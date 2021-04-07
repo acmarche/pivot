@@ -51,17 +51,12 @@ class CategoryUtils
     {
         $this->root = [];
         $this->root['name'] = $category->lvl1;
-        $this->root['items'] = [];
+        $this->lvl2 = [];
     }
 
     function addLevel2(object $category)
     {
-        $this->root['items'][] = $category->lvl2;
-    }
-
-    public function finishLvl()
-    {
-        $this->root['items'] = $this->lvl2;
+        $this->lvl2[] = $category->lvl2;
     }
 
     public function addLevel3($category)
