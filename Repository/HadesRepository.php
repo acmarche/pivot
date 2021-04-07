@@ -10,6 +10,7 @@ use AcMarche\Pivot\Hades;
 use AcMarche\Pivot\Utils\Cache;
 use AcMarche\Pivot\Utils\Mailer;
 use DOMDocument;
+use DOMNodeList;
 use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -204,7 +205,7 @@ class HadesRepository
     public function countOffres(string $category): ?int
     {
         return $this->cache->get(
-            $category,
+            $category.'12',
             function () use ($category) {
                 $xmlString = $this->hadesRemoteRepository->loadOffres(['cat_id' => $category], 'digest');
                 if ($xmlString === null) {
@@ -215,13 +216,22 @@ class HadesRepository
                     return null;
                 }
                 $data = $domdoc->getElementsByTagName('tot');
-                if ($data instanceof \DOMNodeList) {
+                if (!$data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
-                if ($totDom instanceof DOMDocument) {
+                if ($totDom instanceof \DOMElement) {
                     return $totDom->nodeValue;
                 }
+                $data = $domdoc->getElementsByTagName('nb_offres');
+                if (!$data instanceof DOMNodeList) {
+                    return null;
+                }
+                $totDom = $data->item(0);
+                if ($totDom instanceof \DOMElement) {
+                    return $totDom->nodeValue;
+                }
+
                 return null;
             }
         );
