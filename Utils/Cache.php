@@ -14,7 +14,7 @@ class Cache
         if (extension_loaded('apc') && ini_get('apc.enabled')) {
             return new ApcuAdapter(
             // a string prefixed to the keys of the items stored in this cache
-                $namespace = 'newmarche',
+                $namespace = 'pivot',
 
                 // the default lifetime (in seconds) for cache items that do not define their
                 // own lifetime, with a value 0 causing items to be stored indefinitely (i.e.
@@ -29,7 +29,7 @@ class Cache
             return new FilesystemAdapter(
             // a string used as the subdirectory of the root cache directory, where cache
             // items will be stored
-                $namespace = 'newmarche2',
+                $namespace = 'pivot',
 
                 // the default lifetime (in seconds) for cache items that do not define their
                 // own lifetime, with a value 0 causing items to be stored indefinitely (i.e.
