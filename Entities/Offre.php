@@ -108,10 +108,6 @@ class Offre implements OffreInterface
         if ($this->libelle->get($language) && $this->libelle->get($language)) {
             return $this->libelle->get($language);
         }
-        //try in french
-        if ($titre = $this->getTitre()) {
-            return $titre;
-        }
 
         return 'titre found';
     }

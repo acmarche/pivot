@@ -31,6 +31,11 @@ class HadesRepository
         $this->cache = Cache::instance();
     }
 
+    /**
+     * @param array $types
+     * @return OffreInterface[]
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function getOffres(array $types = []): array
     {
         $xmlString = $this->hadesRemoteRepository->getOffres($types);
@@ -144,7 +149,7 @@ class HadesRepository
     public function getOffre(string $id): ?OffreInterface
     {
         return $this->cache->get(
-            'offre_hades-'.$id,
+            'offre_hades-'.$id.time(),
             function () use ($id) {
                 $xmlString = $this->hadesRemoteRepository->getOffreById($id);
                 if ($xmlString === null) {

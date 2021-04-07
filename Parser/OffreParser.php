@@ -14,10 +14,13 @@ use AcMarche\Pivot\Entities\Libelle;
 use AcMarche\Pivot\Entities\Localite;
 use AcMarche\Pivot\Entities\Media;
 use AcMarche\Pivot\Entities\Selection;
+use DOMAttr;
 use DOMDocument;
 use DOMElement;
+use DOMNodeList;
 use DOMXPath;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class OffreParser
 {
@@ -26,7 +29,7 @@ class OffreParser
      */
     public $offre;
     /**
-     * @var \Symfony\Component\PropertyAccess\PropertyAccessor
+     * @var PropertyAccessor
      */
     public $propertyAccessor;
     /**
@@ -46,7 +49,7 @@ class OffreParser
         $this->xpath = new DOMXPath($document);
     }
 
-    public function offreId()
+    public function offreId(): ?string
     {
         return $this->getAttribute($this->offre, 'id');
     }
@@ -54,7 +57,7 @@ class OffreParser
     public function getAttributs(string $name): ?string
     {
         $domList = $this->offre->getElementsByTagName($name);
-        if ($domList instanceof \DOMNodeList) {
+        if ($domList instanceof DOMNodeList) {
             $domElement = $domList->item(0);
             if ($domElement instanceof DOMElement) {
                 return $domElement->nodeValue;
@@ -175,17 +178,18 @@ class OffreParser
     {
         $data = [];
         $descriptions = $this->xpath->query("descriptions", $offreDom);
-        if (!$descriptions->item(0) instanceof \DOMNodeList) {
+        if (!$descriptions->item(0) instanceof DOMElement) {
             return [];
         }
         foreach ($descriptions->item(0)->childNodes as $descriptionDom) {
-            if ($descriptionDom instanceof \DOMElement) {
+            if ($descriptionDom instanceof DOMElement) {
                 $description = new Description();
                 $libelle = new Libelle();
-                $description->dat = $descriptionDom->getAttributeNode('dat')->nodeValue;
-                $description->lot = $descriptionDom->getAttributeNode('lot')->nodeValue;
-                $description->tri = $descriptionDom->getAttributeNode('tri')->nodeValue;
-                $description->typ = $descriptionDom->getAttributeNode('typ')->nodeValue;
+                // dump($descriptionDom->getAttributeNode('dat'));
+                $description->dat = $this->getAttributeNode($descriptionDom, 'dat');
+                $description->lot = $this->getAttributeNode($descriptionDom, 'lot');
+                $description->tri = $this->getAttributeNode($descriptionDom, 'tri');
+                $description->typ = $this->getAttributeNode($descriptionDom, 'typ');
                 $libs = $this->xpath->query("lib", $descriptionDom);
                 foreach ($libs as $lib) {
                     $language = $lib->getAttributeNode('lg');
@@ -221,12 +225,12 @@ class OffreParser
     public function medias(DOMElement $offreDom): array
     {
         $data = [];
-        $categories = $this->xpath->query("medias", $offreDom);
-        if (!$categories->item(0) instanceof \DOMNodeList) {
+        $medias = $this->xpath->query("medias", $offreDom);
+        if (!$medias->item(0) instanceof DOMElement) {
             return [];
         }
-        foreach ($categories->item(0)->childNodes as $categoryDom) {
-            if ($categoryDom instanceof \DOMElement) {
+        foreach ($medias->item(0)->childNodes as $categoryDom) {
+            if ($categoryDom instanceof DOMElement) {
                 $media = new Media();
                 $media->ext = $categoryDom->getAttributeNode('ext')->nodeValue;
                 $media->libelle = $this->getTitre($categoryDom);
@@ -286,11 +290,11 @@ class OffreParser
         $data = [];
         $categories = $this->xpath->query("categories", $offreDom);
         foreach ($categories->item(0)->childNodes as $categoryDom) {
-            if ($categoryDom instanceof \DOMElement) {
+            if ($categoryDom instanceof DOMElement) {
                 $category = new Categorie();
                 $libelle = new Libelle();
-                $category->id = $categoryDom->getAttributeNode('id')->nodeValue;
-                $category->tri = $categoryDom->getAttributeNode('tri')->nodeValue;
+                $category->id = $this->getAttributeNode($categoryDom, 'id');
+                $category->tri = $this->getAttributeNode($categoryDom, 'tri');
                 $labels = $this->xpath->query("lib", $categoryDom);
                 foreach ($labels as $label) {
                     $language = $label->getAttributeNode('lg');
@@ -320,8 +324,8 @@ class OffreParser
             foreach ($communicationsDom->childNodes as $communicationDom) {
                 if ($communicationDom instanceof DOMElement) {
                     $communication = new Communication();
-                    $communication->typ = $communicationDom->getAttributeNode('typ')->nodeValue;
-                    $communication->tri = $communicationDom->getAttributeNode('tri')->nodeValue;
+                    $communication->typ = $this->getAttributeNode($communicationDom, 'typ');
+                    $communication->tri = $this->getAttributeNode($communicationDom, 'tri');
                     $labels = $this->xpath->query("lib", $communicationDom);
                     $libelle = new Libelle();
                     foreach ($labels as $label) {
@@ -334,9 +338,11 @@ class OffreParser
                     }
                     $communication->lib = $libelle;
                     $vals = $this->xpath->query("val", $communicationDom);
-                    $communication->val = $vals->item(0)->nodeValue;
-                    if ($communication->val != '') {
-                        $data[] = $communication;
+                    if ($vals->count() > 0) {
+                        $communication->val = $vals->item(0)->nodeValue;
+                        if ($communication->val != '') {
+                            $data[] = $communication;
+                        }
                     }
                 }
             }
@@ -356,7 +362,7 @@ class OffreParser
         $year = $horaires->getAttributeNode('an')->value;
 
         foreach ($horaires->childNodes as $horaireDom) {
-            if ($horaireDom instanceof \DOMElement) {
+            if ($horaireDom instanceof DOMElement) {
                 $horaire = new Horaire();
                 $horaire->year = $year;
                 $labels = $this->xpath->query("lib", $horaireDom);
@@ -419,6 +425,18 @@ class OffreParser
         }
 
         return '';
+    }
+
+    private function getAttributeNode(?DOMElement $element, string $name): ?string
+    {
+        if ($element) {
+            $node = $element->getAttributeNode($name);
+            if ($node instanceof DOMAttr) {
+                $node->nodeValue;
+            }
+        }
+
+        return null;
     }
 
 }
