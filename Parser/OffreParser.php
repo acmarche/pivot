@@ -141,18 +141,8 @@ class OffreParser
         foreach ($contacts->item(0)->childNodes as $contactDom) {
             if ($contactDom->nodeType == XML_ELEMENT_NODE) {
                 $contact = new Contact();
-                $libelle = new Libelle();
                 $contact->tri = $contactDom->getAttributeNode('tri')->nodeValue;
-                $libs = $this->xpath->query("lib", $contactDom);
-                foreach ($libs as $lib) {
-                    $language = $lib->getAttributeNode('lg');
-                    if ($language) {
-                        $libelle->add($language->nodeValue, $lib->nodeValue);
-                    } else {
-                        $libelle->add('default', $lib->nodeValue);
-                    }
-                }
-                $contact->lib = $libelle;
+                $contact->lib = $this->getLibelle($contactDom);
                 $contact->communications = $this->extractCommunications($contactDom);
                 foreach ($contactDom->childNodes as $attribute) {
                     if ($attribute->nodeType == XML_ELEMENT_NODE) {
@@ -167,7 +157,6 @@ class OffreParser
         }
 
         return $data;
-
     }
 
     /**
@@ -184,22 +173,11 @@ class OffreParser
         foreach ($descriptions->item(0)->childNodes as $descriptionDom) {
             if ($descriptionDom instanceof DOMElement) {
                 $description = new Description();
-                $libelle = new Libelle();
-                // dump($descriptionDom->getAttributeNode('dat'));
                 $description->dat = $this->getAttributeNode($descriptionDom, 'dat');
                 $description->lot = $this->getAttributeNode($descriptionDom, 'lot');
                 $description->tri = $this->getAttributeNode($descriptionDom, 'tri');
                 $description->typ = $this->getAttributeNode($descriptionDom, 'typ');
-                $libs = $this->xpath->query("lib", $descriptionDom);
-                foreach ($libs as $lib) {
-                    $language = $lib->getAttributeNode('lg');
-                    if ($language) {
-                        $libelle->add($language->nodeValue, $lib->nodeValue);
-                    } else {
-                        $libelle->add('default', $lib->nodeValue);
-                    }
-                }
-                $description->lib = $libelle;
+                $description->lib = $this->getLibelle($descriptionDom);
                 $libelle = new Libelle();
                 $textes = $this->xpath->query("texte", $descriptionDom);
                 foreach ($textes as $texte) {
@@ -292,19 +270,9 @@ class OffreParser
         foreach ($categories->item(0)->childNodes as $categoryDom) {
             if ($categoryDom instanceof DOMElement) {
                 $category = new Categorie();
-                $libelle = new Libelle();
                 $category->id = $this->getAttributeNode($categoryDom, 'id');
                 $category->tri = $this->getAttributeNode($categoryDom, 'tri');
-                $labels = $this->xpath->query("lib", $categoryDom);
-                foreach ($labels as $label) {
-                    $language = $label->getAttributeNode('lg');
-                    if ($language) {
-                        $libelle->add($language->nodeValue, $label->nodeValue);
-                    } else {
-                        $libelle->add('default', $label->nodeValue);
-                    }
-                }
-                $category->lib = $libelle;
+                $category->lib = $this->getLibelle($categoryDom);
                 $data[] = $category;
             }
         }
@@ -326,17 +294,7 @@ class OffreParser
                     $communication = new Communication();
                     $communication->typ = $this->getAttributeNode($communicationDom, 'typ');
                     $communication->tri = $this->getAttributeNode($communicationDom, 'tri');
-                    $labels = $this->xpath->query("lib", $communicationDom);
-                    $libelle = new Libelle();
-                    foreach ($labels as $label) {
-                        $language = $label->getAttributeNode('lg');
-                        if ($language) {
-                            $libelle->add($language->nodeValue, $label->nodeValue);
-                        } else {
-                            $libelle->add('default', $label->nodeValue);
-                        }
-                    }
-                    $communication->lib = $libelle;
+                    $communication->lib = $this->getLibelle($communicationDom);
                     $vals = $this->xpath->query("val", $communicationDom);
                     if ($vals->count() > 0) {
                         $communication->val = $vals->item(0)->nodeValue;
@@ -439,4 +397,19 @@ class OffreParser
         return null;
     }
 
+    private function getLibelle($dom): Libelle
+    {
+        $libelle = new Libelle();
+        $libs = $this->xpath->query("lib", $dom);
+        foreach ($libs as $lib) {
+            $language = $lib->getAttributeNode('lg');
+            if ($language) {
+                $libelle->add($language->nodeValue, $lib->nodeValue);
+            } else {
+                $libelle->add('default', $lib->nodeValue);
+            }
+        }
+
+        return $libelle;
+    }
 }
