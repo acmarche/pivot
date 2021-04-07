@@ -36,14 +36,13 @@ class HadesRemoteRepository
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function loadOffres(array $args, string $tbl = 'xmlcomplet')
+    public function loadOffres(array $args, string $tbl = 'xmlcomplet'): string
     {
         $args['tbl'] = $tbl;
         $args['com_id'] = Hades::COMMUNE;
         //  'reg_id' => Hades::PAYS,
         // 'cat_id' => $categorie,
         //   'from_datetime'=>'2020-06-26%2012:27:00'
-
         try {
             $request = $this->httpClient->request(
                 'GET',
@@ -75,7 +74,7 @@ class HadesRemoteRepository
 
         $key = join('-', $args);
         $t = $this->cache->get(
-            'hebergements_hades_remote'.$key,
+            'hebergements_hades_remote'.$key.time(),
             function () use ($args) {
                 return $this->loadOffres($args);
             }
