@@ -56,7 +56,7 @@ class CategoryUtils
 
     function addLevel2(object $category)
     {
-        $this->lvl2[] = $category->lvl2;
+        $this->lvl2['name'] = $category->lvl2;
     }
 
     public function addLevel3($category)
