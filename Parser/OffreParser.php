@@ -175,6 +175,9 @@ class OffreParser
     {
         $data = [];
         $descriptions = $this->xpath->query("descriptions", $offreDom);
+        if (!$descriptions->item(0) instanceof \DOMNodeList) {
+            return [];
+        }
         foreach ($descriptions->item(0)->childNodes as $descriptionDom) {
             if ($descriptionDom instanceof \DOMElement) {
                 $description = new Description();
@@ -219,6 +222,9 @@ class OffreParser
     {
         $data = [];
         $categories = $this->xpath->query("medias", $offreDom);
+        if (!$categories->item(0) instanceof \DOMNodeList) {
+            return [];
+        }
         foreach ($categories->item(0)->childNodes as $categoryDom) {
             if ($categoryDom instanceof \DOMElement) {
                 $media = new Media();
