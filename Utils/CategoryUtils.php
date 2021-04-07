@@ -23,29 +23,45 @@ class CategoryUtils
     /**
      * @var array
      */
-    public $lvl;
+    public $root;
+    /**
+     * @var array
+     */
+    public $lvl4;
+    /**
+     * @var array
+     */
+    public $tree;
 
     public function __construct()
     {
         $hadesRepository = new WpRepository();
         $this->categories = $hadesRepository->getCategoriesHades();
+        $this->tree = [];
     }
 
     function initLvl()
     {
-        $this->lvl = [];
         $this->lvl2 = [];
         $this->lvl3 = [];
+        $this->lvl4 = [];
+    }
+
+    function initLvl1(object $category)
+    {
+        $this->root = [];
+        $this->root['name'] = $category->lvl1;
+        $this->root['items'] = [];
     }
 
     function addLevel2(object $category)
     {
-        $this->lvl2['name'] = $category->lvl2;
+        $this->root['items'][] = $category->lvl2;
     }
 
     public function finishLvl()
     {
-        $this->lvl['items'] = $this->lvl2;
+        $this->root['items'] = $this->lvl2;
     }
 
     public function addLevel3($category)
@@ -53,9 +69,16 @@ class CategoryUtils
         $this->lvl3[] = $category->lvl3;
     }
 
-    public function finishLvl3() {
+    public function finishLvl3()
+    {
         $this->lvl2['items2'] = $this->lvl3;
-        $this->lvl3=[];
+        $this->lvl3 = [];
     }
 
+    public function addItem(object $category, ?object $parent, int $level)
+    {
+        if ($parent == null) {
+            $this->tree[] = $category;
+        }
+    }
 }
