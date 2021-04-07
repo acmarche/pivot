@@ -27,7 +27,7 @@ class HadesRepository
     public function __construct()
     {
         $this->hadesRemoteRepository = new HadesRemoteRepository();
-        $this->cache                 = Cache::instance();
+        $this->cache = Cache::instance();
     }
 
     public function getOffres(array $types = []): array
@@ -40,9 +40,9 @@ class HadesRepository
         if ($domdoc === null) {
             return [];
         }
-        $data      = $domdoc->getElementsByTagName('offres');
+        $data = $domdoc->getElementsByTagName('offres');
         $offresXml = $data->item(0);
-        $offres    = [];
+        $offres = [];
 
         foreach ($offresXml->childNodes as $offre) {
             if ($offre->nodeType == XML_ELEMENT_NODE) {
@@ -146,17 +146,14 @@ class HadesRepository
             'offre_hades-'.$id,
             function () use ($id) {
                 $xmlString = $this->hadesRemoteRepository->getOffreById($id);
-                $domdoc    = $this->loadXml($xmlString);
-                if ($domdoc === null) {
-                    return null;
-                }
                 if ($xmlString === null) {
                     return null;
                 }
+                $domdoc = $this->loadXml($xmlString);
                 if ($domdoc === null) {
                     return null;
                 }
-                $data      = $domdoc->getElementsByTagName('offres');
+                $data = $domdoc->getElementsByTagName('offres');
                 $offresXml = $data->item(0);
 
                 foreach ($offresXml->childNodes as $offre) {
@@ -185,15 +182,15 @@ class HadesRepository
             foreach ($offres as $element) {
                 foreach ($element->categories as $category2) {
                     if ($category->lib == $category2->lib && $offre->id != $element->id) {
-                        $image  = null;
+                        $image = null;
                         $images = $element->medias;
                         if (count($images) > 0) {
                             $image = $images[0]->url;
                         }
                         $recommandations[] = [
-                            'title'      => $element->titre,
-                            'url'        => $element->url,
-                            'image'      => $image,
+                            'title' => $element->titre,
+                            'url' => $element->url,
+                            'image' => $image,
                             'categories' => $element->categories,
                         ];
                     }
@@ -202,5 +199,31 @@ class HadesRepository
         }
 
         return $recommandations;
+    }
+
+    public function countOffres(string $category): ?int
+    {
+        return $this->cache->get(
+            $category,
+            function () use ($category) {
+                $xmlString = $this->hadesRemoteRepository->loadOffres(['cat_id' => $category], 'digest');
+                if ($xmlString === null) {
+                    return null;
+                }
+                $domdoc = $this->loadXml($xmlString);
+                if ($domdoc === null) {
+                    return null;
+                }
+                $data = $domdoc->getElementsByTagName('tot');
+                if ($data instanceof \DOMNodeList) {
+                    return null;
+                }
+                $totDom = $data->item(0);
+                if ($totDom instanceof DOMDocument) {
+                    return $totDom->nodeValue;
+                }
+                return null;
+            }
+        );
     }
 }
