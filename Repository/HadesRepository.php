@@ -3,12 +3,12 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use AcMarche\Common\Cache;
-use AcMarche\Common\Mailer;
 use AcMarche\Pivot\Entities\Offre;
 use AcMarche\Pivot\Entities\OffreInterface;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Hades;
+use AcMarche\Pivot\Utils\Cache;
+use AcMarche\Pivot\Utils\Mailer;
 use DOMDocument;
 use Exception;
 use Symfony\Contracts\Cache\CacheInterface;

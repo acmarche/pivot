@@ -3,10 +3,10 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use AcMarche\Common\Cache;
-use AcMarche\Common\Mailer;
 use AcMarche\Pivot\ConnectionHadesTrait;
 use AcMarche\Pivot\Hades;
+use AcMarche\Pivot\Utils\Cache;
+use AcMarche\Pivot\Utils\Mailer;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Contracts\Cache\CacheInterface;
 
