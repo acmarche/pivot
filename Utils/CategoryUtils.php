@@ -31,24 +31,21 @@ class CategoryUtils
         $this->categories = $hadesRepository->getCategoriesHades();
     }
 
-    function initLvl(object $category)
+    function initLvl()
     {
         $this->lvl = [];
-        $this->lvl['name'] = $category->lvl1;
         $this->lvl2 = [];
         $this->lvl3 = [];
     }
 
     function addLevel2(object $category)
     {
-        $this->lvl2[] = $category->lvl2;
+        $this->lvl2['name'] = $category->lvl2;
     }
 
-    public function finishLvl(): array
+    public function finishLvl()
     {
         $this->lvl['items'] = $this->lvl2;
-
-        return $this->lvl;
     }
 
     public function addLevel3($category)
@@ -56,8 +53,8 @@ class CategoryUtils
         $this->lvl3[] = $category->lvl3;
     }
 
-    public function finishLevle3() {
-        $this->lvl2['items'] = $this->lvl3;
+    public function finishLvl3() {
+        $this->lvl2['items2'] = $this->lvl3;
         $this->lvl3=[];
     }
 
