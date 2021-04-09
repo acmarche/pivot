@@ -35,7 +35,7 @@ class OffreParser
     /**
      * @var DOMDocument
      */
-    private $document;
+    public $document;
     /**
      * @var DOMXPath
      */
@@ -390,7 +390,7 @@ class OffreParser
         if ($element) {
             $node = $element->getAttributeNode($name);
             if ($node instanceof DOMAttr) {
-                $node->nodeValue;
+                return $node->nodeValue;
             }
         }
 
