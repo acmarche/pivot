@@ -210,7 +210,7 @@ class HadesRepository
     public function countOffres(string $category): ?int
     {
         return $this->cache->get(
-            $category.'12',
+            $category,
             function () use ($category) {
                 $xmlString = $this->hadesRemoteRepository->loadOffres(['cat_id' => $category], 'digest');
                 if ($xmlString === null) {

@@ -40,9 +40,9 @@ class HadesRemoteRepository
     {
         $args['tbl'] = $tbl;
         $args['com_id'] = Hades::COMMUNE;
-        //  'reg_id' => Hades::PAYS,
-        // 'cat_id' => $categorie,
-        //   'from_datetime'=>'2020-06-26%2012:27:00'
+        //'reg_id' => Hades::PAYS,
+        //'cat_id' => $categorie,
+        //'from_datetime'=>'2020-06-26%2012:27:00'
         try {
             $request = $this->httpClient->request(
                 'GET',
