@@ -117,15 +117,19 @@ class Offre implements OffreInterface
         $contacts = array_filter(
             $this->contacts,
             function ($contact) {
-                if (isset($contact->lgs['main']) && $contact->lgs['main'] == 'ap') {
+                $default = $contact->lib->get('default');
+                if ($default === 'contact') {
                     return $contact;
                 }
 
-                return [];
+                return null;
             }
         );
+        if ($contacts) {
+            return $contacts[array_key_first($contacts)];
+        }
 
-        return count($contacts) > 0 ? $contacts[0] : null;
+        return count($this->contacts) > 0 ? $this->contacts[0] : null;
     }
 
     public function communcationPrincipal(): array
@@ -134,7 +138,7 @@ class Offre implements OffreInterface
         $contact = $this->contactPrincipal();
         if ($contact) {
             foreach ($contact->communications as $communication) {
-                $coms[$communication->type][$communication->name] = $communication->value;
+                $coms[$communication->typ][$communication->lib->get('default')] = $communication->val;
             }
         }
 
@@ -145,26 +149,26 @@ class Offre implements OffreInterface
     {
         $emails = isset($this->communcationPrincipal()['mail']) ? $this->communcationPrincipal()['mail'] : [];
 
-        return isset($emails['E-mail']) ? $emails['E-mail'] : null;
+        return $emails['mail'] ?? null;
     }
 
-    public function telPrincipal()
+    public function telPrincipal(): ?string
     {
-        $telephones = isset($this->communcationPrincipal()['mail']) ? $this->communcationPrincipal()['mail'] : [];
+        $telephones = isset($this->communcationPrincipal()['tel']) ? $this->communcationPrincipal()['tel'] : [];
 
-        return isset($telephones['E-mail']) ? $telephones['E-mail'] : null;
+        return $telephones['tel'] ?? null;
     }
 
-    public function sitePrincipal()
+    public function sitePrincipal(): ?string
     {
         $sites = isset($this->communcationPrincipal()['url']) ? $this->communcationPrincipal()['url'] : [];
 
-        $site = isset($sites['Web']) ? $sites['Web'] : null;
+        $site = $sites['url'] ?? null;
         if ($site) {
             return $site;
         }
 
-        $site = isset($sites['FaceBook']) ? $sites['FaceBook'] : null;
+        $site = $sites['url_facebook'] ?? null;
         if ($site) {
             return $site;
         }

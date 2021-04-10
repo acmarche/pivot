@@ -155,6 +155,7 @@ class HadesRepository
                 if ($xmlString === null) {
                     return null;
                 }
+              //  echo($xmlString);
                 $domdoc = $this->loadXml($xmlString);
                 if ($domdoc === null) {
                     return null;
