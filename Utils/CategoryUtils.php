@@ -41,6 +41,10 @@ class CategoryUtils
      * @var HadesRepository
      */
     private $hadesRepository;
+    /**
+     * @var \Symfony\Contracts\Cache\CacheInterface
+     */
+    private $cache;
 
     public function __construct()
     {
@@ -48,16 +52,22 @@ class CategoryUtils
         $this->hadesRepository = new HadesRepository();
         $this->categories = $this->wpRepository->getCategoriesHades();
         $this->tree = [];
+        $this->cache = Cache::instance();
     }
 
     public function setCounts(): void
     {
-        foreach ($this->categories as $category) {
-            if ($category->category_id) {
-                $count = $this->hadesRepository->countOffres($category->category_id);
-                $category->count = $count;
+        $this->cache->get(
+            'visit_categories'.time(),
+            function () {
+                foreach ($this->categories as $category) {
+                    if ($category->category_id) {
+                        $count = $this->hadesRepository->countOffres($category->category_id);
+                        $category->count = $count;
+                    }
+                }
             }
-        }
+        );
     }
 
     public function getCategoriesNotEmpty(): array
@@ -68,7 +78,9 @@ class CategoryUtils
                 if (isset($category->count) && $category->count > 0) {
                     $notEmpty[] = $category;
                 }
+                continue;
             }
+            $notEmpty[] = $category;
         }
 
         return $notEmpty;
