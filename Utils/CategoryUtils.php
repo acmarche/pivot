@@ -97,6 +97,16 @@ class CategoryUtils
         return $key;
     }
 
+    public function getNamesByKey(array $keys): array
+    {
+        $names = [];
+        foreach ($keys as $key) {
+            $names[] = $this->getNameByKey($key);
+        }
+
+        return $names;
+    }
+
     function initLvl()
     {
         $this->lvl2 = [];
