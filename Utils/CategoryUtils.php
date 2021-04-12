@@ -4,6 +4,7 @@
 namespace AcMarche\Pivot\Utils;
 
 
+use AcMarche\Pivot\Repository\HadesRepository;
 use VisitMarche\Theme\Lib\WpRepository;
 
 class CategoryUtils
@@ -32,12 +33,43 @@ class CategoryUtils
      * @var array
      */
     public $tree;
+    /**
+     * @var WpRepository
+     */
+    private $wpRepository;
+    /**
+     * @var HadesRepository
+     */
+    private $hadesRepository;
 
     public function __construct()
     {
-        $hadesRepository = new WpRepository();
-        $this->categories = $hadesRepository->getCategoriesHades();
+        $this->wpRepository = new WpRepository();
+        $this->hadesRepository = new HadesRepository();
+        $this->categories = $this->wpRepository->getCategoriesHades();
         $this->tree = [];
+    }
+
+    public function setCounts(): void
+    {
+        foreach ($this->categories as $category) {
+            if ($category->category_id) {
+                $count = $this->hadesRepository->countOffres($category->category_id);
+                $category->count = $count;
+            }
+        }
+    }
+
+    public function getCategoriesNotEmpty(): array
+    {
+        $notEmpty = [];
+        foreach ($this->categories as $category) {
+            if (isset($count) && $count > 0) {
+                $notEmpty[] = $category;
+            }
+        }
+
+        return $notEmpty;
     }
 
     public function getNameByKey(string $key): string
