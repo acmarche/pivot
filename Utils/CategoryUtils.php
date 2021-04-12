@@ -64,8 +64,10 @@ class CategoryUtils
     {
         $notEmpty = [];
         foreach ($this->categories as $category) {
-            if (isset($count) && $count > 0) {
-                $notEmpty[] = $category;
+            if ($category->category_id) {
+                if (isset($category->count) && $category->count > 0) {
+                    $notEmpty[] = $category;
+                }
             }
         }
 
