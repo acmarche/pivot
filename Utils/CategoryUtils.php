@@ -40,6 +40,29 @@ class CategoryUtils
         $this->tree = [];
     }
 
+    public function getNameByKey(string $key): string
+    {
+        foreach ($this->categories as $category) {
+
+            if ($category->category_id == $key) {
+                if ($category->lvl1) {
+                    return $category->lvl1;
+                }
+                if ($category->lvl2) {
+                    return $category->lvl2;
+                }
+                if ($category->lvl3) {
+                    return $category->lvl3;
+                }
+                if ($category->lvl4) {
+                    return $category->lvl4;
+                }
+            }
+        }
+
+        return $key;
+    }
+
     function initLvl()
     {
         $this->lvl2 = [];
