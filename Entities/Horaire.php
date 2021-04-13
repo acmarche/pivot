@@ -42,7 +42,7 @@ class Horaire
             return $this->texte->get($language);
         }
         //try in french
-        if ($titre = $this->getTexte()) {
+        if ($titre = $this->texte->get('fr')) {
             return $titre;
         }
 

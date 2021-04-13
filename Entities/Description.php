@@ -37,7 +37,7 @@ class Description
             return $this->lib->get($language);
         }
         //try in french
-        if ($titre = $this->getLib()) {
+        if ($titre = $this->lib->get('fr')) {
             return $titre;
         }
 
@@ -50,7 +50,7 @@ class Description
             return $this->texte->get($language);
         }
         //try in french
-        if ($titre = $this->getTexte()) {
+        if ($titre = $this->texte->get('fr')) {
             return $titre;
         }
 

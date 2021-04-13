@@ -34,7 +34,7 @@ class Libelle
 
     public function get(string $language): ?string
     {
-        return isset($this->languages[$language]) ? $this->languages[$language] : null;
+        return $this->languages[$language] ?? null;
     }
 
     private function libelle(string $language)

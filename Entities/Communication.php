@@ -29,7 +29,7 @@ class Communication
             return $this->lib->get($language);
         }
         //try in french
-        if ($titre = $this->getLib()) {
+        if ($titre = $this->lib->get('fr')) {
             return $titre;
         }
 
