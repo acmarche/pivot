@@ -13,6 +13,7 @@ use DOMDocument;
 use DOMNodeList;
 use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
+use VisitMarche\Theme\Lib\LocaleHelper;
 
 class HadesRepository
 {
@@ -28,7 +29,7 @@ class HadesRepository
     public function __construct()
     {
         $this->hadesRemoteRepository = new HadesRemoteRepository();
-        $this->cache                 = Cache::instance();
+        $this->cache = Cache::instance();
     }
 
     /**
@@ -47,9 +48,9 @@ class HadesRepository
         if ($domdoc === null) {
             return [];
         }
-        $data      = $domdoc->getElementsByTagName('offres');
+        $data = $domdoc->getElementsByTagName('offres');
         $offresXml = $data->item(0);
-        $offres    = [];
+        $offres = [];
 
         foreach ($offresXml->childNodes as $offre) {
             if ($offre->nodeType == XML_ELEMENT_NODE) {
@@ -163,7 +164,7 @@ class HadesRepository
                 if ($domdoc === null) {
                     return null;
                 }
-                $data      = $domdoc->getElementsByTagName('offres');
+                $data = $domdoc->getElementsByTagName('offres');
                 $offresXml = $data->item(0);
 
                 foreach ($offresXml->childNodes as $offre) {
@@ -177,35 +178,28 @@ class HadesRepository
         );
     }
 
-    public function getOffresSameCategories(OffreInterface $offre, int $catId): ?array
+    public function getOffresSameCategories(OffreInterface $offre): ?array
     {
-        $offres = $this->getOffres();
-        /*array_map(
-            function ($offre) use ($catId) {
-                $offre->url = RouterHades::getUrlOffre($offre, $catId);
-            },
-            $offres
-        );*/
         $recommandations = [];
-
+        $language = 'fr';
+        if (class_exists(LocaleHelper::class)) {
+            $language = LocaleHelper::getSelectedLanguage();
+        }
+        $categories = [];
         foreach ($offre->categories as $category) {
-            foreach ($offres as $element) {
-                foreach ($element->categories as $category2) {
-                    if ($category->lib == $category2->lib && $offre->id != $element->id) {
-                        $image  = null;
-                        $images = $element->medias;
-                        if (count($images) > 0) {
-                            $image = $images[0]->url;
-                        }
-                        $recommandations[] = [
-                            'title'      => $element->titre,
-                            'url'        => $element->url,
-                            'image'      => $image,
-                            'categories' => $element->categories,
-                        ];
-                    }
-                }
+            $categories[] = $category->id;
+        }
+        $offres = $this->getOffres($categories);
+        foreach ($offres as $item) {
+            if ($offre->id == $item->id) {
+                continue;
             }
+            $recommandations[] = [
+                'title' => $item->getTitre($language),
+                'url' => $item->url,
+                'image' => $item->firstImage(),
+                'categories' => $item->categories,
+            ];
         }
 
         return $recommandations;
@@ -225,7 +219,7 @@ class HadesRepository
                     return null;
                 }
                 $data = $domdoc->getElementsByTagName('tot');
-                if ( ! $data instanceof DOMNodeList) {
+                if (!$data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
@@ -233,7 +227,7 @@ class HadesRepository
                     return $totDom->nodeValue;
                 }
                 $data = $domdoc->getElementsByTagName('nb_offres');
-                if ( ! $data instanceof DOMNodeList) {
+                if (!$data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
