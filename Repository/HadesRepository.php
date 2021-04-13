@@ -28,11 +28,12 @@ class HadesRepository
     public function __construct()
     {
         $this->hadesRemoteRepository = new HadesRemoteRepository();
-        $this->cache = Cache::instance();
+        $this->cache                 = Cache::instance();
     }
 
     /**
      * @param array $types
+     *
      * @return OffreInterface[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
@@ -46,9 +47,9 @@ class HadesRepository
         if ($domdoc === null) {
             return [];
         }
-        $data = $domdoc->getElementsByTagName('offres');
+        $data      = $domdoc->getElementsByTagName('offres');
         $offresXml = $data->item(0);
-        $offres = [];
+        $offres    = [];
 
         foreach ($offresXml->childNodes as $offre) {
             if ($offre->nodeType == XML_ELEMENT_NODE) {
@@ -133,7 +134,9 @@ class HadesRepository
                         $stingError .= $error->message;
                     }
                 }
-                Mailer::sendError('xml error hades', 'error: '.$stingError.'contenu: '.$xmlString);
+                global $wp;
+                $url = home_url($wp->request);
+                Mailer::sendError('xml error hades', 'error: '.$stingError.'contenu: '.$xmlString.' url '.$url);
 
                 return null;
             }
@@ -155,12 +158,12 @@ class HadesRepository
                 if ($xmlString === null) {
                     return null;
                 }
-              //  echo($xmlString);
+                //  echo($xmlString);
                 $domdoc = $this->loadXml($xmlString);
                 if ($domdoc === null) {
                     return null;
                 }
-                $data = $domdoc->getElementsByTagName('offres');
+                $data      = $domdoc->getElementsByTagName('offres');
                 $offresXml = $data->item(0);
 
                 foreach ($offresXml->childNodes as $offre) {
@@ -189,15 +192,15 @@ class HadesRepository
             foreach ($offres as $element) {
                 foreach ($element->categories as $category2) {
                     if ($category->lib == $category2->lib && $offre->id != $element->id) {
-                        $image = null;
+                        $image  = null;
                         $images = $element->medias;
                         if (count($images) > 0) {
                             $image = $images[0]->url;
                         }
                         $recommandations[] = [
-                            'title' => $element->titre,
-                            'url' => $element->url,
-                            'image' => $image,
+                            'title'      => $element->titre,
+                            'url'        => $element->url,
+                            'image'      => $image,
                             'categories' => $element->categories,
                         ];
                     }
@@ -222,7 +225,7 @@ class HadesRepository
                     return null;
                 }
                 $data = $domdoc->getElementsByTagName('tot');
-                if (!$data instanceof DOMNodeList) {
+                if ( ! $data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
@@ -230,7 +233,7 @@ class HadesRepository
                     return $totDom->nodeValue;
                 }
                 $data = $domdoc->getElementsByTagName('nb_offres');
-                if (!$data instanceof DOMNodeList) {
+                if ( ! $data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
