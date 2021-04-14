@@ -4,8 +4,11 @@
 namespace AcMarche\Pivot\Utils;
 
 
+use AcMarche\Pivot\Hades;
 use AcMarche\Pivot\Repository\HadesRepository;
 use Symfony\Contracts\Cache\CacheInterface;
+use VisitMarche\Theme\Inc\CategoryMetaBox;
+use VisitMarche\Theme\Lib\LocaleHelper;
 use VisitMarche\Theme\Lib\WpRepository;
 
 class CategoryUtils
@@ -38,7 +41,7 @@ class CategoryUtils
     public function setCounts(): void
     {
         $this->cache->get(
-            'visit_categories',
+            'visit_categories'.time(),
             function () {
                 foreach ($this->categories as $category) {
                     if ($category->category_id) {
@@ -55,12 +58,12 @@ class CategoryUtils
         $notEmpty = [];
         foreach ($this->categories as $category) {
             if ($category->category_id) {
-                if (isset($category->count) && $category->count > 0) {
+                if ($category->count > 0) {
                     $notEmpty[] = $category;
                 }
-                continue;
+            } else {
+                $notEmpty[] = $category;
             }
-            $notEmpty[] = $category;
         }
 
         return $notEmpty;
@@ -74,6 +77,20 @@ class CategoryUtils
                 $filtres[$key] = $allCategories[$key];
             }
         }
+
+        return $filtres;
+    }
+
+    public function getFiltresCategory(int $categoryId): array
+    {
+        $filtresString = get_term_meta($categoryId, CategoryMetaBox::KEY_NAME_HADES, true);
+
+        $all = Hades::allCategories();
+        $filtres = $all[$filtresString] ?? explode(',', $filtresString);
+        $filtres = array_combine($filtres, $filtres);
+        $categoryUtils = new CategoryUtils();
+        $language = LocaleHelper::getSelectedLanguage();
+        $filtres = $categoryUtils->translateFiltres($filtres, $language);
 
         return $filtres;
     }
