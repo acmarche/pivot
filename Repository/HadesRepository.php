@@ -239,4 +239,23 @@ class HadesRepository
             }
         );
     }
+
+    public function extractCategories(string $language)
+    {
+        return $this->cache->get(
+            'hades_categories_'.$language.time(),
+            function () use ($language) {
+
+                $categories = [];
+                foreach ($this->getOffres() as $offre) {
+                    foreach ($offre->categories as $category) {
+                        $categories[$category->id] = $category->getLib($language);
+                    }
+                }
+                asort($categories);
+
+                return $categories;
+            }
+        );
+    }
 }
