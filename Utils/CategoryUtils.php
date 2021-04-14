@@ -3,7 +3,6 @@
 
 namespace AcMarche\Pivot\Utils;
 
-
 use AcMarche\Pivot\Hades;
 use AcMarche\Pivot\Repository\HadesRepository;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -41,7 +40,7 @@ class CategoryUtils
     public function setCounts(): void
     {
         $this->cache->get(
-            'visit_categories'.time(),
+            'visit_categories',
             function () {
                 foreach ($this->categories as $category) {
                     if ($category->category_id) {
