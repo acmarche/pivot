@@ -84,6 +84,9 @@ class CategoryUtils
     public function getFiltresCategory(int $categoryId): array
     {
         $filtresString = get_term_meta($categoryId, CategoryMetaBox::KEY_NAME_HADES, true);
+        if (!$filtresString) {
+            return [];
+        }
 
         $all = Hades::allCategories();
         $filtres = $all[$filtresString] ?? explode(',', $filtresString);
