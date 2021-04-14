@@ -43,6 +43,7 @@ class CategoryUtils
             'visit_categories',
             function () {
                 foreach ($this->categories as $category) {
+                    $category->count = 0;
                     if ($category->category_id) {
                         $count = $this->hadesRepository->countOffres($category->category_id);
                         $category->count = $count;
