@@ -40,7 +40,7 @@ class CategoryUtils
     public function setCounts(): void
     {
         $this->cache->get(
-            'visit_categories'.time(),
+            'visit_categories',
             function () {
                 foreach ($this->categories as $category) {
                     $category->count = 0;
@@ -89,11 +89,15 @@ class CategoryUtils
         }
 
         $all = Hades::allCategories();
-        $filtres = $all[$filtresString] ?? explode(',', $filtresString);
-        $filtres = array_combine($filtres, $filtres);
-        $categoryUtils = new CategoryUtils();
+        if (isset($all[$filtresString])) {
+            $filtres = $all[$filtresString];
+        } else {
+            $filtres = explode(',', $filtresString);
+            $filtres = array_combine($filtres, $filtres);
+        }
+
         $language = LocaleHelper::getSelectedLanguage();
-        $filtres = $categoryUtils->translateFiltres($filtres, $language);
+        $filtres = $this->translateFiltres($filtres, $language);
 
         return $filtres;
     }
