@@ -38,7 +38,7 @@ class CategoryUtils
     public function setCounts(): void
     {
         $this->cache->get(
-            'visit_categories'.time(),
+            'visit_categories',
             function () {
                 foreach ($this->categories as $category) {
                     if ($category->category_id) {

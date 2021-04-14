@@ -153,7 +153,7 @@ class HadesRepository
     public function getOffre(string $id): ?OffreInterface
     {
         return $this->cache->get(
-            'offre_hades-'.$id.time(),
+            'offre_hades-'.$id,
             function () use ($id) {
                 $xmlString = $this->hadesRemoteRepository->getOffreById($id);
                 if ($xmlString === null) {
@@ -243,7 +243,7 @@ class HadesRepository
     public function extractCategories(string $language)
     {
         return $this->cache->get(
-            'hades_categories_'.$language.time(),
+            'hades_categories_'.$language,
             function () use ($language) {
 
                 $categories = [];
