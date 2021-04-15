@@ -40,7 +40,7 @@ class CategoryUtils
     public function setCounts(): void
     {
         $this->cache->get(
-            'visit_categories22',
+            'visit_categories22'.time(),
             function () {
                 foreach ($this->categories as $category) {
                     $category->count = 0;
