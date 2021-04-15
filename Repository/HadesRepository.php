@@ -13,6 +13,7 @@ use DOMDocument;
 use DOMNodeList;
 use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
+use VisitMarche\Theme\Inc\RouterHades;
 use VisitMarche\Theme\Lib\LocaleHelper;
 
 class HadesRepository
@@ -178,7 +179,7 @@ class HadesRepository
         );
     }
 
-    public function getOffresSameCategories(OffreInterface $offre): ?array
+    public function getOffresSameCategories(OffreInterface $offre, int $categoryWpId): ?array
     {
         $recommandations = [];
         $language = 'fr';
@@ -194,9 +195,10 @@ class HadesRepository
             if ($offre->id == $item->id) {
                 continue;
             }
+            $url = RouterHades::getUrlOffre($item, $categoryWpId);
             $recommandations[] = [
                 'title' => $item->getTitre($language),
-                'url' => $item->url,
+                'url' => $url,
                 'image' => $item->firstImage(),
                 'categories' => $item->categories,
             ];
