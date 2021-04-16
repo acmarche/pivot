@@ -15,6 +15,7 @@ use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
 use VisitMarche\Theme\Inc\RouterHades;
 use VisitMarche\Theme\Lib\LocaleHelper;
+use wpdb;
 
 class HadesRepository
 {
@@ -259,5 +260,15 @@ class HadesRepository
                 return $categories;
             }
         );
+    }
+
+    public function getCategoriesHades()
+    {
+        /**
+         * @var wpdb $wpdb
+         */
+        global $wpdb;
+
+        return $wpdb->get_results("SELECT * FROM hades");
     }
 }
