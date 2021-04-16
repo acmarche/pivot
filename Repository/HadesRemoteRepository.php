@@ -73,8 +73,9 @@ class HadesRemoteRepository
         }
 
         $key = join('-', $args);
+        dump($key);
         $t = $this->cache->get(
-            'hebergements_hades_remote'.$key,
+            'hebergements_hades_remote'.$key.time(),
             function () use ($args) {
                 return $this->loadOffres($args);
             }
