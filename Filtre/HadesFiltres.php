@@ -122,13 +122,14 @@ class HadesFiltres
     public function translateFiltres(array $filtres, string $language = 'fr'): array
     {
         $allFiltres = $this->hadesRepository->extractCategories($language);
-        foreach ($filtres as $key => $filtre) {
-            if (isset($allFiltres[$key])) {
-                $filtres[$key] = $allFiltres[$key];
+        $data = [];
+        foreach ($filtres as $filtre) {
+            if (isset($allFiltres[$filtre])) {
+                $data[$filtre] = $allFiltres[$filtre];
             }
         }
 
-        return $filtres;
+        return $data;
     }
 
     public function getCategoryFilters(int $categoryId, string $language = 'fr'): array
@@ -143,9 +144,7 @@ class HadesFiltres
             $filtres = $all[$filtresString];
         } else {
             $filtres = explode(',', $filtresString);
-            $filtres = array_combine($filtres, $filtres);
         }
-
         $filtres = $this->translateFiltres($filtres, $language);
 
         return $filtres;
