@@ -71,7 +71,7 @@ class HadesRepository
      */
     public function getEvents(array $types = []): array
     {
-        $types = count($types) === 0 ? array_keys(HadesFiltres::EVENEMENTS) : $types;
+        $types = count($types) === 0 ? HadesFiltres::EVENEMENTS : $types;
 
         return $this->cache->get(
             'events_hades',
@@ -94,7 +94,7 @@ class HadesRepository
 
     public function getHebergements(array $types = []): array
     {
-        $types = count($types) === 0 ? array_keys(HadesFiltres::HEBERGEMENTS) : $types;
+        $types = count($types) === 0 ? HadesFiltres::HEBERGEMENTS : $types;
 
         return $this->cache->get(
             'hebergement_hades',
@@ -106,7 +106,7 @@ class HadesRepository
 
     public function getRestaurations(array $types = []): array
     {
-        $types = count($types) === 0 ? array_keys(HadesFiltres::RESTAURATIONS) : $types;
+        $types = count($types) === 0 ? HadesFiltres::RESTAURATIONS : $types;
 
         return $this->cache->get(
             'resto_hades',
