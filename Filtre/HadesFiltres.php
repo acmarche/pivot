@@ -133,7 +133,7 @@ class HadesFiltres
 
     public function getCategoryFilters(int $categoryId, string $language = 'fr'): array
     {
-        $filtresString = get_term_meta($categoryId, CategoryMetaBox::KEY_NAME_HADES, true);
+        $filtresString = get_term_meta($categoryId, FiltreMetaBox::KEY_NAME_HADES, true);
         if (!$filtresString) {
             return [];
         }

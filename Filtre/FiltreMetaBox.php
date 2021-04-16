@@ -3,7 +3,7 @@
 
 namespace AcMarche\Pivot\Filtre;
 
-class CategoryMetaBox
+class FiltreMetaBox
 {
     const KEY_NAME_HADES = 'hades_refrubrique';
 
