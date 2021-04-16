@@ -138,12 +138,8 @@ class HadesFiltres
         if (!$filtresString) {
             return [];
         }
-        $all = self::groupedFilters();
-        if (isset($all[$filtresString])) {
-            $filtres = $all[$filtresString];
-        } else {
-            $filtres = explode(',', $filtresString);
-        }dump($filtres);
+        $groupedFilters = self::groupedFilters();
+        $filtres = isset($groupedFilters[$filtresString]) ?? explode(',', $filtresString);
         $filtres = $this->translateFiltres($filtres, $language);
 
         return $filtres;
