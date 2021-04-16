@@ -4,7 +4,7 @@
 namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\ConnectionHadesTrait;
-use AcMarche\Pivot\Hades;
+use AcMarche\Pivot\Filtre\HadesFiltres;
 use AcMarche\Pivot\Utils\Cache;
 use AcMarche\Pivot\Utils\Mailer;
 use Symfony\Component\HttpClient\Exception\ClientException;
@@ -39,7 +39,7 @@ class HadesRemoteRepository
     public function loadOffres(array $args, string $tbl = 'xmlcomplet'): string
     {
         $args['tbl'] = $tbl;
-        $args['com_id'] = Hades::COMMUNE;
+        $args['com_id'] = HadesFiltres::COMMUNE;
         //'reg_id' => Hades::PAYS,
         //'cat_id' => $categorie,
         //'from_datetime'=>'2020-06-26%2012:27:00'

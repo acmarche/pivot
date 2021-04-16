@@ -70,7 +70,7 @@ class HadesFiltres
     /**
      * @var array|object|null
      */
-    public $categories;
+    public $filtres;
     /**
      * @var HadesRepository
      */
@@ -83,16 +83,16 @@ class HadesFiltres
     public function __construct()
     {
         $this->hadesRepository = new HadesRepository();
-        $this->categories = $this->hadesRepository->getCategoriesHades();
+        $this->filtres = $this->hadesRepository->getFiltresHades();
         $this->cache = Cache::instance();
     }
 
     public function setCounts(): void
     {
         $this->cache->get(
-            'visit_categories'.time(),
+            'visit_filtres'.time(),
             function () {
-                foreach ($this->categories as $category) {
+                foreach ($this->filtres as $category) {
                     $category->count = 0;
                     if ($category->category_id) {
                         $count = $this->hadesRepository->countOffres($category->category_id);
@@ -103,10 +103,10 @@ class HadesFiltres
         );
     }
 
-    public function getCategoriesNotEmpty(): array
+    public function getFiltresNotEmpty(): array
     {
         $notEmpty = [];
-        foreach ($this->categories as $category) {
+        foreach ($this->filtres as $category) {
             if ($category->category_id) {
                 if (isset($category->count) && $category->count > 0) {
                     $notEmpty[] = $category;
@@ -121,10 +121,10 @@ class HadesFiltres
 
     public function translateFiltres(array $filtres, string $language = 'fr'): array
     {
-        $allCategories = $this->hadesRepository->extractCategories($language);
+        $allFiltres = $this->hadesRepository->extractCategories($language);
         foreach ($filtres as $key => $filtre) {
-            if (isset($allCategories[$key])) {
-                $filtres[$key] = $allCategories[$key];
+            if (isset($allFiltres[$key])) {
+                $filtres[$key] = $allFiltres[$key];
             }
         }
 

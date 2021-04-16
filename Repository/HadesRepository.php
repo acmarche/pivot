@@ -6,7 +6,7 @@ namespace AcMarche\Pivot\Repository;
 use AcMarche\Pivot\Entities\Offre;
 use AcMarche\Pivot\Entities\OffreInterface;
 use AcMarche\Pivot\Event\EventUtils;
-use AcMarche\Pivot\Hades;
+use AcMarche\Pivot\Filtre\HadesFiltres;
 use AcMarche\Pivot\Utils\Cache;
 use AcMarche\Pivot\Utils\Mailer;
 use DOMDocument;
@@ -71,7 +71,7 @@ class HadesRepository
      */
     public function getEvents(array $types = []): array
     {
-        $types = count($types) === 0 ? array_keys(Hades::EVENEMENTS) : $types;
+        $types = count($types) === 0 ? array_keys(HadesFiltres::EVENEMENTS) : $types;
 
         return $this->cache->get(
             'events_hades',
@@ -94,7 +94,7 @@ class HadesRepository
 
     public function getHebergements(array $types = []): array
     {
-        $types = count($types) === 0 ? array_keys(Hades::HEBERGEMENTS) : $types;
+        $types = count($types) === 0 ? array_keys(HadesFiltres::HEBERGEMENTS) : $types;
 
         return $this->cache->get(
             'hebergement_hades',
@@ -106,7 +106,7 @@ class HadesRepository
 
     public function getRestaurations(array $types = []): array
     {
-        $types = count($types) === 0 ? array_keys(Hades::RESTAURATIONS) : $types;
+        $types = count($types) === 0 ? array_keys(HadesFiltres::RESTAURATIONS) : $types;
 
         return $this->cache->get(
             'resto_hades',
@@ -262,7 +262,7 @@ class HadesRepository
         );
     }
 
-    public function getCategoriesHades()
+    public function getFiltresHades()
     {
         /**
          * @var wpdb $wpdb
