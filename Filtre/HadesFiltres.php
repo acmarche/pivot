@@ -137,7 +137,7 @@ class HadesFiltres
         $filtresString = get_term_meta($categoryId, FiltreMetaBox::KEY_NAME_HADES, true);
         if (!$filtresString) {
             return [];
-        }
+        }dump($filtresString);
 
         $all = self::groupedFilters();
         if (isset($all[$filtresString])) {
