@@ -13,8 +13,6 @@ use DOMDocument;
 use DOMNodeList;
 use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
-use VisitMarche\Theme\Inc\RouterHades;
-use VisitMarche\Theme\Lib\LocaleHelper;
 use wpdb;
 
 class HadesRepository
@@ -180,32 +178,21 @@ class HadesRepository
         );
     }
 
-    public function getOffresSameCategories(OffreInterface $offre, int $categoryWpId): ?array
+    /**
+     * @param \AcMarche\Pivot\Entities\OffreInterface $offre
+     * @param int $categoryWpId
+     * @param string $language
+     * @return \AcMarche\Pivot\Entities\OffreInterface[]|null
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function getOffresSameCategories(OffreInterface $offre): ?array
     {
-        $recommandations = [];
-        $language = 'fr';
-        if (class_exists(LocaleHelper::class)) {
-            $language = LocaleHelper::getSelectedLanguage();
-        }
         $categories = [];
         foreach ($offre->categories as $category) {
             $categories[] = $category->id;
         }
-        $offres = $this->getOffres($categories);
-        foreach ($offres as $item) {
-            if ($offre->id == $item->id) {
-                continue;
-            }
-            $url = RouterHades::getUrlOffre($item, $categoryWpId);
-            $recommandations[] = [
-                'title' => $item->getTitre($language),
-                'url' => $url,
-                'image' => $item->firstImage(),
-                'categories' => $item->categories,
-            ];
-        }
 
-        return $recommandations;
+        return $this->getOffres($categories);
     }
 
     public function countOffres(string $category): ?int
