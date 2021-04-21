@@ -29,7 +29,7 @@ class HadesRepository
     public function __construct()
     {
         $this->hadesRemoteRepository = new HadesRemoteRepository();
-        $this->cache = Cache::instance();
+        $this->cache                 = Cache::instance();
     }
 
     /**
@@ -48,9 +48,9 @@ class HadesRepository
         if ($domdoc === null) {
             return [];
         }
-        $data = $domdoc->getElementsByTagName('offres');
+        $data      = $domdoc->getElementsByTagName('offres');
         $offresXml = $data->item(0);
-        $offres = [];
+        $offres    = [];
 
         foreach ($offresXml->childNodes as $offre) {
             if ($offre->nodeType == XML_ELEMENT_NODE) {
@@ -123,7 +123,8 @@ class HadesRepository
     {
         try {
             libxml_use_internal_errors(true);
-            $domdoc = new DOMDocument();
+            $xmlString = preg_replace("#&#", "&amp;", $xmlString);
+            $domdoc    = new DOMDocument();
             $domdoc->loadXML($xmlString);
             $errors = libxml_get_errors();
 
@@ -164,7 +165,7 @@ class HadesRepository
                 if ($domdoc === null) {
                     return null;
                 }
-                $data = $domdoc->getElementsByTagName('offres');
+                $data      = $domdoc->getElementsByTagName('offres');
                 $offresXml = $data->item(0);
 
                 foreach ($offresXml->childNodes as $offre) {
@@ -182,6 +183,7 @@ class HadesRepository
      * @param \AcMarche\Pivot\Entities\OffreInterface $offre
      * @param int $categoryWpId
      * @param string $language
+     *
      * @return \AcMarche\Pivot\Entities\OffreInterface[]|null
      * @throws \Psr\Cache\InvalidArgumentException
      */
@@ -209,7 +211,7 @@ class HadesRepository
                     return null;
                 }
                 $data = $domdoc->getElementsByTagName('tot');
-                if (!$data instanceof DOMNodeList) {
+                if ( ! $data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
@@ -217,7 +219,7 @@ class HadesRepository
                     return $totDom->nodeValue;
                 }
                 $data = $domdoc->getElementsByTagName('nb_offres');
-                if (!$data instanceof DOMNodeList) {
+                if ( ! $data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
