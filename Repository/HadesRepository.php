@@ -123,7 +123,9 @@ class HadesRepository
     {
         try {
             libxml_use_internal_errors(true);
-            $xmlString = preg_replace("#&#", "&amp;", $xmlString);
+            $xmlString = preg_replace("|&#xD;|", " ", $xmlString);
+            $xmlString = preg_replace("#&amp;#", " ", $xmlString);
+            $xmlString = preg_replace("#&#", " ", $xmlString);
             $domdoc    = new DOMDocument();
             $domdoc->loadXML($xmlString);
             $errors = libxml_get_errors();
