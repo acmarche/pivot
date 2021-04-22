@@ -134,13 +134,13 @@ class HadesRepository
             if (count($errors) > 0) {
                 $stingError = '';
                 foreach ($errors as $error) {
-                    if ($error->level != LIBXML_ERR_WARNING) {
-                        $stingError .= $error->message;
+                    if ($error->level > LIBXML_ERR_WARNING) {
+                        $stingError .= $error->message.' code '.$error->code. ' line '.$error->line. ' col '.$error->column;
                     }
                 }
                 global $wp;
                 $url = home_url($wp->request);
-                Mailer::sendError('xml error hades', 'error: '.$stingError.'contenu: '.$xmlString.' url '.$url);
+                Mailer::sendError('xml error hades', $url. ' error: '.$stingError.'contenu: '.$xmlString);
 
                 return null;
             }
