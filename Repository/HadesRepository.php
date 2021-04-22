@@ -139,9 +139,11 @@ class HadesRepository
                         $stingError .= $error->message.' code '.$error->code.' line '.$error->line.' col '.$error->column;
                     }
                 }
-                global $wp;
-                $url = home_url($wp->request);
-                Mailer::sendError('xml error hades', $url.' error: '.$stingError.'contenu: '.$xmlString);
+                if(strlen($stingError) > 0) {
+                    global $wp;
+                    $url = home_url($wp->request);
+                    Mailer::sendError('xml error hades', $url.' error: '.$stingError.'contenu: '.$xmlString);
+                }
 
                 return null;
             }
