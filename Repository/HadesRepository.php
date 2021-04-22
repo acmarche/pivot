@@ -123,10 +123,7 @@ class HadesRepository
     {
         try {
             libxml_use_internal_errors(true);
-            $xmlString = preg_replace("|&#xD;|", " ", $xmlString);
-            $xmlString = preg_replace("#&amp;#", " ", $xmlString);
-            $xmlString = preg_replace("#&#", " ", $xmlString);
-            $domdoc    = new DOMDocument();
+            $domdoc = new DOMDocument();
             $domdoc->loadXML($xmlString);
             $errors = libxml_get_errors();
 
@@ -134,13 +131,17 @@ class HadesRepository
             if (count($errors) > 0) {
                 $stingError = '';
                 foreach ($errors as $error) {
+                    //symbole &
+                    if ($error->code == 68) {
+                        continue;
+                    }
                     if ($error->level > LIBXML_ERR_WARNING) {
-                        $stingError .= $error->message.' code '.$error->code. ' line '.$error->line. ' col '.$error->column;
+                        $stingError .= $error->message.' code '.$error->code.' line '.$error->line.' col '.$error->column;
                     }
                 }
                 global $wp;
                 $url = home_url($wp->request);
-                Mailer::sendError('xml error hades', $url. ' error: '.$stingError.'contenu: '.$xmlString);
+                Mailer::sendError('xml error hades', $url.' error: '.$stingError.'contenu: '.$xmlString);
 
                 return null;
             }
