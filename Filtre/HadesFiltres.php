@@ -12,7 +12,7 @@ class HadesFiltres
     const MARCHE = 134;
     const PAYS = 9;
     const HEBERGEMENTS_KEY = 'hebergements';
-    const RESTAURATIONS_KEY = 'resaurations';
+    const RESTAURATIONS_KEY = 'restaurations';
     const EVENEMENTS_KEY = 'evenements';
     const BOUGER_KEY = 'evenements';
 
