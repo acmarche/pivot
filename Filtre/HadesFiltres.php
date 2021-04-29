@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Filtre;
 
 use AcMarche\Pivot\Repository\HadesRepository;
 use AcMarche\Pivot\Utils\Cache;
+use Symfony\Component\String\Inflector\EnglishInflector;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class HadesFiltres
@@ -127,6 +128,14 @@ class HadesFiltres
             if (isset($allFiltres[$filtre])) {
                 $data[$filtre] = $allFiltres[$filtre];
             }
+        }
+
+        //restaurant,barbecue,traiteur pluriels
+        $inflector = new EnglishInflector();
+
+        foreach ($data as $key => $value) {
+            $result = $inflector->pluralize($value);
+            $data[$key] = count($result) > 0 ? $result[0] : $value;
         }
 
         return $data;
