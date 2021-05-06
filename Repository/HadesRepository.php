@@ -160,7 +160,7 @@ class HadesRepository
     public function getOffre(string $id): ?OffreInterface
     {
         return $this->cache->get(
-            'offre_hades-'.$id.time(),
+            'offre_hades-'.$id,
             function () use ($id) {
                 $xmlString = $this->hadesRemoteRepository->getOffreById($id);
 
