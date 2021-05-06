@@ -309,6 +309,44 @@ class OffreParser
         return $data;
     }
 
+
+    public function parents(DOMElement $offreDom): array
+    {
+        $ids = [];
+
+        $parents = $this->xpath->query("parents", $offreDom);
+        if ($parents === null || $parents->count() === 0) {
+            return [];
+        }
+        $parents = $parents->item(0);//pour par prendre elements parents
+        foreach ($parents->childNodes as $offre) {
+            if ($offre->nodeType == XML_ELEMENT_NODE) {
+                $ids[] = (int)$this->getAttributeNode($offre, 'id');
+            }
+        }
+
+        return $ids;
+    }
+
+    public function enfants(DOMElement $offreDom): array
+    {
+        $ids = [];
+
+        $enfants = $this->xpath->query("enfants", $offreDom);
+        if ($enfants === null || $enfants->count() === 0) {
+            return [];
+        }
+        $enfants = $enfants->item(0);//pour par prendre elements parents
+
+        foreach ($enfants->childNodes as $offre) {
+            if ($offre->nodeType == XML_ELEMENT_NODE) {
+                $ids[] = (int)$this->getAttributeNode($offre, 'id');
+            }
+        }
+
+        return $ids;
+    }
+
     public function horaires(DOMElement $offreDom): array
     {
         $data = [];
@@ -317,7 +355,8 @@ class OffreParser
         if (!$horaires instanceof DOMElement) {
             return [];
         }
-        $year = $horaires->getAttributeNode('an')->value;
+
+        $year = $this->getAttributeNode($horaires, 'an');
 
         foreach ($horaires->childNodes as $horaireDom) {
             if ($horaireDom instanceof DOMElement) {
@@ -412,4 +451,5 @@ class OffreParser
 
         return $libelle;
     }
+
 }

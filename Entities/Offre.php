@@ -71,6 +71,22 @@ class Offre implements OffreInterface
      * @var string|null
      */
     public $image;
+    /**
+     * @var array|int[]
+     */
+    public $enfantIds;
+    /**
+     * @var array|int[]
+     */
+    public $parentIds;
+    /**
+     * @var array|OffreInterface[]
+     */
+    public $enfants;
+    /**
+     * @var array|OffreInterface[]
+     */
+    public $parents;
 
     public function __construct()
     {
@@ -99,6 +115,8 @@ class Offre implements OffreInterface
         $offre->horaires = $parser->horaires($offreDom);
         $offre->datesR = $offre->dates();
         $offre->image = $offre->firstImage();
+        $offre->parentIds = $parser->parents($offreDom);
+        $offre->enfantIds = $parser->enfants($offreDom);
 
         return $offre;
     }

@@ -11,6 +11,10 @@ class Libelle
     const EN = 'en';
     const DE = 'de';
     const DEFAULT = 'default';
+    const COURT = 'lib_court';
+    const ENFANT = 'libelle_e';
+    const PARENT = 'libelle_p';
+
     /**
      * @var array
      */

@@ -29,10 +29,19 @@ namespace AcMarche\Pivot\Entities;
  * @property Selection[] $selections
  *
  * @property Horaire[] $horaires
+ *
+ * @property int[] $parentIds
+ *
+ * @property int[] $enfantIds
+ *
+ * @property OffreInterface[] $parents
+ *
+ * @property OffreInterface[] $enfants
+ *
  */
 interface OffreInterface
 {
-    public function getTitre(?string $language): string;
+    public function getTitre(?string $language = 'fr'): string;
 
     function contactPrincipal(): ?Contact;
 

@@ -40,7 +40,7 @@ class EventUtils
                         return 0;
                     }
 
-                    return ($debut1 < $debut2) ? 1 : -1;
+                    return ($debut1 < $debut2) ? -1 : 1;
                 }
             }
         );

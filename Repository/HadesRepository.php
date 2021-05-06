@@ -184,6 +184,22 @@ class HadesRepository
         );
     }
 
+    public function getOffreWithChildsAndParents(string $id): ?OffreInterface {
+        $offre = $this->getOffre($id);
+        $this->setParentsAndChilds($offre);
+        return $offre;
+    }
+
+    public function setParentsAndChilds(Offre $offre)
+    {
+        foreach ($offre->enfantIds as $enfantId) {
+            $offre->enfants[] =  $this->getOffre($enfantId);;
+        }
+        foreach ($offre->parentIds as $parentId) {
+            $offre->parents[] = $this->getOffre($parentId);
+        }
+    }
+
     /**
      * @param \AcMarche\Pivot\Entities\OffreInterface $offre
      * @param int $categoryWpId
