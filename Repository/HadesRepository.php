@@ -12,6 +12,7 @@ use AcMarche\Pivot\Utils\Mailer;
 use DOMDocument;
 use DOMNodeList;
 use Exception;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 use wpdb;
 
@@ -29,7 +30,7 @@ class HadesRepository
     public function __construct()
     {
         $this->hadesRemoteRepository = new HadesRemoteRepository();
-        $this->cache                 = Cache::instance();
+        $this->cache = Cache::instance();
     }
 
     /**
@@ -48,9 +49,9 @@ class HadesRepository
         if ($domdoc === null) {
             return [];
         }
-        $data      = $domdoc->getElementsByTagName('offres');
+        $data = $domdoc->getElementsByTagName('offres');
         $offresXml = $data->item(0);
-        $offres    = [];
+        $offres = [];
 
         foreach ($offresXml->childNodes as $offre) {
             if ($offre->nodeType == XML_ELEMENT_NODE) {
@@ -139,7 +140,7 @@ class HadesRepository
                         $stingError .= $error->message.' code '.$error->code.' line '.$error->line.' col '.$error->column;
                     }
                 }
-                if(strlen($stingError) > 0) {
+                if (strlen($stingError) > 0) {
                     global $wp;
                     $url = home_url($wp->request);
                     Mailer::sendError('xml error hades', $url.' error: '.$stingError.'contenu: '.$xmlString);
@@ -159,9 +160,10 @@ class HadesRepository
     public function getOffre(string $id): ?OffreInterface
     {
         return $this->cache->get(
-            'offre_hades-'.$id,
+            'offre_hades-'.$id.time(),
             function () use ($id) {
                 $xmlString = $this->hadesRemoteRepository->getOffreById($id);
+
                 if ($xmlString === null) {
                     return null;
                 }
@@ -170,7 +172,7 @@ class HadesRepository
                 if ($domdoc === null) {
                     return null;
                 }
-                $data      = $domdoc->getElementsByTagName('offres');
+                $data = $domdoc->getElementsByTagName('offres');
                 $offresXml = $data->item(0);
 
                 foreach ($offresXml->childNodes as $offre) {
@@ -184,29 +186,35 @@ class HadesRepository
         );
     }
 
-    public function getOffreWithChildsAndParents(string $id): ?OffreInterface {
+    public function getOffreWithChildrenAndParents(string $id): ?OffreInterface
+    {
         $offre = $this->getOffre($id);
-        $this->setParentsAndChilds($offre);
+        $this->setParentsAndChildren($offre);
+
         return $offre;
     }
 
-    public function setParentsAndChilds(Offre $offre)
+    public function setParentsAndChildren(Offre $offre):void
     {
         foreach ($offre->enfantIds as $enfantId) {
-            $offre->enfants[] =  $this->getOffre($enfantId);;
+            if ($enfant = $this->getOffre($enfantId)) {
+                $offre->enfants[] = $enfant;
+            }
         }
         foreach ($offre->parentIds as $parentId) {
-            $offre->parents[] = $this->getOffre($parentId);
+            if ($parent = $this->getOffre($parentId)) {
+                $offre->parents[] = $parent;
+            }
         }
     }
 
     /**
-     * @param \AcMarche\Pivot\Entities\OffreInterface $offre
+     * @param OffreInterface $offre
      * @param int $categoryWpId
      * @param string $language
      *
-     * @return \AcMarche\Pivot\Entities\OffreInterface[]|null
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @return OffreInterface[]|null
+     * @throws InvalidArgumentException
      */
     public function getOffresSameCategories(OffreInterface $offre): ?array
     {
@@ -232,7 +240,7 @@ class HadesRepository
                     return null;
                 }
                 $data = $domdoc->getElementsByTagName('tot');
-                if ( ! $data instanceof DOMNodeList) {
+                if (!$data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
@@ -240,7 +248,7 @@ class HadesRepository
                     return $totDom->nodeValue;
                 }
                 $data = $domdoc->getElementsByTagName('nb_offres');
-                if ( ! $data instanceof DOMNodeList) {
+                if (!$data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
@@ -253,12 +261,16 @@ class HadesRepository
         );
     }
 
-    public function extractCategories(string $language)
+    /**
+     * @param string $language
+     * @return array|string[]
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function extractCategories(string $language):array
     {
         return $this->cache->get(
             'hades_categories_'.$language,
             function () use ($language) {
-
                 $categories = [];
                 foreach ($this->getOffres() as $offre) {
                     foreach ($offre->categories as $category) {

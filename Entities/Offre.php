@@ -94,6 +94,10 @@ class Offre implements OffreInterface
         $this->medias = [];
         $this->contacts = [];
         $this->horaires = [];
+        $this->enfantIds = [];
+        $this->parentIds = [];
+        $this->enfants = [];
+        $this->parents = [];
     }
 
     public static function createFromDom(\DOMElement $offreDom, \DOMDocument $document): ?Offre
