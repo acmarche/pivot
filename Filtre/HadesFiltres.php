@@ -4,7 +4,7 @@ namespace AcMarche\Pivot\Filtre;
 
 use AcMarche\Pivot\Repository\HadesRepository;
 use AcMarche\Pivot\Utils\Cache;
-use Symfony\Component\String\Inflector\EnglishInflector;
+use Symfony\Component\String\Inflector\FrenchInflector;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class HadesFiltres
@@ -131,7 +131,7 @@ class HadesFiltres
         }
 
         //restaurant,barbecue,traiteur pluriels
-        $inflector = new EnglishInflector();
+        $inflector = new FrenchInflector();
 
         foreach ($data as $key => $value) {
             $result = $inflector->pluralize($value);
