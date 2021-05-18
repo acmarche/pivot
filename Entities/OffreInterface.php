@@ -12,6 +12,8 @@ namespace AcMarche\Pivot\Entities;
  *
  * @property string $reference
  *
+ * @property string $description
+ *
  * @property Geocode $geocode
  *
  * @property Localite $localisation
