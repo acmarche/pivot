@@ -6,6 +6,8 @@ use AcMarche\Pivot\Repository\HadesRepository;
 use AcMarche\Pivot\Utils\Cache;
 use Symfony\Component\String\Inflector\FrenchInflector;
 use Symfony\Contracts\Cache\CacheInterface;
+use VisitMarche\Theme\Inc\RouterHades;
+use VisitMarche\Theme\Lib\WpRepository;
 
 class HadesFiltres
 {
@@ -150,6 +152,14 @@ class HadesFiltres
         $groupedFilters = self::groupedFilters();
         $filtres = $groupedFilters[$filtresString] ?? explode(',', $filtresString);
         $filtres = $this->translateFiltres($filtres, $language);
+
+        $wpRepository = new WpRepository();
+        $children = $wpRepository->getChildrenOfCategory($categoryId);
+        foreach ($children as $child) {
+            $filtres[$child->cat_ID] = $child->name;
+        }
+
+        asort($filtres);
 
         return $filtres;
     }
