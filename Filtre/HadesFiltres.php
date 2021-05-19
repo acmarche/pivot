@@ -145,13 +145,13 @@ class HadesFiltres
 
     public function getCategoryFilters(int $categoryId, string $language = 'fr'): array
     {
+        $filtres = [];
         $filtresString = get_term_meta($categoryId, FiltreMetaBox::KEY_NAME_HADES, true);
-        if (!$filtresString) {
-            return [];
+        if ($filtresString) {
+            $groupedFilters = self::groupedFilters();
+            $filtres = $groupedFilters[$filtresString] ?? explode(',', $filtresString);
+            $filtres = $this->translateFiltres($filtres, $language);
         }
-        $groupedFilters = self::groupedFilters();
-        $filtres = $groupedFilters[$filtresString] ?? explode(',', $filtresString);
-        $filtres = $this->translateFiltres($filtres, $language);
 
         $wpRepository = new WpRepository();
         $children = $wpRepository->getChildrenOfCategory($categoryId);
