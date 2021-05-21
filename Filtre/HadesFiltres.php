@@ -136,8 +136,18 @@ class HadesFiltres
         $inflector = new FrenchInflector();
 
         foreach ($data as $key => $value) {
-            $result = $inflector->pluralize($value);
-            $data[$key] = count($result) > 0 ? $result[0] : $value;
+            $textes = explode(" ", $value);
+            $join = [];
+            foreach ($textes as $text) {
+                if (strlen($text) > 1) {
+                    $result = $inflector->pluralize($text);
+                    $join[] = count($result) > 0 ? $result[0] : $text;
+                } else {
+                    $join[] = $text;
+                }
+            }
+            $join = implode(" ", $join);
+            $data[$key] = $join;
         }
 
         return $data;
