@@ -136,6 +136,10 @@ class HadesFiltres
         $inflector = new FrenchInflector();
 
         foreach ($data as $key => $value) {
+            if ($pluriel = $this->particularPluriels($value)) {
+                $data[$key] = $pluriel;
+                continue;
+            }
             $textes = explode(" ", $value);
             $join = [];
             foreach ($textes as $text) {
@@ -151,6 +155,24 @@ class HadesFiltres
         }
 
         return $data;
+    }
+
+    private function particularPluriels(string $mot): ?string
+    {
+        switch ($mot) {
+            case 'Gite à la ferme':
+                return 'Gites à la ferme';
+            case 'Terrain de camp':
+                return 'Terrains de camp';
+            case 'Meublé de tourisme':
+                return 'Meublés de tourisme';
+            case 'Meublé de vacance':
+                return 'Meublés de vacances';
+            case 'Autre hébergement non reconnu':
+                return 'Autres hébergements non reconnus';
+            default:
+                return null;
+        }
     }
 
     public function getCategoryFilters(int $categoryId, string $language = 'fr'): array
