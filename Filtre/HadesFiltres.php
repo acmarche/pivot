@@ -166,7 +166,7 @@ class HadesFiltres
                 return 'Terrains de camp';
             case 'Meublé de tourisme':
                 return 'Meublés de tourisme';
-            case 'Meublé de vacance':
+            case 'Meublés de vacances':
                 return 'Meublés de vacances';
             case 'Autre hébergement non reconnu':
                 return 'Autres hébergements non reconnus';
