@@ -160,6 +160,10 @@ class HadesFiltres
     private function particularPluriels(string $mot): ?string
     {
         switch ($mot) {
+            case 'Bar à vin':
+                return 'Bars à vins';
+            case 'Pique-nique':
+                return 'Pique niques';
             case 'Gîtes à la ferme':
                 return 'Gîtes à la ferme';
             case 'Gites à la ferme':
