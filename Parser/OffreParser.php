@@ -14,6 +14,7 @@ use AcMarche\Pivot\Entities\Libelle;
 use AcMarche\Pivot\Entities\Localite;
 use AcMarche\Pivot\Entities\Media;
 use AcMarche\Pivot\Entities\Selection;
+use AcMarche\Pivot\Utils\SortUtils;
 use DOMAttr;
 use DOMDocument;
 use DOMElement;
@@ -192,6 +193,8 @@ class OffreParser
                 $data[] = $description;
             }
         }
+
+        $data = SortUtils::sortDescriptions($data);
 
         return $data;
     }
