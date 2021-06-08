@@ -9,9 +9,9 @@ class Communication
 
     public string $val;
 
-    public string $typ;
+    public ?string $typ;
 
-    public string $tri;
+    public ?string $tri;
 
     public Libelle $lib;
 

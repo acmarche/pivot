@@ -11,7 +11,7 @@ class Contact
 
     public string $civilite;
 
-    public string $noms;
+    public ?string $noms = null;
 
     public string $prenoms;
 
@@ -21,7 +21,7 @@ class Contact
 
     public string $numero;
 
-    public string $boite;
+    public ?string $boite = null;
 
     public string $postal;
 
