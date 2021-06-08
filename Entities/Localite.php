@@ -6,49 +6,33 @@ namespace AcMarche\Pivot\Entities;
 
 class Localite
 {
-    /**
-     * @var string
-     */
-    public $id;
-    /**
-     * @var string
-     */
-    public $l_nom;
-    /**
-     * @var string
-     */
-    public $postal;
-    /**
-     * @var string
-     */
-    public $com_id;
-    /**
-     * @var string
-     */
-    public $c_nom;
-    /**
-     * @var string
-     */
-    public $reg_id;
-    /**
-     * @var string
-     */
-    public $x;
-    /**
-     * @var string
-     */
-    public $y;
+    public string $id;
 
-    public function localite() {
+    public string $l_nom;
+
+    public string $postal;
+
+    public string $com_id;
+
+    public string $c_nom;
+
+    public string $reg_id;
+
+    public string $x;
+
+    public string $y;
+
+    public function localite(): string
+    {
         return $this->l_nom;
     }
 
-    public function latitude()
+    public function latitude(): string
     {
         return $this->y;
     }
 
-    public function longitude()
+    public function longitude(): string
     {
         return $this->x;
     }

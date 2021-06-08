@@ -9,7 +9,7 @@ use DateTime;
 
 class EventUtils
 {
-    private static $today = null;
+    private static ?\DateTimeInterface $today = null;
 
     public static function isEventObsolete(OffreInterface $event)
     {

@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\Utils;
 
 
 use AcMarche\Pivot\Entities\Description;
+
 class SortUtils
 {
     /**

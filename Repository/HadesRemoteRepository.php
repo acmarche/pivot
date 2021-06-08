@@ -14,10 +14,7 @@ class HadesRemoteRepository
 {
     use ConnectionHadesTrait;
 
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
+    private CacheInterface $cache;
 
     public function __construct()
     {

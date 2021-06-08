@@ -6,7 +6,6 @@ use AcMarche\Pivot\Repository\HadesRepository;
 use AcMarche\Pivot\Utils\Cache;
 use Symfony\Component\String\Inflector\FrenchInflector;
 use Symfony\Contracts\Cache\CacheInterface;
-use VisitMarche\Theme\Inc\RouterHades;
 use VisitMarche\Theme\Lib\WpRepository;
 
 class HadesFiltres
@@ -74,14 +73,10 @@ class HadesFiltres
      * @var array|object|null
      */
     public $filtres;
-    /**
-     * @var HadesRepository
-     */
-    private $hadesRepository;
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
+
+    private HadesRepository $hadesRepository;
+
+    private CacheInterface $cache;
 
     public function __construct()
     {

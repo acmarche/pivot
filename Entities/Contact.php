@@ -5,77 +5,49 @@ namespace AcMarche\Pivot\Entities;
 
 class Contact
 {
-    /**
-     * @var string
-     */
-    public $id;
-    /**
-     * @var Libelle
-     */
-    public $lib;
-    /**
-     * @var string
-     */
-    public $civilite;
-    /**
-     * @var string
-     */
-    public $noms;
-    /**
-     * @var string
-     */
-    public $prenoms;
-    /**
-     * @var string
-     */
-    public $societe;
-    /**
-     * @var string
-     */
-    public $adresse;
-    /**
-     * @var string
-     */
-    public $numero;
-    /**
-     * @var string
-     */
-    public $boite;
-    /**
-     * @var string
-     */
-    public $postal;
-    /**
-     * @var string
-     */
-    public $pays;
-    /**
-     * @var string
-     */
-    public $l_nom;
-    /**
-     * @var string
-     */
-    public $remarque;
+    public string $id;
+
+    public Libelle $lib;
+
+    public string $civilite;
+
+    public string $noms;
+
+    public string $prenoms;
+
+    public string $societe;
+
+    public string $adresse;
+
+    public string $numero;
+
+    public string $boite;
+
+    public string $postal;
+
+    public string $pays;
+
+    public string $l_nom;
+
+    public string $remarque;
     /**
      * @var Communication[]
      */
-    public $communications;
+    public array $communications;
     /**
      * @var array
      */
-    public $lgs;
-    /**
-     * @var string
-     */
-    public $tri;
+    public array $lgs;
+
+    public string $tri;
 
     public function __construct()
     {
         $this->communications = [];
     }
 
-    public function localite() {
+    public function localite(): string
+    {
         return $this->l_nom;
     }
 

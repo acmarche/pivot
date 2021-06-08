@@ -9,22 +9,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 trait ConnectionHadesTrait
 {
-    /**
-     * @var HttpClientInterface
-     */
-    private $httpClient;
-    /**
-     * @var string
-     */
-    private $code;
-    /**
-     * @var string
-     */
-    private $url;
-    /**
-     * @var string
-     */
-    private $clef;
+    private HttpClientInterface $httpClient;
+
+    private string $code;
+
+    private string $url;
+
+    private string $clef;
 
     public function connect()
     {

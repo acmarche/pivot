@@ -18,7 +18,7 @@ class Libelle
     /**
      * @var array
      */
-    public $languages;
+    public array $languages;
 
     public function __construct()
     {
@@ -41,7 +41,7 @@ class Libelle
         return $this->languages[$language] ?? null;
     }
 
-    private function libelle(string $language)
+    private function libelle(string $language): string
     {
         if (isset($languages[$language])) {
             return $this->languages[$language];

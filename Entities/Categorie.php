@@ -6,22 +6,14 @@ namespace AcMarche\Pivot\Entities;
 
 class Categorie
 {
-    /**
-     * @var string
-     */
-    public $id;
-    /**
-     * @var Libelle
-     */
-    public $lib;
-    /**
-     * @var string
-     */
-    public $value;
-    /**
-     * @var string
-     */
-    public $tri;
+
+    public string $id;
+
+    public Libelle $lib;
+
+    public string $value;
+
+    public string $tri;
 
     public function getLib(?string $language = 'fr'): string
     {

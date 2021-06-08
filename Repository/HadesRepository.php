@@ -18,14 +18,9 @@ use wpdb;
 
 class HadesRepository
 {
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
-    /**
-     * @var HadesRemoteRepository
-     */
-    private $hadesRemoteRepository;
+    private CacheInterface $cache;
+
+    private HadesRemoteRepository $hadesRemoteRepository;
 
     public function __construct()
     {

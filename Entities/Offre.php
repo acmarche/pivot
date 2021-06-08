@@ -7,86 +7,67 @@ use AcMarche\Pivot\Parser\OffreParser;
 
 class Offre implements OffreInterface
 {
-    /**
-     * @var string
-     */
-    public $id;
-    /**
-     * @var Libelle
-     */
-    public $libelle;
-    /**
-     * @var string
-     */
-    public $reference;
-    /**
-     * @var Geocode
-     */
-    public $geocode;
-    /**
-     * @var Localite
-     */
-    public $localisation;
-    /**
-     * @var string
-     */
-    public $url;
+    public ?string $id;
+
+    public Libelle $libelle;
+
+    public ?string $reference;
+
+    public Geocode $geocode;
+
+    public Localite $localisation;
+
+    public string $url;
     /**
      * @var Contact[]
      */
-    public $contacts;
+    public array $contacts;
     /**
      * @var Description[]
      */
-    public $descriptions;
+    public array $descriptions;
     /**
      * @var Media[]
      */
-    public $medias;
+    public array $medias;
     /**
      * @var Categorie[]
      */
-    public $categories;
+    public array $categories;
     /**
      * @var Selection[]
      */
-    public $selections;
+    public array $selections;
     /**
      * @var Horaire[]
      */
-    public $horaires;
-    /**
-     * @var string|null
-     */
-    public $modif_date;
+    public array $horaires;
+
+    public ?string $modif_date;
     /**
      * @var Horline[]
      */
-    public $datesR;
-    /**
-     * @var string|null
-     */
-    public $publiable;
-    /**
-     * @var string|null
-     */
-    public $image;
+    public array $datesR;
+
+    public ?string $publiable;
+
+    public ?string $image;
     /**
      * @var array|int[]
      */
-    public $enfantIds;
+    public array $enfantIds;
     /**
      * @var array|int[]
      */
-    public $parentIds;
+    public array $parentIds;
     /**
      * @var array|OffreInterface[]
      */
-    public $enfants;
+    public array $enfants;
     /**
      * @var array|OffreInterface[]
      */
-    public $parents;
+    public array $parents;
 
     public function __construct()
     {

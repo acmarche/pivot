@@ -25,22 +25,13 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class OffreParser
 {
-    /**
-     * @var DOMElement
-     */
-    public $offre;
-    /**
-     * @var PropertyAccessor
-     */
-    public $propertyAccessor;
-    /**
-     * @var DOMDocument
-     */
-    public $document;
-    /**
-     * @var DOMXPath
-     */
-    private $xpath;
+    public DOMElement $offre;
+
+    public PropertyAccessor $propertyAccessor;
+
+    public DOMDocument $document;
+
+    private DOMXPath $xpath;
 
     public function __construct(DOMDocument $document, DOMElement $offre)
     {
@@ -80,10 +71,6 @@ class OffreParser
         return $libelle;
     }
 
-    /**
-     * @param DOMElement $offreDom
-     * @return Geocode
-     */
     public function geocodes(DOMElement $offreDom): Geocode
     {
         $coordinates = new Geocode();
@@ -129,7 +116,6 @@ class OffreParser
     }
 
     /**
-     * @param DOMElement $offreDom
      * @return Contact[]
      */
     public function contacts(DOMElement $offreDom): array
@@ -161,7 +147,6 @@ class OffreParser
     }
 
     /**
-     * @param DOMElement $offreDom
      * @return Description[]
      */
     public function descriptions(DOMElement $offreDom): array
@@ -200,7 +185,6 @@ class OffreParser
     }
 
     /**
-     * @param DOMElement $offreDom
      * @return Media[]
      */
     public function medias(DOMElement $offreDom): array
@@ -263,7 +247,6 @@ class OffreParser
     }
 
     /**
-     * @param DOMElement $offreDom
      * @return Categorie[]
      */
     public function categories(DOMElement $offreDom): array
@@ -284,7 +267,6 @@ class OffreParser
     }
 
     /**
-     * @param DOMElement $contactDom
      * @return Communication[]
      */
     private function extractCommunications(DOMElement $contactDom): array

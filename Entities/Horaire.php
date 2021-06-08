@@ -6,22 +6,15 @@ namespace AcMarche\Pivot\Entities;
 
 class Horaire
 {
-    /**
-     * @var string
-     */
-    public $year;
-    /**
-     * @var Libelle
-     */
-    public $lib;
-    /**
-     * @var Libelle
-     */
-    public $texte;
+    public string $year;
+
+    public Libelle $lib;
+
+    public Libelle $texte;
     /**
      * @var Horline[]
      */
-    public $horlines = [];
+    public array $horlines = [];
 
     public function getLib(?string $language = 'fr'): string
     {
