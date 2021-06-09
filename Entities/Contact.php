@@ -11,17 +11,17 @@ class Contact
 
     public string $civilite;
 
-    public ?string $noms = null;
+    public ?string $noms ;
 
     public string $prenoms;
 
     public string $societe;
 
-    public ?string $adresse = null;
+    public ?string $adresse ;
 
-    public string $numero;
+    public ?string $numero;
 
-    public ?string $boite = null;
+    public ?string $boite ;
 
     public string $postal;
 
@@ -34,9 +34,7 @@ class Contact
      * @var Communication[]
      */
     public array $communications;
-    /**
-     * @var array
-     */
+
     public array $lgs;
 
     public string $tri;

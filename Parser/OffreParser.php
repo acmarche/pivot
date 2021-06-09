@@ -14,6 +14,7 @@ use AcMarche\Pivot\Entities\Libelle;
 use AcMarche\Pivot\Entities\Localite;
 use AcMarche\Pivot\Entities\Media;
 use AcMarche\Pivot\Entities\Selection;
+use AcMarche\Pivot\Utils\PropertyUtils;
 use AcMarche\Pivot\Utils\SortUtils;
 use DOMAttr;
 use DOMDocument;
@@ -26,11 +27,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 class OffreParser
 {
     public DOMElement $offre;
-
     public PropertyAccessor $propertyAccessor;
-
     public DOMDocument $document;
-
     private DOMXPath $xpath;
 
     public function __construct(DOMDocument $document, DOMElement $offre)
@@ -128,6 +126,10 @@ class OffreParser
         foreach ($contacts->item(0)->childNodes as $contactDom) {
             if ($contactDom->nodeType == XML_ELEMENT_NODE) {
                 $contact = new Contact();
+
+                $propertyUtils = new PropertyUtils();
+                $propertyUtils->t(Contact::class, $contact);
+
                 $contact->tri = $contactDom->getAttributeNode('tri')->nodeValue;
                 $contact->lib = $this->getLibelle($contactDom);
                 $contact->communications = $this->extractCommunications($contactDom);
@@ -142,7 +144,6 @@ class OffreParser
             }
 
         }
-
         return $data;
     }
 
