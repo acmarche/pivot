@@ -17,7 +17,7 @@ class Contact
 
     public string $societe;
 
-    public string $adresse;
+    public ?string $adresse = null;
 
     public string $numero;
 
