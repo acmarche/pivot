@@ -10,7 +10,7 @@ class Media
 
     public string $url;
 
-    public string $titre;
+    public string $titre = '';
 
     public string $ext;
 
