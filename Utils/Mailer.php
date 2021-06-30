@@ -9,6 +9,6 @@ class Mailer
     {
         Env::loadEnv();
         $to = $_ENV['WEBMASTER_EMAIL'];
-        wp_mail($to, $subject, $message);
+        wp_mail($to, $subject, $message);//Todo replace sf mailer
     }
 }

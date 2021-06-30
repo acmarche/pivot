@@ -6,9 +6,9 @@ namespace AcMarche\Pivot\Entities;
 
 class OffreParent
 {
-    public string $id;
+    public ?string $id = null;
 
-    public string $typ;
+    public ?string $typ = null;
 
-    public Libelle $lib;
+    public ?Libelle $lib = null;
 }

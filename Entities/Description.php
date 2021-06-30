@@ -6,17 +6,17 @@ namespace AcMarche\Pivot\Entities;
 
 class Description
 {
-    public ?string $dat;
+    public ?string $dat = null;
 
-    public ?string $lot;
+    public ?string $lot = null;
 
-    public ?string $typ;
+    public ?string $typ = null;
 
-    public Libelle $texte;
+    public ?Libelle $texte = null;
 
-    public Libelle $lib;
+    public ?Libelle $lib = null;
 
-    public ?string $tri;
+    public ?string $tri = null;
 
     public function getLib(?string $language = 'fr'): string
     {

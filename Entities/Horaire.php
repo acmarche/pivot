@@ -6,11 +6,11 @@ namespace AcMarche\Pivot\Entities;
 
 class Horaire
 {
-    public string $year;
+    public ?string $year = null;
 
-    public Libelle $lib;
+    public ?Libelle $lib = null;
 
-    public Libelle $texte;
+    public ?Libelle $texte = null;
     /**
      * @var Horline[]
      */

@@ -6,14 +6,13 @@ namespace AcMarche\Pivot\Entities;
 
 class Communication
 {
+    public ?string $val = null;
 
-    public string $val;
+    public ?string $typ = null;
 
-    public ?string $typ;
+    public ?string $tri = null;
 
-    public ?string $tri;
-
-    public Libelle $lib;
+    public ?Libelle $lib = null;
 
     public function getLib(?string $language = 'fr'): string
     {

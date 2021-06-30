@@ -5,39 +5,39 @@ namespace AcMarche\Pivot\Entities;
 
 class Contact
 {
-    public string $id;
+    public ?string $id = null;
 
-    public Libelle $lib;
+    public ?Libelle $lib = null;
 
-    public string $civilite;
+    public ?string $civilite = null;
 
-    public ?string $noms ;
+    public ?string $noms = null;
 
-    public string $prenoms;
+    public ?string $prenoms = null;
 
-    public string $societe;
+    public ?string $societe = null;
 
-    public ?string $adresse ;
+    public ?string $adresse = null;
 
-    public ?string $numero;
+    public ?string $numero = null;
 
-    public ?string $boite ;
+    public ?string $boite = null;
 
-    public string $postal;
+    public ?string $postal = null;
 
-    public string $pays;
+    public ?string $pays = null;
 
-    public string $l_nom;
+    public ?string $l_nom = null;
 
-    public string $remarque;
+    public ?string $remarque = null;
     /**
      * @var Communication[]
      */
     public array $communications;
 
-    public array $lgs;
+    public array $lgs = [];
 
-    public string $tri;
+    public ?string $tri = null;
 
     public function __construct()
     {

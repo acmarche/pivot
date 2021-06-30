@@ -6,14 +6,13 @@ namespace AcMarche\Pivot\Entities;
 
 class Categorie
 {
+    public ?string $id = null;
 
-    public string $id;
+    public ?Libelle $lib = null;
 
-    public Libelle $lib;
+    public ?string $value = null;
 
-    public string $value;
-
-    public string $tri;
+    public ?string $tri = null;
 
     public function getLib(?string $language = 'fr'): string
     {

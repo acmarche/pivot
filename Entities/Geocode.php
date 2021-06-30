@@ -6,18 +6,18 @@ namespace AcMarche\Pivot\Entities;
 
 class Geocode
 {
-    public string $x;
+    public ?string $x = null;
 
-    public string $y;
+    public ?string $y = null;
 
-    public string $trace;
+    public ?string $trace = null;
 
-    public function latitude(): string
+    public function latitude(): ?string
     {
         return $this->y;
     }
 
-    public function longitude(): string
+    public function longitude(): ?string
     {
         return $this->x;
     }

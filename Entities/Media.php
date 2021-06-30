@@ -6,13 +6,13 @@ namespace AcMarche\Pivot\Entities;
 
 class Media
 {
-    public string $copyright;
+    public ?string $copyright = null;
 
-    public string $url;
+    public ?string $url = null;
 
-    public string $titre = '';
+    public ?string $titre = '';
 
-    public string $ext;
+    public ?string $ext = null;
 
-    public Libelle $libelle;
+    public ?Libelle $libelle = null;
 }
