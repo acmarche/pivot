@@ -184,12 +184,14 @@ class HadesRepository
     public function getOffreWithChildrenAndParents(string $id): ?OffreInterface
     {
         $offre = $this->getOffre($id);
-        $this->setParentsAndChildren($offre);
+        if ($offre) {
+            $this->setParentsAndChildren($offre);
+        }
 
         return $offre;
     }
 
-    public function setParentsAndChildren(Offre $offre):void
+    public function setParentsAndChildren(Offre $offre): void
     {
         foreach ($offre->enfantIds as $enfantId) {
             if ($enfant = $this->getOffre($enfantId)) {
@@ -261,7 +263,7 @@ class HadesRepository
      * @return array|string[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function extractCategories(string $language):array
+    public function extractCategories(string $language): array
     {
         return $this->cache->get(
             'hades_categories_'.$language,
