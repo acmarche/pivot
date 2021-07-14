@@ -10,11 +10,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 trait ConnectionHadesTrait
 {
     private HttpClientInterface $httpClient;
-
     private string $code;
-
     private string $url;
-
     private string $clef;
 
     public function connect()
