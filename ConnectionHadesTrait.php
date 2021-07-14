@@ -3,7 +3,7 @@
 
 namespace AcMarche\Pivot;
 
-use AcMarche\Common\Env;
+use AcMarche\Pivot\Utils\Env;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
