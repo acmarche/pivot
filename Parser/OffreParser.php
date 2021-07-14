@@ -128,7 +128,7 @@ class OffreParser
                 $contact = new Contact();
 
                 $propertyUtils = new PropertyUtils();
-                $propertyUtils->t(Contact::class, $contact);
+                $propertyUtils->getProperties(Contact::class, $contact);
 
                 $contact->tri = $contactDom->getAttributeNode('tri')->nodeValue;
                 $contact->lib = $this->getLibelle($contactDom);
