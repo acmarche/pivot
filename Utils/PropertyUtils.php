@@ -41,11 +41,11 @@ class PropertyUtils
         );
     }
 
-    public function t(string $class, object $object)
+    public function getProperties(string $class, object $object)
     {
         foreach ($this->propertyInfo->getProperties($class) as $property) {
             $value = $this->getValue($class, $property);
-            if($property === 'numero') {
+            if ($property === 'numero') {
 
             }
             $this->propertyAccessor->setValue($object, $property, $value);
@@ -55,7 +55,7 @@ class PropertyUtils
     private function getValue(string $class, string $property)
     {
         $types = $this->propertyInfo->getTypes($class, $property);
-        if($property === 'lib'){
+        if ($property === 'lib') {
             return new Libelle();
         }
 
