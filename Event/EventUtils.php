@@ -4,14 +4,15 @@
 namespace AcMarche\Pivot\Event;
 
 
+use DateTimeInterface;
 use AcMarche\Pivot\Entities\OffreInterface;
 use DateTime;
 
 class EventUtils
 {
-    private static ?\DateTimeInterface $today = null;
+    private static ?DateTimeInterface $today = null;
 
-    public static function isEventObsolete(OffreInterface $event)
+    public static function isEventObsolete(OffreInterface $event): bool
     {
         self::$today = new DateTime();
         $horlines    = [];
@@ -20,11 +21,7 @@ class EventUtils
                 $horlines[] = $horline;
             }
         }
-        if (count($horlines) == 0) {
-            return true;
-        }
-
-        return false;
+        return count($horlines) == 0;
     }
 
     public static function sortDates(OffreInterface $event): void
@@ -36,7 +33,7 @@ class EventUtils
                 {
                     $debut1 = $a->year.'-'.$a->month.'-'.$a->day;
                     $debut2 = $b->year.'-'.$b->month.'-'.$b->day;
-                    if ($debut1 == $debut2) {
+                    if ($debut1 === $debut2) {
                         return 0;
                     }
 
@@ -47,8 +44,6 @@ class EventUtils
     }
 
     /**
-     * @param array $events
-     *
      * @return OffreInterface[]
      */
     public static function sortEvents(array $events): array
@@ -62,7 +57,7 @@ class EventUtils
 
                     $debut1 = $horlineA->year.'-'.$horlineA->month.'-'.$horlineA->day;
                     $debut2 = $horlineB->year.'-'.$horlineB->month.'-'.$horlineB->day;
-                    if ($debut1 == $debut2) {
+                    if ($debut1 === $debut2) {
                         return 0;
                     }
 
@@ -77,10 +72,6 @@ class EventUtils
     private static function isObsolete(string $year, string $month, string $day): bool
     {
         $dateEnd = $year.'-'.$month.'-'.$day;
-        if ($dateEnd < self::$today->format('Y-m-d')) {
-            return true;
-        }
-
-        return false;
+        return $dateEnd < self::$today->format('Y-m-d');
     }
 }

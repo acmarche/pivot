@@ -26,20 +26,16 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class OffreParser
 {
-    public DOMElement $offre;
     public PropertyAccessor $propertyAccessor;
-    public DOMDocument $document;
     private DOMXPath $xpath;
 
-    public function __construct(DOMDocument $document, DOMElement $offre)
+    public function __construct(public DOMDocument $document, public DOMElement $offre)
     {
-        $this->offre = $offre;
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
-        $this->document = $document;
         $this->xpath = new DOMXPath($document);
     }
 
-    public function offreId(): ?string
+    public function offreId(): string
     {
         return $this->getAttribute($this->offre, 'id');
     }
@@ -134,10 +130,8 @@ class OffreParser
                 $contact->lib = $this->getLibelle($contactDom);
                 $contact->communications = $this->extractCommunications($contactDom);
                 foreach ($contactDom->childNodes as $attribute) {
-                    if ($attribute->nodeType == XML_ELEMENT_NODE) {
-                        if ($attribute->nodeName != 'lib' && $attribute->nodeName != 'communications') {
-                            $this->propertyAccessor->setValue($contact, $attribute->nodeName, $attribute->nodeValue);
-                        }
+                    if ($attribute->nodeType == XML_ELEMENT_NODE && ($attribute->nodeName != 'lib' && $attribute->nodeName != 'communications')) {
+                        $this->propertyAccessor->setValue($contact, $attribute->nodeName, $attribute->nodeValue);
                     }
                 }
                 $data[] = $contact;
@@ -180,9 +174,7 @@ class OffreParser
             }
         }
 
-        $data = SortUtils::sortDescriptions($data);
-
-        return $data;
+        return SortUtils::sortDescriptions($data);
     }
 
     /**
@@ -379,7 +371,6 @@ class OffreParser
     }
 
     /**
-     * @param DOMElement $horaireDom
      * @return Horline[]
      */
     private function extractHoraires(DOMElement $horaireDom): array
@@ -394,7 +385,7 @@ class OffreParser
                     $this->propertyAccessor->setValue($horline, $node->nodeName, $node->nodeValue);
                 }
             }
-            list($horline->day, $horline->month, $horline->year) = explode("/", $horline->date_deb);
+            [$horline->day, $horline->month, $horline->year] = explode("/", $horline->date_deb);
             $data[] = $horline;
         }
 
@@ -403,7 +394,7 @@ class OffreParser
 
     private function getAttribute(?DOMElement $element, string $name): string
     {
-        if ($element) {
+        if ($element !== null) {
             return $element->getAttribute($name);
         }
 
@@ -412,7 +403,7 @@ class OffreParser
 
     private function getAttributeNode(?DOMElement $element, string $name): ?string
     {
-        if ($element) {
+        if ($element !== null) {
             $node = $element->getAttributeNode($name);
             if ($node instanceof DOMAttr) {
                 return $node->nodeValue;

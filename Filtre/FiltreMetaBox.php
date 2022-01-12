@@ -5,25 +5,25 @@ namespace AcMarche\Pivot\Filtre;
 
 class FiltreMetaBox
 {
-    const KEY_NAME_HADES = 'hades_refrubrique';
+    public const KEY_NAME_HADES = 'hades_refrubrique';
 
     public function __construct()
     {
         add_action(
             'category_edit_form_fields',
-            [$this, 'hades_metabox_edit'],
+            fn($tag) => $this::hades_metabox_edit($tag),
             10,
             1
         );
         add_action(
             'edited_category',
-            [$this, 'save_hades_metadata'],
+            fn($term_id) => $this::save_hades_metadata($term_id),
             10,
             1
         );
     }
 
-    public static function hades_metabox_edit($tag)
+    public static function hades_metabox_edit($tag): void
     {
         $single = true;
         $term_id = $tag->term_id;
@@ -45,7 +45,7 @@ class FiltreMetaBox
         <?php
     }
 
-    public static function save_hades_metadata($term_id)
+    public static function save_hades_metadata($term_id): void
     {
         $meta_key = self::KEY_NAME_HADES;
 
@@ -60,7 +60,7 @@ class FiltreMetaBox
                 }
                 $filtres[$key] = $filtre;
             }
-            update_term_meta($term_id, $meta_key, join(',', $filtres));
+            update_term_meta($term_id, $meta_key, implode(',', $filtres));
         } else {
             delete_term_meta($term_id, $meta_key);
         }

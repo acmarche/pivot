@@ -19,7 +19,7 @@ class SortUtils
             $descriptions,
             function ($descriptionA, $descriptionB) {
                 {
-                    if ($descriptionA->tri == $descriptionB->tri) {
+                    if ($descriptionA->tri === $descriptionB->tri) {
                         return 0;
                     }
 

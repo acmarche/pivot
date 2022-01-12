@@ -17,10 +17,10 @@ class Pivot
      * offres liées
      */
 
-    const QUERY_DETAIL_LVL_DEFAULT = 0;
-    const QUERY_DETAIL_LVL_RESUME = 1;
-    const QUERY_DETAIL_LVL_COMPLET = 2;
-    const QUERY_DETAIL_LVL_LIES = 3;
+    public const QUERY_DETAIL_LVL_DEFAULT = 0;
+    public const QUERY_DETAIL_LVL_RESUME = 1;
+    public const QUERY_DETAIL_LVL_COMPLET = 2;
+    public const QUERY_DETAIL_LVL_LIES = 3;
 
     /**
      * Le paramètre matriciel content permet de modifier la richesse du contenu produit.
@@ -39,25 +39,25 @@ class Pivot
      * services et le média par défaut associé à l’offre.
      */
 
-    const OFFER_DETAIL_LVL_CGT = 0;
-    const OFFER_DETAIL_LVL_RESUME = 1;
-    const OFFER_DETAIL_LVL_DEFAULT = 2;
-    const OFFER_DETAIL_LVL_LIES = 3;
-    const OFFER_DETAIL_LVL_OPEND_DATA = 4;
+    public const OFFER_DETAIL_LVL_CGT = 0;
+    public const OFFER_DETAIL_LVL_RESUME = 1;
+    public const OFFER_DETAIL_LVL_DEFAULT = 2;
+    public const OFFER_DETAIL_LVL_LIES = 3;
+    public const OFFER_DETAIL_LVL_OPEND_DATA = 4;
 
-    const FORMAT_JSON = 'application/json';
-    const FORMAT_XML = 'application/xml';
-    const FORMAT_KML = 'application/vnd.google-earth.kml+xml';
-    const FORMAT_ATOM = 'application/atom+xml';
+    public const FORMAT_JSON = 'application/json';
+    public const FORMAT_XML = 'application/xml';
+    public const FORMAT_KML = 'application/vnd.google-earth.kml+xml';
+    public const FORMAT_ATOM = 'application/atom+xml';
 
-    const ACTIVE_ARCHIVE = 5;//= archivée
-    const ACTIVE_NOT_PUBLIABLE = 10; //= non publiable
-    const ACTIVE_EDITON = 20; //en édition
-    const ACTIVE_PUBLIABLE = 30;// = publiable
+    public const ACTIVE_ARCHIVE = 5;//= archivée
+    public const ACTIVE_NOT_PUBLIABLE = 10; //= non publiable
+    public const ACTIVE_EDITON = 20; //en édition
+    public const ACTIVE_PUBLIABLE = 30;// = publiable
 
-    const VISIBILITY_LOCAL = 10;// local (territoire d’une maison de tourisme)
-    const VISIBILITY_BUREAU = 15;//  convention bureau (territoire d’un convention bureau) – réservé au MICE
-    const VISIBILITY_PROVINCIAL = 20;//  provincial
-    const VISIBILITY_REGIONAL = 30;//  régional
-    const VISIBILITY_INTERNATIONAL = 40;//  international
+    public const VISIBILITY_LOCAL = 10;// local (territoire d’une maison de tourisme)
+    public const VISIBILITY_BUREAU = 15;//  convention bureau (territoire d’un convention bureau) – réservé au MICE
+    public const VISIBILITY_PROVINCIAL = 20;//  provincial
+    public const VISIBILITY_REGIONAL = 30;//  régional
+    public const VISIBILITY_INTERNATIONAL = 40;//  international
 }

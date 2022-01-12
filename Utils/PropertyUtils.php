@@ -41,7 +41,7 @@ class PropertyUtils
         );
     }
 
-    public function getProperties(string $class, object $object)
+    public function getProperties(string $class, object $object): void
     {
         foreach ($this->propertyInfo->getProperties($class) as $property) {
             $value = $this->getValue($class, $property);

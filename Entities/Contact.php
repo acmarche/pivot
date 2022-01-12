@@ -44,7 +44,7 @@ class Contact
         $this->communications = [];
     }
 
-    public function localite(): string
+    public function localite(): ?string
     {
         return $this->l_nom;
     }

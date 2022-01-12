@@ -3,6 +3,8 @@
 
 namespace AcMarche\Pivot\Entities;
 
+use DOMElement;
+use DOMDocument;
 /**
  * @property string $id
  *
@@ -55,7 +57,7 @@ interface OffreInterface
 
     function sitePrincipal();
 
-    static function createFromDom(\DOMElement $offre, \DOMDocument $document): ?Offre;
+    static function createFromDom(DOMElement $offre, DOMDocument $document): ?Offre;
 
     /**
      * Utilise dans @return Horline|null
