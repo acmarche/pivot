@@ -154,28 +154,7 @@ class HadesFiltres
 
     private function particularPluriels(string $mot): ?string
     {
-        switch ($mot) {
-            case 'Salons de dégustation':
-                return $mot;
-            case 'Restauration rapide':
-                return $mot;
-            case 'Bars à vins':
-                return $mot;
-            case 'Gîte à la ferme':
-                return 'Gîtes à la ferme';
-            case 'Terrain de camp':
-                return 'Terrains de camp';
-            case 'Meublé de tourisme':
-                return 'Meublés de tourisme';
-            case 'Meublés de vacances':
-                return 'Meublés de vacances';
-            case 'Autre hébergement non reconnu':
-                return 'Autres hébergements non reconnus';
-            default:
-                return null;
-        }
-
-    /*    return match ($mot) {
+        return match ($mot) {
             'Salons de dégustation' => $mot,
             'Restauration rapide' => $mot,
             'Bars à vins' => $mot,
@@ -185,7 +164,7 @@ class HadesFiltres
             'Meublés de vacances' => 'Meublés de vacances',
             'Autre hébergement non reconnu' => 'Autres hébergements non reconnus',
             default => null,
-        };*/
+        };
     }
 
     public function getCategoryFilters(int $categoryId, string $language = 'fr'): array
