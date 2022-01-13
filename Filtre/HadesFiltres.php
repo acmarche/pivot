@@ -4,9 +4,9 @@ namespace AcMarche\Pivot\Filtre;
 
 use AcMarche\Pivot\Repository\HadesRepository;
 use AcMarche\Pivot\Utils\Cache;
+use AcMarche\Theme\Lib\WpRepository;
 use Symfony\Component\String\Inflector\FrenchInflector;
 use Symfony\Contracts\Cache\CacheInterface;
-use VisitMarche\Theme\Lib\WpRepository;
 
 class HadesFiltres
 {
@@ -81,8 +81,8 @@ class HadesFiltres
     public function __construct()
     {
         $this->hadesRepository = new HadesRepository();
-        $this->filtres = $this->hadesRepository->getFiltresHades();
-        $this->cache = Cache::instance();
+        $this->filtres         = $this->hadesRepository->getFiltresHades();
+        $this->cache           = Cache::instance();
     }
 
     public function setCounts(): void
@@ -93,7 +93,7 @@ class HadesFiltres
                 foreach ($this->filtres as $category) {
                     $category->count = 0;
                     if ($category->category_id) {
-                        $count = $this->hadesRepository->countOffres($category->category_id);
+                        $count           = $this->hadesRepository->countOffres($category->category_id);
                         $category->count = $count;
                     }
                 }
@@ -120,7 +120,7 @@ class HadesFiltres
     public function translateFiltres(array $filtres, string $language = 'fr'): array
     {
         $allFiltres = $this->hadesRepository->extractCategories($language);
-        $data = [];
+        $data       = [];
         foreach ($filtres as $filtre) {
             if (isset($allFiltres[$filtre])) {
                 $data[$filtre] = $allFiltres[$filtre];
@@ -136,7 +136,7 @@ class HadesFiltres
                 continue;
             }
             $textes = explode(" ", $value);
-            $join = [];
+            $join   = [];
             foreach ($textes as $text) {
                 if (strlen($text) > 1) {
                     $result = $inflector->pluralize($text);
@@ -145,7 +145,7 @@ class HadesFiltres
                     $join[] = $text;
                 }
             }
-            $join = implode(" ", $join);
+            $join       = implode(" ", $join);
             $data[$key] = $join;
         }
 
@@ -154,7 +154,28 @@ class HadesFiltres
 
     private function particularPluriels(string $mot): ?string
     {
-        return match ($mot) {
+        switch ($mot) {
+            case 'Salons de dégustation':
+                return $mot;
+            case 'Restauration rapide':
+                return $mot;
+            case 'Bars à vins':
+                return $mot;
+            case 'Gîte à la ferme':
+                return 'Gîtes à la ferme';
+            case 'Terrain de camp':
+                return 'Terrains de camp';
+            case 'Meublé de tourisme':
+                return 'Meublés de tourisme';
+            case 'Meublés de vacances':
+                return 'Meublés de vacances';
+            case 'Autre hébergement non reconnu':
+                return 'Autres hébergements non reconnus';
+            default:
+                return null;
+        }
+
+    /*    return match ($mot) {
             'Salons de dégustation' => $mot,
             'Restauration rapide' => $mot,
             'Bars à vins' => $mot,
@@ -164,21 +185,21 @@ class HadesFiltres
             'Meublés de vacances' => 'Meublés de vacances',
             'Autre hébergement non reconnu' => 'Autres hébergements non reconnus',
             default => null,
-        };
+        };*/
     }
 
     public function getCategoryFilters(int $categoryId, string $language = 'fr'): array
     {
-        $filtres = [];
+        $filtres       = [];
         $filtresString = get_term_meta($categoryId, FiltreMetaBox::KEY_NAME_HADES, true);
         if ($filtresString) {
             $groupedFilters = self::groupedFilters();
-            $filtres = $groupedFilters[$filtresString] ?? explode(',', $filtresString);
-            $filtres = $this->translateFiltres($filtres, $language);
+            $filtres        = $groupedFilters[$filtresString] ?? explode(',', $filtresString);
+            $filtres        = $this->translateFiltres($filtres, $language);
         }
 
         $wpRepository = new WpRepository();
-        $children = $wpRepository->getChildrenOfCategory($categoryId);
+        $children     = $wpRepository->getChildrenOfCategory($categoryId);
         foreach ($children as $child) {
             $filtres[$child->cat_ID] = $child->name;
         }
@@ -191,9 +212,9 @@ class HadesFiltres
     public static function groupedFilters(): array
     {
         return [
-            self::HEBERGEMENTS_KEY => self::HEBERGEMENTS,
+            self::HEBERGEMENTS_KEY  => self::HEBERGEMENTS,
             self::RESTAURATIONS_KEY => self::RESTAURATIONS,
-            self::EVENEMENTS_KEY => self::EVENEMENTS,
+            self::EVENEMENTS_KEY    => self::EVENEMENTS,
         ];
     }
 
