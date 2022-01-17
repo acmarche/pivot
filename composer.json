@@ -1,5 +1,11 @@
 {
   "name": "acmarche/pivot",
+  "authors": [
+    {
+      "name": "jfsenechal",
+      "email": "jfsenechal@gmail.com"
+    }
+  ],
   "require": {
     "php": ">=8.0",
     "ext-json": "*",
