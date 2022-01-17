@@ -10,15 +10,15 @@ use VisitMarche\Theme\Lib\WpRepository;
 
 class HadesFiltres
 {
-    const COMMUNE = 263;
-    const MARCHE = 134;
-    const PAYS = 9;
-    const HEBERGEMENTS_KEY = 'hebergements';
-    const RESTAURATIONS_KEY = 'restaurations';
-    const EVENEMENTS_KEY = 'evenements';
-    const BOUGER_KEY = 'evenements';
+    public const COMMUNE = 263;
+    public const MARCHE = 134;
+    public const PAYS = 9;
+    public const HEBERGEMENTS_KEY = 'hebergements';
+    public const RESTAURATIONS_KEY = 'restaurations';
+    public const EVENEMENTS_KEY = 'evenements';
+    public const BOUGER_KEY = 'evenements';
 
-    const EVENEMENTS = [
+    public const EVENEMENTS = [
         'evt_sport',
         'cine_club',
         'conference',
@@ -35,7 +35,7 @@ class HadesFiltres
         'evt_vis_guid',
     ];
 
-    const RESTAURATIONS = [
+    public const RESTAURATIONS = [
         'barbecue',
         'bar_vin',
         'brass_bistr',
@@ -48,7 +48,7 @@ class HadesFiltres
         'traiteur',
     ];
 
-    const HEBERGEMENTS = [
+    public const HEBERGEMENTS = [
         //Hébergements de vacances
         'aire_motorho',
         'camping',
@@ -106,7 +106,7 @@ class HadesFiltres
         $notEmpty = [];
         foreach ($this->filtres as $category) {
             if ($category->category_id) {
-                if (isset($category->count) && $category->count > 0) {
+                if (property_exists($category, 'count') && null !== $category->count && $category->count > 0) {
                     $notEmpty[] = $category;
                 }
             } else {
@@ -135,45 +135,21 @@ class HadesFiltres
                 $data[$key] = $pluriel;
                 continue;
             }
-            $textes = explode(" ", $value);
+            $textes = explode(' ', $value);
             $join = [];
             foreach ($textes as $text) {
-                if (strlen($text) > 1) {
+                if (\strlen($text) > 1) {
                     $result = $inflector->pluralize($text);
-                    $join[] = count($result) > 0 ? $result[0] : $text;
+                    $join[] = [] !== $result ? $result[0] : $text;
                 } else {
                     $join[] = $text;
                 }
             }
-            $join = implode(" ", $join);
+            $join = implode(' ', $join);
             $data[$key] = $join;
         }
 
         return $data;
-    }
-
-    private function particularPluriels(string $mot): ?string
-    {
-        switch ($mot) {
-            case 'Salons de dégustation':
-                return $mot;
-            case 'Restauration rapide':
-                return $mot;
-            case 'Bars à vins':
-                return $mot;
-            case 'Gîte à la ferme':
-                return 'Gîtes à la ferme';
-            case 'Terrain de camp':
-                return 'Terrains de camp';
-            case 'Meublé de tourisme':
-                return 'Meublés de tourisme';
-            case 'Meublés de vacances':
-                return 'Meublés de vacances';
-            case 'Autre hébergement non reconnu':
-                return 'Autres hébergements non reconnus';
-            default:
-                return null;
-        }
     }
 
     public function getCategoryFilters(int $categoryId, string $language = 'fr'): array
@@ -206,5 +182,18 @@ class HadesFiltres
         ];
     }
 
-
+    private function particularPluriels(string $mot): ?string
+    {
+        return match ($mot) {
+            'Salons de dégustation' => $mot,
+            'Restauration rapide' => $mot,
+            'Bars à vins' => $mot,
+            'Gîte à la ferme' => 'Gîtes à la ferme',
+            'Terrain de camp' => 'Terrains de camp',
+            'Meublé de tourisme' => 'Meublés de tourisme',
+            'Meublés de vacances' => 'Meublés de vacances',
+            'Autre hébergement non reconnu' => 'Autres hébergements non reconnus',
+            default => null,
+        };
+    }
 }

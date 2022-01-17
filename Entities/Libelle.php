@@ -1,23 +1,20 @@
 <?php
 
-
 namespace AcMarche\Pivot\Entities;
 
+use Stringable;
 
-class Libelle
+class Libelle implements Stringable
 {
-    const FR = 'fr';
-    const NL = 'nl';
-    const EN = 'en';
-    const DE = 'de';
-    const DEFAULT = 'default';
-    const COURT = 'lib_court';
-    const ENFANT = 'libelle_e';
-    const PARENT = 'libelle_p';
+    public const FR = 'fr';
+    public const NL = 'nl';
+    public const EN = 'en';
+    public const DE = 'de';
+    public const DEFAULT = 'default';
+    public const COURT = 'lib_court';
+    public const ENFANT = 'libelle_e';
+    public const PARENT = 'libelle_p';
 
-    /**
-     * @var array
-     */
     public array $languages;
 
     public function __construct()
@@ -25,14 +22,14 @@ class Libelle
         $this->languages = [];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->libelle(self::FR);
     }
 
-    public function add(?string $language, ?string $value)
+    public function add(?string $language, ?string $value): void
     {
-        $language = $language == '' ? self::DEFAULT : $language;
+        $language = '' === $language ? self::DEFAULT : $language;
         $this->languages[$language] = $value;
     }
 
@@ -43,6 +40,7 @@ class Libelle
 
     private function libelle(string $language): string
     {
+        $languages = [];
         if (isset($languages[$language])) {
             return $this->languages[$language];
         }

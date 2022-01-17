@@ -1,75 +1,59 @@
 <?php
 
-
 namespace AcMarche\Pivot\Entities;
 
+use DOMDocument;
+use DOMElement;
+
 /**
- * @property string $id
- *
- * @property string $titre
- *
- * @property Libelle $libelle
- *
- * @property string $reference
- *
- * @property string $description
- *
- * @property Geocode $geocode
- *
- * @property Localite $localisation
- *
- * @property string $url
- *
- * @property Contact[] $contacts
- *
- * @property Description[] $descriptions
- *
- * @property Media[] $medias
- *
- * @property Categorie[] $categories
- *
- * @property Selection[] $selections
- *
- * @property Horaire[] $horaires
- *
- * @property int[] $parentIds
- *
- * @property int[] $enfantIds
- *
+ * @property string           $id
+ * @property string           $titre
+ * @property Libelle          $libelle
+ * @property string           $reference
+ * @property string           $description
+ * @property Geocode          $geocode
+ * @property Localite         $localisation
+ * @property string           $url
+ * @property Contact[]        $contacts
+ * @property Description[]    $descriptions
+ * @property Media[]          $medias
+ * @property Categorie[]      $categories
+ * @property Selection[]      $selections
+ * @property Horaire[]        $horaires
+ * @property int[]            $parentIds
+ * @property int[]            $enfantIds
  * @property OffreInterface[] $parents
- *
  * @property OffreInterface[] $enfants
- *
  */
 interface OffreInterface
 {
     public function getTitre(?string $language = 'fr'): string;
 
-    function contactPrincipal(): ?Contact;
+    public function contactPrincipal(): ?Contact;
 
-    function communcationPrincipal(): array;
+    public function communcationPrincipal(): array;
 
-    function emailPrincipal(): ?string;
+    public function emailPrincipal(): ?string;
 
-    function telPrincipal();
+    public function telPrincipal();
 
-    function sitePrincipal();
+    public function sitePrincipal();
 
-    static function createFromDom(\DOMElement $offre, \DOMDocument $document): ?Offre;
+    public static function createFromDom(DOMElement $offre, DOMDocument $document): ?Offre;
 
     /**
-     * Utilise dans @return Horline|null
+     * Utilise dans @return Horline|null.
+     *
      * @see EventUtils
      */
-    function firstHorline(): ?Horline;
+    public function firstHorline(): ?Horline;
 
     /**
-     * Raccourcis util a react
+     * Raccourcis util a react.
      *
      * @return Horline[]
      */
-    function dates(): array;
+    public function dates(): array;
 
-    function firstImage(): ?string;
-
+    public function firstImage(): ?string;
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AcMarche\Pivot;
 
 use AcMarche\Pivot\Utils\Env;
@@ -18,10 +17,10 @@ trait ConnectionHadesTrait
     {
         Env::loadEnv();
         $this->url = $_ENV['HADES_URL'];
-        $user      = $_ENV['HADES_USER'];
-        $password  = $_ENV['HADES_PASSWORD'];
+        $user = $_ENV['HADES_USER'];
+        $password = $_ENV['HADES_PASSWORD'];
 
-        $options   = [
+        $options = [
             'auth_basic' => [$user, $password],
         ];
 

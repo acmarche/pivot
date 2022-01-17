@@ -1,17 +1,18 @@
 <?php
 
-
 namespace AcMarche\Pivot\Entities;
 
 use AcMarche\Pivot\Parser\OffreParser;
+use DOMDocument;
+use DOMElement;
 
 class Offre implements OffreInterface
 {
-    public ?string $id;
+    public ?string $id = null;
 
     public Libelle $libelle;
 
-    public ?string $reference;
+    public ?string $reference = null;
 
     public Geocode $geocode;
 
@@ -43,15 +44,15 @@ class Offre implements OffreInterface
      */
     public array $horaires;
 
-    public ?string $modif_date;
+    public ?string $modif_date = null;
     /**
      * @var Horline[]
      */
     public array $datesR;
 
-    public ?string $publiable;
+    public ?string $publiable = null;
 
-    public ?string $image;
+    public ?string $image = null;
     /**
      * @var array|int[]
      */
@@ -81,7 +82,7 @@ class Offre implements OffreInterface
         $this->parents = [];
     }
 
-    public static function createFromDom(\DOMElement $offreDom, \DOMDocument $document): ?Offre
+    public static function createFromDom(DOMElement $offreDom, DOMDocument $document): ?self
     {
         $parser = new OffreParser($document, $offreDom);
         $offre = new self();
@@ -125,25 +126,25 @@ class Offre implements OffreInterface
             $this->contacts,
             function ($contact) {
                 $default = $contact->lib->get('default');
-                if ($default === 'contact') {
+                if ('contact' === $default) {
                     return $contact;
                 }
 
                 return null;
             }
         );
-        if ($contacts) {
+        if ([] !== $contacts) {
             return $contacts[array_key_first($contacts)];
         }
 
-        return count($this->contacts) > 0 ? $this->contacts[0] : null;
+        return [] !== $this->contacts ? $this->contacts[0] : null;
     }
 
     public function communcationPrincipal(): array
     {
         $coms = [];
         $contact = $this->contactPrincipal();
-        if ($contact) {
+        if (null !== $contact) {
             foreach ($contact->communications as $communication) {
                 $coms[$communication->typ][$communication->lib->get('default')] = $communication->val;
             }
@@ -154,21 +155,21 @@ class Offre implements OffreInterface
 
     public function emailPrincipal(): ?string
     {
-        $emails = isset($this->communcationPrincipal()['mail']) ? $this->communcationPrincipal()['mail'] : [];
+        $emails = $this->communcationPrincipal()['mail'] ?? [];
 
         return $emails['mail'] ?? null;
     }
 
     public function telPrincipal(): ?string
     {
-        $telephones = isset($this->communcationPrincipal()['tel']) ? $this->communcationPrincipal()['tel'] : [];
+        $telephones = $this->communcationPrincipal()['tel'] ?? [];
 
         return $telephones['tel'] ?? null;
     }
 
     public function sitePrincipal(): ?string
     {
-        $sites = isset($this->communcationPrincipal()['url']) ? $this->communcationPrincipal()['url'] : [];
+        $sites = $this->communcationPrincipal()['url'] ?? [];
 
         $site = $sites['url'] ?? null;
         if ($site) {
@@ -184,22 +185,21 @@ class Offre implements OffreInterface
     }
 
     /**
-     * Utilise dans @return Horline|null
+     * Utilise dans @return Horline|null.
+     *
      * @see EventUtils
      */
     public function firstHorline(): ?Horline
     {
-        if (count($this->horaires) > 0) {
-            if (count($this->horaires[0]->horlines)) {
-                return $this->horaires[0]->horlines[0];
-            }
+        if ([] !== $this->horaires && \count($this->horaires[0]->horlines)) {
+            return $this->horaires[0]->horlines[0];
         }
 
         return null;
     }
 
     /**
-     * Raccourcis util a react
+     * Raccourcis util a react.
      *
      * @return Horline[]
      */
@@ -215,9 +215,8 @@ class Offre implements OffreInterface
         return $dates;
     }
 
-    function firstImage(): ?string
+    public function firstImage(): ?string
     {
-        return count($this->medias) > 0 ? $this->medias[0]->url : null;
+        return [] !== $this->medias ? $this->medias[0]->url : null;
     }
-
 }

@@ -1,14 +1,19 @@
 <?php
 
-
 namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\ConnectionHadesTrait;
 use AcMarche\Pivot\Filtre\HadesFiltres;
 use AcMarche\Pivot\Utils\Cache;
 use AcMarche\Pivot\Utils\Mailer;
+use Exception;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class HadesRemoteRepository
 {
@@ -23,15 +28,12 @@ class HadesRemoteRepository
     }
 
     /**
-     * http://w3.ftlb.be/wiki/index.php/Flux
-     * @param array $args
-     * @param string $tbl
+     * http://w3.ftlb.be/wiki/index.php/Flux.
      *
-     * @return string
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function loadOffres(array $args, string $tbl = 'xmlcomplet'): string
     {
@@ -52,51 +54,46 @@ class HadesRemoteRepository
             return $request->getContent();
         } catch (ClientException $exception) {
             Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
-            throw  new \Exception($exception->getMessage());
+            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
     /**
-     * http://w3.ftlb.be/webservice/h2o.php?com_id=263&tbl=xmlcomplet&cat_id=evt_sport,cine_club,conference,exposition,festival,fete_festiv,anim_jeux,livre_conte,manifestatio,foire_brocan,evt_promenad,spectacle,stage_ateli,evt_vis_guid
-     * @param array $types
-     * @return string
-     * @throws \Psr\Cache\InvalidArgumentException
+     * http://w3.ftlb.be/webservice/h2o.php?com_id=263&tbl=xmlcomplet&cat_id=evt_sport,cine_club,conference,exposition,festival,fete_festiv,anim_jeux,livre_conte,manifestatio,foire_brocan,evt_promenad,spectacle,stage_ateli,evt_vis_guid.
+     *
+     * @throws InvalidArgumentException
      */
-    public function getOffres(array $types = []): ?string
+    public function getOffres(array $types = []): string
     {
         $args = [];
-        if (count($types) >= 0) {
-            $args = ['cat_id' => join(',', $types)];
+        if (\count($types) >= 0) {
+            $args = [
+                'cat_id' => implode(',', $types),
+            ];
         }
 
-        $key = join('-', $args);
-
-        $t = $this->cache->get(
-            'hebergements_hades_remote'.$key,
-            function () use ($args) {
-                return $this->loadOffres($args);
-            }
-        );
+        $key = implode('-', $args);
 
         //  echo($t);
-        return $t;
+        return $this->cache->get(
+            'hebergements_hades_remote'.$key,
+            fn () => $this->loadOffres($args)
+        );
     }
 
     /**
-     * http://w3.ftlb.be/webservice/h2o.php?tbl=xmlcomplet&off_id=84670
-     * @return string
-     * @throws \Psr\Cache\InvalidArgumentException
-     * @throws \Exception
+     * http://w3.ftlb.be/webservice/h2o.php?tbl=xmlcomplet&off_id=84670.
+     *
+     * @throws InvalidArgumentException
+     * @throws Exception
      */
     public function getOffreById(string $id): string
     {
-        $t = $this->cache->get(
+        return $this->cache->get(
             'offre_hades_remote_'.$id,
-            function () use ($id) {
-                return $this->loadOffres(['off_id' => $id]);
-            }
+            fn () => $this->loadOffres([
+                'off_id' => $id,
+            ])
         );
-
-        return $t;
     }
 }

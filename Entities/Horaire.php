@@ -1,8 +1,6 @@
 <?php
 
-
 namespace AcMarche\Pivot\Entities;
-
 
 class Horaire
 {
@@ -22,7 +20,7 @@ class Horaire
             return $this->lib->get($language);
         }
         //try in french
-        if ($titre = $this->getLib()) {
+        if (($titre = $this->getLib()) !== '' && ($titre = $this->getLib()) !== '0') {
             return $titre;
         }
 

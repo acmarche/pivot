@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Categorie;
@@ -26,20 +25,18 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class OffreParser
 {
-    public DOMElement $offre;
     public PropertyAccessor $propertyAccessor;
-    public DOMDocument $document;
     private DOMXPath $xpath;
 
-    public function __construct(DOMDocument $document, DOMElement $offre)
-    {
-        $this->offre = $offre;
+    public function __construct(
+        public DOMDocument $document,
+        public DOMElement $offre
+    ) {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
-        $this->document = $document;
         $this->xpath = new DOMXPath($document);
     }
 
-    public function offreId(): ?string
+    public function offreId(): string
     {
         return $this->getAttribute($this->offre, 'id');
     }
@@ -59,7 +56,7 @@ class OffreParser
 
     public function getTitre(DOMElement $offreDom): Libelle
     {
-        $titles = $this->xpath->query("titre", $offreDom);
+        $titles = $this->xpath->query('titre', $offreDom);
         $libelle = new Libelle();
         foreach ($titles as $title) {
             $language = $title->getAttributeNode('lg');
@@ -72,15 +69,15 @@ class OffreParser
     public function geocodes(DOMElement $offreDom): Geocode
     {
         $coordinates = new Geocode();
-        $geocodes = $this->xpath->query("geocodes", $offreDom);
+        $geocodes = $this->xpath->query('geocodes', $offreDom);
         $geocode = $geocodes->item(0);
-        if (!$geocode instanceof DOMElement) {
+        if (! $geocode instanceof DOMElement) {
             return $coordinates;
         }
         foreach ($geocode->childNodes as $child) {
-            if ($child->nodeType == XML_ELEMENT_NODE) {
+            if (XML_ELEMENT_NODE === $child->nodeType) {
                 foreach ($child->childNodes as $cat) {
-                    if ($cat->nodeType == XML_ELEMENT_NODE) {
+                    if (XML_ELEMENT_NODE === $cat->nodeType) {
                         $this->propertyAccessor->setValue($coordinates, $cat->nodeName, $cat->nodeValue);
                     }
                 }
@@ -95,15 +92,15 @@ class OffreParser
         $data = new Localite();
         $localisations = $offreDom->getElementsByTagName('localisation');
         $localisation = $localisations->item(0);
-        if (!$localisation instanceof DOMElement) {
+        if (! $localisation instanceof DOMElement) {
             return $data;
         }
 
         foreach ($localisation->childNodes as $child) {
-            if ($child->nodeType == XML_ELEMENT_NODE) {
+            if (XML_ELEMENT_NODE === $child->nodeType) {
                 $data->id = $child->getAttributeNode('id')->nodeValue;
                 foreach ($child->childNodes as $cat) {
-                    if ($cat->nodeType == XML_ELEMENT_NODE) {
+                    if (XML_ELEMENT_NODE === $cat->nodeType) {
                         $this->propertyAccessor->setValue($data, $cat->nodeName, $cat->nodeValue);
                     }
                 }
@@ -119,12 +116,12 @@ class OffreParser
     public function contacts(DOMElement $offreDom): array
     {
         $data = [];
-        $contacts = $this->xpath->query("contacts", $offreDom);
-        if ($contacts->length == 0) {
+        $contacts = $this->xpath->query('contacts', $offreDom);
+        if (0 === $contacts->length) {
             return [];
         }
         foreach ($contacts->item(0)->childNodes as $contactDom) {
-            if ($contactDom->nodeType == XML_ELEMENT_NODE) {
+            if (XML_ELEMENT_NODE === $contactDom->nodeType) {
                 $contact = new Contact();
 
                 $propertyUtils = new PropertyUtils();
@@ -134,16 +131,14 @@ class OffreParser
                 $contact->lib = $this->getLibelle($contactDom);
                 $contact->communications = $this->extractCommunications($contactDom);
                 foreach ($contactDom->childNodes as $attribute) {
-                    if ($attribute->nodeType == XML_ELEMENT_NODE) {
-                        if ($attribute->nodeName != 'lib' && $attribute->nodeName != 'communications') {
-                            $this->propertyAccessor->setValue($contact, $attribute->nodeName, $attribute->nodeValue);
-                        }
+                    if (XML_ELEMENT_NODE === $attribute->nodeType && ('lib' !== $attribute->nodeName && 'communications' !== $attribute->nodeName)) {
+                        $this->propertyAccessor->setValue($contact, $attribute->nodeName, $attribute->nodeValue);
                     }
                 }
                 $data[] = $contact;
             }
-
         }
+
         return $data;
     }
 
@@ -153,8 +148,8 @@ class OffreParser
     public function descriptions(DOMElement $offreDom): array
     {
         $data = [];
-        $descriptions = $this->xpath->query("descriptions", $offreDom);
-        if (!$descriptions->item(0) instanceof DOMElement) {
+        $descriptions = $this->xpath->query('descriptions', $offreDom);
+        if (! $descriptions->item(0) instanceof DOMElement) {
             return [];
         }
         foreach ($descriptions->item(0)->childNodes as $descriptionDom) {
@@ -166,7 +161,7 @@ class OffreParser
                 $description->typ = $this->getAttributeNode($descriptionDom, 'typ');
                 $description->lib = $this->getLibelle($descriptionDom);
                 $libelle = new Libelle();
-                $textes = $this->xpath->query("texte", $descriptionDom);
+                $textes = $this->xpath->query('texte', $descriptionDom);
                 foreach ($textes as $texte) {
                     $language = $texte->getAttributeNode('lg');
                     if ($language) {
@@ -180,9 +175,7 @@ class OffreParser
             }
         }
 
-        $data = SortUtils::sortDescriptions($data);
-
-        return $data;
+        return SortUtils::sortDescriptions($data);
     }
 
     /**
@@ -191,8 +184,8 @@ class OffreParser
     public function medias(DOMElement $offreDom): array
     {
         $data = [];
-        $medias = $this->xpath->query("medias", $offreDom);
-        if (!$medias->item(0) instanceof DOMElement) {
+        $medias = $this->xpath->query('medias', $offreDom);
+        if (! $medias->item(0) instanceof DOMElement) {
             return [];
         }
         foreach ($medias->item(0)->childNodes as $categoryDom) {
@@ -201,7 +194,7 @@ class OffreParser
                 $media->ext = $categoryDom->getAttributeNode('ext')->nodeValue;
                 $media->libelle = $this->getTitre($categoryDom);
                 foreach ($categoryDom->childNodes as $cat) {
-                    if ($cat->nodeType == XML_ELEMENT_NODE) {
+                    if (XML_ELEMENT_NODE === $cat->nodeType) {
                         $this->propertyAccessor->setValue($media, $cat->nodeName, $cat->nodeValue);
                     }
                 }
@@ -210,7 +203,7 @@ class OffreParser
         }
         array_map(
             function ($media) {
-                $media->url = preg_replace("#http:#", "https:", $media->url);
+                $media->url = preg_replace('#http:#', 'https:', $media->url);
             },
             $data
         );
@@ -225,18 +218,18 @@ class OffreParser
     {
         $data = [];
         $object = $this->offre->getElementsByTagName('selections');
-        $selections = $object->item(0);//pour par prendre elements parents
-        if (!$selections instanceof DOMElement) {
+        $selections = $object->item(0); //pour par prendre elements parents
+        if (! $selections instanceof DOMElement) {
             return [];
         }
 
         foreach ($selections->childNodes as $child) {
-            if ($child->nodeType == XML_ELEMENT_NODE) {
+            if (XML_ELEMENT_NODE === $child->nodeType) {
                 $selection = new Selection();
                 $selection->id = $child->getAttributeNode('id')->nodeValue;
                 $selection->cl = $child->getAttributeNode('cl')->nodeValue;
                 foreach ($child->childNodes as $cat) {
-                    if ($cat->nodeType == XML_ELEMENT_NODE) {
+                    if (XML_ELEMENT_NODE === $cat->nodeType) {
                         $this->propertyAccessor->setValue($selection, $cat->nodeName, $cat->nodeValue);
                     }
                 }
@@ -253,7 +246,7 @@ class OffreParser
     public function categories(DOMElement $offreDom): array
     {
         $data = [];
-        $categories = $this->xpath->query("categories", $offreDom);
+        $categories = $this->xpath->query('categories', $offreDom);
         foreach ($categories->item(0)->childNodes as $categoryDom) {
             if ($categoryDom instanceof DOMElement) {
                 $category = new Categorie();
@@ -267,47 +260,18 @@ class OffreParser
         return $data;
     }
 
-    /**
-     * @return Communication[]
-     */
-    private function extractCommunications(DOMElement $contactDom): array
-    {
-        $data = [];
-        $communications = $this->xpath->query("communications", $contactDom);
-        foreach ($communications as $communicationsDom) {
-            foreach ($communicationsDom->childNodes as $communicationDom) {
-                if ($communicationDom instanceof DOMElement) {
-                    $communication = new Communication();
-                    $communication->typ = $this->getAttributeNode($communicationDom, 'typ');
-                    $communication->tri = $this->getAttributeNode($communicationDom, 'tri');
-                    $communication->lib = $this->getLibelle($communicationDom);
-                    $vals = $this->xpath->query("val", $communicationDom);
-                    if ($vals->count() > 0) {
-                        $communication->val = $vals->item(0)->nodeValue;
-                        if ($communication->val != '') {
-                            $data[] = $communication;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $data;
-    }
-
-
     public function parents(DOMElement $offreDom): array
     {
         $ids = [];
 
-        $parents = $this->xpath->query("parents", $offreDom);
-        if ($parents === null || $parents->count() === 0) {
+        $parents = $this->xpath->query('parents', $offreDom);
+        if (null === $parents || 0 === $parents->count()) {
             return [];
         }
-        $parents = $parents->item(0);//pour par prendre elements parents
+        $parents = $parents->item(0); //pour par prendre elements parents
         foreach ($parents->childNodes as $offre) {
-            if ($offre->nodeType == XML_ELEMENT_NODE) {
-                $ids[] = (int)$this->getAttributeNode($offre, 'id');
+            if (XML_ELEMENT_NODE === $offre->nodeType) {
+                $ids[] = (int) $this->getAttributeNode($offre, 'id');
             }
         }
 
@@ -318,15 +282,15 @@ class OffreParser
     {
         $ids = [];
 
-        $enfants = $this->xpath->query("enfants", $offreDom);
-        if ($enfants === null || $enfants->count() === 0) {
+        $enfants = $this->xpath->query('enfants', $offreDom);
+        if (null === $enfants || 0 === $enfants->count()) {
             return [];
         }
-        $enfants = $enfants->item(0);//pour par prendre elements parents
+        $enfants = $enfants->item(0); //pour par prendre elements parents
 
         foreach ($enfants->childNodes as $offre) {
-            if ($offre->nodeType == XML_ELEMENT_NODE) {
-                $ids[] = (int)$this->getAttributeNode($offre, 'id');
+            if (XML_ELEMENT_NODE === $offre->nodeType) {
+                $ids[] = (int) $this->getAttributeNode($offre, 'id');
             }
         }
 
@@ -336,9 +300,9 @@ class OffreParser
     public function horaires(DOMElement $offreDom): array
     {
         $data = [];
-        $horaires = $this->xpath->query("horaires", $offreDom);
-        $horaires = $horaires->item(0);//pour par prendre elements parents
-        if (!$horaires instanceof DOMElement) {
+        $horaires = $this->xpath->query('horaires', $offreDom);
+        $horaires = $horaires->item(0); //pour par prendre elements parents
+        if (! $horaires instanceof DOMElement) {
             return [];
         }
 
@@ -348,7 +312,7 @@ class OffreParser
             if ($horaireDom instanceof DOMElement) {
                 $horaire = new Horaire();
                 $horaire->year = $year;
-                $labels = $this->xpath->query("lib", $horaireDom);
+                $labels = $this->xpath->query('lib', $horaireDom);
                 $libelle = new Libelle();
                 foreach ($labels as $label) {
                     $language = $label->getAttributeNode('lg');
@@ -359,7 +323,7 @@ class OffreParser
                     }
                 }
                 $horaire->lib = $libelle;
-                $textes = $this->xpath->query("texte", $horaireDom);
+                $textes = $this->xpath->query('texte', $horaireDom);
                 $libelle = new Libelle();
                 foreach ($textes as $texte) {
                     $language = $texte->getAttributeNode('lg');
@@ -379,22 +343,49 @@ class OffreParser
     }
 
     /**
-     * @param DOMElement $horaireDom
+     * @return Communication[]
+     */
+    private function extractCommunications(DOMElement $contactDom): array
+    {
+        $data = [];
+        $communications = $this->xpath->query('communications', $contactDom);
+        foreach ($communications as $communicationsDom) {
+            foreach ($communicationsDom->childNodes as $communicationDom) {
+                if ($communicationDom instanceof DOMElement) {
+                    $communication = new Communication();
+                    $communication->typ = $this->getAttributeNode($communicationDom, 'typ');
+                    $communication->tri = $this->getAttributeNode($communicationDom, 'tri');
+                    $communication->lib = $this->getLibelle($communicationDom);
+                    $vals = $this->xpath->query('val', $communicationDom);
+                    if ($vals->count() > 0) {
+                        $communication->val = $vals->item(0)->nodeValue;
+                        if ('' !== $communication->val) {
+                            $data[] = $communication;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * @return Horline[]
      */
     private function extractHoraires(DOMElement $horaireDom): array
     {
         $data = [];
-        $horlines = $this->xpath->query("horline", $horaireDom);
+        $horlines = $this->xpath->query('horline', $horaireDom);
         foreach ($horlines as $horlineDom) {
             $horline = new Horline();
             $horline->id = $this->getAttribute($horlineDom, 'id');
             foreach ($horlineDom->childNodes as $node) {
-                if ($node->nodeType == XML_ELEMENT_NODE) {
+                if (XML_ELEMENT_NODE === $node->nodeType) {
                     $this->propertyAccessor->setValue($horline, $node->nodeName, $node->nodeValue);
                 }
             }
-            list($horline->day, $horline->month, $horline->year) = explode("/", $horline->date_deb);
+            [$horline->day, $horline->month, $horline->year] = explode('/', $horline->date_deb);
             $data[] = $horline;
         }
 
@@ -403,7 +394,7 @@ class OffreParser
 
     private function getAttribute(?DOMElement $element, string $name): string
     {
-        if ($element) {
+        if (null !== $element) {
             return $element->getAttribute($name);
         }
 
@@ -412,7 +403,7 @@ class OffreParser
 
     private function getAttributeNode(?DOMElement $element, string $name): ?string
     {
-        if ($element) {
+        if (null !== $element) {
             $node = $element->getAttributeNode($name);
             if ($node instanceof DOMAttr) {
                 return $node->nodeValue;
@@ -425,7 +416,7 @@ class OffreParser
     private function getLibelle($dom): Libelle
     {
         $libelle = new Libelle();
-        $libs = $this->xpath->query("lib", $dom);
+        $libs = $this->xpath->query('lib', $dom);
         foreach ($libs as $lib) {
             $language = $lib->getAttributeNode('lg');
             if ($language) {
@@ -437,5 +428,4 @@ class OffreParser
 
         return $libelle;
     }
-
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AcMarche\Pivot\Utils;
 
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
@@ -11,7 +10,7 @@ class Cache
 {
     public static function instance(): CacheInterface
     {
-        if (extension_loaded('apc') && ini_get('apc.enabled')) {
+        if (\extension_loaded('apc') && ini_get('apc.enabled')) {
             return new ApcuAdapter(
             // a string prefixed to the keys of the items stored in this cache
                 $namespace = 'pivot',
@@ -25,8 +24,9 @@ class Cache
                 // this $version string
                 $version = null
             );
-        } else {
-            return new FilesystemAdapter(
+        }
+
+        return new FilesystemAdapter(
             // a string used as the subdirectory of the root cache directory, where cache
             // items will be stored
                 $namespace = 'pivot',
@@ -39,7 +39,6 @@ class Cache
                 // the main cache directory (the application needs read-write permissions on it)
                 // if none is specified, a directory is created inside the system temporary directory
                 $directory = null
-            );
-        }
+        );
     }
 }

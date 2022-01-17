@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AcMarche\Pivot\Utils;
 
 use AcMarche\Pivot\Entities\Libelle;
@@ -41,12 +40,11 @@ class PropertyUtils
         );
     }
 
-    public function getProperties(string $class, object $object)
+    public function getProperties(string $class, object $object): void
     {
         foreach ($this->propertyInfo->getProperties($class) as $property) {
             $value = $this->getValue($class, $property);
-            if ($property === 'numero') {
-
+            if ('numero' === $property) {
             }
             $this->propertyAccessor->setValue($object, $property, $value);
         }
@@ -55,7 +53,7 @@ class PropertyUtils
     private function getValue(string $class, string $property)
     {
         $types = $this->propertyInfo->getTypes($class, $property);
-        if ($property === 'lib') {
+        if ('lib' === $property) {
             return new Libelle();
         }
 
@@ -63,13 +61,13 @@ class PropertyUtils
         if ($type->isNullable()) {
             return null;
         }
-        if ($type->getBuiltinType() === 'string') {
+        if ('string' === $type->getBuiltinType()) {
             return '';
         }
-        if ($type->getBuiltinType() === 'array') {
+        if ('array' === $type->getBuiltinType()) {
             return [];
         }
-        if ($type->getBuiltinType() === 'int') {
+        if ('int' === $type->getBuiltinType()) {
             return 0;
         }
 

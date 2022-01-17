@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Entities\Offre;
@@ -10,6 +9,7 @@ use AcMarche\Pivot\Filtre\HadesFiltres;
 use AcMarche\Pivot\Utils\Cache;
 use AcMarche\Pivot\Utils\Mailer;
 use DOMDocument;
+use DOMElement;
 use DOMNodeList;
 use Exception;
 use Psr\Cache\InvalidArgumentException;
@@ -29,19 +29,18 @@ class HadesRepository
     }
 
     /**
-     * @param array $types
-     *
      * @return OffreInterface[]
-     * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function getOffres(array $types = []): array
     {
         $xmlString = $this->hadesRemoteRepository->getOffres($types);
-        if ($xmlString == null) {
+        if (null === $xmlString) {
             return [];
         }
         $domdoc = $this->loadXml($xmlString);
-        if ($domdoc === null) {
+        if (! $domdoc instanceof \DOMDocument) {
             return [];
         }
         $data = $domdoc->getElementsByTagName('offres');
@@ -49,7 +48,7 @@ class HadesRepository
         $offres = [];
 
         foreach ($offresXml->childNodes as $offre) {
-            if ($offre->nodeType == XML_ELEMENT_NODE) {
+            if (XML_ELEMENT_NODE === $offre->nodeType) {
                 $offres[] = Offre::createFromDom($offre, $domdoc);
             }
         }
@@ -58,14 +57,13 @@ class HadesRepository
     }
 
     /**
-     * @param array $types
-     *
      * @return OffreInterface[]
-     * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function getEvents(array $types = []): array
     {
-        $types = count($types) === 0 ? HadesFiltres::EVENEMENTS : $types;
+        $types = [] === $types ? HadesFiltres::EVENEMENTS : $types;
 
         return $this->cache->get(
             'events_hades',
@@ -79,42 +77,32 @@ class HadesRepository
                     }
                     $events[] = $offre;
                 }
-                $events = EventUtils::sortEvents($events);
 
-                return $events;
+                return EventUtils::sortEvents($events);
             }
         );
     }
 
     public function getHebergements(array $types = []): array
     {
-        $types = count($types) === 0 ? HadesFiltres::HEBERGEMENTS : $types;
+        $types = [] === $types ? HadesFiltres::HEBERGEMENTS : $types;
 
         return $this->cache->get(
             'hebergement_hades',
-            function () use ($types) {
-                return $this->getOffres($types);
-            }
+            fn () => $this->getOffres($types)
         );
     }
 
     public function getRestaurations(array $types = []): array
     {
-        $types = count($types) === 0 ? HadesFiltres::RESTAURATIONS : $types;
+        $types = [] === $types ? HadesFiltres::RESTAURATIONS : $types;
 
         return $this->cache->get(
             'resto_hades',
-            function () use ($types) {
-                return $this->getOffres($types);
-            }
+            fn () => $this->getOffres($types)
         );
     }
 
-    /**
-     * @param string $xmlString
-     *
-     * @return DOMDocument|null
-     */
     public function loadXml(string $xmlString): ?DOMDocument
     {
         try {
@@ -124,18 +112,18 @@ class HadesRepository
             $errors = libxml_get_errors();
 
             libxml_clear_errors();
-            if (count($errors) > 0) {
+            if ([] !== $errors) {
                 $stingError = '';
                 foreach ($errors as $error) {
                     //symbole &
-                    if ($error->code == 68) {
+                    if (68 === $error->code) {
                         continue;
                     }
                     if ($error->level > LIBXML_ERR_WARNING) {
                         $stingError .= $error->message.' code '.$error->code.' line '.$error->line.' col '.$error->column;
                     }
                 }
-                if (strlen($stingError) > 0) {
+                if (\strlen($stingError) > 0) {
                     global $wp;
                     $url = home_url($wp->request);
                     Mailer::sendError('xml error hades', $url.' error: '.$stingError.'contenu: '.$xmlString);
@@ -159,19 +147,19 @@ class HadesRepository
             function () use ($id) {
                 $xmlString = $this->hadesRemoteRepository->getOffreById($id);
 
-                if ($xmlString === null) {
+                if (null === $xmlString) {
                     return null;
                 }
                 //  echo($xmlString);
                 $domdoc = $this->loadXml($xmlString);
-                if ($domdoc === null) {
+                if (! $domdoc instanceof \DOMDocument) {
                     return null;
                 }
                 $data = $domdoc->getElementsByTagName('offres');
                 $offresXml = $data->item(0);
 
                 foreach ($offresXml->childNodes as $offre) {
-                    if ($offre->nodeType == XML_ELEMENT_NODE) {
+                    if (XML_ELEMENT_NODE === $offre->nodeType) {
                         return Offre::createFromDom($offre, $domdoc);
                     }
                 }
@@ -184,7 +172,7 @@ class HadesRepository
     public function getOffreWithChildrenAndParents(string $id): ?OffreInterface
     {
         $offre = $this->getOffre($id);
-        if ($offre) {
+        if (null !== $offre) {
             $this->setParentsAndChildren($offre);
         }
 
@@ -194,26 +182,26 @@ class HadesRepository
     public function setParentsAndChildren(Offre $offre): void
     {
         foreach ($offre->enfantIds as $enfantId) {
-            if ($enfant = $this->getOffre($enfantId)) {
+            if (($enfant = $this->getOffre($enfantId)) !== null) {
                 $offre->enfants[] = $enfant;
             }
         }
         foreach ($offre->parentIds as $parentId) {
-            if ($parent = $this->getOffre($parentId)) {
+            if (($parent = $this->getOffre($parentId)) !== null) {
                 $offre->parents[] = $parent;
             }
         }
     }
 
     /**
-     * @param OffreInterface $offre
-     * @param int $categoryWpId
+     * @param int    $offre
      * @param string $language
      *
      * @return OffreInterface[]|null
+     *
      * @throws InvalidArgumentException
      */
-    public function getOffresSameCategories(OffreInterface $offre): ?array
+    public function getOffresSameCategories(OffreInterface $offre): array
     {
         $categories = [];
         foreach ($offre->categories as $category) {
@@ -228,28 +216,30 @@ class HadesRepository
         return $this->cache->get(
             $category,
             function () use ($category) {
-                $xmlString = $this->hadesRemoteRepository->loadOffres(['cat_id' => $category], 'digest');
-                if ($xmlString === null) {
+                $xmlString = $this->hadesRemoteRepository->loadOffres([
+                    'cat_id' => $category,
+                ], 'digest');
+                if (null === $xmlString) {
                     return null;
                 }
                 $domdoc = $this->loadXml($xmlString);
-                if ($domdoc === null) {
+                if (! $domdoc instanceof \DOMDocument) {
                     return null;
                 }
                 $data = $domdoc->getElementsByTagName('tot');
-                if (!$data instanceof DOMNodeList) {
+                if (! $data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
-                if ($totDom instanceof \DOMElement) {
+                if ($totDom instanceof DOMElement) {
                     return $totDom->nodeValue;
                 }
                 $data = $domdoc->getElementsByTagName('nb_offres');
-                if (!$data instanceof DOMNodeList) {
+                if (! $data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
-                if ($totDom instanceof \DOMElement) {
+                if ($totDom instanceof DOMElement) {
                     return $totDom->nodeValue;
                 }
 
@@ -259,9 +249,9 @@ class HadesRepository
     }
 
     /**
-     * @param string $language
      * @return array|string[]
-     * @throws \Psr\Cache\InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function extractCategories(string $language): array
     {
@@ -283,11 +273,11 @@ class HadesRepository
 
     public function getFiltresHades()
     {
-        /**
+        /*
          * @var wpdb $wpdb
          */
         global $wpdb;
 
-        return $wpdb->get_results("SELECT * FROM hades");
+        return $wpdb->get_results('SELECT * FROM hades');
     }
 }
