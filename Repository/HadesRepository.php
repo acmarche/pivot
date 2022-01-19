@@ -14,12 +14,10 @@ use DOMNodeList;
 use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
-use wpdb;
 
 class HadesRepository
 {
     private CacheInterface $cache;
-
     private HadesRemoteRepository $hadesRemoteRepository;
 
     public function __construct()
@@ -33,23 +31,26 @@ class HadesRepository
      *
      * @throws InvalidArgumentException
      */
-    public function getOffres(array $types = []): array
+    public function getOffres(array $types = [], bool $onlyFilters = false): array
     {
         $xmlString = $this->hadesRemoteRepository->getOffres($types);
         if (null === $xmlString) {
             return [];
         }
         $domdoc = $this->loadXml($xmlString);
-        if (! $domdoc instanceof \DOMDocument) {
+        if (!$domdoc instanceof \DOMDocument) {
             return [];
         }
         $data = $domdoc->getElementsByTagName('offres');
         $offresXml = $data->item(0);
         $offres = [];
-
         foreach ($offresXml->childNodes as $offre) {
             if (XML_ELEMENT_NODE === $offre->nodeType) {
-                $offres[] = Offre::createFromDom($offre, $domdoc);
+                if ($onlyFilters) {
+                    $offres[] = Offre::createFromDomForFilters($offre, $domdoc);
+                } else {
+                    $offres[] = Offre::createFromDom($offre, $domdoc);
+                }
             }
         }
 
@@ -89,7 +90,7 @@ class HadesRepository
 
         return $this->cache->get(
             'hebergement_hades',
-            fn () => $this->getOffres($types)
+            fn() => $this->getOffres($types)
         );
     }
 
@@ -99,7 +100,7 @@ class HadesRepository
 
         return $this->cache->get(
             'resto_hades',
-            fn () => $this->getOffres($types)
+            fn() => $this->getOffres($types)
         );
     }
 
@@ -152,7 +153,7 @@ class HadesRepository
                 }
                 //  echo($xmlString);
                 $domdoc = $this->loadXml($xmlString);
-                if (! $domdoc instanceof \DOMDocument) {
+                if (!$domdoc instanceof \DOMDocument) {
                     return null;
                 }
                 $data = $domdoc->getElementsByTagName('offres');
@@ -194,7 +195,7 @@ class HadesRepository
     }
 
     /**
-     * @param int    $offre
+     * @param int $offre
      * @param string $language
      *
      * @return OffreInterface[]|null
@@ -223,11 +224,11 @@ class HadesRepository
                     return null;
                 }
                 $domdoc = $this->loadXml($xmlString);
-                if (! $domdoc instanceof \DOMDocument) {
+                if (!$domdoc instanceof \DOMDocument) {
                     return null;
                 }
                 $data = $domdoc->getElementsByTagName('tot');
-                if (! $data instanceof DOMNodeList) {
+                if (!$data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
@@ -235,7 +236,7 @@ class HadesRepository
                     return $totDom->nodeValue;
                 }
                 $data = $domdoc->getElementsByTagName('nb_offres');
-                if (! $data instanceof DOMNodeList) {
+                if (!$data instanceof DOMNodeList) {
                     return null;
                 }
                 $totDom = $data->item(0);
@@ -259,7 +260,7 @@ class HadesRepository
             'hades_categories_'.$language,
             function () use ($language) {
                 $categories = [];
-                foreach ($this->getOffres() as $offre) {
+                foreach ($this->getOffres([], true) as $offre) {
                     foreach ($offre->categories as $category) {
                         $categories[$category->id] = $category->getLib($language);
                     }
