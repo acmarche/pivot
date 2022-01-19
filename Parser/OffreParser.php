@@ -30,8 +30,9 @@ class OffreParser
 
     public function __construct(
         public DOMDocument $document,
-        public DOMElement $offre
-    ) {
+        public DOMElement  $offre
+    )
+    {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
         $this->xpath = new DOMXPath($document);
     }
@@ -71,7 +72,7 @@ class OffreParser
         $coordinates = new Geocode();
         $geocodes = $this->xpath->query('geocodes', $offreDom);
         $geocode = $geocodes->item(0);
-        if (! $geocode instanceof DOMElement) {
+        if (!$geocode instanceof DOMElement) {
             return $coordinates;
         }
         foreach ($geocode->childNodes as $child) {
@@ -92,7 +93,7 @@ class OffreParser
         $data = new Localite();
         $localisations = $offreDom->getElementsByTagName('localisation');
         $localisation = $localisations->item(0);
-        if (! $localisation instanceof DOMElement) {
+        if (!$localisation instanceof DOMElement) {
             return $data;
         }
 
@@ -120,13 +121,12 @@ class OffreParser
         if (0 === $contacts->length) {
             return [];
         }
+        //$propertyUtils = new PropertyUtils();
         foreach ($contacts->item(0)->childNodes as $contactDom) {
             if (XML_ELEMENT_NODE === $contactDom->nodeType) {
                 $contact = new Contact();
-
-                $propertyUtils = new PropertyUtils();
-                $propertyUtils->getProperties(Contact::class, $contact);
-
+                //$propertyUtils->initAttributesObject(Contact::class, $contact);
+                $data[] = $contact;
                 $contact->tri = $contactDom->getAttributeNode('tri')->nodeValue;
                 $contact->lib = $this->getLibelle($contactDom);
                 $contact->communications = $this->extractCommunications($contactDom);
@@ -149,7 +149,7 @@ class OffreParser
     {
         $data = [];
         $descriptions = $this->xpath->query('descriptions', $offreDom);
-        if (! $descriptions->item(0) instanceof DOMElement) {
+        if (!$descriptions->item(0) instanceof DOMElement) {
             return [];
         }
         foreach ($descriptions->item(0)->childNodes as $descriptionDom) {
@@ -185,7 +185,7 @@ class OffreParser
     {
         $data = [];
         $medias = $this->xpath->query('medias', $offreDom);
-        if (! $medias->item(0) instanceof DOMElement) {
+        if (!$medias->item(0) instanceof DOMElement) {
             return [];
         }
         foreach ($medias->item(0)->childNodes as $categoryDom) {
@@ -219,7 +219,7 @@ class OffreParser
         $data = [];
         $object = $this->offre->getElementsByTagName('selections');
         $selections = $object->item(0); //pour par prendre elements parents
-        if (! $selections instanceof DOMElement) {
+        if (!$selections instanceof DOMElement) {
             return [];
         }
 
@@ -271,7 +271,7 @@ class OffreParser
         $parents = $parents->item(0); //pour par prendre elements parents
         foreach ($parents->childNodes as $offre) {
             if (XML_ELEMENT_NODE === $offre->nodeType) {
-                $ids[] = (int) $this->getAttributeNode($offre, 'id');
+                $ids[] = (int)$this->getAttributeNode($offre, 'id');
             }
         }
 
@@ -290,7 +290,7 @@ class OffreParser
 
         foreach ($enfants->childNodes as $offre) {
             if (XML_ELEMENT_NODE === $offre->nodeType) {
-                $ids[] = (int) $this->getAttributeNode($offre, 'id');
+                $ids[] = (int)$this->getAttributeNode($offre, 'id');
             }
         }
 
@@ -302,7 +302,7 @@ class OffreParser
         $data = [];
         $horaires = $this->xpath->query('horaires', $offreDom);
         $horaires = $horaires->item(0); //pour par prendre elements parents
-        if (! $horaires instanceof DOMElement) {
+        if (!$horaires instanceof DOMElement) {
             return [];
         }
 
