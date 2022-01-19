@@ -8,6 +8,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
+use Symfony\Component\PropertyInfo\Type;
 
 class PropertyUtils
 {
@@ -40,37 +41,47 @@ class PropertyUtils
         );
     }
 
-    public function getProperties(string $class, object $object): void
+    /**
+     * Pour eviter erreur php not initialized
+     * @param string $class
+     * @param object $object
+     * @return void
+     */
+    public function initAttributesObject(string $class, object $object): void
     {
         foreach ($this->propertyInfo->getProperties($class) as $property) {
-            $value = $this->getValue($class, $property);
+            $value = $this->getTypeOfProperty($class, $property);
             if ('numero' === $property) {
             }
             $this->propertyAccessor->setValue($object, $property, $value);
         }
     }
 
-    private function getValue(string $class, string $property)
+    private function getTypeOfProperty(string $class, string $property): string|int|null|Libelle|array
     {
         $types = $this->propertyInfo->getTypes($class, $property);
+
         if ('lib' === $property) {
             return new Libelle();
         }
-
+        if (!is_array($types)) {
+            return null;
+        }
+        /**
+         * @var Type $type
+         */
         $type = $types[0];
         if ($type->isNullable()) {
             return null;
         }
-        if ('string' === $type->getBuiltinType()) {
-            return '';
-        }
-        if ('array' === $type->getBuiltinType()) {
-            return [];
-        }
-        if ('int' === $type->getBuiltinType()) {
-            return 0;
-        }
 
-        return '';
+        $builtinType = $type->getBuiltinType();
+
+        return match ($builtinType) {
+            Type::BUILTIN_TYPE_STRING => '',
+            Type::BUILTIN_TYPE_ARRAY => [],
+            Type::BUILTIN_TYPE_INT => 0,
+            default => null
+        };
     }
 }
