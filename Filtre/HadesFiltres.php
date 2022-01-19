@@ -69,13 +69,8 @@ class HadesFiltres
         'hotel',
     ];
 
-    /**
-     * @var array|object|null
-     */
-    public $filtres;
-
+    public array|object|null $filtres;
     private HadesRepository $hadesRepository;
-
     private CacheInterface $cache;
 
     public function __construct()
@@ -88,7 +83,7 @@ class HadesFiltres
     public function setCounts(): void
     {
         $this->cache->get(
-            'visit_filtres'.time(),
+            'visit_filtres',
             function () {
                 foreach ($this->filtres as $category) {
                     $category->count = 0;
@@ -156,12 +151,12 @@ class HadesFiltres
     {
         $filtres = [];
         $filtresString = get_term_meta($categoryId, FiltreMetaBox::KEY_NAME_HADES, true);
+
         if ($filtresString) {
             $groupedFilters = self::groupedFilters();
             $filtres = $groupedFilters[$filtresString] ?? explode(',', $filtresString);
             $filtres = $this->translateFiltres($filtres, $language);
         }
-
         $wpRepository = new WpRepository();
         $children = $wpRepository->getChildrenOfCategory($categoryId);
         foreach ($children as $child) {
