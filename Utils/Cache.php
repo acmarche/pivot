@@ -18,7 +18,7 @@ class Cache
                 // the default lifetime (in seconds) for cache items that do not define their
                 // own lifetime, with a value 0 causing items to be stored indefinitely (i.e.
                 // until the APCu memory is cleared)
-                $defaultLifetime = 3600,
+                $defaultLifetime = 43200,//12h
 
                 // when set, all keys prefixed by $namespace can be invalidated by changing
                 // this $version string
@@ -34,7 +34,7 @@ class Cache
                 // the default lifetime (in seconds) for cache items that do not define their
                 // own lifetime, with a value 0 causing items to be stored indefinitely (i.e.
                 // until the files are deleted)
-                $defaultLifetime = 3600,
+                $defaultLifetime = 43200,//12h
 
                 // the main cache directory (the application needs read-write permissions on it)
                 // if none is specified, a directory is created inside the system temporary directory
