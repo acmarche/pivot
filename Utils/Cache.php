@@ -38,7 +38,7 @@ class Cache
 
                 // the main cache directory (the application needs read-write permissions on it)
                 // if none is specified, a directory is created inside the system temporary directory
-                $directory = null
+                $directory = 'var/cache'
         );
     }
 }
