@@ -107,6 +107,17 @@ class Offre implements OffreInterface
         return $offre;
     }
 
+    public static function createFromDomForFilters(DOMElement $offreDom, DOMDocument $document): ?self
+    {
+        $parser = new OffreParser($document, $offreDom);
+        $offre = new self();
+        $offre->id = $parser->offreId();
+        $offre->libelle = $parser->getTitre($offreDom);
+        $offre->categories = $parser->categories($offreDom);
+
+        return $offre;
+    }
+
     public function getTitre(?string $language = 'fr'): string
     {
         if ($this->libelle->get($language) && $this->libelle->get($language)) {
