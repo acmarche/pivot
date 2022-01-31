@@ -6,7 +6,6 @@ use AcMarche\Pivot\Repository\HadesRepository;
 use AcMarche\Pivot\Utils\Cache;
 use Symfony\Component\String\Inflector\FrenchInflector;
 use Symfony\Contracts\Cache\CacheInterface;
-use VisitMarche\Theme\Lib\WpRepository;
 
 class HadesFiltres
 {
