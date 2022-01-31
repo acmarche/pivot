@@ -147,27 +147,6 @@ class HadesFiltres
         return $data;
     }
 
-    public function getCategoryFilters(int $categoryId, string $language = 'fr'): array
-    {
-        $filtres = [];
-        $filtresString = get_term_meta($categoryId, 'hades_refrubrique', true);
-
-        if ($filtresString) {
-            $groupedFilters = self::groupedFilters();
-            $filtres = $groupedFilters[$filtresString] ?? explode(',', $filtresString);
-            $filtres = $this->translateFiltres($filtres, $language);
-        }
-        $wpRepository = new WpRepository();
-        $children = $wpRepository->getChildrenOfCategory($categoryId);
-        foreach ($children as $child) {
-            $filtres[$child->cat_ID] = $child->name;
-        }
-
-        asort($filtres);
-
-        return $filtres;
-    }
-
     public static function groupedFilters(): array
     {
         return [

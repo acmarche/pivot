@@ -1,7 +1,10 @@
 <?php
 
 namespace AcMarche\Pivot;
-
+/**
+ * http://w3.ftlb.be/wiki/index.php/Liste_des_cat%C3%A9gories
+ * https://visitmarche.be/fr/index-des-offres/
+ */
 class Pivot
 {
     /**
