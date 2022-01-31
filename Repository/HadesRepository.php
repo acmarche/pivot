@@ -272,13 +272,23 @@ class HadesRepository
         );
     }
 
-    public function getFiltresHades()
+    public function getAllFiltersFromDb()
     {
         /*
          * @var wpdb $wpdb
          */
         global $wpdb;
 
-        return $wpdb->get_results('SELECT * FROM hades');
+        return $wpdb->get_results('SELECT * FROM hades_filtres');
+    }
+
+    public function findFilterByKeyword(string $keyword)
+    {
+        /*
+         * @var wpdb $wpdb
+         */
+        global $wpdb;
+
+        return $wpdb->get_row("SELECT * FROM hades_filtres WHERE `keyword` = '$keyword'");
     }
 }

@@ -3,9 +3,6 @@
 namespace AcMarche\Pivot\Filtre;
 
 use AcMarche\Pivot\Repository\HadesRepository;
-use AcMarche\Pivot\Utils\Cache;
-use Symfony\Component\String\Inflector\FrenchInflector;
-use Symfony\Contracts\Cache\CacheInterface;
 
 class HadesFiltres
 {
@@ -70,77 +67,25 @@ class HadesFiltres
 
     public array|object|null $filtres;
     private HadesRepository $hadesRepository;
-    private CacheInterface $cache;
 
     public function __construct()
     {
         $this->hadesRepository = new HadesRepository();
-        $this->filtres = $this->hadesRepository->getFiltresHades();
-        $this->cache = Cache::instance();
+        $this->filtres = $this->hadesRepository->getAllFiltersFromDb();
     }
 
-    public function setCounts(): void
+    public function translateFiltres(array $keywords, string $language = 'fr'): array
     {
-        $this->cache->get(
-            'visit_filtres',
-            function () {
-                foreach ($this->filtres as $category) {
-                    $category->count = 0;
-                    if ($category->category_id) {
-                        $count = $this->hadesRepository->countOffres($category->category_id);
-                        $category->count = $count;
-                    }
-                }
-            }
-        );
-    }
-
-    public function getFiltresNotEmpty(): array
-    {
-        $notEmpty = [];
-        foreach ($this->filtres as $category) {
-            if ($category->category_id) {
-                if (property_exists($category, 'count') && null !== $category->count && $category->count > 0) {
-                    $notEmpty[] = $category;
-                }
-            } else {
-                $notEmpty[] = $category;
-            }
-        }
-
-        return $notEmpty;
-    }
-
-    public function translateFiltres(array $filtres, string $language = 'fr'): array
-    {
-        $allFiltres = $this->hadesRepository->extractCategories($language);
         $data = [];
-        foreach ($filtres as $filtre) {
-            if (isset($allFiltres[$filtre])) {
-                $data[$filtre] = $allFiltres[$filtre];
-            }
-        }
-
-        //restaurant,barbecue,traiteur pluriels
-        $inflector = new FrenchInflector();
-
-        foreach ($data as $key => $value) {
-            if ($pluriel = $this->particularPluriels($value)) {
-                $data[$key] = $pluriel;
-                continue;
-            }
-            $textes = explode(' ', $value);
-            $join = [];
-            foreach ($textes as $text) {
-                if (\strlen($text) > 1) {
-                    $result = $inflector->pluralize($text);
-                    $join[] = [] !== $result ? $result[0] : $text;
-                } else {
-                    $join[] = $text;
+        $fieldName = 'name_'.$language;
+        foreach ($keywords as $keyword) {
+            if ($filter = $this->hadesRepository->findFilterByKeyword($keyword)) {
+                $value = $filter->$fieldName;
+                if (!$value) {
+                    $value = $filter->name_original;
                 }
+                $data[$keyword] = $value;
             }
-            $join = implode(' ', $join);
-            $data[$key] = $join;
         }
 
         return $data;
