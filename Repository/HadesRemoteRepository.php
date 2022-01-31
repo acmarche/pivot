@@ -76,7 +76,7 @@ class HadesRemoteRepository
 
         //  echo($t);
         return $this->cache->get(
-            'hebergements_hades_remote'.$key,
+            'hebergements_hades_remote'.$key.time(),
             fn () => $this->loadOffres($args)
         );
     }

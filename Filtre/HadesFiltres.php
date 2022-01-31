@@ -150,7 +150,7 @@ class HadesFiltres
     public function getCategoryFilters(int $categoryId, string $language = 'fr'): array
     {
         $filtres = [];
-        $filtresString = get_term_meta($categoryId, FiltreMetaBox::KEY_NAME_HADES, true);
+        $filtresString = get_term_meta($categoryId, 'hades_refrubrique', true);
 
         if ($filtresString) {
             $groupedFilters = self::groupedFilters();

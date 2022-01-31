@@ -257,7 +257,7 @@ class HadesRepository
     public function extractCategories(string $language): array
     {
         return $this->cache->get(
-            'hades_categories_'.$language,
+            'hades_categories_'.$language.time(),
             function () use ($language) {
                 $categories = [];
                 foreach ($this->getOffres([], true) as $offre) {
