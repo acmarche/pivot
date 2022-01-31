@@ -13,7 +13,7 @@ class Env
         try {
             $dotenv->load(getcwd().'/.env');
         } catch (Exception $exception) {
-            echo "error load env: " . $exception->getMessage();
+            //echo "error load env: " . $exception->getMessage();
         }
     }
 }
