@@ -291,4 +291,44 @@ class HadesRepository
 
         return $wpdb->get_row("SELECT * FROM hades_filtres WHERE `keyword` = '$keyword'");
     }
+
+    public function getTree(): array
+    {
+        $data = [];
+        foreach ($this->findRoots() as $lvl1) {
+            $lvl1->children = $this->findByParent($lvl1->id);
+            foreach ($lvl1->children as $lvl2) {
+                $lvl2->children = $this->findByParent($lvl2->id);
+                foreach ($lvl2->children as $lvl3) {
+                    $lvl3->children = $this->findByParent($lvl3->id);
+                }
+            }
+            $data[$lvl1->id] = $lvl1;
+        }
+
+        return $data;
+    }
+
+    public function findRoots(): array
+    {
+        /*
+         * @var wpdb $wpdb
+         */
+        global $wpdb;
+
+        return $wpdb->get_results("SELECT * FROM hades_filtres WHERE `parent_id` IS NULL ORDER BY `name_original`");
+    }
+
+    /**
+     * @return [] Returns an array of HadesFilter objects
+     */
+    public function findByParent(int $filterId): array
+    {
+        /*
+         * @var wpdb $wpdb
+         */
+        global $wpdb;
+
+        return $wpdb->get_results("SELECT * FROM hades_filtres WHERE `parent_id` = $filterId ORDER BY `name_original`");
+    }
 }
