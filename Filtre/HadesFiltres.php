@@ -99,19 +99,4 @@ class HadesFiltres
             self::EVENEMENTS_KEY => self::EVENEMENTS,
         ];
     }
-
-    private function particularPluriels(string $mot): ?string
-    {
-        return match ($mot) {
-            'Salons de dégustation' => $mot,
-            'Restauration rapide' => $mot,
-            'Bars à vins' => $mot,
-            'Gîte à la ferme' => 'Gîtes à la ferme',
-            'Terrain de camp' => 'Terrains de camp',
-            'Meublé de tourisme' => 'Meublés de tourisme',
-            'Meublés de vacances' => 'Meublés de vacances',
-            'Autre hébergement non reconnu' => 'Autres hébergements non reconnus',
-            default => null,
-        };
-    }
 }
