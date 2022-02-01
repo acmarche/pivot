@@ -37,7 +37,7 @@ class LoaderCommand extends Command
         $hadesRepository = new HadesRemoteRepository();
         $data = ['date' => $today];
         try {
-         $jsonString =   $hadesRepository->loadOffres([]);
+         $jsonString =   $hadesRepository->loadOffresFromFlux([]);
             $data['result'] = 'true';
         } catch (ClientExceptionInterface|ServerExceptionInterface|TransportExceptionInterface|RedirectionExceptionInterface|\Exception $e) {
             $data['result'] = 'false';

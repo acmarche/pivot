@@ -33,7 +33,7 @@ class HadesRepository
      */
     public function getOffres(array $types = [], bool $onlyFilters = false): array
     {
-        $xmlString = $this->hadesRemoteRepository->getOffres($types);
+        $xmlString = $this->hadesRemoteRepository->getOffresByArgs($types);
         if (null === $xmlString) {
             return [];
         }
@@ -217,7 +217,7 @@ class HadesRepository
         return $this->cache->get(
             $category,
             function () use ($category) {
-                $xmlString = $this->hadesRemoteRepository->loadOffres([
+                $xmlString = $this->hadesRemoteRepository->loadOffresFromFlux([
                     'cat_id' => $category,
                 ], 'digest');
                 if (null === $xmlString) {
@@ -257,7 +257,7 @@ class HadesRepository
     public function extractCategories(string $language): array
     {
         return $this->cache->get(
-            'hades_categories_'.$language.time(),
+            'hades_categories_'.$language,
             function () use ($language) {
                 $categories = [];
                 foreach ($this->getOffres([], true) as $offre) {

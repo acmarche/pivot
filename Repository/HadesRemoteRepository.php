@@ -35,7 +35,7 @@ class HadesRemoteRepository
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function loadOffres(array $args, string $tbl = 'xmlcomplet'): string
+    public function loadOffresFromFlux(array $args, string $tbl = 'xmlcomplet'): string
     {
         $args['tbl'] = $tbl;
         $args['com_id'] = HadesFiltres::COMMUNE;
@@ -63,7 +63,7 @@ class HadesRemoteRepository
      *
      * @throws InvalidArgumentException
      */
-    public function getOffres(array $types = []): string
+    public function getOffresByArgs(array $types = []): string
     {
         $args = [];
         if (\count($types) >= 0) {
@@ -76,8 +76,8 @@ class HadesRemoteRepository
 
         //  echo($t);
         return $this->cache->get(
-            'hebergements_hades_remote'.$key.time(),
-            fn () => $this->loadOffres($args)
+            'hebergements_hades_remote'.$key,
+            fn () => $this->loadOffresFromFlux($args)
         );
     }
 
@@ -91,7 +91,7 @@ class HadesRemoteRepository
     {
         return $this->cache->get(
             'offre_hades_remote_'.$id,
-            fn () => $this->loadOffres([
+            fn () => $this->loadOffresFromFlux([
                 'off_id' => $id,
             ])
         );
