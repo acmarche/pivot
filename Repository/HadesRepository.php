@@ -58,6 +58,7 @@ class HadesRepository
     }
 
     /**
+     * https://w3.ftlb.be/webservice/h2o.php?tbl=xmlcomplet&com_id=263&cat_id=evt_sport,cine_club,conference,exposition,festival,fete_festiv,anim_jeux,livre_conte,manifestatio,foire_brocan,evt_promenad,spectacle,stage_ateli,evt_vis_guid
      * @return OffreInterface[]
      *
      * @throws InvalidArgumentException
