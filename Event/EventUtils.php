@@ -15,7 +15,8 @@ class EventUtils
         self::$today = new DateTime();
         $horlines = [];
         foreach ($event->dates() as $horline) {
-            if (! self::isObsolete($horline->year, $horline->month, $horline->day)) {
+            list($day, $month, $year) = explode('/', $horline->date_fin);
+            if (!self::isObsolete($year, $month, $day)) {
                 $horlines[] = $horline;
             }
         }
