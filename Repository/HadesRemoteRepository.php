@@ -34,6 +34,7 @@ class HadesRemoteRepository
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
+     * @throws Exception
      */
     public function loadOffresFromFlux(array $args, string $tbl = 'xmlcomplet'): string
     {
@@ -53,7 +54,7 @@ class HadesRemoteRepository
 
             return $request->getContent();
         } catch (ClientException $exception) {
-            Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
+           // Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
             throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
