@@ -1,6 +1,7 @@
 <?php
 
 namespace AcMarche\Pivot;
+
 /**
  * http://w3.ftlb.be/wiki/index.php/Liste_des_cat%C3%A9gories
  * https://visitmarche.be/fr/index-des-offres/
@@ -24,7 +25,7 @@ class Pivot
     public const QUERY_DETAIL_LVL_LIES = 3;
 
     /**
-     * Le paramètre matriciel content permet de modifier la richesse du contenu produit.
+     *
      * • 0 = génère une offre ne contenant que le codeCgt et les dates de création et de dernière
      * modification. Ce mode est utile pour consulter la date de dernière modification d’une offre
      * • 1 = génère un « résumé » d’offre, ne contenant que le codeCgt, le nom, l’adresse et la
@@ -45,10 +46,27 @@ class Pivot
     public const OFFER_DETAIL_LVL_LIES = 3;
     public const OFFER_DETAIL_LVL_OPEND_DATA = 4;
 
+    /**
+     * • XML (par défaut) : contenu xml respectant le schéma pivot-offer.xsd
+     * • JSON : contenu json respectant le schéma pivot-offer.xsd
+     * • HTML (expérimental) : page HTML de présentation de l’offre
+     * • KML : contenu xml respectant le schéma www.opengis.net/kml/2.2 de Google Earth
+     * • ATOM : contenu xml conçu pour la syndication de contenu périodique (disponible
+     * actuellement que pour les offres de type événements)
+     */
     public const FORMAT_JSON = 'application/json';
     public const FORMAT_XML = 'application/xml';
     public const FORMAT_KML = 'application/vnd.google-earth.kml+xml';
     public const FORMAT_ATOM = 'application/atom+xml';
+    public const FORMAT_HTML = 'text/html';
+
+    public const FORMAT_JSON_FMT = 'json';
+    public const FORMAT_XML_FMT = 'xml';
+    public const FORMAT_KML_FMT = 'kml';
+    public const FORMAT_ATOM_FMT = 'atom';
+    public const FORMAT_ATOM_HTML = 'html';
+
+    public const FORMAT_GZIP = 'Accept-Encoding: gzip';
 
     public const ACTIVE_ARCHIVE = 5; //= archivée
     public const ACTIVE_NOT_PUBLIABLE = 10; //= non publiable
@@ -60,4 +78,31 @@ class Pivot
     public const VISIBILITY_PROVINCIAL = 20; //  provincial
     public const VISIBILITY_REGIONAL = 30; //  régional
     public const VISIBILITY_INTERNATIONAL = 40; //  international
+
+    /**
+     * THESAURUS
+     */
+    public const THESAURUS_FAMILY = 'family';
+    public const THESAURUS_TYPE_OFFRE = 'typeofr';
+    public const THESAURUS_TYPE_TINS = 'tins';
+    public const THESAURUS_TYPE_CHAMP = 'typeurn';
+    public const THESAURUS_LISTE_PICTOS = 'img';
+
+    public const IMG_THB_XSF = '75x75';
+    public const IMG_THB_XSW = '75x-1';
+    public const IMG_THB_XSH = '-1x75';
+    public const IMG_THB_SF = '150x150';
+    public const IMG_THB_SW = '150x-1';
+    public const IMG_THB_SH = '-1x150';
+    public const IMG_THB_MF = '300x300';
+    public const IMG_THB_MW = '300x-1';
+    public const IMG_THB_MH = '-1x300';
+    public const IMG_THB_LF = '480x480';
+    public const IMG_THB_LW = '480x-1';
+    public const IMG_THB_LH = '-1x480';
+    public const IMG_ICO_XS = '-1x16';
+    public const IMG_ICO_S = '-1x24';
+    public const IMG_ICO_M = '-1x32';
+    public const IMG_ICO_L = '-1x48';
+    public const IMG_ICO_XL = '-1x64';
 }

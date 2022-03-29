@@ -13,10 +13,7 @@ trait ConnectionPivotTrait
     private string $base_uri;
     private string $ws_key;
 
-    /**
-     * @return void
-     */
-    public function connect()
+    public function connect(string $output): void
     {
         Env::loadEnv();
         $this->base_uri = $_ENV['PIVOT_BASE_URI'];
@@ -25,6 +22,7 @@ trait ConnectionPivotTrait
 
         $headers = [
             'headers' => [
+                'Accept' => $output,
                 'ws_key' => $this->ws_key,
             ],
         ];

@@ -2,21 +2,21 @@
 
 namespace AcMarche\Pivot\Command;
 
-use AcMarche\Pivot\Repository\HadesRemoteRepository;
+use AcMarche\Pivot\Entities\Pivot\TypeOffre;
+use AcMarche\Pivot\Pivot;
+use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Utils\FileUtils;
+use AcMarche\Pivot\Utils\SerializerPivot;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class LoaderCommand extends Command
 {
-    protected static $defaultName = 'hades:loadxml';
+    protected static $defaultName = 'pivot:loadxml';
     private SymfonyStyle $io;
+    private PivotRemoteRepository $pivotRemoteRepository;
 
     protected function configure(): void
     {
@@ -29,24 +29,40 @@ class LoaderCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
         $today = date('Y-m-d');
 
-        $result = $this->getLastSync();
-        if ($result['date'] == $today && $result['result'] == 'true') {
-            return Command::SUCCESS;
-        }
+        /*    $result = $this->getLastSync();
+            if ($result['date'] == $today && $result['result'] == 'true') {
+                return Command::SUCCESS;
+            }*/
 
-        $hadesRepository = new HadesRemoteRepository();
-        $data = ['date' => $today];
-        try {
-         $jsonString =   $hadesRepository->loadOffresFromFlux([]);
-            $data['result'] = 'true';
-        } catch (ClientExceptionInterface|ServerExceptionInterface|TransportExceptionInterface|RedirectionExceptionInterface|\Exception $e) {
-            $data['result'] = 'false';
-            $data['error'] = $e->getMessage();
-        }
+        $this->pivotRemoteRepository = new PivotRemoteRepository();
+        $this->getTypes();
 
-        file_put_contents(FileUtils::FILE_NAME_LOG, implode($data));
+        $query = file_get_contents('/var/www/visit/AcMarche/Pivot/Query/test.xml');
+        // $pivotRemoteRepository->search($query);
+
+        //cho($jsonString);
 
         return Command::SUCCESS;
+    }
+
+    private function getTypes()
+    {
+        $jsonString = $this->pivotRemoteRepository->getThesaurus(Pivot::THESAURUS_TYPE_OFFRE);
+
+        $serializer = SerializerPivot::create();
+        $titi = $serializer->deserialize($jsonString, 'AcMarche\Pivot\Entities\Pivot\Titi', 'json', [
+
+        ]);
+
+        foreach ($titi->spec as $type) {
+          //  var_dump($type);
+            break;
+            //echo $type['code'];
+        }
+
+        var_dump($serializer->deserialize(file_get_contents('/var/www/visit/one.json'), TypeOffre::class, 'json'));
+
+        //echo($jsonString);
     }
 
     private function getLastSync(): array
