@@ -7,11 +7,13 @@ use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Utils\Cache;
 use Exception;
 use Symfony\Component\HttpClient\Exception\ClientException;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class PivotRemoteRepository
@@ -32,7 +34,7 @@ class PivotRemoteRepository
      *
      * @throws Exception|TransportExceptionInterface
      */
-    public function getOffreById(string $id): string
+    public function offreByCgt(string $codeCgt): string
     {
         $options = [
             'query' => [
@@ -46,8 +48,16 @@ class PivotRemoteRepository
             ],
         ];
 
-        //00096Z/exists;fmt=json"
-        return $this->executeRequest($this->base_uri.'/offer/'.$id);
+        return $this->executeRequest($this->base_uri.'/offer/'.$codeCgt);
+    }
+
+    /**
+     *
+     * @throws Exception|TransportExceptionInterface
+     */
+    public function offreExist(string $codeCgt): string
+    {
+        return $this->executeRequest($this->base_uri.'/offer/'.$codeCgt.'/exists');
     }
 
     /**
@@ -138,9 +148,27 @@ class PivotRemoteRepository
      * de données. Les requêtes sont accessibles au moyen d’un code identifiant unique (codeCgt).
      * @throws Exception|TransportExceptionInterface
      */
-    public function query(string $codeCgt): string
+    public function query(string $idQuery = ""): string
     {
-        return $this->executeRequest($this->base_uri.'/query/'.$codeCgt);
+        $idQuery = $this->code;
+
+        return $this->executeRequest($this->base_uri.'/query/'.$idQuery);
+    }
+
+    /**
+     * Envoyer le query en body
+     */
+    public function queryPost(string $query = ""): string
+    {
+        $idQuery = $this->code;
+
+        return $this->executeRequest(
+            $this->base_uri.'/query/'.$idQuery,
+            [
+                'body' => $query,
+            ],
+            'POST'
+        );
     }
 
     public function search(string $query)
@@ -151,11 +179,11 @@ class PivotRemoteRepository
     /**
      * @throws Exception
      */
-    private function executeRequest(string $url, array $options = [])
+    private function executeRequest(string $url, array $options = [], string $method = 'GET')
     {
         try {
             $response = $this->httpClient->request(
-                'GET',
+                $method,
                 $url,
                 $options
             );

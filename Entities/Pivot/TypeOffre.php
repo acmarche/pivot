@@ -16,4 +16,14 @@ class TypeOffre
     public bool $root;
     public string $dateModification;
     public string $dateCreation;
+
+    public function __construct()
+    {
+        $this->label = [];
+    }
+
+    public function addLabel(Label $label)
+    {
+        $this->label[] = $label;
+    }
 }

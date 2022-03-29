@@ -30,7 +30,7 @@ class SerializerPivot
             new PropertyNormalizer(),
             new ObjectNormalizer(null, null, null, new ReflectionExtractor()),
             new ObjectNormalizer(null, null, null, new PhpDocExtractor()),
-            new ArrayDenormalizer(),
+        //    new ArrayDenormalizer(),
             new DateTimeNormalizer(),
         ];
         $encoders = [
