@@ -8,9 +8,9 @@ class Offer
     public string $dateCreation;
     public string $dateModification;
     public User $userCreation;
-    public userGlobalCreation $userGlobalCreation;
-    public userGlobalModification $userModification;
-    public userGlobalModification $userGlobalModification;
+    public UserGlobalCreation $userGlobalCreation;
+    public UserGlobalModification $userModification;
+    public UserGlobalModification $userGlobalModification;
     public string $nom;
     /**
      * @deprecated $estActive
