@@ -29,8 +29,8 @@ class SerializerPivot
             new GetSetMethodNormalizer(),
             new PropertyNormalizer(),
             new ObjectNormalizer(null, null, null, new ReflectionExtractor()),
-            new ObjectNormalizer(null, null, null, new PhpDocExtractor()),
-        //    new ArrayDenormalizer(),
+            //   new ObjectNormalizer(null, null, null, new PhpDocExtractor()),
+            new ArrayDenormalizer(),
             new DateTimeNormalizer(),
         ];
         $encoders = [
@@ -41,14 +41,15 @@ class SerializerPivot
         return new Serializer($normalizers, $encoders);
     }
 
-    private function t()
+    public static function create2(): SerializerInterface
     {
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $normalizer = new ObjectNormalizer($classMetadataFactory);
 
         $normalizers = [$normalizer];
-        $serializer = new Serializer($normalizers, $encoders);
+
+        return new Serializer($normalizers, $encoders);
     }
 
 }

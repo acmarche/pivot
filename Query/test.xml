@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Query xmlns="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://pivot.tourismewallonie.be/files/xsd/pivot/
-3.1 http://pivot.tourismewallonie.be/files/xsd/pivot/3.1/pivot-
-query.xsd">
+
+<Query xmlns="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1 http://pivot.tourismewallonie.be/files/xsd/pivot/3.1/pivot-query.xsd">
     <CriteriaGroup type="and">
-        <CriteriaField field="urn:fld:typeofr" operator="equal"
-                       target="value">
+        <CriteriaField field="urn:fld:typeofr" operator="equal" target="value">
             <value>1</value>
         </CriteriaField>
         <CriteriaGroup type="or">
-            <CriteriaField field="urn:fld:phone1" operator="notempty"
-                           target="value"/>
-            <CriteriaField field="urn:fld:phone2" operator="notempty"
-                           target="value"/>
+            <CriteriaField field="urn:fld:phone1" operator="notempty" target="value">
+                <value></value>
+            </CriteriaField>
+            <CriteriaField field="urn:fld:phone2" operator="notempty" target="value">
+                <value></value>
+            </CriteriaField>
         </CriteriaGroup>
     </CriteriaGroup>
 </Query>

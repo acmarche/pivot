@@ -2,6 +2,8 @@
 
 namespace AcMarche\Pivot\Command;
 
+use AcMarche\Pivot\Entities\Person;
+use AcMarche\Pivot\Entities\Pivot\Result\ResultAll;
 use AcMarche\Pivot\Entities\Pivot\Result\ResultOfferDetail;
 use AcMarche\Pivot\Entities\Pivot\Result\TypeOffreResult;
 use AcMarche\Pivot\Pivot;
@@ -24,7 +26,7 @@ class LoaderCommand extends Command
     public function __construct(string $name = null)
     {
         $this->serializer = SerializerPivot::create();
-        $this->pivotRemoteRepository = new PivotRemoteRepository();
+        $this->pivotRemoteRepository = new PivotRemoteRepository(Pivot::FORMAT_JSON);
         parent::__construct($name);
     }
 
@@ -38,10 +40,32 @@ class LoaderCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        $query = file_get_contents('/var/www/visit/AcMarche/Pivot/Query/test.xml');
-        var_dump($this->pivotRemoteRepository->queryPost($query));
+        $this->test();
 
         return Command::SUCCESS;
+    }
+
+    private function test()
+    {
+        $person = new Person();
+        $person->setName('foo');
+        $person->setAge(99);
+        $person->setSportsperson(false);
+        $json = json_encode($person);
+        var_dump($json);
+        $jsonContent = $this->serializer->deserialize($json, Person::class, 'json');
+        dump($jsonContent);
+    }
+
+    private function search()
+    {
+        $query = file_get_contents('/var/www/visit/AcMarche/Pivot/Query/test.xml');
+        var_dump($this->pivotRemoteRepository->queryPost($query));
+        try {
+            var_dump($this->pivotRemoteRepository->queryPost($query));
+        } catch (\Exception $exception) {
+            echo $exception->getMessage()."\n";
+        }
     }
 
     private function detailOffre()
@@ -49,6 +73,13 @@ class LoaderCommand extends Command
         $hotel = 'HTL-01-08GR-01AY';
         $hotelString = $this->pivotRemoteRepository->offreByCgt($hotel);
         dump($this->serializer->deserialize($hotelString, ResultOfferDetail::class, 'json'));
+    }
+
+    private function all()
+    {
+        $hotelString = $this->pivotRemoteRepository->query();
+        //dump($this->serializer->deserialize($hotelString, ResultAll::class, 'json'));
+        echo $hotelString;
     }
 
     private function getTypes()

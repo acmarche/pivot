@@ -6,15 +6,8 @@ use AcMarche\Pivot\ConnectionPivotTrait;
 use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Utils\Cache;
 use Exception;
-use Symfony\Component\HttpClient\Exception\ClientException;
-use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class PivotRemoteRepository
 {
@@ -160,10 +153,8 @@ class PivotRemoteRepository
      */
     public function queryPost(string $query = ""): string
     {
-        $idQuery = $this->code;
-
         return $this->executeRequest(
-            $this->base_uri.'/query/'.$idQuery,
+            $this->base_uri.'/query',
             [
                 'body' => $query,
             ],
@@ -173,30 +164,12 @@ class PivotRemoteRepository
 
     public function search(string $query)
     {
-        return $this->executeRequest($this->base_uri.'/search');
+        return $this->executeRequest(
+            $this->base_uri.'/search',
+            [
+                'body' => $query,
+            ],
+        );
     }
 
-    /**
-     * @throws Exception
-     */
-    private function executeRequest(string $url, array $options = [], string $method = 'GET')
-    {
-        try {
-            $response = $this->httpClient->request(
-                $method,
-                $url,
-                $options
-            );
-
-            return $response->getContent();
-        } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            // Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
-            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
-        }
-    }
-
-    private function debug(ResponseInterface $response)
-    {
-        var_dump($response->getInfo('debug'));
-    }
 }
