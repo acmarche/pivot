@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Entities\Pivot;
 
-class userGlobalModification
+class UserGlobalModification
 {
 
 }

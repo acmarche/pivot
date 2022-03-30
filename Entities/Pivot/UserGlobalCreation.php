@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Entities\Pivot;
 
-class userGlobalCreation
+class UserGlobalCreation
 {
 
 }
