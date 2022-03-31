@@ -1,6 +1,6 @@
 <?php
 
-namespace AcMarche\Pivot\Entities\Pivot\Result;
+namespace AcMarche\Pivot\Entities\Pivot\Response;
 
 use AcMarche\Pivot\Entities\Pivot\OffreShort;
 

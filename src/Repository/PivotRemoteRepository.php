@@ -141,35 +141,9 @@ class PivotRemoteRepository
      * de données. Les requêtes sont accessibles au moyen d’un code identifiant unique (codeCgt).
      * @throws Exception|TransportExceptionInterface
      */
-    public function query(string $idQuery = ""): string
+    public function query(): string
     {
-        $idQuery = $this->code;
-
-        return $this->executeRequest($this->base_uri.'/query/'.$idQuery);
-    }
-
-    /**
-     * Envoyer le query en body
-     */
-    public function queryPost(string $query = ""): string
-    {
-        return $this->executeRequest(
-            $this->base_uri.'/query',
-            [
-                'body' => $query,
-            ],
-            'POST'
-        );
-    }
-
-    public function search(string $query)
-    {
-        return $this->executeRequest(
-            $this->base_uri.'/search',
-            [
-                'body' => $query,
-            ],
-        );
+        return $this->executeRequest($this->base_uri.'/query/'.$this->code_query);
     }
 
 }

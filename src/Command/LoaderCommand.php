@@ -3,17 +3,20 @@
 namespace AcMarche\Pivot\Command;
 
 use AcMarche\Pivot\Entities\Person;
-use AcMarche\Pivot\Entities\Pivot\Result\ResultAll;
-use AcMarche\Pivot\Entities\Pivot\Result\ResultOfferDetail;
-use AcMarche\Pivot\Entities\Pivot\Result\TypeOffreResult;
+use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
+use AcMarche\Pivot\Entities\Pivot\Response\TypeOffreResult;
 use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Utils\FileUtils;
-use AcMarche\Pivot\Utils\SerializerPivot;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\Serializer\DependencyInjection\SerializerPass;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class LoaderCommand extends Command
@@ -21,11 +24,9 @@ class LoaderCommand extends Command
     protected static $defaultName = 'pivot:loadxml';
     private SymfonyStyle $io;
     private PivotRemoteRepository $pivotRemoteRepository;
-    private SerializerInterface $serializer;
 
     public function __construct(string $name = null)
     {
-        $this->serializer = SerializerPivot::create();
         $this->pivotRemoteRepository = new PivotRemoteRepository(Pivot::FORMAT_JSON);
         parent::__construct($name);
     }
@@ -38,14 +39,33 @@ class LoaderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $containerBuilder = new ContainerBuilder();
+        $loader = new PhpFileLoader(
+            $containerBuilder,
+            new FileLocator(__DIR__.'/../../config')
+        );
+
+        $loader->load('services.php');
+        dump($containerBuilder->getServiceIds());
+
+        $containerBuilder->addCompilerPass(new SerializerPass());
+        //$containerBuilder->set(SerializerInterface::class, service(Serializer::class));
+        // $containerBuilder->register(SerializerInterface::class, Serializer::class);
+        $containerBuilder->compile();
+        dump($containerBuilder->getServiceIds());
+
+        $serializer = $containerBuilder->get(Serializer::class);
+
+
+        return Command::SUCCESS;
         $this->io = new SymfonyStyle($input, $output);
 
-        $this->test();
+        //     $this->detailOffre();
 
         return Command::SUCCESS;
     }
 
-    private function test()
+    private function test(SerializerInterface $serializer)
     {
         $person = new Person();
         $person->setName('foo');
@@ -53,19 +73,8 @@ class LoaderCommand extends Command
         $person->setSportsperson(false);
         $json = json_encode($person);
         var_dump($json);
-        $jsonContent = $this->serializer->deserialize($json, Person::class, 'json');
+        $jsonContent = $serializer->deserialize($json, Person::class, 'json');
         dump($jsonContent);
-    }
-
-    private function search()
-    {
-        $query = file_get_contents('/var/www/visit/AcMarche/Pivot/Query/test.xml');
-        var_dump($this->pivotRemoteRepository->queryPost($query));
-        try {
-            var_dump($this->pivotRemoteRepository->queryPost($query));
-        } catch (\Exception $exception) {
-            echo $exception->getMessage()."\n";
-        }
     }
 
     private function detailOffre()

@@ -16,7 +16,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 trait ConnectionPivotTrait
 {
     private HttpClientInterface $httpClient;
-    private string $code;
+    private string $code_query;
     private string $base_uri;
     private string $ws_key;
 
@@ -25,7 +25,7 @@ trait ConnectionPivotTrait
         Env::loadEnv();
         $this->base_uri = $_ENV['PIVOT_BASE_URI'];
         $this->ws_key = $_ENV['PIVOT_WS_KEY'];
-        $this->code = $_ENV['PIVOT_CODE'];
+        $this->code_query = $_ENV['PIVOT_CODE'];
 
         $headers = [
             'headers' => [
