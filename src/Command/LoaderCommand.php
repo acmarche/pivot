@@ -3,8 +3,9 @@
 namespace AcMarche\Pivot\Command;
 
 use AcMarche\Pivot\Entities\Person;
-use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
+use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Pivot\Response\TypeOffreResult;
+use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Utils\FileUtils;
@@ -25,7 +26,7 @@ class LoaderCommand extends Command
     private SymfonyStyle $io;
     private PivotRemoteRepository $pivotRemoteRepository;
 
-    public function __construct(string $name = null)
+    public function __construct(private SerializerInterface $serializer, string $name = null)
     {
         $this->pivotRemoteRepository = new PivotRemoteRepository(Pivot::FORMAT_JSON);
         parent::__construct($name);
@@ -39,13 +40,22 @@ class LoaderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->io = new SymfonyStyle($input, $output);
+
+        $this->all();
+
+        return Command::SUCCESS;
+    }
+
+    private function initDi()
+    {
         $containerBuilder = new ContainerBuilder();
         $loader = new PhpFileLoader(
             $containerBuilder,
             new FileLocator(__DIR__.'/../../config')
         );
 
-    //    $loader->load('services.php');
+        //    $loader->load('services.php');
         dump($containerBuilder->getServiceIds());
 
         $containerBuilder->addCompilerPass(new SerializerPass());
@@ -55,14 +65,6 @@ class LoaderCommand extends Command
         dump($containerBuilder->getServiceIds());
 
         $serializer = $containerBuilder->get(Serializer::class);
-
-
-        return Command::SUCCESS;
-        $this->io = new SymfonyStyle($input, $output);
-
-        //     $this->detailOffre();
-
-        return Command::SUCCESS;
     }
 
     private function test(SerializerInterface $serializer)
@@ -81,14 +83,20 @@ class LoaderCommand extends Command
     {
         $hotel = 'HTL-01-08GR-01AY';
         $hotelString = $this->pivotRemoteRepository->offreByCgt($hotel);
-        dump($this->serializer->deserialize($hotelString, ResultOfferDetail::class, 'json'));
+        echo $hotelString;
+        //dump($this->serializer->deserialize($hotelString, ResultOfferDetail::class, 'json'));
     }
 
     private function all()
     {
+        //http://pivot.tourismewallonie.be/index.php/9-pivot-gest-pc/142-types-de-fiches-pivot
         $hotelString = $this->pivotRemoteRepository->query();
-        //dump($this->serializer->deserialize($hotelString, ResultAll::class, 'json'));
-        echo $hotelString;
+        $responseQuery = $this->serializer->deserialize($hotelString, ResponseQuery::class, 'json');
+        $offresShort = PivotFilter::filterByType($responseQuery, 9);
+        foreach ($offresShort as $offreShort) {
+            echo $offreShort->codeCgt."\n";
+        }
+        //echo $hotelString;
     }
 
     private function getTypes()
@@ -112,7 +120,6 @@ class LoaderCommand extends Command
             try {
                 return explode(',', file_get_contents(FileUtils::FILE_NAME_LOG));
             } catch (\Exception $exception) {
-
             }
         }
 
@@ -128,5 +135,4 @@ class LoaderCommand extends Command
 
         return [];
     }
-
 }

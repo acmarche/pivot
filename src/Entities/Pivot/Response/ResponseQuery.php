@@ -4,7 +4,7 @@ namespace AcMarche\Pivot\Entities\Pivot\Response;
 
 use AcMarche\Pivot\Entities\Pivot\OffreShort;
 
-class ResultAll
+class ResponseQuery
 {
     public int $count = 0;
     /**
