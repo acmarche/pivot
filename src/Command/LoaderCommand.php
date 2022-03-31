@@ -45,7 +45,7 @@ class LoaderCommand extends Command
             new FileLocator(__DIR__.'/../../config')
         );
 
-        $loader->load('services.php');
+    //    $loader->load('services.php');
         dump($containerBuilder->getServiceIds());
 
         $containerBuilder->addCompilerPass(new SerializerPass());
