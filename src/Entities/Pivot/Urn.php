@@ -4,9 +4,7 @@ namespace AcMarche\Pivot\Entities\Pivot;
 
 class Urn
 {
+    use LabelTrait;
+
     public string $urn;
-    /**
-     * @var Label[] $label
-     */
-    public array $label;
 }

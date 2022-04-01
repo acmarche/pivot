@@ -65,7 +65,9 @@ class LoaderCommand extends Command
         $offre = $resultOfferDetail->getOffre();
         $this->io->writeln($offre->codeCgt);
         $this->io->writeln($offre->nom);
-        dump($offre->adresse1);
+        $address = $offre->adresse1;
+        $this->io->writeln($address->localiteByLanguage());
+        $this->io->writeln($address->communeByLanguage());
         $this->io->writeln($offre->typeOffre->labelByLanguage());
 
         // $this->all();

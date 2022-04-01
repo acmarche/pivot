@@ -9,7 +9,7 @@ trait LabelTrait
      */
     public array $label;
 
-    public function labelByLanguage(string $language = 'fr'): string
+    public function labelByLanguage(string $language = Label::FR): string
     {
         foreach ($this->label as $label) {
             if ($label->get($language)) {
