@@ -8,6 +8,7 @@ use AcMarche\Pivot\Entities\Pivot\Response\TypeOffreResult;
 use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
+use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Utils\FileUtils;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
@@ -26,8 +27,11 @@ class LoaderCommand extends Command
     private SymfonyStyle $io;
     private PivotRemoteRepository $pivotRemoteRepository;
 
-    public function __construct(private SerializerInterface $serializer, string $name = null)
-    {
+    public function __construct(
+        private SerializerInterface $serializer,
+        private PivotRepository $pivotRepository,
+        string $name = null
+    ) {
         $this->pivotRemoteRepository = new PivotRemoteRepository(Pivot::FORMAT_JSON);
         parent::__construct($name);
     }
@@ -42,7 +46,8 @@ class LoaderCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        $this->all();
+       // $this->all();
+        $this->pivotRepository->getEvents();
 
         return Command::SUCCESS;
     }
@@ -91,12 +96,15 @@ class LoaderCommand extends Command
     {
         //http://pivot.tourismewallonie.be/index.php/9-pivot-gest-pc/142-types-de-fiches-pivot
         $hotelString = $this->pivotRemoteRepository->query();
+        echo $hotelString;
+
+        return;
         $responseQuery = $this->serializer->deserialize($hotelString, ResponseQuery::class, 'json');
         $offresShort = PivotFilter::filterByType($responseQuery, 9);
         foreach ($offresShort as $offreShort) {
             echo $offreShort->codeCgt."\n";
         }
-        //echo $hotelString;
+
     }
 
     private function getTypes()

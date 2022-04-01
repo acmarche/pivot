@@ -16,14 +16,20 @@ class Offer
      * @deprecated $estActive
      */
     public int $estActive;
-    public $estActiveUrn;
+    public Urn $estActiveUrn;
     /**
      * @deprecated $visibilite
      */
     public int $visibilite;
-    public $visibiliteUrn;
-    public $typeOffre;
-    public $adresse1;
+    public Urn $visibiliteUrn;
+    public TypeOffre $typeOffre;
+    public Adresse $adresse1;
+    /**
+     * @var Spec[]
+     */
     public $spec;
+    /**
+     * @var Spec[]
+     */
     public $relOffre;
 }

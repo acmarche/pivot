@@ -2,8 +2,7 @@
 
 namespace AcMarche\Pivot\Entities\Pivot;
 
-class TypeOffreShort
+class IdTypeOffre
 {
     public int $idTypeOffre;
-    public ?string $label;
 }
