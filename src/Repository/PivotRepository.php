@@ -28,7 +28,7 @@ class PivotRepository
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->offreByCgt($offreShort);
             $events[] = $resultOfferDetail->getOffre();
-           // break;
+            // break;
         }
 
         return $events;
@@ -36,11 +36,13 @@ class PivotRepository
 
     private function offreByCgt(OffreShort $offreShort): ?ResultOfferDetail
     {
-        $data = $this->pivotRemoteRepository->offreByCgt($offreShort->codeCgt);
+        return $this->cache->get('offre-'.$offreShort->dateModification, function () use ($offreShort) {
+            $data = $this->pivotRemoteRepository->offreByCgt($offreShort->codeCgt);
 
-        return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
-            DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
-        ]);
+            return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
+                DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
+            ]);
+        });
     }
 
     private function getAllData(): ?ResponseQuery

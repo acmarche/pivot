@@ -77,18 +77,18 @@ class LoaderCommand extends Command
             $this->io->writeln($offre->nom);
             $this->io->writeln($offre->typeOffre->labelByLanguage());
             $address = $offre->adresse1;
-            $this->io->writeln($address->localiteByLanguage());
-            $this->io->writeln($address->communeByLanguage());
+            $this->io->writeln(" ".$address->localiteByLanguage());
+            $this->io->writeln(" ".$address->communeByLanguage());
             $eventSpec = new EventSpec($offre->spec);
             $dates = $eventSpec->dateValidete();
-            $this->io->writeln($dates[0]->format('d-m-Y').' => '.$dates[1]->format('d-m-Y'));
-            $this->io->writeln($eventSpec->getHomePage());
-            $this->io->writeln($eventSpec->isActive());
+            $this->io->writeln(" ".$dates[0]->format('d-m-Y').' => '.$dates[1]->format('d-m-Y'));
+            $this->io->writeln(" ".$eventSpec->getHomePage());
+            $this->io->writeln(" ".$eventSpec->isActive());
             $this->display($eventSpec->getByType(SpecEnum::EMAIL));
             $this->display($eventSpec->getByType(SpecEnum::TEL));
-            $this->io->writeln($eventSpec->getByUrn(UrnEnum::DESCRIPTION, true));
+            $this->io->writeln(" ".$eventSpec->getByUrn(UrnEnum::DESCRIPTION, true));
             //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
-            $this->io->writeln($eventSpec->getByUrn(UrnEnum::TARIF, true));
+            $this->io->writeln(" ".$eventSpec->getByUrn(UrnEnum::TARIF, true));
         }
     }
 
@@ -187,7 +187,7 @@ class LoaderCommand extends Command
     {
         foreach ($specs as $spec) {
             if ($spec) {
-                $this->io->writeln($spec->value);
+                $this->io->writeln(" ".$spec->value);
             }
         }
     }
