@@ -5,36 +5,18 @@ namespace AcMarche\Pivot\Spec;
 use AcMarche\Pivot\Entities\Pivot\Spec;
 use AcMarche\Pivot\Utils\DateUtils;
 
-class EventSpec
+class SpecEvent
 {
+    use SpecTrait;
+
     public const  datedebvalid = 'urn:fld:datedebvalid';
     public const datefinvalid = "urn:fld:datefinvalid";
 
     /**
      * @param Spec[] $specs
      */
-    public function __construct(private array $specs)
+    public function __construct(array $specs)
     {
-    }
-
-    /**
-     * @param array $specs
-     * @param string $key
-     * @return null|Spec
-     */
-    public function getByUrn(string $key, bool $value = false): Spec|string|null
-    {
-        foreach ($this->specs as $spec) {
-            if ($spec->urn === $key) {
-                if ($value) {
-                    return $spec->value;
-                }
-
-                return $spec;
-            }
-        }
-
-        return null;
     }
 
     public function dateValidete(): array
@@ -74,21 +56,5 @@ class EventSpec
         }
 
         return false;
-    }
-
-    /**
-     * @param string $type
-     * @return array|Spec[]
-     */
-    public function getByType(string $type): array
-    {
-        $values = [];
-        foreach ($this->specs as $spec) {
-            if ($spec->type === $type) {
-                $values[] = $spec;
-            }
-        }
-
-        return $values;
     }
 }

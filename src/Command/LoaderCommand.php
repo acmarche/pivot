@@ -10,7 +10,7 @@ use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
-use AcMarche\Pivot\Spec\EventSpec;
+use AcMarche\Pivot\Spec\SpecEvent;
 use AcMarche\Pivot\Spec\SpecEnum;
 use AcMarche\Pivot\Spec\UrnEnum;
 use AcMarche\Pivot\Utils\FileUtils;
@@ -79,7 +79,7 @@ class LoaderCommand extends Command
             $address = $offre->adresse1;
             $this->io->writeln(" ".$address->localiteByLanguage());
             $this->io->writeln(" ".$address->communeByLanguage());
-            $eventSpec = new EventSpec($offre->spec);
+            $eventSpec = new SpecEvent($offre->spec);
             $dates = $eventSpec->dateValidete();
             $this->io->writeln(" ".$dates[0]->format('d-m-Y').' => '.$dates[1]->format('d-m-Y'));
             $this->io->writeln(" ".$eventSpec->getHomePage());
