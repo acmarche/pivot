@@ -10,6 +10,9 @@ use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
+use AcMarche\Pivot\Spec\EventSpec;
+use AcMarche\Pivot\Spec\SpecEnum;
+use AcMarche\Pivot\Spec\UrnEnum;
 use AcMarche\Pivot\Utils\FileUtils;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
@@ -65,10 +68,19 @@ class LoaderCommand extends Command
         $offre = $resultOfferDetail->getOffre();
         $this->io->writeln($offre->codeCgt);
         $this->io->writeln($offre->nom);
+        $this->io->writeln($offre->typeOffre->labelByLanguage());
         $address = $offre->adresse1;
         $this->io->writeln($address->localiteByLanguage());
         $this->io->writeln($address->communeByLanguage());
-        $this->io->writeln($offre->typeOffre->labelByLanguage());
+        $eventSpec = new EventSpec($offre->spec);
+        dump($eventSpec->dateValidete());
+        $this->io->writeln($eventSpec->getHomePage());
+        $this->io->writeln($eventSpec->isActive());
+        $this->display($eventSpec->getByType(SpecEnum::EMAIL));
+        $this->display($eventSpec->getByType(SpecEnum::TEL));
+        $this->io->writeln($eventSpec->getByUrn(UrnEnum::DESCRIPTION, true));
+      //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
+        $this->io->writeln($eventSpec->getByUrn(UrnEnum::TARIF, true));
 
         // $this->all();
         //$this->pivotRepository->getEvents();
@@ -165,5 +177,14 @@ class LoaderCommand extends Command
         }
 
         return [];
+    }
+
+    private function display(array $specs)
+    {
+        foreach ($specs as $spec) {
+            if ($spec) {
+                $this->io->writeln($spec->value);
+            }
+        }
     }
 }
