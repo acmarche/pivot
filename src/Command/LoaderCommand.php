@@ -22,7 +22,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\Serializer\DependencyInjection\SerializerPass;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -51,41 +50,46 @@ class LoaderCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        /**
-         * @var ResultOfferDetail $resultOfferDetail
-         */
-        $resultOfferDetail =
-            $this->serializer->deserialize(
-                file_get_contents('/var/www/intranet/output/event.json'),
-                ResultOfferDetail::class,
-                'json',
-                [
-                    DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
-                    //  'deserialization_path' => 'zeze',
-                ]
-            );
-
-        $offre = $resultOfferDetail->getOffre();
-        $this->io->writeln($offre->codeCgt);
-        $this->io->writeln($offre->nom);
-        $this->io->writeln($offre->typeOffre->labelByLanguage());
-        $address = $offre->adresse1;
-        $this->io->writeln($address->localiteByLanguage());
-        $this->io->writeln($address->communeByLanguage());
-        $eventSpec = new EventSpec($offre->spec);
-        dump($eventSpec->dateValidete());
-        $this->io->writeln($eventSpec->getHomePage());
-        $this->io->writeln($eventSpec->isActive());
-        $this->display($eventSpec->getByType(SpecEnum::EMAIL));
-        $this->display($eventSpec->getByType(SpecEnum::TEL));
-        $this->io->writeln($eventSpec->getByUrn(UrnEnum::DESCRIPTION, true));
-      //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
-        $this->io->writeln($eventSpec->getByUrn(UrnEnum::TARIF, true));
-
         // $this->all();
-        //$this->pivotRepository->getEvents();
+        $this->events($this->pivotRepository->getEvents());
 
         return Command::SUCCESS;
+    }
+
+    private function events(array $events)
+    {
+        /**
+         * @var ResultOfferDetail $resultOfferDetail
+         *
+         * $resultOfferDetail =
+         * $this->serializer->deserialize(
+         * file_get_contents('/var/www/intranet/output/event.json'),
+         * ResultOfferDetail::class,
+         * 'json',
+         * [
+         * DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
+         * ]
+         * );
+         * $offre = $resultOfferDetail->getOffre();
+         */
+        foreach ($events as $offre) {
+            $this->io->writeln($offre->codeCgt);
+            $this->io->writeln($offre->nom);
+            $this->io->writeln($offre->typeOffre->labelByLanguage());
+            $address = $offre->adresse1;
+            $this->io->writeln($address->localiteByLanguage());
+            $this->io->writeln($address->communeByLanguage());
+            $eventSpec = new EventSpec($offre->spec);
+            $dates = $eventSpec->dateValidete();
+            $this->io->writeln($dates[0]->format('d-m-Y').' => '.$dates[1]->format('d-m-Y'));
+            $this->io->writeln($eventSpec->getHomePage());
+            $this->io->writeln($eventSpec->isActive());
+            $this->display($eventSpec->getByType(SpecEnum::EMAIL));
+            $this->display($eventSpec->getByType(SpecEnum::TEL));
+            $this->io->writeln($eventSpec->getByUrn(UrnEnum::DESCRIPTION, true));
+            //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
+            $this->io->writeln($eventSpec->getByUrn(UrnEnum::TARIF, true));
+        }
     }
 
     private function initDi()

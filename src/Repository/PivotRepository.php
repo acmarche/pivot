@@ -27,8 +27,8 @@ class PivotRepository
         $offresShort = PivotFilter::filterByType($responseQuery, 9);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->offreByCgt($offreShort);
-            //  dump($resultOfferDetail->offre);
-            break;
+            $events[] = $resultOfferDetail->getOffre();
+           // break;
         }
 
         return $events;
