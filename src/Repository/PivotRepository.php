@@ -6,6 +6,7 @@ use AcMarche\Pivot\Entities\Pivot\OffreShort;
 use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
 use AcMarche\Pivot\Filtre\PivotFilter;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -37,7 +38,9 @@ class PivotRepository
     {
         $data = $this->pivotRemoteRepository->offreByCgt($offreShort->codeCgt);
 
-        return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json');
+        return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
+            DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
+        ]);
     }
 
     private function getAllData(): ?ResponseQuery

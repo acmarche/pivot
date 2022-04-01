@@ -8,7 +8,7 @@ class OffreItem
     public string $dateCreation;
     public string $dateModification;
     /**
-     * @var IdTypeOffre[] $typeOffre
+     * var IdTypeOffre[] $typeOffre
      */
     public array $typeOffre;
 }

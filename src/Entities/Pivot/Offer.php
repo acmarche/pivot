@@ -25,11 +25,11 @@ class Offer
     public TypeOffre $typeOffre;
     public Adresse $adresse1;
     /**
-     * @var Spec[]
+     * @var Spec[] $spec
      */
     public $spec;
     /**
-     * @var Spec[]
+     * @var RelOffre[] $relOffre
      */
     public $relOffre;
 }

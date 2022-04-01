@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Command;
 
 use AcMarche\Pivot\Entities\Person;
 use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
+use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
 use AcMarche\Pivot\Entities\Pivot\Response\TypeOffreResult;
 use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Pivot;
@@ -18,6 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\Serializer\DependencyInjection\SerializerPass;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -46,8 +48,19 @@ class LoaderCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-       // $this->all();
-        $this->pivotRepository->getEvents();
+        var_dump(
+            $this->serializer->deserialize(
+                file_get_contents('/var/www/intranet/output/event.json'),
+                ResultOfferDetail::class,
+                'json',
+                [
+                    DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
+                  //  'deserialization_path' => 'zeze',
+                ]
+            )
+        );
+        // $this->all();
+        //$this->pivotRepository->getEvents();
 
         return Command::SUCCESS;
     }
@@ -104,7 +117,6 @@ class LoaderCommand extends Command
         foreach ($offresShort as $offreShort) {
             echo $offreShort->codeCgt."\n";
         }
-
     }
 
     private function getTypes()

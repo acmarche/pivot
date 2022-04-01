@@ -26,11 +26,11 @@ class Adresse
     public float $altitude;
     public bool $noaddress;
     /**
-     * @var IdPn[] $parcNaturel
+     * var IdPnClass[] $parcNaturel
      */
     public array $parcNaturel;
     /**
-     * @var Organisme[]
+     * var Organisme[]
      */
-    public array $organisme;
+    public array $organisme22;
 }

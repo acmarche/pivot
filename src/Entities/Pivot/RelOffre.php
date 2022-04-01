@@ -6,7 +6,7 @@ class RelOffre
 {
     public string $urn;
     /**
-     * @var OffreItem[]
+     * var OffreItem[] $offre
      */
     public array $offre;
 }

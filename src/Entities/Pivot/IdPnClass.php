@@ -2,8 +2,8 @@
 
 namespace AcMarche\Pivot\Entities\Pivot;
 
-class IdPn
+class IdPnClass
 {
-    public $idPn;//todo type not work
+    public int $idPn;//todo type not work
     public string $label;
 }
