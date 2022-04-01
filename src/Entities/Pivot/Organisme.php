@@ -4,7 +4,7 @@ namespace AcMarche\Pivot\Entities\Pivot;
 
 class Organisme
 {
-    public int $idMdt;//todo type not work
+    public int $idMdt;
     public string $label;
 
     public function setIdMdt($idMdt): void

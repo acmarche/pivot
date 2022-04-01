@@ -11,4 +11,13 @@ class ResultOfferDetail
      * @var Offer[]
      */
     public array $offre;
+
+    public function getOffre(): ?Offer
+    {
+        if ($this->count > 0) {
+            return $this->offre[0];
+        }
+
+        return null;
+    }
 }

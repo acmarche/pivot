@@ -48,17 +48,26 @@ class LoaderCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        var_dump(
+        /**
+         * @var ResultOfferDetail $resultOfferDetail
+         */
+        $resultOfferDetail =
             $this->serializer->deserialize(
                 file_get_contents('/var/www/intranet/output/event.json'),
                 ResultOfferDetail::class,
                 'json',
                 [
                     DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
-                  //  'deserialization_path' => 'zeze',
+                    //  'deserialization_path' => 'zeze',
                 ]
-            )
-        );
+            );
+
+        $offre = $resultOfferDetail->getOffre();
+        $this->io->writeln($offre->codeCgt);
+        $this->io->writeln($offre->nom);
+        dump($offre->adresse1);
+        $this->io->writeln($offre->typeOffre->labelByLanguage());
+
         // $this->all();
         //$this->pivotRepository->getEvents();
 

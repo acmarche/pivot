@@ -12,7 +12,7 @@ class Adresse
      */
     public array $localite;
     /**
-     * @var Label[]
+     * @var Label[] $commune
      */
     public array $commune;
     public string $province;
@@ -32,5 +32,5 @@ class Adresse
     /**
      * var Organisme[]
      */
-    public array $organisme22;
+    public array $organisme;
 }

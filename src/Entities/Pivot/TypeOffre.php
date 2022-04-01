@@ -4,15 +4,13 @@ namespace AcMarche\Pivot\Entities\Pivot;
 
 class TypeOffre
 {
+    use LabelTrait;
+
     public string $urn;
     public string $code;
     public int $order;
     public bool $deprecated;
     public string $type;
-    /**
-     * @var Label[] $label
-     */
-    public array $label;
     public bool $root;
     public string $dateModification;
     public string $dateCreation;
