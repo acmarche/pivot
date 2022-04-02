@@ -9,7 +9,7 @@ trait SpecTrait
     /**
      * @param Spec[] $specs
      */
-    public array $specs;
+    public array $specs = [];
 
     /**
      * @param string $key

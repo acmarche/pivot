@@ -28,7 +28,7 @@ class PivotRepository
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->offreByCgt($offreShort);
             $events[] = $resultOfferDetail->getOffre();
-            // break;
+            break;
         }
 
         return $events;

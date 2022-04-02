@@ -17,25 +17,24 @@ class SpecEvent
      */
     public function __construct(array $specs)
     {
+        $this->specs = $specs;
     }
 
-    public function dateValidete(): array
+    public function dateBeginAndEnd(): array
     {
+        $dates = [];
         $format = "d/m/Y";
         $dateDebut = $this->getByUrn(self::datedebvalid, true);
         if ($dateDebut) {
-            $dateDebut = DateUtils::convertStringToDateTime($dateDebut, $format);
+            $dates[] = DateUtils::convertStringToDateTime($dateDebut, $format);
         }
 
-        $dateFin = $this->getByUrn(self::datefinvalid);
-        if ($dateFin->value) {
-            $dateFin = DateUtils::convertStringToDateTime($dateFin->value, $format);
+        $dateFin = $this->getByUrn(self::datefinvalid, true);
+        if ($dateFin) {
+            $dates[] = DateUtils::convertStringToDateTime($dateFin, $format);
         }
 
-        return [
-            $dateDebut,
-            $dateFin,
-        ];
+        return $dates;
     }
 
     public function getHomePage(): ?string

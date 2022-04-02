@@ -80,8 +80,10 @@ class LoaderCommand extends Command
             $this->io->writeln(" ".$address->localiteByLanguage());
             $this->io->writeln(" ".$address->communeByLanguage());
             $eventSpec = new SpecEvent($offre->spec);
-            $dates = $eventSpec->dateValidete();
-            $this->io->writeln(" ".$dates[0]->format('d-m-Y').' => '.$dates[1]->format('d-m-Y'));
+            $dates = $eventSpec->dateBeginAndEnd();
+            if (count($dates) > 0) {
+                $this->io->writeln(" ".$dates[0]->format('d-m-Y').' => '.$dates[1]->format('d-m-Y'));
+            }
             $this->io->writeln(" ".$eventSpec->getHomePage());
             $this->io->writeln(" ".$eventSpec->isActive());
             $this->display($eventSpec->getByType(SpecEnum::EMAIL));
