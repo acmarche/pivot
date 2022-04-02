@@ -66,13 +66,13 @@ class PivotRemoteRepository
     }
 
     /**
-     * thesaurus/family/urn:fam:1 ; fmt=xml (fam:1: hebergements)
+     * thesaurus/family/urn:fam:1;fmt=xml (fam:1: hebergements)
      * @param string $type
      * @param string|null $sousType
      */
     public function thesaurusFamily(string $type, ?string $sousType): string
     {
-        $url = $this->base_uri.'/'.Thesaurus::THESAURUS_FAMILY.'/'.$type;
+        $url = $this->base_uri.'/thesaurus/'.Thesaurus::THESAURUS_FAMILY.'/'.$type;
         if ($sousType) {
             $url .= '';
         }
@@ -94,7 +94,7 @@ class PivotRemoteRepository
 
     public function thesaurusLocalite(?int $idLocalite = null): string
     {
-        $url = $this->base_uri.'/'.Thesaurus::THESAURUS_TYPE_TINS;
+        $url = $this->base_uri.'/thesaurus/'.Thesaurus::THESAURUS_TYPE_TINS;
         if ($idLocalite) {
             $url .= '/'.$idLocalite;
         }

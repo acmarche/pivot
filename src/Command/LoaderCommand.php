@@ -10,8 +10,8 @@ use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
-use AcMarche\Pivot\Spec\SpecEvent;
 use AcMarche\Pivot\Spec\SpecEnum;
+use AcMarche\Pivot\Spec\SpecEvent;
 use AcMarche\Pivot\Spec\UrnEnum;
 use AcMarche\Pivot\Thesaurus;
 use AcMarche\Pivot\Utils\FileUtils;
@@ -51,18 +51,18 @@ class LoaderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->generateClass->generateTypeOffre();
+        $this->generateClass->generateTypeUrn();
+        //echo($this->pivotRemoteRepository->getThesaurus(Thesaurus::THESAURUS_TYPE_OFFRE));
         $this->io = new SymfonyStyle($input, $output);
 
         // $this->all();
-    //    $this->events($this->pivotRepository->getEvents());
+        //$this->events($this->pivotRepository->getEvents());
 
         return Command::SUCCESS;
     }
 
     private function events(array $events)
     {
-
         /**
          * @var ResultOfferDetail $resultOfferDetail
          *
@@ -101,7 +101,7 @@ class LoaderCommand extends Command
                 $item = $relation->offre;
                 $code = dump($item['codeCgt']);
                 $sOffre = $this->pivotRemoteRepository->offreByCgt($code);
-               // dump($sOffre);
+                dump($sOffre);
             }
         }
     }

@@ -2,6 +2,24 @@
 
 namespace AcMarche\Pivot;
 
+use AcMarche\Pivot\Entities\Person;
+/*
+enum T
+{
+    case DRAFT;
+
+    public function color(): Person
+    {
+        return match ($this) {
+            T::DRAFT => new Person(),
+        };
+    }
+}
+
+$zeze = T::DRAFT;
+$z = $zeze->color();
+echo $z->getAge();
+*/
 class PivotEnum
 {
     /*
