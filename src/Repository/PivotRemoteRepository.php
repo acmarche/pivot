@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\ConnectionPivotTrait;
 use AcMarche\Pivot\Pivot;
+use AcMarche\Pivot\Thesaurus;
 use AcMarche\Pivot\Utils\Cache;
 use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -71,7 +72,7 @@ class PivotRemoteRepository
      */
     public function thesaurusFamily(string $type, ?string $sousType): string
     {
-        $url = $this->base_uri.'/'.Pivot::THESAURUS_FAMILY.'/'.$type;
+        $url = $this->base_uri.'/'.Thesaurus::THESAURUS_FAMILY.'/'.$type;
         if ($sousType) {
             $url .= '';
         }
@@ -86,14 +87,14 @@ class PivotRemoteRepository
      */
     public function thesaurusLogique($sousType): string
     {
-        $url = $this->base_uri.'/'.Pivot::THESAURUS_TYPE_OFFRE.'/'.$sousType;
+        $url = $this->base_uri.'/'.Thesaurus::THESAURUS_TYPE_OFFRE.'/'.$sousType;
 
         return $this->executeRequest($url);
     }
 
     public function thesaurusLocalite(?int $idLocalite = null): string
     {
-        $url = $this->base_uri.'/'.Pivot::THESAURUS_TYPE_TINS;
+        $url = $this->base_uri.'/'.Thesaurus::THESAURUS_TYPE_TINS;
         if ($idLocalite) {
             $url .= '/'.$idLocalite;
         }
@@ -114,7 +115,7 @@ class PivotRemoteRepository
      */
     public function thesaurusLocaliteSearch(string $field, string $value): string
     {
-        $url = $this->base_uri.'/'.Pivot::THESAURUS_TYPE_TINS.'/'.$field.'/'.$value;
+        $url = $this->base_uri.'/'.Thesaurus::THESAURUS_TYPE_TINS.'/'.$field.'/'.$value;
 
         return $this->executeRequest($url);
     }

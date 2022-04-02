@@ -13,7 +13,9 @@ use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecEvent;
 use AcMarche\Pivot\Spec\SpecEnum;
 use AcMarche\Pivot\Spec\UrnEnum;
+use AcMarche\Pivot\Thesaurus;
 use AcMarche\Pivot\Utils\FileUtils;
+use AcMarche\Pivot\Utils\GenerateClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,6 +36,7 @@ class LoaderCommand extends Command
     public function __construct(
         private SerializerInterface $serializer,
         private PivotRepository $pivotRepository,
+        private GenerateClass $generateClass,
         string $name = null
     ) {
         $this->pivotRemoteRepository = new PivotRemoteRepository(Pivot::FORMAT_JSON);
@@ -48,16 +51,18 @@ class LoaderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->generateClass->generateTypeOffre();
         $this->io = new SymfonyStyle($input, $output);
 
         // $this->all();
-        $this->events($this->pivotRepository->getEvents());
+    //    $this->events($this->pivotRepository->getEvents());
 
         return Command::SUCCESS;
     }
 
     private function events(array $events)
     {
+
         /**
          * @var ResultOfferDetail $resultOfferDetail
          *
@@ -91,6 +96,13 @@ class LoaderCommand extends Command
             $this->io->writeln(" ".$eventSpec->getByUrn(UrnEnum::DESCRIPTION, true));
             //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
             $this->io->writeln(" ".$eventSpec->getByUrn(UrnEnum::TARIF, true));
+            foreach ($offre->relOffre as $relation) {
+                dump($relation);
+                $item = $relation->offre;
+                $code = dump($item['codeCgt']);
+                $sOffre = $this->pivotRemoteRepository->offreByCgt($code);
+               // dump($sOffre);
+            }
         }
     }
 
@@ -150,7 +162,7 @@ class LoaderCommand extends Command
 
     private function getTypes()
     {
-        $jsonString = $this->pivotRemoteRepository->getThesaurus(Pivot::THESAURUS_TYPE_OFFRE);
+        $jsonString = $this->pivotRemoteRepository->getThesaurus(Thesaurus::THESAURUS_TYPE_OFFRE);
         $titi = $this->serializer->deserialize($jsonString, TypeOffreResult::class, 'json', [
 
         ]);

@@ -80,14 +80,8 @@ class Pivot
     public const VISIBILITY_INTERNATIONAL = 40; //  international
 
     /**
-     * THESAURUS
+     * IMAGES
      */
-    public const THESAURUS_FAMILY = 'family';
-    public const THESAURUS_TYPE_OFFRE = 'typeofr';
-    public const THESAURUS_TYPE_TINS = 'tins';
-    public const THESAURUS_TYPE_CHAMP = 'typeurn';
-    public const THESAURUS_LISTE_PICTOS = 'img';
-
     public const IMG_THB_XSF = '75x75';
     public const IMG_THB_XSW = '75x-1';
     public const IMG_THB_XSH = '-1x75';

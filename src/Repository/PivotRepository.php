@@ -6,6 +6,8 @@ use AcMarche\Pivot\Entities\Pivot\OffreShort;
 use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
 use AcMarche\Pivot\Filtre\PivotFilter;
+use AcMarche\Pivot\PivotType;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -24,7 +26,7 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllData();
-        $offresShort = PivotFilter::filterByType($responseQuery, 9);
+        $offresShort = PivotFilter::filterByType($responseQuery, PivotType::EVENEMENT);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->offreByCgt($offreShort);
             $events[] = $resultOfferDetail->getOffre();
@@ -41,6 +43,7 @@ class PivotRepository
 
             return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
                 DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
+                AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
             ]);
         });
     }

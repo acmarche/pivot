@@ -9,9 +9,6 @@ class SpecEvent
 {
     use SpecTrait;
 
-    public const  datedebvalid = 'urn:fld:datedebvalid';
-    public const datefinvalid = "urn:fld:datefinvalid";
-
     /**
      * @param Spec[] $specs
      */
@@ -24,12 +21,12 @@ class SpecEvent
     {
         $dates = [];
         $format = "d/m/Y";
-        $dateDebut = $this->getByUrn(self::datedebvalid, true);
+        $dateDebut = $this->getByUrn(UrnEnum::datedebvalid, true);
         if ($dateDebut) {
             $dates[] = DateUtils::convertStringToDateTime($dateDebut, $format);
         }
 
-        $dateFin = $this->getByUrn(self::datefinvalid, true);
+        $dateFin = $this->getByUrn(UrnEnum::datefinvalid, true);
         if ($dateFin) {
             $dates[] = DateUtils::convertStringToDateTime($dateFin, $format);
         }
@@ -39,7 +36,7 @@ class SpecEvent
 
     public function getHomePage(): ?string
     {
-        $spec = $this->getByUrn("urn:fld:homepage");
+        $spec = $this->getByUrn(UrnEnum::HOMEPAGE);
         if ($spec) {
             return $spec->value;
         }
@@ -49,7 +46,7 @@ class SpecEvent
 
     public function isActive(): bool
     {
-        $spec = $this->getByUrn("urn:fld:typeevt:activrecur");
+        $spec = $this->getByUrn(UrnEnum::ACTIVE);
         if ($spec) {
             return (bool)$spec->value;
         }
