@@ -51,12 +51,12 @@ class LoaderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->generateClass->generateTypeUrn();
-        //echo($this->pivotRemoteRepository->getThesaurus(Thesaurus::THESAURUS_TYPE_OFFRE));
+        //$this->generateClass->generateTypeUrn();
+        // echo($this->pivotRemoteRepository->getThesaurus(Thesaurus::THESAURUS_TYPE_OFFRE));
         $this->io = new SymfonyStyle($input, $output);
 
         // $this->all();
-        //$this->events($this->pivotRepository->getEvents());
+        $this->events($this->pivotRepository->getEvents());
 
         return Command::SUCCESS;
     }
@@ -100,8 +100,12 @@ class LoaderCommand extends Command
                 dump($relation);
                 $item = $relation->offre;
                 $code = dump($item['codeCgt']);
-                $sOffre = $this->pivotRemoteRepository->offreByCgt($code);
-                dump($sOffre);
+                $idType = $item['typeOffre']['idTypeOffre'];
+                dump($idType);
+                $sOffre = $this->pivotRepository->offreByCgt($code, $item['dateModification']);
+                $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
+                dump($itemSpec->getByUrn(UrnEnum::URL));
+                dump($sOffre->getOffre()->nom);
             }
         }
     }

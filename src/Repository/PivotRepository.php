@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Repository;
 
+use AcMarche\Pivot\Entities\Pivot\Offer;
 use AcMarche\Pivot\Entities\Pivot\OffreShort;
 use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
@@ -22,35 +23,41 @@ class PivotRepository
     ) {
     }
 
+    /**
+     * @return array|Offer[]
+     */
     public function getEvents(): array
     {
         $events = [];
         $responseQuery = $this->getAllData();
         $offresShort = PivotFilter::filterByType($responseQuery, PivotType::EVENEMENT);
         foreach ($offresShort as $offreShort) {
-            $resultOfferDetail = $this->offreByCgt($offreShort);
+            $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification);
             $events[] = $resultOfferDetail->getOffre();
-            break;
+            //break;
         }
 
         return $events;
     }
 
-    private function offreByCgt(OffreShort $offreShort): ?ResultOfferDetail
+    public function offreByCgt(string $codeCgt, string $dateModification): ?ResultOfferDetail
     {
-        return $this->cache->get('offre-'.$offreShort->dateModification, function () use ($offreShort) {
-            $data = $this->pivotRemoteRepository->offreByCgt($offreShort->codeCgt);
+        return $this->cache->get(
+            'offre-'.$codeCgt.'-'.$dateModification,
+            function () use ($codeCgt) {
+                $data = $this->pivotRemoteRepository->offreByCgt($codeCgt);
 
-            return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
-                DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
-                AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
-            ]);
-        });
+                return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
+                    DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
+                    AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
+                ]);
+            }
+        );
     }
 
     private function getAllData(): ?ResponseQuery
     {
-        return $this->cache->get('h', function () {
+        return $this->cache->get('pivotAllData', function () {
             try {
                 $dataString = $this->pivotRemoteRepository->query();
 

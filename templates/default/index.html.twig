@@ -1,0 +1,37 @@
+{% extends '@AcMarchePivot/layout.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        {% for event in events %}
+            <div class="col-6 mb-2">
+                <div class="card">
+                    <h3 class="card-header">{{ event.nom }}</h3>
+                    {% if event.image is defined %}
+                        <img src="{{ event.image }}" class="card-img-top" alt="...">
+                    {% endif %}
+                    <div class="card-body">
+                        <p>
+                            {{ event.dates.0|format_date('full') }} au {{ event.dates.1|format_date('full') }}
+                        </p>
+                        <br/>
+                        {{ event.adresse1.cp }} {{ event.adresse1.localiteByLanguage }}
+                        ({{ event.adresse1.communeByLanguage }})<br/>
+                        {{ event.adresse1.latitude }}<br/>
+                        {% if event.email is defined %}
+                            {{ event.email }}<br/>
+                        {% endif %}
+                        {% if event.tel is defined %}
+                            {{ event.tel }}<br/>
+                        {% endif %}
+                        <br/>
+                        <span class="text-muted">
+                {{ event.description|raw }}<br/>
+                {{ event.tarif|nl2br }}
+                </span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

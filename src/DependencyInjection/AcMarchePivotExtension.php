@@ -33,7 +33,7 @@ class AcMarchePivotExtension extends Extension implements PrependExtensionInterf
         foreach (array_keys($containerBuilder->getExtensions()) as $name) {
             switch ($name) {
                 case 'twig':
-
+                    $this->loadConfig('twig');
                     break;
                 case 'vich_uploader':
 

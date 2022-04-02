@@ -14,4 +14,5 @@ class UrnEnum
     public const HOMEPAGE = "urn:fld:homepage";
     public const ACTIVE = "urn:fld:typeevt:activrecur";
     public const DATE_OBJECT = "urn:obj:date";
+    public const URL = "urn:fld:url";
 }
