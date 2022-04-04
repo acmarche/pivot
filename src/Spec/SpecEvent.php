@@ -21,12 +21,12 @@ class SpecEvent
     {
         $dates = [];
         $format = "d/m/Y";
-        $dateDebut = $this->getByUrn(UrnEnum::datedebvalid, true);
+        $dateDebut = $this->getByUrn(UrnEnum::DATE_DEB_VALID, true);
         if ($dateDebut) {
             $dates[] = DateUtils::convertStringToDateTime($dateDebut, $format);
         }
 
-        $dateFin = $this->getByUrn(UrnEnum::datefinvalid, true);
+        $dateFin = $this->getByUrn(UrnEnum::DATE_FIN_VALID, true);
         if ($dateFin) {
             $dates[] = DateUtils::convertStringToDateTime($dateFin, $format);
         }

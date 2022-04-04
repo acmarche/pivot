@@ -2,15 +2,19 @@
 
 namespace AcMarche\Pivot\Repository;
 
+use AcMarche\Pivot\Entities\Pivot\Event;
 use AcMarche\Pivot\Entities\Pivot\Offer;
-use AcMarche\Pivot\Entities\Pivot\OffreShort;
 use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
 use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\PivotType;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
@@ -24,7 +28,7 @@ class PivotRepository
     }
 
     /**
-     * @return array|Offer[]
+     * @return array|Event[]
      */
     public function getEvents(): array
     {
@@ -32,25 +36,60 @@ class PivotRepository
         $responseQuery = $this->getAllData();
         $offresShort = PivotFilter::filterByType($responseQuery, PivotType::EVENEMENT);
         foreach ($offresShort as $offreShort) {
-            $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification);
-            $events[] = $resultOfferDetail->getOffre();
-            //break;
+            $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification, Event::class);
+            dump($resultOfferDetail);
+            $offre = $resultOfferDetail;
+            $events[] = $offre;
+            break;
         }
 
         return $events;
     }
 
-    public function offreByCgt(string $codeCgt, string $dateModification): ?ResultOfferDetail
-    {
+    public function offreByCgt(
+        string $codeCgt,
+        string $dateModification,
+        string $class = ResultOfferDetail::class
+    ): ResultOfferDetail|Event|null|Offer {
         return $this->cache->get(
-            'offre-'.$codeCgt.'-'.$dateModification,
-            function () use ($codeCgt) {
+            'offre-'.time().$codeCgt.'-'.$dateModification,
+            function () use ($codeCgt, $class) {
                 $data = $this->pivotRemoteRepository->offreByCgt($codeCgt);
+                if ($class != ResultOfferDetail::class) {
+                    $tmp = json_decode($data);
+                    $data = json_encode($tmp->offre[0]);
 
-                return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
-                    DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS,
-                    AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
-                ]);
+                    return $this->serializer->deserialize($data, $class, 'json', [
+                        DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
+                        AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
+                    ]);
+                }
+                try {
+                    return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
+                        DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
+                        AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
+                    ]);
+                } catch (PartialDenormalizationException $exception) {
+                    $violations = new ConstraintViolationList();
+                    /** @var NotNormalizableValueException */
+                    foreach ($exception->getErrors() as $exception) {
+                        dump($exception);
+                        $message = sprintf(
+                            'The type must be one of "%s" ("%s" given).',
+                            implode(', ', $exception->getExpectedTypes()),
+                            $exception->getCurrentType()
+                        );
+                        $parameters = [];
+                        if ($exception->canUseMessageForUser()) {
+                            $parameters['hint'] = $exception->getMessage();
+                        }
+                        $violations->add(
+                            new ConstraintViolation($message, '', $parameters, null, $exception->getPath(), null)
+                        );
+                    }
+                }
+
+                return null;
             }
         );
     }

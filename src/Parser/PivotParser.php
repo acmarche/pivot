@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Parser;
 
-use AcMarche\Pivot\Entities\Pivot\Offer;
+use AcMarche\Pivot\Entities\Pivot\Event;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecEnum;
 use AcMarche\Pivot\Spec\SpecEvent;
@@ -15,8 +15,8 @@ class PivotParser
     }
 
     /**
-     * @param array|Offer[] $offres
-     * @return void
+     * @param array $events
+     * @return Event[]
      */
     public function parseEvents(array $events)
     {
@@ -25,11 +25,12 @@ class PivotParser
         }, $events);
     }
 
-    public function parseEvent(Offer $offre)
+    public function parseEvent(Event $offre)
     {
         $eventSpec = new SpecEvent($offre->spec);
         $dates = $eventSpec->dateBeginAndEnd();
-        $offre->dates = $dates;
+        $offre->dateBegin = $dates[0];
+        $offre->dateEnd = $dates[1];
         $offre->homepage = $eventSpec->getHomePage();
         $offre->active = $eventSpec->isActive();
         foreach ($eventSpec->getByType(SpecEnum::EMAIL) as $spec) {
@@ -47,12 +48,15 @@ class PivotParser
                 $item = $relation->offre;
                 $code = $item['codeCgt'];
                 $idType = $item['typeOffre']['idTypeOffre'];
+                dump($code);
                 $sOffre = $this->pivotRepository->offreByCgt($code, $item['dateModification']);
-                $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
-                if ($image = $itemSpec->getByUrn(UrnEnum::URL)) {
-                    $offre->image = $image->value;
+                dump($sOffre);
+                if ($sOffre) {
+                    $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
+                    if ($image = $itemSpec->getByUrn(UrnEnum::URL)) {
+                        $offre->image = $image->value;
+                    }
                 }
-//            dump($sOffre->getOffre()->nom);
             }
         }
     }

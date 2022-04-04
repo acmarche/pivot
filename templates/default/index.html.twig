@@ -11,7 +11,7 @@
                     {% endif %}
                     <div class="card-body">
                         <p>
-                            {{ event.dates.0|format_date('full') }} au {{ event.dates.1|format_date('full') }}
+                            {{ event.dateBegin|format_date('full') }} au {{ event.dateEnd|format_date('full') }}
                         </p>
                         <br/>
                         {{ event.adresse1.cp }} {{ event.adresse1.localiteByLanguage }}
