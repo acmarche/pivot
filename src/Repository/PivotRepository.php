@@ -33,11 +33,10 @@ class PivotRepository
     public function getEvents(): array
     {
         $events = [];
-        $responseQuery = $this->getAllData();
+        $responseQuery = $this->getAllDataFromRemote();
         $offresShort = PivotFilter::filterByType($responseQuery, PivotType::EVENEMENT);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification, Event::class);
-            dump($resultOfferDetail);
             $offre = $resultOfferDetail;
             $events[] = $offre;
             break;
@@ -94,7 +93,7 @@ class PivotRepository
         );
     }
 
-    private function getAllData(): ?ResponseQuery
+    private function getAllDataFromRemote(): ?ResponseQuery
     {
         return $this->cache->get('pivotAllData', function () {
             try {

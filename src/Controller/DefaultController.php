@@ -6,6 +6,7 @@ use AcMarche\Pivot\Parser\PivotParser;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecEvent;
 use AcMarche\Pivot\Spec\UrnEnum;
+use AcMarche\Pivot\Spec\UrnUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +18,8 @@ class DefaultController extends AbstractController
     public function __construct(
         private SerializerInterface $serializer,
         private PivotRepository $pivotRepository,
-        private PivotParser $pivotParser
+        private PivotParser $pivotParser,
+        private UrnUtils $specUtils
     ) {
     }
 
@@ -26,6 +28,11 @@ class DefaultController extends AbstractController
     {
         $events = $this->pivotRepository->getEvents();
         $this->pivotParser->parseEvents($events);
+        foreach ($events as $event) {
+            foreach ($event->urns as $urn) {
+                dump($urn->labelByLanguage('fr'));
+            }
+        }
 
         return $this->render(
             '@AcMarchePivot/default/index.html.twig',

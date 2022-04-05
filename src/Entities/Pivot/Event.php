@@ -15,4 +15,10 @@ class Event extends Offer
     public string|Spec|null $description;
     public string|Spec|null $tarif;
     public string $image;
+    public array $emails = [];
+    public array $tels = [];
+    /**
+     * @var Urn[] $urns
+     */
+    public array $urns = [];
 }

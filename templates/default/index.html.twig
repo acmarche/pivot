@@ -7,12 +7,18 @@
                 <div class="card">
                     <h3 class="card-header">{{ event.nom }}</h3>
                     {% if event.image is defined %}
-                        <img src="{{ event.image }}" class="card-img-top" alt="...">
+                        <img src="{{ event.image }}" style="height: 150px;" class="card-img-top" alt="...">
                     {% endif %}
                     <div class="card-body">
                         <p>
                             {{ event.dateBegin|format_date('full') }} au {{ event.dateEnd|format_date('full') }}
                         </p>
+                        {% if event.tels|length > 1 %}
+                            {{ dump(event.tels) }}
+                        {% endif %}
+                        {% if event.emails|length > 1 %}
+                            {{ dump(event.emails) }}
+                        {% endif %}
                         <br/>
                         {{ event.adresse1.cp }} {{ event.adresse1.localiteByLanguage }}
                         ({{ event.adresse1.communeByLanguage }})<br/>

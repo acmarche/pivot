@@ -7,54 +7,56 @@ use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecEnum;
 use AcMarche\Pivot\Spec\SpecEvent;
 use AcMarche\Pivot\Spec\UrnEnum;
+use AcMarche\Pivot\Spec\UrnUtils;
 
 class PivotParser
 {
-    public function __construct(private PivotRepository $pivotRepository)
+    public function __construct(private PivotRepository $pivotRepository, private UrnUtils $urnUtils)
     {
     }
 
     /**
      * @param array $events
-     * @return Event[]
      */
-    public function parseEvents(array $events)
+    public function parseEvents(array $events): void
     {
         array_map(function ($event) {
             $this->parseEvent($event);
         }, $events);
     }
 
-    public function parseEvent(Event $offre)
+    public function parseEvent(Event $event)
     {
-        $eventSpec = new SpecEvent($offre->spec);
+        foreach ($event->spec as $spec) {
+            $event->urns[] = $this->urnUtils->getInfosUrn($spec->urn);
+        }
+
+        $eventSpec = new SpecEvent($event->spec);
         $dates = $eventSpec->dateBeginAndEnd();
-        $offre->dateBegin = $dates[0];
-        $offre->dateEnd = $dates[1];
-        $offre->homepage = $eventSpec->getHomePage();
-        $offre->active = $eventSpec->isActive();
+        $event->dateBegin = $dates[0];
+        $event->dateEnd = $dates[1];
+        $event->homepage = $eventSpec->getHomePage();
+        $event->active = $eventSpec->isActive();
         foreach ($eventSpec->getByType(SpecEnum::EMAIL) as $spec) {
-            $offre->email = $spec->value;
+            $event->emails[] = $spec->value;
         }
         foreach ($eventSpec->getByType(SpecEnum::TEL) as $spec) {
-            $offre->tel = $spec->value;
+            $event->tels[] = $spec->value;
         }
-        $offre->description = $eventSpec->getByUrn(UrnEnum::DESCRIPTION, true);
+        $event->description = $eventSpec->getByUrn(UrnEnum::DESCRIPTION, true);
         //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
-        $offre->tarif = $eventSpec->getByUrn(UrnEnum::TARIF, true);
-        if (is_array($offre->relOffre)) {
-            foreach ($offre->relOffre as $relation) {
+        $event->tarif = $eventSpec->getByUrn(UrnEnum::TARIF, true);
+        if (is_array($event->relOffre)) {
+            foreach ($event->relOffre as $relation) {
                 //dump($relation);
                 $item = $relation->offre;
                 $code = $item['codeCgt'];
                 $idType = $item['typeOffre']['idTypeOffre'];
-                dump($code);
                 $sOffre = $this->pivotRepository->offreByCgt($code, $item['dateModification']);
-                dump($sOffre);
                 if ($sOffre) {
                     $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
                     if ($image = $itemSpec->getByUrn(UrnEnum::URL)) {
-                        $offre->image = $image->value;
+                        $event->image = $image->value;
                     }
                 }
             }
