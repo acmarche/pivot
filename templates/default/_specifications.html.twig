@@ -1,0 +1,6 @@
+{% for specInfo in event.specsDetailed %}
+    <strong>{{ specInfo.specDefinition.labelByLanguage('fr') }}</strong><br/>
+    {{ specInfo.specData.value }}
+    {{ dump(specInfo.specData) }}
+    <br/><br/>
+{% endfor %}
