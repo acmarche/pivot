@@ -2,12 +2,15 @@
 
 namespace AcMarche\Pivot;
 
+use AcMarche\Pivot\Utils\GenerateClass;
+
+/**
+ * @see GenerateClass
+ * http://pivot.tourismewallonie.be/index.php/9-pivot-gest-pc/142-types-de-fiches-pivot
+ * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr;fmt=json
+ */
 class PivotType
 {
-    /**
-     * http://pivot.tourismewallonie.be/index.php/9-pivot-gest-pc/142-types-de-fiches-pivot
-     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr;fmt=json
-     */
     /**
      * Hôtel
      * Root 1

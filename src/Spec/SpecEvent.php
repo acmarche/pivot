@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Spec;
 
-use AcMarche\Pivot\Entities\Pivot\Spec;
+use AcMarche\Pivot\Entities\Pivot\SpecData;
 use AcMarche\Pivot\Utils\DateUtils;
 
 class SpecEvent
@@ -10,7 +10,7 @@ class SpecEvent
     use SpecTrait;
 
     /**
-     * @param Spec[] $specs
+     * @param SpecData[] $specs
      */
     public function __construct(array $specs)
     {
@@ -21,12 +21,12 @@ class SpecEvent
     {
         $dates = [];
         $format = "d/m/Y";
-        $dateDebut = $this->getByUrn(UrnEnum::DATE_DEB_VALID, true);
+        $dateDebut = $this->getByUrn(UrnConst::DATE_DEB_VALID, true);
         if ($dateDebut) {
             $dates[] = DateUtils::convertStringToDateTime($dateDebut, $format);
         }
 
-        $dateFin = $this->getByUrn(UrnEnum::DATE_FIN_VALID, true);
+        $dateFin = $this->getByUrn(UrnConst::DATE_FIN_VALID, true);
         if ($dateFin) {
             $dates[] = DateUtils::convertStringToDateTime($dateFin, $format);
         }
@@ -36,7 +36,7 @@ class SpecEvent
 
     public function getHomePage(): ?string
     {
-        $spec = $this->getByUrn(UrnEnum::HOMEPAGE);
+        $spec = $this->getByUrn(UrnConst::HOMEPAGE);
         if ($spec) {
             return $spec->value;
         }
@@ -46,7 +46,7 @@ class SpecEvent
 
     public function isActive(): bool
     {
-        $spec = $this->getByUrn(UrnEnum::ACTIVE);
+        $spec = $this->getByUrn(UrnConst::ACTIVE);
         if ($spec) {
             return (bool)$spec->value;
         }

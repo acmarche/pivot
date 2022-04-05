@@ -10,9 +10,9 @@ use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
-use AcMarche\Pivot\Spec\SpecEnum;
+use AcMarche\Pivot\Spec\SpecTypeConst;
 use AcMarche\Pivot\Spec\SpecEvent;
-use AcMarche\Pivot\Spec\UrnEnum;
+use AcMarche\Pivot\Spec\UrnConst;
 use AcMarche\Pivot\Thesaurus;
 use AcMarche\Pivot\Utils\FileUtils;
 use AcMarche\Pivot\Utils\GenerateClass;
@@ -91,11 +91,11 @@ class LoaderCommand extends Command
             }
             $this->io->writeln(" ".$eventSpec->getHomePage());
             $this->io->writeln(" ".$eventSpec->isActive());
-            $this->display($eventSpec->getByType(SpecEnum::EMAIL));
-            $this->display($eventSpec->getByType(SpecEnum::TEL));
-            $this->io->writeln(" ".$eventSpec->getByUrn(UrnEnum::DESCRIPTION, true));
+            $this->display($eventSpec->getByType(SpecTypeConst::EMAIL));
+            $this->display($eventSpec->getByType(SpecTypeConst::TEL));
+            $this->io->writeln(" ".$eventSpec->getByUrn(UrnConst::DESCRIPTION, true));
             //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
-            $this->io->writeln(" ".$eventSpec->getByUrn(UrnEnum::TARIF, true));
+            $this->io->writeln(" ".$eventSpec->getByUrn(UrnConst::TARIF, true));
             foreach ($offre->relOffre as $relation) {
                 dump($relation);
                 $item = $relation->offre;
@@ -104,7 +104,7 @@ class LoaderCommand extends Command
                 dump($idType);
                 $sOffre = $this->pivotRepository->offreByCgt($code, $item['dateModification']);
                 $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
-                dump($itemSpec->getByUrn(UrnEnum::URL));
+                dump($itemSpec->getByUrn(UrnConst::URL));
                 dump($sOffre->getOffre()->nom);
             }
         }

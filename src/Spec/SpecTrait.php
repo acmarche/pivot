@@ -2,21 +2,21 @@
 
 namespace AcMarche\Pivot\Spec;
 
-use AcMarche\Pivot\Entities\Pivot\Spec;
+use AcMarche\Pivot\Entities\Pivot\SpecData;
 
 trait SpecTrait
 {
     /**
-     * @param Spec[] $specs
+     * @param SpecData[] $specs
      */
     public array $specs = [];
 
     /**
      * @param string $key
      * @param bool $value
-     * @return Spec|string|null
+     * @return SpecData|string|null
      */
-    public function getByUrn(string $key, bool $value = false): Spec|string|null
+    public function getByUrn(string $key, bool $value = false): SpecData|string|null
     {
         foreach ($this->specs as $spec) {
             if ($spec->urn === $key) {
@@ -33,7 +33,7 @@ trait SpecTrait
 
     /**
      * @param string $type
-     * @return array|Spec[]
+     * @return array|SpecData[]
      */
     public function getByType(string $type): array
     {

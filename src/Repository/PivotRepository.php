@@ -28,6 +28,7 @@ class PivotRepository
     }
 
     /**
+     * Retourne la liste des events
      * @return array|Event[]
      */
     public function getEvents(): array
@@ -45,13 +46,24 @@ class PivotRepository
         return $events;
     }
 
+    /***
+     * Retourne une offre
+     * Si une classe est donnée au paramètre $class,
+     * une instance de cette classe est retournée
+     *
+     * @param string $codeCgt
+     * @param string $dateModification
+     * @param string $class
+     * @return ResultOfferDetail|Event|Offer|null
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function offreByCgt(
         string $codeCgt,
         string $dateModification,
         string $class = ResultOfferDetail::class
     ): ResultOfferDetail|Event|null|Offer {
         return $this->cache->get(
-            'offre-'.time().$codeCgt.'-'.$dateModification,
+            'offre-'.$codeCgt.'-'.$dateModification,
             function () use ($codeCgt, $class) {
                 $data = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
@@ -69,23 +81,7 @@ class PivotRepository
                         AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
                     ]);
                 } catch (PartialDenormalizationException $exception) {
-                    $violations = new ConstraintViolationList();
-                    /** @var NotNormalizableValueException */
-                    foreach ($exception->getErrors() as $exception) {
-                        dump($exception);
-                        $message = sprintf(
-                            'The type must be one of "%s" ("%s" given).',
-                            implode(', ', $exception->getExpectedTypes()),
-                            $exception->getCurrentType()
-                        );
-                        $parameters = [];
-                        if ($exception->canUseMessageForUser()) {
-                            $parameters['hint'] = $exception->getMessage();
-                        }
-                        $violations->add(
-                            new ConstraintViolation($message, '', $parameters, null, $exception->getPath(), null)
-                        );
-                    }
+                    $this->getErrors($exception);
                 }
 
                 return null;
@@ -93,6 +89,11 @@ class PivotRepository
         );
     }
 
+    /**
+     * Retourne le json (string) complet du query
+     * @return ResponseQuery|null
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     private function getAllDataFromRemote(): ?ResponseQuery
     {
         return $this->cache->get('pivotAllData', function () {
@@ -105,5 +106,26 @@ class PivotRepository
 
             return null;
         });
+    }
+
+    private function getErrors(\Exception|PartialDenormalizationException $exception)
+    {
+        $violations = new ConstraintViolationList();
+        /** @var NotNormalizableValueException */
+        foreach ($exception->getErrors() as $exception) {
+            dump($exception);
+            $message = sprintf(
+                'The type must be one of "%s" ("%s" given).',
+                implode(', ', $exception->getExpectedTypes()),
+                $exception->getCurrentType()
+            );
+            $parameters = [];
+            if ($exception->canUseMessageForUser()) {
+                $parameters['hint'] = $exception->getMessage();
+            }
+            $violations->add(
+                new ConstraintViolation($message, '', $parameters, null, $exception->getPath(), null)
+            );
+        }
     }
 }

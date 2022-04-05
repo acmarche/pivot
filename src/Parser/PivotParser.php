@@ -3,10 +3,11 @@
 namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Pivot\Event;
+use AcMarche\Pivot\Entities\Pivot\SpecInfo;
 use AcMarche\Pivot\Repository\PivotRepository;
-use AcMarche\Pivot\Spec\SpecEnum;
+use AcMarche\Pivot\Spec\SpecTypeConst;
 use AcMarche\Pivot\Spec\SpecEvent;
-use AcMarche\Pivot\Spec\UrnEnum;
+use AcMarche\Pivot\Spec\UrnConst;
 use AcMarche\Pivot\Spec\UrnUtils;
 
 class PivotParser
@@ -16,6 +17,8 @@ class PivotParser
     }
 
     /**
+     * Complète la class Event
+     * Date de début, date de fin,...
      * @param array $events
      */
     public function parseEvents(array $events): void
@@ -25,10 +28,15 @@ class PivotParser
         }, $events);
     }
 
+    /**
+     * @param Event $event
+     * @return void
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function parseEvent(Event $event)
     {
         foreach ($event->spec as $spec) {
-            $event->urns[] = $this->urnUtils->getInfosUrn($spec->urn);
+            $event->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
         }
 
         $eventSpec = new SpecEvent($event->spec);
@@ -37,15 +45,15 @@ class PivotParser
         $event->dateEnd = $dates[1];
         $event->homepage = $eventSpec->getHomePage();
         $event->active = $eventSpec->isActive();
-        foreach ($eventSpec->getByType(SpecEnum::EMAIL) as $spec) {
+        foreach ($eventSpec->getByType(SpecTypeConst::EMAIL) as $spec) {
             $event->emails[] = $spec->value;
         }
-        foreach ($eventSpec->getByType(SpecEnum::TEL) as $spec) {
+        foreach ($eventSpec->getByType(SpecTypeConst::TEL) as $spec) {
             $event->tels[] = $spec->value;
         }
-        $event->description = $eventSpec->getByUrn(UrnEnum::DESCRIPTION, true);
+        $event->description = $eventSpec->getByUrn(UrnConst::DESCRIPTION, true);
         //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
-        $event->tarif = $eventSpec->getByUrn(UrnEnum::TARIF, true);
+        $event->tarif = $eventSpec->getByUrn(UrnConst::TARIF, true);
         if (is_array($event->relOffre)) {
             foreach ($event->relOffre as $relation) {
                 //dump($relation);
@@ -55,7 +63,7 @@ class PivotParser
                 $sOffre = $this->pivotRepository->offreByCgt($code, $item['dateModification']);
                 if ($sOffre) {
                     $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
-                    if ($image = $itemSpec->getByUrn(UrnEnum::URL)) {
+                    if ($image = $itemSpec->getByUrn(UrnConst::URL)) {
                         $event->image = $image->value;
                     }
                 }

@@ -3,7 +3,7 @@
 namespace AcMarche\Pivot\Spec;
 
 use AcMarche\Pivot\Entities\Pivot\Response\UrnResponse;
-use AcMarche\Pivot\Entities\Pivot\Urn;
+use AcMarche\Pivot\Entities\Pivot\UrnDefinition;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -13,7 +13,7 @@ class UrnUtils
     use SpecTrait;
 
     /**
-     * @var array|Urn[]
+     * @var array|UrnDefinition[]
      */
     public array $urns = [];
 
@@ -25,7 +25,7 @@ class UrnUtils
     }
 
     /**
-     * @return array|Urn[]
+     * @return array|UrnDefinition[]
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function loadAll(): array
@@ -38,7 +38,7 @@ class UrnUtils
         });
     }
 
-    public function getInfosUrn(string $urnKey, bool $value = false): ?Urn
+    public function getInfosUrn(string $urnKey, bool $value = false): ?UrnDefinition
     {
         if (count($this->urns) === 0) {
             $this->urns = $this->loadAll();

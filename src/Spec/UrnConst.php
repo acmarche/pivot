@@ -5,7 +5,7 @@ namespace AcMarche\Pivot\Spec;
 /**
  * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/urn;fmt=json
  */
-class UrnEnum
+class UrnConst
 {
     public const DESCRIPTION = "urn:fld:descmarket";
     public const DESCRIPTION_NL = "nl:urn:fld:descmarket";

@@ -13,12 +13,17 @@ namespace AcMarche\Pivot\Entities\Pivot;
  * • un objet
  * • un type de champ
  */
-class Spec
+class SpecData
 {
     public string $urn;
     public string $urnCat;
     public string $urnSubCat;
     public int $order;
     public string $type;
-    public string $value;
+    public ?string $value = null;
+    /**
+     * Type == Object
+     * @var SpecData[]|array
+     */
+    public array $spec;
 }

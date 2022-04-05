@@ -2,7 +2,10 @@
 
 namespace AcMarche\Pivot\Entities\Pivot;
 
-class Urn
+/**
+ * Definition de la spec
+ */
+class UrnDefinition
 {
     use LabelTrait;
 

@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Utils;
 
+use AcMarche\Pivot\PivotType;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Thesaurus;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -13,10 +14,11 @@ class GenerateClass
     }
 
     /**
+     * Generate Class @return void
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @see PivotType
      * http://pivot.tourismewallonie.be/index.php/9-pivot-gest-pc/142-types-de-fiches-pivot
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr;fmt=json
-     * @return void
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function generateTypeOffre()
     {

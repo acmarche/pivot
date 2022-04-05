@@ -2,12 +2,15 @@
 
 namespace AcMarche\Pivot\Entities\Pivot\Response;
 
-use AcMarche\Pivot\Entities\Pivot\Urn;
+use AcMarche\Pivot\Entities\Pivot\UrnDefinition;
 
+/**
+ * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/urn;fmt=json
+ */
 class UrnResponse
 {
     /**
-     * @var Urn[] $spec
+     * @var UrnDefinition[] $spec
      */
     public array $spec;
 }

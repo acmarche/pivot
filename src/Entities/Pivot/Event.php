@@ -12,13 +12,13 @@ class Event extends Offer
     public bool $active;
     public string $email;
     public string $tel;
-    public string|Spec|null $description;
-    public string|Spec|null $tarif;
+    public string|SpecData|null $description;
+    public string|SpecData|null $tarif;
     public string $image;
     public array $emails = [];
     public array $tels = [];
     /**
-     * @var Urn[] $urns
+     * @var SpecInfo[]
      */
-    public array $urns = [];
+    public array $specsDetailed;
 }

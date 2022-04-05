@@ -16,9 +16,9 @@ class Adresse
      */
     public array $commune;
     public string $province;
-    public Urn $provinceUrn;
+    public UrnLabel $provinceUrn;
     public string $pays;
-    public Urn $paysUrn;
+    public UrnLabel $paysUrn;
     public float $lambertX;
     public float $lambertY;
     public float $latitude;

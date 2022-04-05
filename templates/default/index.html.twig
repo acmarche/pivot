@@ -30,10 +30,11 @@
                             {{ event.tel }}<br/>
                         {% endif %}
                         <br/>
-                        <span class="text-muted">
-                {{ event.description|raw }}<br/>
-                {{ event.tarif|nl2br }}
-                </span>
+                        <div class="text-muted">
+                            {{ event.description|raw }}<br/>
+                            {{ event.tarif|nl2br }}
+                        </div>
+                        {% include 'AcMarchePivot/default/_specifications.html.twig' %}
                     </div>
                 </div>
             </div>

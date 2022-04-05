@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Spec;
 
-class SpecEnum
+class SpecTypeConst
 {
     public const TEL = "Phone";
     public const EMAIL = "EMail";
