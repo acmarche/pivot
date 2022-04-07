@@ -5,8 +5,8 @@ namespace AcMarche\Pivot\Parser;
 use AcMarche\Pivot\Entities\Pivot\Event;
 use AcMarche\Pivot\Entities\Pivot\SpecInfo;
 use AcMarche\Pivot\Repository\PivotRepository;
-use AcMarche\Pivot\Spec\SpecTypeConst;
 use AcMarche\Pivot\Spec\SpecEvent;
+use AcMarche\Pivot\Spec\SpecTypeConst;
 use AcMarche\Pivot\Spec\UrnConst;
 use AcMarche\Pivot\Spec\UrnUtils;
 
@@ -54,6 +54,12 @@ class PivotParser
         $event->description = $eventSpec->getByUrn(UrnConst::DESCRIPTION, true);
         //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
         $event->tarif = $eventSpec->getByUrn(UrnConst::TARIF, true);
+        $event->categories = $eventSpec->getByUrnCat(UrnConst::CATEGORIE);
+        $this->parseRelOffre($event);
+    }
+
+    public function parseRelOffre(Event $event)
+    {
         if (is_array($event->relOffre)) {
             foreach ($event->relOffre as $relation) {
                 //dump($relation);

@@ -27,6 +27,8 @@ class DefaultController extends AbstractController
         $events = $this->pivotRepository->getEvents();
         $this->pivotParser->parseEvents($events);
 
+        dump($events);
+
         return $this->render(
             '@AcMarchePivot/default/index.html.twig',
             [

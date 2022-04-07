@@ -20,7 +20,7 @@ trait ConnectionPivotTrait
     private string $base_uri;
     private string $ws_key;
 
-    public function connect(string $output): void
+    public function connect(FormatEnum $output): void
     {
         Env::loadEnv();
         $this->base_uri = $_ENV['PIVOT_BASE_URI'];
@@ -29,12 +29,13 @@ trait ConnectionPivotTrait
 
         $headers = [
             'headers' => [
-                'Accept' => $output,
+                'Accept' => $output->value,
                 'ws_key' => $this->ws_key,
             ],
         ];
 
         $this->httpClient = HttpClient::create($headers);
+        dump($this->httpClient);
     }
 
 

@@ -63,7 +63,7 @@ class PivotRepository
         string $class = ResultOfferDetail::class
     ): ResultOfferDetail|Event|null|Offer {
         return $this->cache->get(
-            'offre-'.$codeCgt.'-'.$dateModification,
+            'offre-'.time().$codeCgt.'-'.$dateModification,
             function () use ($codeCgt, $class) {
                 $data = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {

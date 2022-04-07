@@ -18,4 +18,5 @@ class UrnConst
     public const ACTIVE = "urn:fld:typeevt:activrecur";
     public const DATE_OBJECT = "urn:obj:date";
     public const URL = "urn:fld:url";
+    public const CATEGORIE = "urn:cat:classlab";
 }

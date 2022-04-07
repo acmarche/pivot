@@ -31,6 +31,27 @@ trait SpecTrait
         return null;
     }
 
+
+    /**
+     * @param string $key
+     * @param bool $value
+     * @return SpecData|string|null
+     */
+    public function getByUrnCat(string $key, bool $value = false): SpecData|string|null
+    {
+        foreach ($this->specs as $spec) {
+            if ($spec->urnCat === $key) {
+                if ($value) {
+                    return $spec->value;
+                }
+
+                return $spec;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @param string $type
      * @return array|SpecData[]

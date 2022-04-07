@@ -3,7 +3,8 @@
 namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\ConnectionPivotTrait;
-use AcMarche\Pivot\Pivot;
+use AcMarche\Pivot\ContentEnum;
+use AcMarche\Pivot\FormatEnum;
 use AcMarche\Pivot\Thesaurus;
 use AcMarche\Pivot\Utils\Cache;
 use Exception;
@@ -18,29 +19,38 @@ class PivotRemoteRepository
 
     public const SEPARATOR = '/';
 
-    public function __construct(string $output = Pivot::FORMAT_JSON)
+    public function __construct(FormatEnum $output = FormatEnum::JSON)
     {
         $this->connect($output);
         $this->cache = Cache::instance();
     }
 
     /**
-     *
      * @throws Exception|TransportExceptionInterface
      */
-    public function offreByCgt(string $codeCgt): string
+    public function offreByCgt(string $codeCgt, array $options = []): string
     {
         $options = [
-            'query' => [
-                'output' => 'html',
-                'page' => 1,
-                'fmt' => 'json',
-                'info' => true,//labels des specs et relations
-                'infolvl' => 0,//de 0 a 10
-                'nofmt,' => true,//convertir automatiquement ces contenus HTML en texte brut avec mise en page.
-                'content' => Pivot::OFFER_DETAIL_LVL_DEFAULT,//de 0 a 4
-            ],
+            'output' => 'html',
+            'page' => 1,
+            'fmt' => 'json',
+            'info' => true,//labels des specs et relations
+            'infolvl' => 0,//de 0 a 10
+            'nofmt,' => true,//convertir automatiquement ces contenus HTML en texte brut avec mise en page.
+            'content' => ContentEnum::LVL_DEFAULT->value,
         ];
+
+        $options = [
+            'content' => ContentEnum::LVL_DEFAULT->value,
+            'info' => true,
+            'infolvl' => 0,
+        ];
+
+        $params = "";
+        foreach ($options as $key => $value) {
+            $params .= $key.'='.$value.';';
+        }
+        $params = substr($params, 0, -1);
 
         return $this->executeRequest($this->base_uri.'/offer/'.$codeCgt);
     }

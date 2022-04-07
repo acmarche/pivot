@@ -7,11 +7,10 @@ use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
 use AcMarche\Pivot\Entities\Pivot\Response\TypeOffreResult;
 use AcMarche\Pivot\Filtre\PivotFilter;
-use AcMarche\Pivot\Pivot;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
-use AcMarche\Pivot\Spec\SpecTypeConst;
 use AcMarche\Pivot\Spec\SpecEvent;
+use AcMarche\Pivot\Spec\SpecTypeConst;
 use AcMarche\Pivot\Spec\UrnConst;
 use AcMarche\Pivot\Thesaurus;
 use AcMarche\Pivot\Utils\FileUtils;
@@ -31,15 +30,14 @@ class LoaderCommand extends Command
 {
     protected static $defaultName = 'pivot:loadxml';
     private SymfonyStyle $io;
-    private PivotRemoteRepository $pivotRemoteRepository;
 
     public function __construct(
         private SerializerInterface $serializer,
         private PivotRepository $pivotRepository,
+        private PivotRemoteRepository $pivotRemoteRepository,
         private GenerateClass $generateClass,
         string $name = null
     ) {
-        $this->pivotRemoteRepository = new PivotRemoteRepository(Pivot::FORMAT_JSON);
         parent::__construct($name);
     }
 
@@ -55,8 +53,10 @@ class LoaderCommand extends Command
         // echo($this->pivotRemoteRepository->getThesaurus(Thesaurus::THESAURUS_TYPE_OFFRE));
         $this->io = new SymfonyStyle($input, $output);
 
-        // $this->all();
-        $this->events($this->pivotRepository->getEvents());
+        $this->all();
+        //$this->detailOffre();
+
+        //$this->events($this->pivotRepository->getEvents());
 
         return Command::SUCCESS;
     }
@@ -144,8 +144,9 @@ class LoaderCommand extends Command
 
     private function detailOffre()
     {
-        $hotel = 'HTL-01-08GR-01AY';
-        $hotelString = $this->pivotRemoteRepository->offreByCgt($hotel);
+        $codeCgt = 'HTL-01-08GR-01AY';
+        $codeCgt = 'EVT-01-0B0S-Q0K3';
+        $hotelString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
         echo $hotelString;
         //dump($this->serializer->deserialize($hotelString, ResultOfferDetail::class, 'json'));
     }
