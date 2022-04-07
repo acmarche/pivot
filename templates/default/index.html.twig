@@ -10,9 +10,12 @@
                         <img src="{{ event.image }}" style="height: 150px;" class="card-img-top" alt="...">
                     {% endif %}
                     <div class="card-body">
-              <p><strong>{{ event.codeCgt }}</strong></p>
+                        <p><strong>{{ event.codeCgt }}</strong></p>
                         <p>
                             {{ event.dateBegin|format_date('full') }} au {{ event.dateEnd|format_date('full') }}
+                        </p>
+                        <p>
+                            <strong>Categories</strong> {{ event.categories|join(',') }}
                         </p>
                         {% if event.tels|length > 1 %}
                             {{ dump(event.tels) }}

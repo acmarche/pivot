@@ -21,4 +21,5 @@ class Event extends Offer
      * @var SpecInfo[]
      */
     public array $specsDetailed;
+    public array $categories = [];
 }

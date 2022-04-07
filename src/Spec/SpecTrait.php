@@ -35,21 +35,18 @@ trait SpecTrait
     /**
      * @param string $key
      * @param bool $value
-     * @return SpecData|string|null
+     * @return SpecData[]
      */
-    public function getByUrnCat(string $key, bool $value = false): SpecData|string|null
+    public function getByUrnCat(string $key, bool $value = false): array
     {
+        $data = [];
         foreach ($this->specs as $spec) {
-            if ($spec->urnCat === $key) {
-                if ($value) {
-                    return $spec->value;
-                }
-
-                return $spec;
+            if (isset($spec->urnCat) && $spec->urnCat === $key) {
+                $data[] = $spec;
             }
         }
 
-        return null;
+        return $data;
     }
 
     /**

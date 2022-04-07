@@ -19,7 +19,7 @@ class PivotRemoteRepository
 
     public const SEPARATOR = '/';
 
-    public function __construct(FormatEnum $output = FormatEnum::JSON)
+    public function __construct(FormatEnum $output = FormatEnum::JSON_HEADER)
     {
         $this->connect($output);
         $this->cache = Cache::instance();

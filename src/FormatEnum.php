@@ -4,6 +4,8 @@ namespace AcMarche\Pivot;
 
 enum FormatEnum: string
 {
-    case JSON = 'json';
-    case XML = 'xml';
+    case JSON_HEADER = 'application/json';
+    case JSON_FTM = 'json';
+    case XML_HEADER = 'application/xml';
+    case XML_FMT = 'xml';
 }

@@ -54,7 +54,13 @@ class PivotParser
         $event->description = $eventSpec->getByUrn(UrnConst::DESCRIPTION, true);
         //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
         $event->tarif = $eventSpec->getByUrn(UrnConst::TARIF, true);
-        $event->categories = $eventSpec->getByUrnCat(UrnConst::CATEGORIE);
+        $cats = $eventSpec->getByUrnCat(UrnConst::CATEGORIE);
+        foreach ($cats as $cat) {
+            $info = $this->urnUtils->getInfosUrn($cat->urn);
+            if ($info) {
+                $event->categories[] = $info->labelByLanguage('fr');
+            }
+        }
         $this->parseRelOffre($event);
     }
 

@@ -35,7 +35,6 @@ trait ConnectionPivotTrait
         ];
 
         $this->httpClient = HttpClient::create($headers);
-        dump($this->httpClient);
     }
 
 

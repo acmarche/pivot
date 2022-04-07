@@ -53,8 +53,7 @@ class LoaderCommand extends Command
         // echo($this->pivotRemoteRepository->getThesaurus(Thesaurus::THESAURUS_TYPE_OFFRE));
         $this->io = new SymfonyStyle($input, $output);
 
-        $this->all();
-        //$this->detailOffre();
+        $this->detailOffre();
 
         //$this->events($this->pivotRepository->getEvents());
 
