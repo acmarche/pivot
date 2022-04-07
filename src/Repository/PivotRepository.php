@@ -3,6 +3,7 @@
 namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Entities\Pivot\Event;
+use AcMarche\Pivot\Entities\Pivot\Hotel;
 use AcMarche\Pivot\Entities\Pivot\Offer;
 use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
@@ -40,7 +41,27 @@ class PivotRepository
             $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification, Event::class);
             $offre = $resultOfferDetail;
             $events[] = $offre;
-            break;
+            //break;
+        }
+
+        return $events;
+    }
+
+    /**
+     * Retourne la liste des events
+     * @return array
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function getHotels(): array
+    {
+        $events = [];
+        $responseQuery = $this->getAllDataFromRemote();
+        $offresShort = PivotFilter::filterByType($responseQuery, PivotType::HOTEL);
+        foreach ($offresShort as $offreShort) {
+            $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification, Hotel::class);
+            $offre = $resultOfferDetail;
+            $events[] = $offre;
+            //    break;
         }
 
         return $events;

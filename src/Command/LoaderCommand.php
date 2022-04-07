@@ -16,6 +16,7 @@ use AcMarche\Pivot\Thesaurus;
 use AcMarche\Pivot\Utils\FileUtils;
 use AcMarche\Pivot\Utils\GenerateClass;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,9 +27,12 @@ use Symfony\Component\Serializer\DependencyInjection\SerializerPass;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
+#[AsCommand(
+    name: 'pivot:test',
+    description: 'Add a short description for your command',
+)]
 class LoaderCommand extends Command
 {
-    protected static $defaultName = 'pivot:loadxml';
     private SymfonyStyle $io;
 
     public function __construct(

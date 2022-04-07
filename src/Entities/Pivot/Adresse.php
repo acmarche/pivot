@@ -6,6 +6,8 @@ class Adresse
 {
     public int $idIns;
     public string $ins;
+    public string $rue;
+    public string $numero;
     public string $cp;
     /**
      * @var Label[] $localite

@@ -3,6 +3,7 @@
 namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Pivot\Event;
+use AcMarche\Pivot\Entities\Pivot\Hotel;
 use AcMarche\Pivot\Entities\Pivot\SpecInfo;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecEvent;
@@ -79,6 +80,52 @@ class PivotParser
                         $event->image = $image->value;
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * @param Hotel[] $hotels
+     * @return void
+     */
+    public function parseHotels(array $hotels)
+    {
+        array_map(function ($hotel) {
+            $this->parseHotel($hotel);
+        }, $hotels);
+    }
+
+    /**
+     * @param Event $hotel
+     * @return void
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function parseHotel(Hotel $hotel)
+    {
+        foreach ($hotel->spec as $spec) {
+            $hotel->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
+        }
+
+        $eventSpec = new SpecEvent($hotel->spec);
+        $dates = $eventSpec->dateBeginAndEnd();
+      //  $hotel->dateBegin = $dates[0];
+      //  $hotel->dateEnd = $dates[1];
+        $hotel->homepage = $eventSpec->getHomePage();
+        $hotel->active = $eventSpec->isActive();
+        foreach ($eventSpec->getByType(SpecTypeConst::EMAIL) as $spec) {
+            $hotel->emails[] = $spec->value;
+        }
+        foreach ($eventSpec->getByType(SpecTypeConst::TEL) as $spec) {
+            $hotel->tels[] = $spec->value;
+        }
+        $hotel->description = $eventSpec->getByUrn(UrnConst::DESCRIPTION, true);
+        //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
+        $hotel->tarif = $eventSpec->getByUrn(UrnConst::TARIF, true);
+        $cats = $eventSpec->getByUrnCat(UrnConst::CATEGORIE);
+        foreach ($cats as $cat) {
+            $info = $this->urnUtils->getInfosUrn($cat->urn);
+            if ($info) {
+                $hotel->categories[] = $info->labelByLanguage('fr');
             }
         }
     }

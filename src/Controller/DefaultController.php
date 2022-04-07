@@ -24,40 +24,42 @@ class DefaultController extends AbstractController
     #[Route(path: '/', name: 'pivot_home')]
     public function index(): Response
     {
+        return $this->render(
+            '@AcMarchePivot/default/index.html.twig',
+            [
+
+            ]
+        );
+    }
+
+    #[Route(path: '/events', name: 'pivot_events')]
+    public function events(): Response
+    {
         $events = $this->pivotRepository->getEvents();
         $this->pivotParser->parseEvents($events);
 
-        dump($events);
-
         return $this->render(
-            '@AcMarchePivot/default/index.html.twig',
+            '@AcMarchePivot/default/events.html.twig',
             [
                 'events' => $events,
             ]
         );
     }
 
-    private function events(array $events)
+    #[Route(path: '/hotels', name: 'pivot_hotels')]
+    public function hotel(): Response
     {
-        $offres = [];
-        foreach ($events as $offre) {
-            $this->io->writeln($offre->codeCgt);
-            $this->io->writeln($offre->nom);
-            $this->io->writeln($offre->typeOffre->labelByLanguage());
-            $address = $offre->adresse1;
-            $this->io->writeln(" ".$address->localiteByLanguage());
-            $this->io->writeln(" ".$address->communeByLanguage());
-            foreach ($offre->relOffre as $relation) {
-                dump($relation);
-                $item = $relation->offre;
-                $code = dump($item['codeCgt']);
-                $idType = $item['typeOffre']['idTypeOffre'];
-                dump($idType);
-                $sOffre = $this->pivotRepository->offreByCgt($code, $item['dateModification']);
-                $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
-                dump($itemSpec->getByUrn(UrnConst::URL));
-                dump($sOffre->getOffre()->nom);
-            }
-        }
+        $hotels = $this->pivotRepository->getHotels();
+        $this->pivotParser->parseHotels($hotels);
+
+        dump($hotels);
+        //$this->pivotParser->parseEvents($events);
+
+        return $this->render(
+            '@AcMarchePivot/default/hotels.html.twig',
+            [
+                'hotels' => $hotels,
+            ]
+        );
     }
 }
