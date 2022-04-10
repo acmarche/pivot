@@ -2,28 +2,32 @@
 
 {% block body %}
 
-    <h2>{{ hotels|length }} hôtels</h2>
+    <div class="card">
+        <h3 class="card-header">{{ hotels|length }} hôtels</h3>
+        <div class="card-body">
+            <div class="row">
+                {% for offre in hotels %}
+                    <div class="col-6 mb-2">
+                        <div class="card">
+                            <h3 class="card-header">{{ offre.nom }}</h3>
+                            <div class="card-body">
+                                <p><strong>{{ offre.codeCgt }}</strong></p>
+                                {% include '@AcMarchePivot/default/_images.html.twig' %}
+                                {{ dump(offre.descriptions) }}
+                                <p>
+                                    <strong>Categories</strong> {{ offre.categories|join(',') }}
+                                </p>
+                                <div class="text-muted">
+                                    {{ offre.description|raw }}<br/>
+                                    {{ offre.tarif|nl2br }}
+                                </div>
 
-    <div class="row">
-        {% for offre in hotels %}
-            <div class="col-6 mb-2">
-                <div class="card">
-                    <h3 class="card-header">{{ offre.nom }}</h3>
-                    <div class="card-body">
-                        <p><strong>{{ offre.codeCgt }}</strong></p>
-                        {% include '@AcMarchePivot/default/_images.html.twig' %}
-                        <p>
-                            <strong>Categories</strong> {{ offre.categories|join(',') }}
-                        </p>
-                        <div class="text-muted">
-                            {{ offre.description|raw }}<br/>
-                            {{ offre.tarif|nl2br }}
+                            </div>
                         </div>
-
                     </div>
-                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        </div>
     </div>
 
 {% endblock %}

@@ -22,12 +22,12 @@ class SpecEvent
     {
         $dates = [];
         $format = "d/m/Y";
-        $dateDebut = $this->getByUrn(UrnConst::DATE_DEB_VALID, true);
+        $dateDebut = $this->getByUrn(UrnList::DATE_DEB_VALID, true);
         if ($dateDebut) {
             $dates[] = DateUtils::convertStringToDateTime($dateDebut, $format);
         }
 
-        $dateFin = $this->getByUrn(UrnConst::DATE_FIN_VALID, true);
+        $dateFin = $this->getByUrn(UrnList::DATE_FIN_VALID, true);
         if ($dateFin) {
             $dates[] = DateUtils::convertStringToDateTime($dateFin, $format);
         }
@@ -37,7 +37,7 @@ class SpecEvent
 
     public function getHomePage(): ?string
     {
-        $spec = $this->getByUrn(UrnConst::HOMEPAGE);
+        $spec = $this->getByUrn(UrnList::HOMEPAGE);
         if ($spec) {
             return $spec->value;
         }
@@ -47,7 +47,7 @@ class SpecEvent
 
     public function isActive(): bool
     {
-        $spec = $this->getByUrn(UrnConst::ACTIVE);
+        $spec = $this->getByUrn(UrnList::ACTIVE);
         if ($spec) {
             return (bool)$spec->value;
         }
@@ -61,13 +61,13 @@ class SpecEvent
     public function getDates(): array
     {
         $dates = [];
-        $specs = $this->getByUrns(UrnConst::DATE_OBJECT);
+        $specs = $this->getByUrns(UrnList::DATE_OBJECT);
         foreach ($specs as $spec) {
             foreach ($spec->spec as $data) {
-                if ($data->urn == UrnConst::DATE_DEB) {
+                if ($data->urn == UrnList::DATE_DEB) {
                     $dateBegin = $data->value;
                 }
-                if ($data->urn == UrnConst::DATE_DEB) {
+                if ($data->urn == UrnList::DATE_DEB) {
                     $dateEnd = $data->value;
                 }
             }

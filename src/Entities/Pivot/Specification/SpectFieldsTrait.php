@@ -5,7 +5,7 @@ namespace AcMarche\Pivot\Entities\Pivot\Specification;
 use AcMarche\Pivot\Entities\Pivot\SpecData;
 use AcMarche\Pivot\Entities\Pivot\SpecInfo;
 
-trait SpectTrait
+trait SpectFieldsTrait
 {
     public ?string $homepage;
     public array $emails = [];

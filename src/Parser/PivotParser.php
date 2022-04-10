@@ -9,7 +9,7 @@ use AcMarche\Pivot\Entities\Pivot\SpecInfo;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecEvent;
 use AcMarche\Pivot\Spec\SpecTypeConst;
-use AcMarche\Pivot\Spec\UrnConst;
+use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnUtils;
 
 class PivotParser
@@ -29,10 +29,11 @@ class PivotParser
         foreach ($eventSpec->getByType(SpecTypeConst::TEL) as $spec) {
             $offre->tels[] = $spec->value;
         }
-        $offre->description = $eventSpec->getByUrn(UrnConst::DESCRIPTION, true);
+        $offre->description = $eventSpec->getByUrn(UrnList::DESCRIPTION, true);
+        $offre->descriptions = $eventSpec->getByUrns(UrnList::DESCRIPTION_SHORT, true);
         //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
-        $offre->tarif = $eventSpec->getByUrn(UrnConst::TARIF, true);
-        $cats = $eventSpec->getByUrnCat(UrnConst::CATEGORIE);
+        $offre->tarif = $eventSpec->getByUrn(UrnList::TARIF, true);
+        $cats = $eventSpec->getByUrnCat(UrnList::CATEGORIE);
         foreach ($cats as $cat) {
             $info = $this->urnUtils->getInfosUrn($cat->urn);
             if ($info) {
@@ -84,7 +85,7 @@ class PivotParser
                 $sOffre = $this->pivotRepository->offreByCgt($code, $item['dateModification']);
                 if ($sOffre) {
                     $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
-                    if ($image = $itemSpec->getByUrn(UrnConst::URL)) {
+                    if ($image = $itemSpec->getByUrn(UrnList::URL)) {
                         $event->images[] = $image->value;
                     }
                 }

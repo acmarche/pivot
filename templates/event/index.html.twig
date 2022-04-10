@@ -2,29 +2,33 @@
 
 {% block body %}
 
-    <h2>{{ events|length }} Events</h2>
-    <div class="row">
-        {% for offre in events %}
-            <div class="col-6 mb-2">
-                <div class="card">
-                    <h3 class="card-header">{{ offre.nom }}</h3>
-                    {% if offre.image is defined %}
-                        <img src="{{ offre.image }}" style="height: 150px;" class="card-img-top" alt="...">
-                    {% endif %}
-                    <div class="card-body">
-                        <p><strong>{{ offre.codeCgt }}</strong></p>
-                        {% include '@AcMarchePivot/event/_dates.html.twig' %}
-                        <br/>
-                        <br/>
-                        <div class="text-muted">
-                            {{ offre.description|raw }}<br/>
-                            {{ offre.tarif|nl2br }}
+    <div class="card">
+        <h3 class="card-header">{{ events|length }} Events</h3>
+        <div class="card-body">
+            <div class="row">
+                {% for offre in events %}
+                    <div class="col-6 mb-2">
+                        <div class="card">
+                            <h3 class="card-header">{{ offre.nom }}</h3>
+                            {% if offre.image is defined %}
+                                <img src="{{ offre.image }}" style="height: 150px;" class="card-img-top" alt="...">
+                            {% endif %}
+                            <div class="card-body">
+                                <p><strong>{{ offre.codeCgt }}</strong></p>
+                                {% include '@AcMarchePivot/event/_dates.html.twig' %}
+                                <br/>
+                                <br/>
+                                <div class="text-muted">
+                                    {{ offre.description|raw }}<br/>
+                                    {{ offre.tarif|nl2br }}
+                                </div>
+                                {% include '@AcMarchePivot/default/_specifications.html.twig' with {'offre': offre} %}
+                            </div>
                         </div>
-                        {% include '@AcMarchePivot/default/_specifications.html.twig' with {'offre': offre} %}
                     </div>
-                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        </div>
     </div>
 
 {% endblock %}

@@ -16,7 +16,7 @@ trait SpecTrait
      * @param bool $value
      * @return SpecData|string|null
      */
-    public function getByUrn(string $key, bool $value = false): SpecData|string|null
+    public function getByUrn(UrnList $key, bool $value = false): SpecData|string|null
     {
         foreach ($this->specs as $spec) {
             if ($spec->urn === $key) {
@@ -35,10 +35,16 @@ trait SpecTrait
      * @param string $key
      * @return SpecData[]
      */
-    public function getByUrns(string $key): array
+    public function getByUrns(UrnList $key, bool $like = false): array
     {
         $specs = [];
         foreach ($this->specs as $spec) {
+            if ($like) {
+                if (str_contains($key, $spec->urn)) {
+                    $specs[] = $spec;
+                }
+                continue;
+            }
             if ($spec->urn === $key) {
                 $specs[] = $spec;
             }
@@ -53,7 +59,7 @@ trait SpecTrait
      * @param bool $value
      * @return SpecData[]
      */
-    public function getByUrnCat(string $key, bool $value = false): array
+    public function getByUrnCat(UrnList $key, bool $value = false): array
     {
         $data = [];
         foreach ($this->specs as $spec) {
@@ -66,10 +72,10 @@ trait SpecTrait
     }
 
     /**
-     * @param string $type
-     * @return array|SpecData[]
+     * @param SpecTypeConst $type
+     * @return SpecData[]
      */
-    public function getByType(string $type): array
+    public function getByType(SpecTypeConst $type): array
     {
         $values = [];
         foreach ($this->specs as $spec) {
