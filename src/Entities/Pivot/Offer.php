@@ -2,8 +2,12 @@
 
 namespace AcMarche\Pivot\Entities\Pivot;
 
+use AcMarche\Pivot\Spec\SpecTrait;
+
 class Offer
 {
+    use SpecTrait;
+
     public string $codeCgt;
     public string $dateCreation;
     public string $dateModification;

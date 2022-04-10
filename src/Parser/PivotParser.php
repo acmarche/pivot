@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Pivot\Event;
 use AcMarche\Pivot\Entities\Pivot\Hotel;
+use AcMarche\Pivot\Entities\Pivot\Offer;
 use AcMarche\Pivot\Entities\Pivot\SpecInfo;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecEvent;
@@ -15,6 +16,29 @@ class PivotParser
 {
     public function __construct(private PivotRepository $pivotRepository, private UrnUtils $urnUtils)
     {
+    }
+
+    public function parse(Offer|Event|Hotel $offre)
+    {
+        $eventSpec = new SpecEvent($offre->spec);
+        $offre->homepage = $eventSpec->getHomePage();
+        $offre->active = $eventSpec->isActive();
+        foreach ($eventSpec->getByType(SpecTypeConst::EMAIL) as $spec) {
+            $offre->emails[] = $spec->value;
+        }
+        foreach ($eventSpec->getByType(SpecTypeConst::TEL) as $spec) {
+            $offre->tels[] = $spec->value;
+        }
+        $offre->description = $eventSpec->getByUrn(UrnConst::DESCRIPTION, true);
+        //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
+        $offre->tarif = $eventSpec->getByUrn(UrnConst::TARIF, true);
+        $cats = $eventSpec->getByUrnCat(UrnConst::CATEGORIE);
+        foreach ($cats as $cat) {
+            $info = $this->urnUtils->getInfosUrn($cat->urn);
+            if ($info) {
+                $offre->categories[] = $info->labelByLanguage('fr');
+            }
+        }
     }
 
     /**
@@ -40,29 +64,12 @@ class PivotParser
             $event->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
         }
 
+        $this->parse($event);
         $eventSpec = new SpecEvent($event->spec);
         $datesValidite = $eventSpec->dateBeginAndEnd();
         $event->dates = $eventSpec->getDates();
         $event->dateBegin = $datesValidite[0];
         $event->dateEnd = $datesValidite[1];
-        $event->homepage = $eventSpec->getHomePage();
-        $event->active = $eventSpec->isActive();
-        foreach ($eventSpec->getByType(SpecTypeConst::EMAIL) as $spec) {
-            $event->emails[] = $spec->value;
-        }
-        foreach ($eventSpec->getByType(SpecTypeConst::TEL) as $spec) {
-            $event->tels[] = $spec->value;
-        }
-        $event->description = $eventSpec->getByUrn(UrnConst::DESCRIPTION, true);
-        //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
-        $event->tarif = $eventSpec->getByUrn(UrnConst::TARIF, true);
-        $cats = $eventSpec->getByUrnCat(UrnConst::CATEGORIE);
-        foreach ($cats as $cat) {
-            $info = $this->urnUtils->getInfosUrn($cat->urn);
-            if ($info) {
-                $event->categories[] = $info->labelByLanguage('fr');
-            }
-        }
         $this->parseRelOffre($event);
     }
 
@@ -106,28 +113,7 @@ class PivotParser
         foreach ($hotel->spec as $spec) {
             $hotel->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
         }
-
-        $eventSpec = new SpecEvent($hotel->spec);
-        $hotel->homepage = $eventSpec->getHomePage();
-        $hotel->active = $eventSpec->isActive();
-        foreach ($eventSpec->getByType(SpecTypeConst::EMAIL) as $spec) {
-            $hotel->emails[] = $spec->value;
-        }
-        foreach ($eventSpec->getByType(SpecTypeConst::TEL) as $spec) {
-            $hotel->tels[] = $spec->value;
-        }
-        $hotel->description = $eventSpec->getByUrn(UrnConst::DESCRIPTION, true);
-        //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
-        $hotel->tarif = $eventSpec->getByUrn(UrnConst::TARIF, true);
-        $cats = $eventSpec->getByUrnCat(UrnConst::CATEGORIE);
-        foreach ($cats as $cat) {
-            $info = $this->urnUtils->getInfosUrn($cat->urn);
-            if ($info) {
-                $hotel->categories[] = $info->labelByLanguage('fr');
-            }
-        }
+        $this->parse($hotel);
         $this->parseRelOffre($hotel);
-
     }
-
 }

@@ -5,20 +5,21 @@
     <h2>{{ hotels|length }} hôtels</h2>
 
     <div class="row">
-        {% for hotel in hotels %}
+        {% for offre in hotels %}
             <div class="col-6 mb-2">
                 <div class="card">
-                    <h3 class="card-header">{{ hotel.nom }}</h3>
+                    <h3 class="card-header">{{ offre.nom }}</h3>
                     <div class="card-body">
-                        <p><strong>{{ hotel.codeCgt }}</strong></p>
+                        <p><strong>{{ offre.codeCgt }}</strong></p>
+                        {% include '@AcMarchePivot/default/_images.html.twig' %}
                         <p>
-                            <strong>Categories</strong> {{ hotel.categories|join(',') }}
+                            <strong>Categories</strong> {{ offre.categories|join(',') }}
                         </p>
                         <div class="text-muted">
-                            {{ hotel.description|raw }}<br/>
-                            {{ hotel.tarif|nl2br }}
+                            {{ offre.description|raw }}<br/>
+                            {{ offre.tarif|nl2br }}
                         </div>
-                        {% include '@AcMarchePivot/default/_specifications.html.twig' with {'entity': hotel} %}
+
                     </div>
                 </div>
             </div>
