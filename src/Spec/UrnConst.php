@@ -13,6 +13,7 @@ class UrnConst
     public const NOMO = "urn:fld:nomofr";
     public const MEDIA = "urn:lnk:media:autre";
     public const DATE_DEB_VALID = 'urn:fld:datedebvalid';
+    public const DATE_DEB = 'urn:fld:date:datedeb';
     public const DATE_FIN_VALID = "urn:fld:datefinvalid";
     public const HOMEPAGE = "urn:fld:homepage";
     public const ACTIVE = "urn:fld:typeevt:activrecur";

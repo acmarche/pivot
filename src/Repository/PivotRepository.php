@@ -86,18 +86,18 @@ class PivotRepository
         return $this->cache->get(
             'offre-'.time().$codeCgt.'-'.$dateModification,
             function () use ($codeCgt, $class) {
-                $data = $this->pivotRemoteRepository->offreByCgt($codeCgt);
+                $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
-                    $tmp = json_decode($data);
-                    $data = json_encode($tmp->offre[0]);
+                    $tmp = json_decode($dataString);
+                    $dataString = json_encode($tmp->offre[0]);
 
-                    return $this->serializer->deserialize($data, $class, 'json', [
+                    return $this->serializer->deserialize($dataString, $class, 'json', [
                         DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
                         AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
                     ]);
                 }
                 try {
-                    return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
+                    return $this->serializer->deserialize($dataString, ResultOfferDetail::class, 'json', [
                         DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
                         AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
                     ]);

@@ -1,0 +1,16 @@
+
+{% if offre.tels|length > 1 %}
+    {{ dump(offre.tels) }}
+{% endif %}
+
+{% if offre.emails|length > 1 %}
+    {{ dump(offre.emails) }}
+{% endif %}
+
+{% if offre.email is defined %}
+    {{ offre.email }}<br/>
+{% endif %}
+{% if offre.tel is defined %}
+    {{ offre.tel }}<br/>
+{% endif %}
+                     

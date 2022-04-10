@@ -41,9 +41,10 @@ class PivotParser
         }
 
         $eventSpec = new SpecEvent($event->spec);
-        $dates = $eventSpec->dateBeginAndEnd();
-        $event->dateBegin = $dates[0];
-        $event->dateEnd = $dates[1];
+        $datesValidite = $eventSpec->dateBeginAndEnd();
+        $event->dates = $eventSpec->getDates();
+        $event->dateBegin = $datesValidite[0];
+        $event->dateEnd = $datesValidite[1];
         $event->homepage = $eventSpec->getHomePage();
         $event->active = $eventSpec->isActive();
         foreach ($eventSpec->getByType(SpecTypeConst::EMAIL) as $spec) {
@@ -65,7 +66,7 @@ class PivotParser
         $this->parseRelOffre($event);
     }
 
-    public function parseRelOffre(Event $event)
+    public function parseRelOffre($event)
     {
         if (is_array($event->relOffre)) {
             foreach ($event->relOffre as $relation) {
@@ -77,7 +78,7 @@ class PivotParser
                 if ($sOffre) {
                     $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
                     if ($image = $itemSpec->getByUrn(UrnConst::URL)) {
-                        $event->image = $image->value;
+                        $event->images[] = $image->value;
                     }
                 }
             }
@@ -107,9 +108,6 @@ class PivotParser
         }
 
         $eventSpec = new SpecEvent($hotel->spec);
-        $dates = $eventSpec->dateBeginAndEnd();
-      //  $hotel->dateBegin = $dates[0];
-      //  $hotel->dateEnd = $dates[1];
         $hotel->homepage = $eventSpec->getHomePage();
         $hotel->active = $eventSpec->isActive();
         foreach ($eventSpec->getByType(SpecTypeConst::EMAIL) as $spec) {
@@ -128,6 +126,8 @@ class PivotParser
                 $hotel->categories[] = $info->labelByLanguage('fr');
             }
         }
+        $this->parseRelOffre($hotel);
+
     }
 
 }

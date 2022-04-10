@@ -22,4 +22,5 @@ class Hotel extends Offer
      */
     public array $specsDetailed;
     public array $categories = [];
+    public array $images= [];
 }

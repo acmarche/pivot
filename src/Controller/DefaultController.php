@@ -4,8 +4,6 @@ namespace AcMarche\Pivot\Controller;
 
 use AcMarche\Pivot\Parser\PivotParser;
 use AcMarche\Pivot\Repository\PivotRepository;
-use AcMarche\Pivot\Spec\SpecEvent;
-use AcMarche\Pivot\Spec\UrnConst;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,7 +37,7 @@ class DefaultController extends AbstractController
         $this->pivotParser->parseEvents($events);
 
         return $this->render(
-            '@AcMarchePivot/default/events.html.twig',
+            '@AcMarchePivot/event/index.html.twig',
             [
                 'events' => $events,
             ]
@@ -53,10 +51,11 @@ class DefaultController extends AbstractController
         $this->pivotParser->parseHotels($hotels);
 
         dump($hotels);
+
         //$this->pivotParser->parseEvents($events);
 
         return $this->render(
-            '@AcMarchePivot/default/hotels.html.twig',
+            '@AcMarchePivot/hebergement/hotels.html.twig',
             [
                 'hotels' => $hotels,
             ]

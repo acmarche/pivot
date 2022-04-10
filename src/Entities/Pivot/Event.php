@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Entities\Pivot;
 
+use AcMarche\Pivot\Event\DateBeginEnd;
 use DateTimeInterface;
 
 class Event extends Offer
@@ -22,4 +23,9 @@ class Event extends Offer
      */
     public array $specsDetailed;
     public array $categories = [];
+    public array $images = [];
+    /**
+     * @var DateBeginEnd[]
+     */
+    public array $dates = [];
 }

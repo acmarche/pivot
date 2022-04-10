@@ -31,6 +31,22 @@ trait SpecTrait
         return null;
     }
 
+    /**
+     * @param string $key
+     * @return SpecData[]
+     */
+    public function getByUrns(string $key): array
+    {
+        $specs = [];
+        foreach ($this->specs as $spec) {
+            if ($spec->urn === $key) {
+                $specs[] = $spec;
+            }
+        }
+
+        return $specs;
+    }
+
 
     /**
      * @param string $key
