@@ -17,7 +17,8 @@ use Twig\Environment;
 return static function (ContainerConfigurator $containerConfigurator): void {
 
     $containerConfigurator->parameters()
-        ->set('mailer.transport', '%env(HADES_URL)%');
+        ->set('mailer.transport', '%env(HADES_URL)%')
+        ->set('kernel.cache_dir', 'var/cache');
 
     $services = $containerConfigurator->services()
         ->defaults()

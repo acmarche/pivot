@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\DependencyInjection;
 
 use Symfony\Component\Config\Builder\ConfigBuilderGenerator;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
@@ -14,12 +15,13 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * @see http://symfony.com/doc/current/cookbook/bundles/extension.html
  */
-class AcMarchePivotExtension extends Extension implements PrependExtensionInterface
+class AcMarchePivotExtension extends Extension implements PrependExtensionInterface, CompilerPassInterface
 {
     private PhpFileLoader $loader;
 
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
+        dd(123);
         $this->loader->load('services.php');
     }
 
@@ -28,6 +30,7 @@ class AcMarchePivotExtension extends Extension implements PrependExtensionInterf
      */
     public function prepend(ContainerBuilder $containerBuilder): void
     {
+        $containerBuilder->setParameter('kernel.cache_dir', 'var/cache');
         $this->loader = $this->initPhpFilerLoader($containerBuilder);
 
         foreach (array_keys($containerBuilder->getExtensions()) as $name) {
@@ -57,5 +60,10 @@ class AcMarchePivotExtension extends Extension implements PrependExtensionInterf
                 $containerBuilder->getParameter('kernel.cache_dir')
             ) : null
         );
+    }
+
+    public function process(ContainerBuilder $container)
+    {
+
     }
 }
