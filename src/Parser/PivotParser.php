@@ -2,11 +2,11 @@
 
 namespace AcMarche\Pivot\Parser;
 
-use AcMarche\Pivot\Entities\Pivot\Event;
-use AcMarche\Pivot\Entities\Pivot\Hotel;
-use AcMarche\Pivot\Entities\Pivot\Offer;
-use AcMarche\Pivot\Entities\Pivot\SpecEvent;
-use AcMarche\Pivot\Entities\Pivot\SpecInfo;
+use AcMarche\Pivot\Entities\Event\Event;
+use AcMarche\Pivot\Entities\Hebergement\Hotel;
+use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Specification\SpecEvent;
+use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecTypeConst;
 use AcMarche\Pivot\Spec\UrnList;
@@ -18,7 +18,7 @@ class PivotParser
     {
     }
 
-    public function parse(Offer|Event|Hotel $offre)
+    public function parse(Offre|Event|Hotel $offre)
     {
         $eventSpec = new SpecEvent($offre->spec);
         $offre->homepage = $eventSpec->getHomePage();

@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Controller;
 
 use AcMarche\Pivot\Parser\PivotParser;
 use AcMarche\Pivot\Repository\PivotRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;

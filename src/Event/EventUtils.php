@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Event;
 
-use AcMarche\Pivot\Entities\OffreInterface;
 use DateTime;
 use DateTimeInterface;
 

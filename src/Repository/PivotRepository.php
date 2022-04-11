@@ -2,11 +2,11 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use AcMarche\Pivot\Entities\Pivot\Event;
-use AcMarche\Pivot\Entities\Pivot\Hotel;
-use AcMarche\Pivot\Entities\Pivot\Offer;
-use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
-use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
+use AcMarche\Pivot\Entities\Event\Event;
+use AcMarche\Pivot\Entities\Hebergement\Hotel;
+use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Response\ResponseQuery;
+use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
 use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\PivotTypeEnum;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
@@ -75,14 +75,14 @@ class PivotRepository
      * @param string $codeCgt
      * @param string $dateModification
      * @param string $class
-     * @return ResultOfferDetail|Event|Offer|null
+     * @return ResultOfferDetail|Event|Offre|null
      * @throws \Psr\Cache\InvalidArgumentException
      */
     public function offreByCgt(
         string $codeCgt,
         string $dateModification,
         string $class = ResultOfferDetail::class
-    ): ResultOfferDetail|Event|null|Offer {
+    ): ResultOfferDetail|Event|null|Offre {
         return $this->cache->get(
             'offre-'.time().$codeCgt.'-'.$dateModification,
             function () use ($codeCgt, $class) {

@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Spec;
 
-use AcMarche\Pivot\Entities\Pivot\SpecData;
+use AcMarche\Pivot\Entities\Specification\SpecData;
 
 trait SpecTrait
 {

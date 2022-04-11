@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Filtre;
 
-use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
+use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\PivotTypeEnum;
 
 class PivotFilter

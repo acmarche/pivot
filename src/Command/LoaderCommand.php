@@ -2,8 +2,8 @@
 
 namespace AcMarche\Pivot\Command;
 
-use AcMarche\Pivot\Entities\Pivot\Event;
-use AcMarche\Pivot\Entities\Pivot\SpecEvent;
+use AcMarche\Pivot\Entities\Event\Event;
+use AcMarche\Pivot\Entities\Specification\SpecEvent;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Attribute\AsCommand;

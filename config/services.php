@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
+use Twig\Environment;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
 

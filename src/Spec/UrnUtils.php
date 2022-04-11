@@ -2,8 +2,8 @@
 
 namespace AcMarche\Pivot\Spec;
 
-use AcMarche\Pivot\Entities\Pivot\Response\UrnResponse;
-use AcMarche\Pivot\Entities\Pivot\UrnDefinition;
+use AcMarche\Pivot\Entities\Response\UrnResponse;
+use AcMarche\Pivot\Entities\UrnDefinition;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
