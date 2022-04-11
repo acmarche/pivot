@@ -13,7 +13,7 @@ class UrnUtils
     use SpecTrait;
 
     /**
-     * @var array|UrnDefinition[]
+     * @var UrnDefinition[]
      */
     public array $urns = [];
 

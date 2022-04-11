@@ -3,11 +3,8 @@
 namespace AcMarche\Pivot\Command;
 
 use AcMarche\Pivot\Entities\Pivot\Event;
-use AcMarche\Pivot\Parser\PivotParser;
+use AcMarche\Pivot\Entities\Pivot\SpecEvent;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
-use AcMarche\Pivot\Repository\PivotRepository;
-use AcMarche\Pivot\Spec\SpecEvent;
-use AcMarche\Pivot\Utils\GenerateClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,10 +27,7 @@ class LoaderCommand extends Command
 
     public function __construct(
         private SerializerInterface $serializer,
-        private PivotRepository $pivotRepository,
         private PivotRemoteRepository $pivotRemoteRepository,
-        private GenerateClass $generateClass,
-        private PivotParser $pivotParser,
         string $name = null
     ) {
         parent::__construct($name);

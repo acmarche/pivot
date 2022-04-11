@@ -6,8 +6,6 @@ use AcMarche\Pivot\Entities\Offre;
 use AcMarche\Pivot\Entities\OffreInterface;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Filtre\HadesFiltres;
-use AcMarche\Pivot\Utils\Cache;
-use AcMarche\Pivot\Utils\Mailer;
 use DOMDocument;
 use DOMElement;
 use DOMNodeList;
@@ -17,13 +15,8 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class HadesRepository
 {
-    private CacheInterface $cache;
-    private HadesRemoteRepository $hadesRemoteRepository;
-
-    public function __construct()
+    public function __construct(private CacheInterface $cache, private HadesRemoteRepository $hadesRemoteRepository)
     {
-        $this->hadesRemoteRepository = new HadesRemoteRepository();
-        $this->cache = Cache::instance();
     }
 
     /**
@@ -128,7 +121,7 @@ class HadesRepository
                 if (\strlen($stingError) > 0) {
                     global $wp;
                     $url = home_url($wp->request);
-                   // Mailer::sendError('xml error hades', $url.' error: '.$stingError.'contenu: '.$xmlString);
+                    // Mailer::sendError('xml error hades', $url.' error: '.$stingError.'contenu: '.$xmlString);
                 }
 
                 return null;

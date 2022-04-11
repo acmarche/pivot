@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot;
 
-use AcMarche\Pivot\Utils\Env;
 use Exception;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
@@ -16,16 +15,15 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 trait ConnectionPivotTrait
 {
     private HttpClientInterface $httpClient;
-    private string $code_query;
-    private string $base_uri;
-    private string $ws_key;
+    private ?string $code_query;
+    private ?string $base_uri;
+    private ?string $ws_key;
 
     public function connect(FormatEnum $output): void
     {
-        Env::loadEnv();
-        $this->base_uri = $_ENV['PIVOT_BASE_URI'];
-        $this->ws_key = $_ENV['PIVOT_WS_KEY'];
-        $this->code_query = $_ENV['PIVOT_CODE'];
+        $this->base_uri = $_ENV['PIVOT_BASE_URI'] ?? null;
+        $this->ws_key = $_ENV['PIVOT_WS_KEY'] ?? null;
+        $this->code_query = $_ENV['PIVOT_CODE'] ?? null;
 
         $headers = [
             'headers' => [

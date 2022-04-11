@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Entities\Pivot;
 
-use AcMarche\Pivot\Event\DateBeginEnd;
+use AcMarche\Pivot\Entities\DateBeginEnd;
 use DateTimeInterface;
 
 class Event extends Offer

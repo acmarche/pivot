@@ -1,6 +1,6 @@
 <?php
 
-namespace AcMarche\Pivot\Event;
+namespace AcMarche\Pivot\Entities;
 
 use AcMarche\Pivot\Utils\DateUtils;
 

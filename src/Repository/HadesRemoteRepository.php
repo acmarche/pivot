@@ -4,8 +4,6 @@ namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\ConnectionHadesTrait;
 use AcMarche\Pivot\Filtre\HadesFiltres;
-use AcMarche\Pivot\Utils\Cache;
-use AcMarche\Pivot\Utils\Mailer;
 use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpClient\Exception\ClientException;
@@ -19,12 +17,9 @@ class HadesRemoteRepository
 {
     use ConnectionHadesTrait;
 
-    private CacheInterface $cache;
-
-    public function __construct()
+    public function __construct(private CacheInterface $cache)
     {
         $this->connect();
-        $this->cache = Cache::instance();
     }
 
     /**

@@ -1,9 +1,10 @@
 <?php
 
-namespace AcMarche\Pivot\Spec;
+namespace AcMarche\Pivot\Entities\Pivot;
 
-use AcMarche\Pivot\Entities\Pivot\SpecData;
-use AcMarche\Pivot\Event\DateBeginEnd;
+use AcMarche\Pivot\Entities\DateBeginEnd;
+use AcMarche\Pivot\Spec\SpecTrait;
+use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Utils\DateUtils;
 
 class SpecEvent

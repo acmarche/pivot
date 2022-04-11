@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Entities;
 
-use AcMarche\Pivot\Parser\OffreParser;
 use DOMDocument;
 use DOMElement;
 

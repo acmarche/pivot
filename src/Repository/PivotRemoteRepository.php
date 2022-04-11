@@ -6,7 +6,6 @@ use AcMarche\Pivot\ConnectionPivotTrait;
 use AcMarche\Pivot\ContentEnum;
 use AcMarche\Pivot\FormatEnum;
 use AcMarche\Pivot\Thesaurus;
-use AcMarche\Pivot\Utils\Cache;
 use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -15,14 +14,9 @@ class PivotRemoteRepository
 {
     use ConnectionPivotTrait;
 
-    private CacheInterface $cache;
-
-    public const SEPARATOR = '/';
-
-    public function __construct(FormatEnum $output = FormatEnum::JSON_HEADER)
+    public function __construct(private CacheInterface $cache, FormatEnum $output = FormatEnum::JSON_HEADER)
     {
         $this->connect($output);
-        $this->cache = Cache::instance();
     }
 
     /**

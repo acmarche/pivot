@@ -1,19 +1,7 @@
 <?php
 
-namespace AcMarche\Pivot\Parser;
+namespace AcMarche\Pivot\Entities;
 
-use AcMarche\Pivot\Entities\Categorie;
-use AcMarche\Pivot\Entities\Communication;
-use AcMarche\Pivot\Entities\Contact;
-use AcMarche\Pivot\Entities\Description;
-use AcMarche\Pivot\Entities\Geocode;
-use AcMarche\Pivot\Entities\Horaire;
-use AcMarche\Pivot\Entities\Horline;
-use AcMarche\Pivot\Entities\Libelle;
-use AcMarche\Pivot\Entities\Localite;
-use AcMarche\Pivot\Entities\Media;
-use AcMarche\Pivot\Entities\Selection;
-use AcMarche\Pivot\Utils\PropertyUtils;
 use AcMarche\Pivot\Utils\SortUtils;
 use DOMAttr;
 use DOMDocument;
