@@ -1,6 +1,6 @@
 <?php
 
-namespace AcMarche\Pivot;
+namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Utils\Env;
 use Symfony\Component\HttpClient\HttpClient;

@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use AcMarche\Pivot\ConnectionHadesTrait;
 use AcMarche\Pivot\Filtre\HadesFiltres;
 use Exception;
 use Psr\Cache\InvalidArgumentException;

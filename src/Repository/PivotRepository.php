@@ -8,7 +8,7 @@ use AcMarche\Pivot\Entities\Pivot\Offer;
 use AcMarche\Pivot\Entities\Pivot\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Pivot\Response\ResultOfferDetail;
 use AcMarche\Pivot\Filtre\PivotFilter;
-use AcMarche\Pivot\PivotType;
+use AcMarche\Pivot\PivotTypeEnum;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -36,7 +36,7 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotFilter::filterByType($responseQuery, PivotType::EVENEMENT);
+        $offresShort = PivotFilter::filterByType($responseQuery, PivotTypeEnum::EVENEMENT);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification, Event::class);
             $offre = $resultOfferDetail;
@@ -56,7 +56,7 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotFilter::filterByType($responseQuery, PivotType::HOTEL);
+        $offresShort = PivotFilter::filterByType($responseQuery, PivotTypeEnum::HOTEL);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification, Hotel::class);
             $offre = $resultOfferDetail;

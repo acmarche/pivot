@@ -2,9 +2,9 @@
 
 namespace AcMarche\Pivot\Utils;
 
-use AcMarche\Pivot\PivotType;
+use AcMarche\Pivot\PivotTypeEnum;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
-use AcMarche\Pivot\Thesaurus;
+use AcMarche\Pivot\ThesaurusEnum;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class GenerateClass
@@ -16,16 +16,16 @@ class GenerateClass
     /**
      * Generate Class @return void
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     * @see PivotType
+     * @see PivotTypeEnum
      * http://pivot.tourismewallonie.be/index.php/9-pivot-gest-pc/142-types-de-fiches-pivot
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr;fmt=json
      */
     public function generateTypeOffre()
     {
-        $thesaurus = json_decode($this->pivotRemoteRepository->getThesaurus(Thesaurus::THESAURUS_TYPE_OFFRE));
+        $thesaurus = json_decode($this->pivotRemoteRepository->getThesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE));
         echo "<?php \n ";
         echo "namespace AcMarche\Pivot; \n ";
-        echo "Class PivotType { \n ";
+        echo "enum PivotType: int { \n ";
         foreach ($thesaurus->spec as $spec) {
             $label = $spec->label[0]->value;
             $slug = strtoupper($this->slugger->slug($label, "_"));
@@ -38,7 +38,7 @@ class GenerateClass
                 echo "@eprecated ".$spec->deprecated." \n ";
             }
             echo "*/ \n";
-            echo 'public const '.$slug.' = '."$spec->order; \n ";
+            echo 'case '.$slug.' = '."$spec->order; \n ";
         }
         echo "}";
     }
@@ -51,7 +51,7 @@ class GenerateClass
      */
     public function generateTypeUrn()
     {
-        $thesaurus = $this->pivotRemoteRepository->getThesaurus(Thesaurus::THESAURUS_TYPE_OFFRE);
+        $thesaurus = $this->pivotRemoteRepository->getThesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE);
         echo $thesaurus;
     }
 
