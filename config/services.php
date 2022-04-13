@@ -14,8 +14,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 return static function (ContainerConfigurator $containerConfigurator): void {
 
     $containerConfigurator->parameters()
-        ->set('mailer.transport', '%env(HADES_URL)%')
-        ->set('kernel.cache_dir', 'var/cache');
+        ->set('mailer.transport', '%env(HADES_URL)%');
 
     $services = $containerConfigurator->services()
         ->defaults()
@@ -32,23 +31,23 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->load('AcMarche\Pivot\\', __DIR__.'/../src/*')
         ->exclude([__DIR__.'/../src/{Entities,Tests}']);
 
-
-    $services->set('pivotRepository', PivotRepository::class)
-        ->public();
-
-    $services->set('pivotRemoteRepository', PivotRemoteRepository::class);
-    $services->set('urnUtils', UrnUtils::class);
-    $services->set('pivotParser', PivotParser::class);
-
-    $services->set('Jfs', Jf::class)
-        ->public();
-
-    $services->set('slugger', AsciiSlugger::class);
+    $services->set('Jf', Jf::class)->public();
     $services->set('dotenv', Dotenv::class)->public();
 
-    $services->alias(PivotParser::class, 'pivotParser');
-    $services->alias(UrnUtils::class, 'urnUtils');
-    $services->alias(SluggerInterface::class, 'slugger');
+    /*
+        $services->set('pivotRepository', PivotRepository::class)
+            ->pub();
 
+    /*    $services->set('pivotRemoteRepository', PivotRemoteRepository::class);
+        $services->set('urnUtils', UrnUtils::class);
+        $services->set('pivotParser', PivotParser::class);
+
+        $services->set('slugger', AsciiSlugger::class);
+        $services->set('dotenv', Dotenv::class)->public();
+
+        $services->alias(PivotParser::class, 'pivotParser');
+        $services->alias(UrnUtils::class, 'urnUtils');
+        $services->alias(SluggerInterface::class, 'slugger');
+    */
 
 };

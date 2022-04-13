@@ -21,7 +21,6 @@ class AcMarchePivotExtension extends Extension implements PrependExtensionInterf
 
     public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
-        dd(123);
         $this->loader->load('services.php');
     }
 
@@ -30,7 +29,6 @@ class AcMarchePivotExtension extends Extension implements PrependExtensionInterf
      */
     public function prepend(ContainerBuilder $containerBuilder): void
     {
-        $containerBuilder->setParameter('kernel.cache_dir', 'var/cache');
         $this->loader = $this->initPhpFilerLoader($containerBuilder);
 
         foreach (array_keys($containerBuilder->getExtensions()) as $name) {

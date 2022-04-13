@@ -82,7 +82,7 @@ class PivotRepository
      */
     public function offreByCgt(
         string $codeCgt,
-        string $dateModification,
+        string $dateModification = "xx",
         string $class = ResultOfferDetail::class
     ): ResultOfferDetail|Event|null|Offre {
         return $this->cache->get(
@@ -99,10 +99,11 @@ class PivotRepository
                     ]);
                 }
                 try {
-                    return $this->serializer->deserialize($dataString, ResultOfferDetail::class, 'json', [
+                    $t = $this->serializer->deserialize($dataString, ResultOfferDetail::class, 'json', [
                         DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
                         AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
                     ]);
+                    dd($t);
                 } catch (PartialDenormalizationException $exception) {
                     $this->getErrors($exception);
                 }

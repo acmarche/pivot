@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot;
 
+use AcMarche\Pivot\Entities\Person;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class Jf
@@ -13,7 +14,15 @@ class Jf
 
     public function test()
     {
-        $data = ['nom' => 'jf', 'prenom' => 'sene'];
-        dump($this->serializer->serialize($data, 'json'));
+        $string = json_encode([
+            'nom' => "jf",
+            "prenom" => "jennni",
+            "adresse" => [
+                ["rue" => "rue jolis bois", "numero" => 24],
+                ["rue" => "rue cares", "numero" => 12],
+            ],
+        ]);
+        dd($this->serializer);
+        dd($this->serializer->deserialize($string, Person::class, 'json'));
     }
 }
