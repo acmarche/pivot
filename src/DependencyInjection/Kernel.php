@@ -1,6 +1,6 @@
 <?php
 
-namespace AcMarche\Pivot;
+namespace AcMarche\Pivot\DependencyInjection;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;

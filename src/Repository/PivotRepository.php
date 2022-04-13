@@ -56,7 +56,9 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllDataFromRemote();
+        dd($responseQuery);
         $offresShort = PivotFilter::filterByType($responseQuery, PivotTypeEnum::HOTEL);
+
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification, Hotel::class);
             $offre = $resultOfferDetail;
