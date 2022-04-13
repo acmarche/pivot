@@ -22,7 +22,6 @@ class Jf
                 ["rue" => "rue cares", "numero" => 12],
             ],
         ]);
-        dd($this->serializer);
         dd($this->serializer->deserialize($string, Person::class, 'json'));
     }
 }
