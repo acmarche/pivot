@@ -19,7 +19,7 @@ trait SpecTrait
     public function getByUrn(UrnList $key, bool $value = false): SpecData|string|null
     {
         foreach ($this->specs as $spec) {
-            if ($spec->urn === $key) {
+            if ($spec->urn === $key->value) {
                 if ($value) {
                     return $spec->value;
                 }

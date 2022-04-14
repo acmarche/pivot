@@ -170,7 +170,6 @@ class PivotRepository
         foreach ($offres as $offre) {
             if (is_array($offre->relOffre)) {
                 foreach ($offre->relOffre as $relation) {
-                    //dump($relation);
                     $item   = $relation->offre;
                     $code   = $item['codeCgt'];
                     $idType = $item['typeOffre']['idTypeOffre'];
