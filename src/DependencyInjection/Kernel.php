@@ -11,14 +11,12 @@ class Kernel extends BaseKernel
 
     public function getCacheDir(): string
     {
-
-        return '/var/www/new/var/cache';
+        return dirname(__DIR__).'/../../../var/cache';
     }
 
     public function getLogDir(): string
     {
-        return '/var/www/new/var/log';
+        return dirname(__DIR__).'/../../../var/logs';
     }
-
 
 }
