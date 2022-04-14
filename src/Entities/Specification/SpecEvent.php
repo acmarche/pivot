@@ -65,16 +65,15 @@ class SpecEvent
         $specs = $this->getByUrns(UrnList::DATE_OBJECT);
         foreach ($specs as $spec) {
             foreach ($spec->spec as $data) {
-                if ($data->urn == UrnList::DATE_DEB) {
+                if ($data->urn == UrnList::DATE_DEB->value) {
                     $dateBegin = $data->value;
                 }
-                if ($data->urn == UrnList::DATE_DEB) {
+                if ($data->urn == UrnList::DATE_DEB->value) {
                     $dateEnd = $data->value;
                 }
             }
             $dates[] = new DateBeginEnd($dateBegin, $dateEnd);
         }
-
         return $dates;
     }
 }

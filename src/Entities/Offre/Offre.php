@@ -43,4 +43,19 @@ class Offre
      * @var RelOffre[] $relOffre
      */
     public $relOffre;
+    public array $images = [];
+
+    /**
+     * Alias
+     */
+    public function getAdresse(): ?Adresse
+    {
+        return $this->adresse1;
+    }
+
+    //todo
+    public function getNom2(string $language)
+    {
+
+    }
 }

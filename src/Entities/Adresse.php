@@ -39,8 +39,8 @@ class Adresse
     public function localiteByLanguage(string $language = Label::FR): string
     {
         foreach ($this->localite as $label) {
-            if ($label->get($language)) {
-                return $label->get($language);
+            if ($value = $label->get($language)) {
+                return $value;
             }
         }
 

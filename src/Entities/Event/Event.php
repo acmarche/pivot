@@ -23,4 +23,13 @@ class Event extends Offre
      * @var DateBeginEnd[]
      */
     public array $dates = [];
+
+    public function firstDate(): ?DateBeginEnd
+    {
+        if (count($this->dates) > 0) {
+            return $this->dates[array_key_first($this->dates)];
+        }
+
+        return null;
+    }
 }

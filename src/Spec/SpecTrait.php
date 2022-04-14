@@ -32,20 +32,20 @@ trait SpecTrait
     }
 
     /**
-     * @param string $key
      * @return SpecData[]
      */
     public function getByUrns(UrnList $key, bool $like = false): array
     {
         $specs = [];
+
         foreach ($this->specs as $spec) {
             if ($like) {
-                if (str_contains($key, $spec->urn)) {
+                if (str_contains($key->value, $spec->urn)) {
                     $specs[] = $spec;
                 }
                 continue;
             }
-            if ($spec->urn === $key) {
+            if ($spec->urn === $key->value) {
                 $specs[] = $spec;
             }
         }

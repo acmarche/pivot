@@ -7,33 +7,32 @@ use AcMarche\Pivot\Entities\Hebergement\Hotel;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecEvent;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
-use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecTypeConst;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnUtils;
 
 class PivotParser
 {
-    public function __construct(private PivotRepository $pivotRepository, private UrnUtils $urnUtils)
+    public function __construct(private UrnUtils $urnUtils)
     {
     }
 
     public function parse(Offre|Event|Hotel $offre)
     {
-        $eventSpec = new SpecEvent($offre->spec);
+        $eventSpec       = new SpecEvent($offre->spec);
         $offre->homepage = $eventSpec->getHomePage();
-        $offre->active = $eventSpec->isActive();
+        $offre->active   = $eventSpec->isActive();
         foreach ($eventSpec->getByType(SpecTypeConst::EMAIL) as $spec) {
             $offre->emails[] = $spec->value;
         }
         foreach ($eventSpec->getByType(SpecTypeConst::TEL) as $spec) {
             $offre->tels[] = $spec->value;
         }
-        $offre->description = $eventSpec->getByUrn(UrnList::DESCRIPTION, true);
+        $offre->description  = $eventSpec->getByUrn(UrnList::DESCRIPTION, true);
         $offre->descriptions = $eventSpec->getByUrns(UrnList::DESCRIPTION_SHORT, true);
-        //  $this->io->writeln($eventSpec->getByUrn(UrnEnum::NOMO, true));
+
         $offre->tarif = $eventSpec->getByUrn(UrnList::TARIF, true);
-        $cats = $eventSpec->getByUrnCat(UrnList::CATEGORIE);
+        $cats         = $eventSpec->getByUrnCat(UrnList::CATEGORIE);
         foreach ($cats as $cat) {
             $info = $this->urnUtils->getInfosUrn($cat->urn);
             if ($info) {
@@ -45,6 +44,7 @@ class PivotParser
     /**
      * Complète la class Event
      * Date de début, date de fin,...
+     *
      * @param array $events
      */
     public function parseEvents(array $events): void
@@ -54,50 +54,28 @@ class PivotParser
         }, $events);
     }
 
-    /**
-     * @param Event $event
-     * @return void
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    public function parseEvent(Event $event)
+    public function parseEvent(Event $event): void
     {
         foreach ($event->spec as $spec) {
             $event->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
         }
-
         $this->parse($event);
-        $eventSpec = new SpecEvent($event->spec);
+        $eventSpec     = new SpecEvent($event->spec);
         $datesValidite = $eventSpec->dateBeginAndEnd();
-        $event->dates = $eventSpec->getDates();
-        $event->dateBegin = $datesValidite[0];
-        $event->dateEnd = $datesValidite[1];
-        $this->parseRelOffre($event);
-    }
 
-    public function parseRelOffre($event)
-    {
-        if (is_array($event->relOffre)) {
-            foreach ($event->relOffre as $relation) {
-                //dump($relation);
-                $item = $relation->offre;
-                $code = $item['codeCgt'];
-                $idType = $item['typeOffre']['idTypeOffre'];
-                $sOffre = $this->pivotRepository->offreByCgt($code, $item['dateModification']);
-                if ($sOffre) {
-                    $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
-                    if ($image = $itemSpec->getByUrn(UrnList::URL)) {
-                        $event->images[] = $image->value;
-                    }
-                }
-            }
+        $event->dates = $eventSpec->getDates();
+        if (count($event->dates) > 0) {
+            $fistDate         = $event->firstDate();
+            $event->dateBegin = $fistDate->date_begin;
+            $event->dateEnd   = $fistDate->date_end;
         }
     }
 
+
     /**
      * @param Hotel[] $hotels
-     * @return void
      */
-    public function parseHotels(array $hotels)
+    public function parseHotels(array $hotels): void
     {
         array_map(function ($hotel) {
             $this->parseHotel($hotel);
@@ -105,16 +83,13 @@ class PivotParser
     }
 
     /**
-     * @param Event $hotel
-     * @return void
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @param Hotel $hotel
      */
-    public function parseHotel(Hotel $hotel)
+    public function parseHotel(Hotel $hotel): void
     {
         foreach ($hotel->spec as $spec) {
             $hotel->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
         }
         $this->parse($hotel);
-        $this->parseRelOffre($hotel);
     }
 }
