@@ -1,6 +1,5 @@
 <?php
 
-use AcMarche\Pivot\Jf;
 use AcMarche\Pivot\Parser\PivotParser;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
@@ -31,12 +30,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->load('AcMarche\Pivot\\', __DIR__.'/../src/*')
         ->exclude([__DIR__.'/../src/{Entities,Tests}']);
 
-    $services->set('Jf', Jf::class)->public();
     $services->set('dotenv', Dotenv::class)->public();
 
-    /*
-        $services->set('pivotRepository', PivotRepository::class)
-            ->pub();
+    $services->set('pivotRepository', PivotRepository::class)
+        ->public();
 
     /*    $services->set('pivotRemoteRepository', PivotRemoteRepository::class);
         $services->set('urnUtils', UrnUtils::class);

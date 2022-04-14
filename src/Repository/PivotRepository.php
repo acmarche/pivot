@@ -103,7 +103,7 @@ class PivotRepository
                         DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
                         AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
                     ]);
-                    dd($t);
+                    return $t;
                 } catch (PartialDenormalizationException $exception) {
                     $this->getErrors($exception);
                 }
