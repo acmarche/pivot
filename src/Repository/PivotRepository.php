@@ -10,24 +10,17 @@ use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
 use AcMarche\Pivot\Entities\Specification\SpecEvent;
 use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Parser\PivotParser;
+use AcMarche\Pivot\Parser\PivotSerializer;
 use AcMarche\Pivot\PivotTypeEnum;
 use AcMarche\Pivot\Spec\UrnList;
-use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
-use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class PivotRepository
 {
     public function __construct(
         private PivotRemoteRepository $pivotRemoteRepository,
         private PivotParser $pivotParser,
-        private SerializerInterface $serializer,
+        private PivotSerializer $pivotSerializer,
         private CacheInterface $cache
     ) {
     }
@@ -42,7 +35,11 @@ class PivotRepository
         $responseQuery = $this->getAllDataFromRemote();
         $offresShort   = PivotFilter::filterByType($responseQuery, PivotTypeEnum::EVENEMENT);
         foreach ($offresShort as $offreShort) {
-            $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification, Event::class);
+            $resultOfferDetail = $this->getOffreByCgt(
+                $offreShort->codeCgt,
+                $offreShort->dateModification,
+                Event::class
+            );
             $offre             = $resultOfferDetail;
             $events[]          = $offre;
             //break;
@@ -65,7 +62,11 @@ class PivotRepository
         $offresShort   = PivotFilter::filterByType($responseQuery, PivotTypeEnum::HOTEL);
 
         foreach ($offresShort as $offreShort) {
-            $resultOfferDetail = $this->offreByCgt($offreShort->codeCgt, $offreShort->dateModification, Hotel::class);
+            $resultOfferDetail = $this->getOffreByCgt(
+                $offreShort->codeCgt,
+                $offreShort->dateModification,
+                Hotel::class
+            );
             $offre             = $resultOfferDetail;
             $events[]          = $offre;
             //    break;
@@ -86,11 +87,11 @@ class PivotRepository
      * @return ResultOfferDetail|Event|Offre|null
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function offreByCgt(
+    public function getOffreByCgt(
         string $codeCgt,
         string $dateModification = "xx",
         string $class = ResultOfferDetail::class
-    ): ResultOfferDetail|Event|null|Offre {
+    ): ResultOfferDetail|Event|Offre|null {
         return $this->cache->get(
             'offre-'.time().$codeCgt.'-'.$dateModification,
             function () use ($codeCgt, $class) {
@@ -99,65 +100,33 @@ class PivotRepository
                     $tmp        = json_decode($dataString);
                     $dataString = json_encode($tmp->offre[0]);
 
-                    return $this->serializer->deserialize($dataString, $class, 'json', [
-                        DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
-                        AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES            => true,
-                    ]);
-                }
-                try {
-                    $t = $this->serializer->deserialize($dataString, ResultOfferDetail::class, 'json', [
-                        DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
-                        AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES            => true,
-                    ]);
-
-                    return $t;
-                } catch (PartialDenormalizationException $exception) {
-                    $this->getErrors($exception);
+                    return $this->pivotSerializer->deserializeToClass($dataString, $class);
                 }
 
-                return null;
+                return $this->pivotSerializer->deserializeToClass($dataString, ResultOfferDetail::class);
             }
         );
     }
 
+    public function getEvent(string $codeCgt): ?Event
+    {
+        $event = $this->getOffreByCgt($codeCgt, $codeCgt, Event::class);
+        $this->pivotParser->parseEvent($event);
+        $this->parseRelOffres([$event]);
+
+        return $event;
+    }
+
     /**
      * Retourne le json (string) complet du query
-     * @return ResponseQuery|null
-     * @throws \Psr\Cache\InvalidArgumentException
      */
     private function getAllDataFromRemote(): ?ResponseQuery
     {
         return $this->cache->get('pivotAllData', function () {
-            try {
-                $dataString = $this->pivotRemoteRepository->query();
+            $dataString = $this->pivotRemoteRepository->query();
 
-                return $this->serializer->deserialize($dataString, ResponseQuery::class, 'json');
-            } catch (TransportExceptionInterface $e) {
-            }
-
-            return null;
+            return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class, 'json');
         });
-    }
-
-    private function getErrors(\Exception|PartialDenormalizationException $exception)
-    {
-        $violations = new ConstraintViolationList();
-        /** @var NotNormalizableValueException */
-        foreach ($exception->getErrors() as $exception) {
-            dump($exception);
-            $message    = sprintf(
-                'The type must be one of "%s" ("%s" given).',
-                implode(', ', $exception->getExpectedTypes()),
-                $exception->getCurrentType()
-            );
-            $parameters = [];
-            if ($exception->canUseMessageForUser()) {
-                $parameters['hint'] = $exception->getMessage();
-            }
-            $violations->add(
-                new ConstraintViolation($message, '', $parameters, null, $exception->getPath(), null)
-            );
-        }
     }
 
     /**
@@ -173,7 +142,7 @@ class PivotRepository
                     $item   = $relation->offre;
                     $code   = $item['codeCgt'];
                     $idType = $item['typeOffre']['idTypeOffre'];
-                    $sOffre = $this->offreByCgt($code, $item['dateModification']);
+                    $sOffre = $this->getOffreByCgt($code, $item['dateModification']);
                     if ($sOffre) {
                         $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
                         if ($image = $itemSpec->getByUrn(UrnList::URL)) {

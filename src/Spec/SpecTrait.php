@@ -63,7 +63,7 @@ trait SpecTrait
     {
         $data = [];
         foreach ($this->specs as $spec) {
-            if (isset($spec->urnCat) && $spec->urnCat === $key) {
+            if (isset($spec->urnCat) && $spec->urnCat === $key->value) {
                 $data[] = $spec;
             }
         }

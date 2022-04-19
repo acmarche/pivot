@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Parser;
 
+use AcMarche\Pivot\Entities\Category;
 use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Hebergement\Hotel;
 use AcMarche\Pivot\Entities\Offre\Offre;
@@ -33,10 +34,13 @@ class PivotParser
 
         $offre->tarif = $eventSpec->getByUrn(UrnList::TARIF, true);
         $cats         = $eventSpec->getByUrnCat(UrnList::CATEGORIE);
+        //  dump($cats);
         foreach ($cats as $cat) {
-            $info = $this->urnUtils->getInfosUrn($cat->urn);
+            $info   = $this->urnUtils->getInfosUrn($cat->urn);
             if ($info) {
-                $offre->categories[] = $info->labelByLanguage('fr');
+                $order  = $cat->order;
+                $labels = $info->label;
+                $offre->categories[] = new Category($order, $labels);
             }
         }
     }

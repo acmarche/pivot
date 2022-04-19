@@ -2,23 +2,28 @@
 
 namespace AcMarche\Pivot\Entities\Specification;
 
+use AcMarche\Pivot\Entities\Category;
+
 trait SpectFieldsTrait
 {
     public ?string $homepage;
     public array $emails = [];
     public array $tels = [];
     /**
-     * @var SpecInfo[]
+     * @var SpecInfo[] $specsDetailed
      */
     public array $specsDetailed;
+    /**
+     * @var Category[] $categories
+     */
     public array $categories = [];
     public array $images = [];
     /**
-     * @var SpecData[]
+     * @var SpecData[] $descriptions
      */
     public array $descriptions = [];
     /**
-     * @var SpecData[]
+     * @var SpecData[] $tarifs
      */
     public array $tarifs = [];
 }

@@ -36,6 +36,9 @@ class AcMarchePivotExtension extends Extension implements PrependExtensionInterf
                 case 'twig':
                     $this->loadConfig('twig');
                     break;
+                case 'framework':
+                    $this->loadConfig('framekork');
+                    break;
                 case 'vich_uploader':
 
                     break;
