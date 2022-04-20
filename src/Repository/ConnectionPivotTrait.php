@@ -17,13 +17,13 @@ trait ConnectionPivotTrait
 {
     private HttpClientInterface $httpClient;
     private ?string $code_query;
-    private ?string $base_uri;
+    private ?string $base_uri = null;
     private ?string $ws_key;
 
     public function connect(FormatEnum $output): void
     {
-        $this->base_uri = $_ENV['PIVOT_BASE_URI'] ?? null;
-        $this->ws_key = $_ENV['PIVOT_WS_KEY'] ?? null;
+        $this->base_uri   = $_ENV['PIVOT_BASE_URI'] ?? null;
+        $this->ws_key     = $_ENV['PIVOT_WS_KEY'] ?? null;
         $this->code_query = $_ENV['PIVOT_CODE'] ?? null;
 
         $headers = [

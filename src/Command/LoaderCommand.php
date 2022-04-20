@@ -53,9 +53,9 @@ class LoaderCommand extends Command
     private function detailOffre(string $codeCgt)
     {
         $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
-        $tmp = json_decode($dataString);
+        $tmp        = json_decode($dataString);
         $dataString = json_encode($tmp->offre[0]);
-        $event = $this->serializer->deserialize($dataString, Event::class, 'json');
+        $event      = $this->serializer->deserialize($dataString, Event::class, 'json');
 
         $eventSpec = new SpecEvent($event->spec);
         dump($eventSpec->getDates());
@@ -65,7 +65,7 @@ class LoaderCommand extends Command
     private function initDi()
     {
         $containerBuilder = new ContainerBuilder();
-        $loader = new PhpFileLoader(
+        $loader           = new PhpFileLoader(
             $containerBuilder,
             new FileLocator(__DIR__.'/../../config')
         );

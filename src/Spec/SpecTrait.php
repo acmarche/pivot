@@ -12,40 +12,20 @@ trait SpecTrait
     public array $specs = [];
 
     /**
-     * @param string $key
-     * @param bool $value
-     * @return SpecData|string|null
-     */
-    public function getByUrn(UrnList $key, bool $value = false): SpecData|string|null
-    {
-        foreach ($this->specs as $spec) {
-            if ($spec->urn === $key->value) {
-                if ($value) {
-                    return $spec->value;
-                }
-
-                return $spec;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * @return SpecData[]
      */
-    public function getByUrns(UrnList $key, bool $like = false): array
+    public function findByUrn(UrnList $keywordSearch, bool $like = false): array
     {
         $specs = [];
 
         foreach ($this->specs as $spec) {
             if ($like) {
-                if (str_contains($key->value, $spec->urn)) {
+                if (\str_contains($spec->urn, $keywordSearch->value)) {
                     $specs[] = $spec;
                 }
                 continue;
             }
-            if ($spec->urn === $key->value) {
+            if ($spec->urn === $keywordSearch->value) {
                 $specs[] = $spec;
             }
         }
@@ -55,15 +35,16 @@ trait SpecTrait
 
 
     /**
-     * @param string $key
+     * @param string $keywordSearch
      * @param bool $value
+     *
      * @return SpecData[]
      */
-    public function getByUrnCat(UrnList $key, bool $value = false): array
+    public function findByUrnCat(UrnList $keywordSearch): array
     {
         $data = [];
         foreach ($this->specs as $spec) {
-            if (isset($spec->urnCat) && $spec->urnCat === $key->value) {
+            if (isset($spec->urnCat) && $spec->urnCat === $keywordSearch->value) {
                 $data[] = $spec;
             }
         }
@@ -72,14 +53,15 @@ trait SpecTrait
     }
 
     /**
-     * @param SpecTypeConst $type
+     * @param SpecTypeEnum $keywordSearch
+     *
      * @return SpecData[]
      */
-    public function getByType(SpecTypeConst $type): array
+    public function findByType(SpecTypeEnum $keywordSearch): array
     {
         $values = [];
         foreach ($this->specs as $spec) {
-            if ($spec->type === $type) {
+            if ($spec->type === $keywordSearch->value) {
                 $values[] = $spec;
             }
         }

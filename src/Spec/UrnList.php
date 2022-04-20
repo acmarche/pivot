@@ -21,4 +21,7 @@ enum UrnList: string
     case DATE_OBJECT = "urn:obj:date";
     case URL = "urn:fld:url";
     case CATEGORIE = "urn:cat:classlab";
+    case CATEGORIE_EVENT = "urn:fld:catevt";
+    case COMMUNICATION = "urn:cat:moycom";
+    case WEB = "urn:fld:urlweb";
 }

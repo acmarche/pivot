@@ -145,8 +145,9 @@ class PivotRepository
                     $sOffre = $this->getOffreByCgt($code, $item['dateModification']);
                     if ($sOffre) {
                         $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
-                        if ($image = $itemSpec->getByUrn(UrnList::URL)) {
-                            $offre->images[] = $image->value;
+                        $images   = $itemSpec->findByUrn(UrnList::URL);
+                        if (count($images) > 0) {
+                            $offre->images[] = $images[0]->value;
                         }
                     }
                 }

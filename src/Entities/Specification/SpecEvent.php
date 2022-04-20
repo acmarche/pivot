@@ -21,16 +21,16 @@ class SpecEvent
 
     public function dateBeginAndEnd(): array
     {
-        $dates = [];
-        $format = "d/m/Y";
-        $dateDebut = $this->getByUrn(UrnList::DATE_DEB_VALID, true);
-        if ($dateDebut) {
-            $dates[] = DateUtils::convertStringToDateTime($dateDebut, $format);
+        $dates     = [];
+        $format    = "d/m/Y";
+        $dateDebut = $this->findByUrn(UrnList::DATE_DEB_VALID);
+        if (count($dateDebut) > 0) {
+            $dates[] = DateUtils::convertStringToDateTime($dateDebut[0]->value, $format);
         }
 
-        $dateFin = $this->getByUrn(UrnList::DATE_FIN_VALID, true);
-        if ($dateFin) {
-            $dates[] = DateUtils::convertStringToDateTime($dateFin, $format);
+        $dateFin = $this->findByUrn(UrnList::DATE_FIN_VALID);
+        if (count($dateFin) > 0) {
+            $dates[] = DateUtils::convertStringToDateTime($dateFin[0]->value, $format);
         }
 
         return $dates;
@@ -38,9 +38,9 @@ class SpecEvent
 
     public function getHomePage(): ?string
     {
-        $spec = $this->getByUrn(UrnList::HOMEPAGE);
-        if ($spec) {
-            return $spec->value;
+        $specs = $this->findByUrn(UrnList::HOMEPAGE);
+        if (count($specs) > 0) {
+            return $specs[0]->value;
         }
 
         return null;
@@ -48,9 +48,9 @@ class SpecEvent
 
     public function isActive(): bool
     {
-        $spec = $this->getByUrn(UrnList::ACTIVE);
-        if ($spec) {
-            return (bool)$spec->value;
+        $specs = $this->findByUrn(UrnList::ACTIVE);
+        if (count($specs) > 0) {
+            return (bool)$specs[0]->value;
         }
 
         return false;
@@ -62,7 +62,7 @@ class SpecEvent
     public function getDates(): array
     {
         $dates = [];
-        $specs = $this->getByUrns(UrnList::DATE_OBJECT);
+        $specs = $this->findByUrn(UrnList::DATE_OBJECT);
         foreach ($specs as $spec) {
             foreach ($spec->spec as $data) {
                 if ($data->urn == UrnList::DATE_DEB->value) {
@@ -74,6 +74,7 @@ class SpecEvent
             }
             $dates[] = new DateBeginEnd($dateBegin, $dateEnd);
         }
+
         return $dates;
     }
 }

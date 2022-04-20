@@ -35,15 +35,14 @@ class OffreDumpCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $io      = new SymfonyStyle($input, $output);
         $codeCgt = $input->getArgument('codeCgt');
 
-        if (!$codeCgt) {
+        if ( ! $codeCgt) {
             $io->note(sprintf('Code cgt requis: %s', $codeCgt));
 
             return Command::FAILURE;
         }
-
         $hotelString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
         echo $hotelString;
 

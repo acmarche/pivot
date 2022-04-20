@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Spec;
 
-enum SpecTypeConst: string
+enum SpecTypeEnum: string
 {
     case TEL = "Phone";
     case EMAIL = "EMail";

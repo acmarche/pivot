@@ -8,7 +8,7 @@ use AcMarche\Pivot\Entities\Hebergement\Hotel;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecEvent;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
-use AcMarche\Pivot\Spec\SpecTypeConst;
+use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnUtils;
 
@@ -23,24 +23,26 @@ class PivotParser
         $eventSpec       = new SpecEvent($offre->spec);
         $offre->homepage = $eventSpec->getHomePage();
         $offre->active   = $eventSpec->isActive();
-        foreach ($eventSpec->getByType(SpecTypeConst::EMAIL) as $spec) {
+        foreach ($eventSpec->findByType(SpecTypeEnum::EMAIL) as $spec) {
             $offre->emails[] = $spec->value;
         }
-        foreach ($eventSpec->getByType(SpecTypeConst::TEL) as $spec) {
+        foreach ($eventSpec->findByType(SpecTypeEnum::TEL) as $spec) {
             $offre->tels[] = $spec->value;
         }
-        $offre->description  = $eventSpec->getByUrn(UrnList::DESCRIPTION, true);
-        $offre->descriptions = $eventSpec->getByUrns(UrnList::DESCRIPTION_SHORT, true);
 
-        $offre->tarif = $eventSpec->getByUrn(UrnList::TARIF, true);
-        $cats         = $eventSpec->getByUrnCat(UrnList::CATEGORIE);
-        //  dump($cats);
+        $offre->descriptions = $eventSpec->findByUrn(UrnList::DESCRIPTION_SHORT, true);
+        $offre->tarifs       = $eventSpec->findByUrn(UrnList::TARIF);
+        $offre->webs       = $eventSpec->findByUrn(UrnList::WEB);
+
+        $offre->communications = $eventSpec->findByUrn(UrnList::COMMUNICATION);
+
+        $cats = $eventSpec->findByUrnCat(UrnList::CATEGORIE);
         foreach ($cats as $cat) {
-            $info   = $this->urnUtils->getInfosUrn($cat->urn);
+            $info = $this->urnUtils->getInfosUrn($cat->urn);
             if ($info) {
                 $order  = $cat->order;
                 $labels = $info->label;
-                $offre->categories[] = new Category($order, $labels);
+                //   $offre->categories[] = new Category($order, $labels);
             }
         }
     }
@@ -72,6 +74,16 @@ class PivotParser
             $fistDate         = $event->firstDate();
             $event->dateBegin = $fistDate->date_begin;
             $event->dateEnd   = $fistDate->date_end;
+        }
+
+        $cats = $eventSpec->findByUrn(UrnList::CATEGORIE_EVENT, true);
+        foreach ($cats as $cat) {
+            $info = $this->urnUtils->getInfosUrn($cat->urn);
+            if ($info) {
+                $order               = $cat->order;
+                $labels              = $info->label;
+                $event->categories[] = new Category($order, $labels);
+            }
         }
     }
 
