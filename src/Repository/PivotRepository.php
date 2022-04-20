@@ -100,7 +100,7 @@ class PivotRepository
         string $class = ResultOfferDetail::class
     ): ResultOfferDetail|Event|Offre|null {
         return $this->cache->get(
-            'offre-'.time().$codeCgt.'-'.$dateModification,
+            'offre-'.$codeCgt.'-'.$dateModification,
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
@@ -178,9 +178,12 @@ class PivotRepository
         $events = $this->getEvents(true);
         foreach ($events as $event) {
             foreach ($event->categories as $category) {
-                if (in_array($category->id, array_map(function ($category) {
-                    return $category->id;
-                }, $eventReffer->categories))) {
+                if (in_array(
+                    $category->id,
+                    array_map(function ($category) {
+                        return $category->id;
+                    }, $eventReffer->categories)
+                )) {
                     $data[] = $event;
                 }
             }
