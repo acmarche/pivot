@@ -46,13 +46,14 @@ class PivotRepository
             $events[]          = $offre;
             //break;
         }
-        $this->pivotParser->parseEvents($events,$removeObsolete);
+        $this->pivotParser->parseEvents($events, $removeObsolete);
         $this->parseRelOffres($events);
 
         $events = SortUtils::sortEvents($events);
         if ($removeObsolete) {
             $events = EventUtils::removeObsolete($events);
         }
+
         return $events;
     }
 
@@ -164,5 +165,28 @@ class PivotRepository
                 }
             }
         }
+    }
+
+    /**
+     * @param Event $eventReffer
+     *
+     * @return Event[]
+     */
+    public function getSameEvents(Event $eventReffer): array
+    {
+        $data   = [];
+        $events = $this->getEvents(true);
+        foreach ($events as $event) {
+            foreach ($event->categories as $category) {
+                if (in_array($category->id, array_map(function ($category) {
+                    return $category->id;
+                }, $eventReffer->categories))) {
+                    $data[] = $event;
+                }
+            }
+        }
+
+        return $data;
+
     }
 }

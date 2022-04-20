@@ -51,6 +51,11 @@ class Offre
     public array $images = [];
 
     /**
+     * utilise pour wp
+     */
+    public ?string $url = null;
+
+    /**
      * Alias
      */
     public function getAdresse(): ?Adresse
@@ -62,5 +67,14 @@ class Offre
     public function getNom2(string $language)
     {
 
+    }
+
+    public function firstImage(): ?string
+    {
+        if (count($this->images) > 0) {
+            return $this->images[0];
+        }
+
+        return null;
     }
 }

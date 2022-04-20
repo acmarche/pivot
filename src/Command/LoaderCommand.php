@@ -58,8 +58,6 @@ class LoaderCommand extends Command
         $event      = $this->serializer->deserialize($dataString, Event::class, 'json');
 
         $eventSpec = new SpecEvent($event->spec);
-        dump($eventSpec->getDates());
-
     }
 
     private function initDi()
