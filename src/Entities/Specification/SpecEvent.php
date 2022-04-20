@@ -6,6 +6,7 @@ use AcMarche\Pivot\Entities\Event\DateBeginEnd;
 use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Utils\DateUtils;
+use AcMarche\Pivot\Utils\SortUtils;
 
 class SpecEvent
 {
@@ -74,6 +75,7 @@ class SpecEvent
             }
             $dates[] = new DateBeginEnd($dateBegin, $dateEnd);
         }
+        $dates = SortUtils::sortDatesEvent($dates);
 
         return $dates;
     }

@@ -8,6 +8,7 @@ use AcMarche\Pivot\Entities\Hebergement\Hotel;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecEvent;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
+use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnUtils;
@@ -32,7 +33,7 @@ class PivotParser
 
         $offre->descriptions = $eventSpec->findByUrn(UrnList::DESCRIPTION_SHORT, true);
         $offre->tarifs       = $eventSpec->findByUrn(UrnList::TARIF);
-        $offre->webs       = $eventSpec->findByUrn(UrnList::WEB);
+        $offre->webs         = $eventSpec->findByUrn(UrnList::WEB);
 
         $offre->communications = $eventSpec->findByUrn(UrnList::COMMUNICATION);
 
@@ -53,14 +54,14 @@ class PivotParser
      *
      * @param array $events
      */
-    public function parseEvents(array $events): void
+    public function parseEvents(array $events, bool $removeObsolete = false): void
     {
-        array_map(function ($event) {
-            $this->parseEvent($event);
+        array_map(function ($event) use ($removeObsolete) {
+            $this->parseEvent($event, $removeObsolete);
         }, $events);
     }
 
-    public function parseEvent(Event $event): void
+    public function parseEvent(Event $event, bool $removeObsolete = false): void
     {
         foreach ($event->spec as $spec) {
             $event->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
@@ -70,10 +71,23 @@ class PivotParser
         $datesValidite = $eventSpec->dateBeginAndEnd();
 
         $event->dates = $eventSpec->getDates();
-        if (count($event->dates) > 0) {
-            $fistDate         = $event->firstDate();
+        $fistDate     = $event->firstDate();
+        if ($fistDate) {
             $event->dateBegin = $fistDate->date_begin;
             $event->dateEnd   = $fistDate->date_end;
+        }
+
+        if ($removeObsolete) {
+            foreach ($event->dates as $key => $dateBeginEnd) {
+                if (EventUtils::isDateBeginEndObsolete($dateBeginEnd)) {
+                    unset($event->dates[$key]);
+                }
+            }
+            $fistDate = $event->firstDate();
+            if ($fistDate) {
+                $event->dateBegin = $fistDate->date_begin;
+                $event->dateEnd   = $fistDate->date_end;
+            }
         }
 
         $cats = $eventSpec->findByUrn(UrnList::CATEGORIE_EVENT, true);
@@ -86,7 +100,6 @@ class PivotParser
             }
         }
     }
-
 
     /**
      * @param Hotel[] $hotels

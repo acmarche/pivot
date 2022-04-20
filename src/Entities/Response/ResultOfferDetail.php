@@ -6,6 +6,12 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 
 class ResultOfferDetail
 {
+    /**
+     * La donnée au format original
+     * @var string $data
+     */
+    public string $data;
+
     public int $count = 0;
     /**
      * @var Offre[]

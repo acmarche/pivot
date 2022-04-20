@@ -8,11 +8,13 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
 use AcMarche\Pivot\Entities\Specification\SpecEvent;
+use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Parser\PivotParser;
 use AcMarche\Pivot\Parser\PivotSerializer;
 use AcMarche\Pivot\PivotTypeEnum;
 use AcMarche\Pivot\Spec\UrnList;
+use AcMarche\Pivot\Utils\SortUtils;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class PivotRepository
@@ -29,7 +31,7 @@ class PivotRepository
      * Retourne la liste des events
      * @return Event[]
      */
-    public function getEvents(): array
+    public function getEvents(bool $removeObsolete = false): array
     {
         $events        = [];
         $responseQuery = $this->getAllDataFromRemote();
@@ -44,9 +46,13 @@ class PivotRepository
             $events[]          = $offre;
             //break;
         }
-        $this->pivotParser->parseEvents($events);
+        $this->pivotParser->parseEvents($events,$removeObsolete);
         $this->parseRelOffres($events);
 
+        $events = SortUtils::sortEvents($events);
+        if ($removeObsolete) {
+            $events = EventUtils::removeObsolete($events);
+        }
         return $events;
     }
 
@@ -97,13 +103,18 @@ class PivotRepository
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
-                    $tmp        = json_decode($dataString);
-                    $dataString = json_encode($tmp->offre[0]);
+                    $tmp             = json_decode($dataString);
+                    $dataStringOffre = json_encode($tmp->offre[0]);
 
-                    return $this->pivotSerializer->deserializeToClass($dataString, $class);
+                    $object       = $this->pivotSerializer->deserializeToClass($dataStringOffre, $class);
+                    $object->data = $dataString;
+
+                    return $object;
                 }
+                $object       = $this->pivotSerializer->deserializeToClass($dataString, ResultOfferDetail::class);
+                $object->data = $dataString;
 
-                return $this->pivotSerializer->deserializeToClass($dataString, ResultOfferDetail::class);
+                return $object;
             }
         );
     }
@@ -130,7 +141,7 @@ class PivotRepository
     }
 
     /**
-     * @param Event|Hotel $offres
+     * @param array $offres
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */

@@ -3,59 +3,56 @@
 namespace AcMarche\Pivot\Utils;
 
 
-use AcMarche\Pivot\Entities\Offre\OffreInterface;
+use AcMarche\Pivot\Entities\Event\DateBeginEnd;
+use AcMarche\Pivot\Entities\Event\Event;
 
 class SortUtils
 {
     /**
+     * @param DateBeginEnd[] $dateBeginEnds
+     *
+     * @return DateBeginEnd[]
      */
-    public static function sortDescriptions(array $descriptions): array
+    public static function sortDatesEvent(array $dateBeginEnds, string $order = 'ASC'): array
     {
         usort(
-            $descriptions,
-            fn($descriptionA, $descriptionB) => $descriptionA->tri <=> $descriptionB->tri
+            $dateBeginEnds,
+            function ($dateBeginEndA, $dateBeginEndB) use ($order) {
+                $dateA = $dateBeginEndA->date_begin;
+                $dateB = $dateBeginEndB->date_begin;
+
+                if ($order == 'ASC') {
+                    return $dateA <=> $dateB;
+                } else {
+                    return $dateB <=> $dateA;
+                }
+            }
         );
 
-        return $descriptions;
+        return $dateBeginEnds;
     }
 
     /**
-     * @return OffreInterface[]
+     * @param Event[] $events
+     *
+     * @return Event[]
      */
-    public static function sortEvents(array $events): array
+    public static function sortEvents(array $events, string $order = 'ASC'): array
     {
         usort(
             $events,
-            function ($eventA, $eventB) {
-                $horlineA = $eventA->firstHorline();
-                $horlineB = $eventB->firstHorline();
+            function ($eventA, $eventB) use ($order) {
+                $dateA = $eventA->dateBegin;
+                $dateB = $eventB->dateBegin;
+                if ($order == 'ASC') {
+                    return $dateA <=> $dateB;
+                } else {
+                    return $dateB <=> $dateA;
+                }
 
-                $debut1 = $horlineA->year.'-'.$horlineA->month.'-'.$horlineA->day;
-                $debut2 = $horlineB->year.'-'.$horlineB->month.'-'.$horlineB->day;
-
-                return $debut1 <=> $debut2;
             }
         );
 
         return $events;
-    }
-
-    public static function sortDates(array $dates): void
-    {
-        usort(
-            $dates,
-            function ($a, $b) {
-                $debut1 = $a->year.'-'.$a->month.'-'.$a->day;
-                $debut2 = $b->year.'-'.$b->month.'-'.$b->day;
-
-                return $debut1 <=> $debut2;
-            }
-        );
-        usort(
-            $dates,
-            function ($a, $b) {
-                return $a <=> $b;
-            }
-        );
     }
 }

@@ -1,14 +1,17 @@
 <?php
 
-namespace AcMarche\Pivot\Entities;
+namespace AcMarche\Pivot\Entities\Communication;
+
+use AcMarche\Pivot\Entities\Label;
+use AcMarche\Pivot\Entities\UrnLabel;
 
 class Adresse
 {
     public int $idIns;
     public string $ins;
-    public string $rue;
-    public string $numero;
-    public string $cp;
+    public string $rue = "";
+    public ?string $numero = null;
+    public ?string $cp = null;
     /**
      * @var Label[] $localite
      */

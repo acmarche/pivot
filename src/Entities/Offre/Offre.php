@@ -3,7 +3,7 @@
 namespace AcMarche\Pivot\Entities\Offre;
 
 
-use AcMarche\Pivot\Entities\Adresse;
+use AcMarche\Pivot\Entities\Communication\Adresse;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Specification\SpectFieldsTrait;
 use AcMarche\Pivot\Entities\UrnLabel;
@@ -16,6 +16,11 @@ class Offre
     use SpectFieldsTrait;
 
     public string $codeCgt;
+    /**
+     * L'offre au format original
+     * @var string $data
+     */
+    public string $data;
     public string $dateCreation;
     public string $dateModification;
     public User $userCreation;

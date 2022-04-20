@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\Parser;
 use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Hebergement\Hotel;
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
@@ -24,7 +25,7 @@ class PivotSerializer
         string $data,
         string $class,
         string $format = 'json'
-    ): Offre|Event|Hotel|ResultOfferDetail|null {
+    ): Offre|Event|Hotel|ResultOfferDetail|ResponseQuery|null {
         return $this->serializer->deserialize($data, $class, $format, [
             DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
             AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES            => true,
