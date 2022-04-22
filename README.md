@@ -2,7 +2,7 @@
 
 Librairie php pour interroger l'API de Pivot
 
-https://www.ftlb.be/
+https://pivotweb.tourismewallonie.be
 
 Installation
 ----
@@ -21,10 +21,11 @@ via les variables d'environnment de votre système d'exploitation
 <?php
 //.env.local.php
 return array (
-  'PIVOT_URL'      => 'http://ftlb.be',
-  'PIVOT_USER'     => 'username',
-  'PIVOT_PASSWORD' => 'mdp',
-  'APP_ENV'       => 'prod',
+ 'PIVOT_URL'      => 'https://pivotweb.tourismewallonie.be/PivotWeb-3.1',
+ 'PIVOT_BASE_URI' => 'https://pivotweb.tourismewallonie.be/PivotWeb-3.1',
+ 'PIVOT_WS_KEY'   => 'xxxxxxx-xxxx-xxxx-xxxx-xxxxxxx',
+ 'PIVOT_CODE'     => 'xx-xx-xxxx-xxxx',
+ 'APP_ENV'       => 'prod',
 );
 ```
 
@@ -34,8 +35,8 @@ Utilisation
 ```php
 require_once 'vendor/autoload.php';
 
-use AcMarche\Pivot\Repository\HadesRepository;
+use AcMarche\Pivot\DependencyInjection\PivotContainer;
 
-$hadesRepository = new HadesRepository();
-$events = $hadesRepository->getEvents();
+$pivotRepository = PivotContainer::getRepository();
+$events          = $pivotRepository->getEvents(true);
 ```
