@@ -96,7 +96,7 @@ class PivotRepository
      */
     public function getOffreByCgt(
         string $codeCgt,
-        string $dateModification = "xx",
+        ?string $dateModification = "xx",
         string $class = ResultOfferDetail::class
     ): ResultOfferDetail|Event|Offre|null {
         return $this->cache->get(
