@@ -34,6 +34,7 @@ class PivotParser
         $offre->descriptions = $eventSpec->findByUrn(UrnList::DESCRIPTION_SHORT, true);
         $offre->tarifs       = $eventSpec->findByUrn(UrnList::TARIF);
         $offre->webs         = $eventSpec->findByUrn(UrnList::WEB);
+        $offre->hades_ids     = $eventSpec->findByUrn(UrnList::HADES_ID);
 
         $offre->communications = $eventSpec->findByUrn(UrnList::COMMUNICATION);
 

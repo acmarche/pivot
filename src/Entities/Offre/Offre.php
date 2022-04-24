@@ -49,6 +49,7 @@ class Offre
      */
     public $relOffre;
     public array $images = [];
+    public array $hades_ids = [];
 
     /**
      * utilise pour wp

@@ -24,4 +24,5 @@ enum UrnList: string
     case CATEGORIE_EVENT = "urn:fld:catevt";
     case COMMUNICATION = "urn:cat:moycom";
     case WEB = "urn:fld:urlweb";
+    case HADES_ID = "urn:fld:idhades";
 }
