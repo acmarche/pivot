@@ -192,4 +192,18 @@ class PivotRepository
         return $data;
 
     }
+
+    public function getEventByIdHades(int $idHades): ?Event
+    {
+        $events = $this->getEvents(true);
+        foreach ($events as $event) {
+            if (count($event->hades_ids) > 0) {
+                if ($idHades == $event->hades_ids[0]->value) {
+                    return $event;
+                }
+            }
+        }
+
+        return null;
+    }
 }
