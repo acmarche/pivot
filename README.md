@@ -2,7 +2,7 @@
 
 Librairie php pour interroger l'API de Pivot
 
-https://pivotweb.tourismewallonie.be
+https://organismes.tourismewallonie.be/pivot/
 
 Installation
 ----
