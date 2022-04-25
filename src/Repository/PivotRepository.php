@@ -197,7 +197,6 @@ class PivotRepository
     {
         $events = $this->getEvents(true);
         foreach ($events as $event) {
-            dump($event->hades_ids);
             if (count($event->hades_ids) > 0) {
                 if ($idHades == $event->hades_ids[0]->value) {
                     return $event;
