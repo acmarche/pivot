@@ -37,6 +37,7 @@ class PivotParser
         $offre->hades_ids     = $eventSpec->findByUrn(UrnList::HADES_ID);
 
         $offre->communications = $eventSpec->findByUrn(UrnList::COMMUNICATION);
+        $offre->adresse_rue = $eventSpec->findByUrn(UrnList::ADRESSE_RUE);
 
         $cats = $eventSpec->findByUrnCat(UrnList::CATEGORIE);
         foreach ($cats as $cat) {
