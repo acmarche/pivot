@@ -9,14 +9,15 @@ class PivotFilter
 {
     /**
      * @param ResponseQuery $data
-     * @param PivotTypeEnum $pivotType
+     * @param PivotTypeEnum[] $pivotTypes
      * @return array
      */
-    public static function filterByType(ResponseQuery $data, PivotTypeEnum $pivotType): array
+    public static function filterByTypes(ResponseQuery $data, array $pivotTypes): array
     {
         $offres = [];
+        $types = array_column($pivotTypes, 'value');
         foreach ($data->offre as $row) {
-            if ($row->typeOffre->idTypeOffre == $pivotType->value) {
+            if (in_array($row->typeOffre->idTypeOffre, $types)) {
                 $offres[] = $row;
             }
         }
