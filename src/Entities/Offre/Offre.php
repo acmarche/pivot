@@ -50,6 +50,8 @@ class Offre
     public $relOffre;
     public array $images = [];
     public array $hades_ids = [];
+    public array $enfants = [];
+    public array $parents = [];
 
     /**
      * utilise pour wp
@@ -68,6 +70,11 @@ class Offre
     public function getNom2(string $language)
     {
 
+    }
+
+    public function nomByLanguage(string $language = 'fr'): ?string
+    {
+        return $this->nom;
     }
 
     public function firstImage(): ?string
