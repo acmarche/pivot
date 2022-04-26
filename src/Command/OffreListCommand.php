@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Completion\CompletionSuggestions;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -53,17 +54,30 @@ class OffreListCommand extends Command
             if ($response) {
                 $typeSelected = $this->catchResponseSelected($response);
             }
-        }
-        else {
-            if(!$response = $this->catchTypeSelected($typeSelected)){
+        } else {
+            if (!$response = $this->catchTypeSelected($typeSelected)) {
                 $this->io->error('Ce type n\'exite pas dans la liste');
+
                 return Command::FAILURE;
             }
         }
 
         $this->io->success($response.": ");
         $offres = $this->pivotRepository->getOffres([$typeSelected]);
-        dump($offres);
+        $count = count($offres);
+        $this->io->info("Chargement des $count offres...");
+        $rows = [];
+        foreach ($offres as $offre) {
+            $rows[] = [$offre->nom, $offre->codeCgt, $offre->dateModification];
+        }
+
+        $table = new Table($output);
+        $table
+            ->setHeaders(['Nom', 'CodeCgt', 'Modifié le'])
+            ->setRows($rows);
+        $table->render();
+
+        $this->io->info("Pour le détail d'une offre: bin/console pivot:offre-dump codeCgt");
 
         return Command::SUCCESS;
     }
@@ -101,6 +115,7 @@ class OffreListCommand extends Command
 
     private function createLisiting(): array
     {
+        $this->io->info("Création du listing des types...");
         $progressBar = new ProgressBar($this->output, 0);
         $progressBar->start();
 
@@ -123,6 +138,8 @@ class OffreListCommand extends Command
         }
 
         $progressBar->finish();
+
+        ksort($types);
 
         return $types;
     }

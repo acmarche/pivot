@@ -3,7 +3,6 @@
 namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Entities\Event\Event;
-use AcMarche\Pivot\Entities\Hebergement\Hotel;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
@@ -28,22 +27,46 @@ class PivotRepository
     }
 
     /**
+     * @throws \Psr\Cache\InvalidArgumentException
+     * @return Offre[]
+     */
+    public function getOffres(array $filtres): array
+    {
+        $offres = [];
+        $responseQuery = $this->getAllDataFromRemote();
+        $offresShort = PivotFilter::filterByTypes($responseQuery, $filtres);
+
+        foreach ($offresShort as $offreShort) {
+            $resultOfferDetail = $this->getOffreByCgt(
+                $offreShort->codeCgt,
+                $offreShort->dateModification,
+                Offre::class
+            );
+            $offre = $resultOfferDetail;
+            $offres[] = $offre;
+            //    break;
+        }
+
+        return $offres;
+    }
+
+    /**
      * Retourne la liste des events
      * @return Event[]
      */
     public function getEvents(bool $removeObsolete = false): array
     {
-        $events        = [];
+        $events = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort   = PivotFilter::filterByType($responseQuery, PivotTypeEnum::EVENEMENT);
+        $offresShort = PivotFilter::filterByTypes($responseQuery, [PivotTypeEnum::EVENEMENT]);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->getOffreByCgt(
                 $offreShort->codeCgt,
                 $offreShort->dateModification,
                 Event::class
             );
-            $offre             = $resultOfferDetail;
-            $events[]          = $offre;
+            $offre = $resultOfferDetail;
+            $events[] = $offre;
             //break;
         }
         $this->pivotParser->parseEvents($events, $removeObsolete);
@@ -52,31 +75,6 @@ class PivotRepository
         $events = SortUtils::sortEvents($events);
         if ($removeObsolete) {
             $events = EventUtils::removeObsolete($events);
-        }
-
-        return $events;
-    }
-
-    /**
-     * Retourne la liste des events
-     * @return array
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    public function getHotels(): array
-    {
-        $events        = [];
-        $responseQuery = $this->getAllDataFromRemote();
-        $offresShort   = PivotFilter::filterByType($responseQuery, PivotTypeEnum::HOTEL);
-
-        foreach ($offresShort as $offreShort) {
-            $resultOfferDetail = $this->getOffreByCgt(
-                $offreShort->codeCgt,
-                $offreShort->dateModification,
-                Hotel::class
-            );
-            $offre             = $resultOfferDetail;
-            $events[]          = $offre;
-            //    break;
         }
 
         return $events;
@@ -104,15 +102,15 @@ class PivotRepository
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
-                    $tmp             = json_decode($dataString);
+                    $tmp = json_decode($dataString);
                     $dataStringOffre = json_encode($tmp->offre[0]);
 
-                    $object       = $this->pivotSerializer->deserializeToClass($dataStringOffre, $class);
+                    $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, $class);
                     $object->data = $dataString;
 
                     return $object;
                 }
-                $object       = $this->pivotSerializer->deserializeToClass($dataString, ResultOfferDetail::class);
+                $object = $this->pivotSerializer->deserializeToClass($dataString, ResultOfferDetail::class);
                 $object->data = $dataString;
 
                 return $object;
@@ -137,7 +135,7 @@ class PivotRepository
         return $this->cache->get('pivotAllData', function () {
             $dataString = $this->pivotRemoteRepository->query();
 
-            return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class, 'json');
+            return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
         });
     }
 
@@ -151,13 +149,13 @@ class PivotRepository
         foreach ($offres as $offre) {
             if (is_array($offre->relOffre)) {
                 foreach ($offre->relOffre as $relation) {
-                    $item   = $relation->offre;
-                    $code   = $item['codeCgt'];
+                    $item = $relation->offre;
+                    $code = $item['codeCgt'];
                     $idType = $item['typeOffre']['idTypeOffre'];
                     $sOffre = $this->getOffreByCgt($code, $item['dateModification']);
                     if ($sOffre) {
                         $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
-                        $images   = $itemSpec->findByUrn(UrnList::URL);
+                        $images = $itemSpec->findByUrn(UrnList::URL);
                         if (count($images) > 0) {
                             $offre->images[] = $images[0]->value;
                         }
@@ -174,7 +172,7 @@ class PivotRepository
      */
     public function getSameEvents(Event $eventReffer): array
     {
-        $data   = [];
+        $data = [];
         $events = $this->getEvents(true);
         foreach ($events as $event) {
             foreach ($event->categories as $category) {
@@ -206,4 +204,5 @@ class PivotRepository
 
         return null;
     }
+
 }

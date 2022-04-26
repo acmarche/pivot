@@ -18,9 +18,9 @@ class Offre
     public string $codeCgt;
     /**
      * L'offre au format original
-     * @var string $data
+     * @var string $dataRaw
      */
-    public string $data;
+    public string $dataRaw;
     public string $dateCreation;
     public string $dateModification;
     public User $userCreation;

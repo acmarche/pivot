@@ -15,9 +15,9 @@ class PivotFilter
     public static function filterByTypes(ResponseQuery $data, array $pivotTypes): array
     {
         $offres = [];
-        $types = array_column($pivotTypes, 'value');
+
         foreach ($data->offre as $row) {
-            if (in_array($row->typeOffre->idTypeOffre, $types)) {
+            if (in_array($row->typeOffre->idTypeOffre, $pivotTypes)) {
                 $offres[] = $row;
             }
         }

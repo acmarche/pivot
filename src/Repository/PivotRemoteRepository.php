@@ -24,18 +24,18 @@ class PivotRemoteRepository
     public function offreByCgt(string $codeCgt, array $options = []): string
     {
         $options = [
-            'output'  => 'html',
-            'page'    => 1,
-            'fmt'     => 'json',
-            'info'    => true,//labels des specs et relations
+            'output' => 'html',
+            'page' => 1,
+            'fmt' => 'json',
+            'info' => true,//labels des specs et relations
             'infolvl' => 0,//de 0 a 10
-            'nofmt,'  => true,//convertir automatiquement ces contenus HTML en texte brut avec mise en page.
+            'nofmt,' => true,//convertir automatiquement ces contenus HTML en texte brut avec mise en page.
             'content' => ContentEnum::LVL_DEFAULT->value,
         ];
 
         $options = [
             'content' => ContentEnum::LVL_DEFAULT->value,
-            'info'    => true,
+            'info' => true,
             'infolvl' => 0,
         ];
 
@@ -152,6 +152,17 @@ class PivotRemoteRepository
      */
     public function query(): string
     {
+        $options = [
+            'content' => ContentEnum::LVL_DEFAULT->value,
+            'info' => true,
+            'infolvl' => 0,
+        ];
+        $params = ";";
+        foreach ($options as $key => $value) {
+            $params .= $key.'='.$value.';';
+        }
+        $params = substr($params, 0, -1);
+
         return $this->executeRequest($this->base_uri.'/query/'.$this->code_query);
     }
 
