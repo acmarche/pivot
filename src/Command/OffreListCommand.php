@@ -3,16 +3,19 @@
 namespace AcMarche\Pivot\Command;
 
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
+use AcMarche\Pivot\Repository\PivotRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Completion\CompletionSuggestions;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsCommand(
     name: 'pivot:offre-list',
@@ -20,8 +23,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class OffreListCommand extends Command
 {
+    private SymfonyStyle $io;
+    private OutputInterface $output;
+
     public function __construct(
         private PivotRemoteRepository $pivotRemoteRepository,
+        private PivotRepository $pivotRepository,
+        private CacheInterface $cache,
         string $name = null
     ) {
         parent::__construct($name);
@@ -30,84 +38,109 @@ class OffreListCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('type', InputArgument::OPTIONAL, 'code cgt', null)
-            ->addOption('listing', "ll", InputOption::VALUE_NONE, 'display nom offre');
+            ->addArgument('type', InputArgument::OPTIONAL, 'Type offre', null)
+            ->addOption('listing', "ll", InputOption::VALUE_NONE, 'Liste les types');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-        $type = $input->getArgument('type');
-        $listing = (bool)$input->getOption('listing');
+        $this->output = $output;
+        $this->io = new SymfonyStyle($input, $output);
+        $typeSelected = $input->getArgument('type');
 
-        $resultString = $this->pivotRemoteRepository->query();
+        if (!$typeSelected) {
+            $response = $this->askType();
+            if ($response) {
+                $typeSelected = $this->catchResponseSelected($response);
+            }
+        }
+        else {
+            if(!$response = $this->catchTypeSelected($typeSelected)){
+                $this->io->error('Ce type n\'exite pas dans la liste');
+                return Command::FAILURE;
+            }
+        }
 
-        $response = $this->listing($io);
-
-        $io->writeln($response);
+        $this->io->success($response.": ");
+        $offres = $this->pivotRepository->getOffres([$typeSelected]);
+        dump($offres);
 
         return Command::SUCCESS;
     }
 
-    public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
+    protected function askType()
     {
-        if ($input->mustSuggestArgumentValuesFor(argumentName: 'someArgument')) {
-            $suggestions->suggestValues(['someSuggestion', 'otherSuggestion']);
-        }
-    }
-
-    protected function listing(SymfonyStyle $io)
-    {
-        $rows = iterator_to_array($this->tagsTableRows());
-        $table = $io->createTable();
-        $table->setHeaderTitle("Interactive selection table example");
-        $table->setRows($rows);
-        $table->render();
-        $io->newLine();
+        $typesOffre = $this->getAllTypes();
 
         $choice = new ChoiceQuestion(
-            question: 'Which selection you choose?',
-            choices: array_reduce(
-                array: $rows,
-                callback: function ($carry, $item) {
-                    $carry[] = $item[0];
-
-                    return $carry;
-                }
-            )
+            question: 'Quelle type d\'offre ?',
+            choices: $typesOffre
         );
 
-        return $io->askQuestion($choice);
+        return $this->io->askQuestion($choice);
     }
 
-    protected function tagsTableRows(): \Generator
+    protected function getAllTypes(): array
     {
-        $tags = [
-            "Guide touristique" => 3,
-            "Découverte et Divertissement" => 223,
-            "Point d’intérêt" => 11,
-            "Hôtel" => 3,
-            "Restauration" => 62,
-            "Gîte" => 12,
-            "Événement" => 78,
-            "Meublé" => 7,
-            "Produit de terroir" => 79,
-            "Chambre d’hôtes" => 10,
-            "Hébergements" => 5,
-            "Itinéraire" => 31,
-            "Producteur" => 20,
-            "Structure événementielle" => 3,
-            "Boutique de terroir" => 17,
-            "Artisan" => 5,
-            "Organisme touristique" => 2,
-            "MICE - Infrastructure" => 5,
-            "MICE - Prestataire" => 2,
-            "MICE - Animation" => 5,
-            "MICE - Organisateur" => 2,
-        ];
+        return $this->cache->get('pivote_list_types', function () {
+            return $this->createLisiting();
+        });
+    }
 
-        foreach ($tags as $name => $key) {
-            yield [$name, $key];
+    private function groupingOffres()
+    {
+        $groupe = [];
+
+        if (!isset($groupe[$labelType])) {
+            $groupe[$labelType] = 1;
+        } else {
+            $groupe[$labelType]++;
         }
+
+    }
+
+    private function createLisiting(): array
+    {
+        $progressBar = new ProgressBar($this->output, 0);
+        $progressBar->start();
+
+        $resultString = $this->pivotRemoteRepository->query();
+        $progressBar->advance(30);
+
+        $data = json_decode($resultString);
+
+        $types = [];
+        foreach ($data->offre as $offreInline) {
+            $offreString = $this->pivotRemoteRepository->offreByCgt($offreInline->codeCgt);
+            $offreObject = json_decode($offreString);
+            $offre = $offreObject->offre[0];
+            $type = $offre->typeOffre;
+            $idType = $type->idTypeOffre;
+            $labelType = $type->label[0]->value;
+            $types[$idType] = $labelType;
+
+            $progressBar->advance();
+        }
+
+        $progressBar->finish();
+
+        return $types;
+    }
+
+    public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
+    {
+        if ($input->mustSuggestArgumentValuesFor(argumentName: 'type')) {
+            $suggestions->suggestValues($this->getAllTypes());
+        }
+    }
+
+    private function catchResponseSelected(string $response): int
+    {
+        return array_search($response, $this->getAllTypes());
+    }
+
+    private function catchTypeSelected(int $typeGiven): ?string
+    {
+        return $this->getAllTypes()[$typeGiven] ?? null;
     }
 }
