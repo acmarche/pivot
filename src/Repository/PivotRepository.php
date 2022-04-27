@@ -6,18 +6,20 @@ use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
-use AcMarche\Pivot\Entities\Specification\SpecEvent;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Parser\PivotParser;
 use AcMarche\Pivot\Parser\PivotSerializer;
 use AcMarche\Pivot\PivotTypeEnum;
+use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Utils\SortUtils;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class PivotRepository
 {
+    use SpecTrait;
+
     public function __construct(
         private PivotRemoteRepository $pivotRemoteRepository,
         private PivotParser $pivotParser,
@@ -47,6 +49,12 @@ class PivotRepository
             $offres[] = $offre;
             //    break;
         }
+
+        array_map(function ($offre) {
+            $this->pivotParser->parseOffre($offre);
+        }, $offres);
+
+        $this->parseRelOffres($offres);
 
         return $offres;
     }
@@ -107,12 +115,12 @@ class PivotRepository
                     $dataStringOffre = json_encode($tmp->offre[0]);
 
                     $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, $class);
-                    $object->data = $dataString;
+                    $object->dataRaw = $dataString;
 
                     return $object;
                 }
                 $object = $this->pivotSerializer->deserializeToClass($dataString, ResultOfferDetail::class);
-                $object->data = $dataString;
+                $object->dataRaw = $dataString;
 
                 return $object;
             }
@@ -153,13 +161,31 @@ class PivotRepository
                     $item = $relation->offre;
                     $code = $item['codeCgt'];
                     $idType = $item['typeOffre']['idTypeOffre'];
-                    $sOffre = $this->getOffreByCgt($code, $item['dateModification']);
-                    if ($sOffre) {
-                        $itemSpec = new SpecEvent($sOffre->getOffre()->spec);
-                        $images = $itemSpec->findByUrn(UrnList::URL);
-                        if (count($images) > 0) {
-                            $offre->images[] = $images[0]->value;
+                    try {
+                        $sOffre = $this->getOffreByCgt($code, $item['dateModification']);
+                        if ($sOffre) {
+                            $this->specs = $sOffre->getOffre()->spec;
+                            $images = $this->findByUrn(UrnList::URL);
+                            if (count($images) > 0) {
+                                foreach ($images as $image) {
+                                    $offre->images[] = $image->value;
+                                }
+                            }
+                            $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL, true);
+                            if (count($images) > 0) {
+                                foreach ($images as $image) {
+                                    $offre->images[] = $image->value;
+                                }
+                            }
+                            $voirs = $this->findByUrn(UrnList::VOIR_AUSSI);
+                            if (count($voirs) > 0) {
+                                foreach ($voirs as $voir) {
+                                    $offre->voirs_aussi[] = $voir;
+                                }
+                            }
                         }
+                    } catch (\Exception $exception) {
+
                     }
                 }
             }
