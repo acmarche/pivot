@@ -5,11 +5,11 @@ namespace AcMarche\Pivot\Utils;
 use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\ThesaurusEnum;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\String\UnicodeString;
 
 class GenerateClass
 {
-    public function __construct(private PivotRemoteRepository $pivotRemoteRepository, private SluggerInterface $slugger)
+    public function __construct(private PivotRemoteRepository $pivotRemoteRepository)
     {
     }
 
@@ -27,22 +27,37 @@ class GenerateClass
 
         echo "<?php \n ";
         echo "namespace AcMarche\Pivot\Spec; \n ";
-        echo "Class UrnTypeList: int { \n ";
+        echo "
+use AcMarche\Pivot\Entities\Urn\Urn;
+/**
+             * @see GenerateClass
+             */";
+        echo "Class UrnTypeList { \n ";
 
+        $codes = [];
         foreach ($thesaurus->spec as $spec) {
             $label = new Label();
             $label->value = $spec->label[0]->value;
             $label->lang = $spec->label[0]->lang;
             $deprecated = 'false';
             $root = $spec->root == 1 ?? 0;
-            $slug = strtoupper($this->slugger->slug($label->value, "_"));
+            $slug = new UnicodeString($label->value);
+            $slug = $slug->ascii()->camel();
             echo "  public static function $slug(): Urn { \n ";
             echo "return new Urn(
                 '$spec->urn', '$spec->code', $spec->order, $deprecated, '$spec->type', '$label->value', '$spec->root'
             ); \n ";
             echo "} \n ";
+            $codes[] = $spec->code;
         }
+
+        echo "public static function getAllCode():array {";
+        echo "return ['";
+        echo join("','", $codes);
+        echo "'];";
+        echo "}";
         echo "}";
     }
+
 
 }

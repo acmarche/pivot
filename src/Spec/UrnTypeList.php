@@ -4,355 +4,414 @@ namespace AcMarche\Pivot\Spec;
 
 use AcMarche\Pivot\Entities\Urn\Urn;
 
-class UrnTypeList: int
+/**
+ * @see GenerateClass
+ */
+class UrnTypeList
 {
-    public static function HOTEL(): Urn
+    public static function hotel(): Urn
     {
         return new Urn(
-            'urn:typ:1', 'HTL', 1, false, 'Type', 'Hôtel', true
+            'urn:typ:1', 'HTL', 1, false, 'Type', 'Hôtel', '1'
         );
     }
 
-    public static function GITE(): Urn
+    public static function gite(): Urn
     {
         return new Urn(
-            'urn:typ:2', 'GIT', 2, false, 'Type', 'Gîte', true
+            'urn:typ:2', 'GIT', 2, false, 'Type', 'Gîte', '1'
         );
     }
 
-    public static function CHAMBRE_D_HOTES(): Urn
+    public static function chambreDHotes(): Urn
     {
         return new Urn(
-            'urn:typ:3', 'CHB', 3, false, 'Type', 'Chambre d’hôtes', true
+            'urn:typ:3', 'CHB', 3, false, 'Type', 'Chambre d’hôtes', '1'
         );
     }
 
-    public static function MEUBLE(): Urn
+    public static function meuble(): Urn
     {
         return new Urn(
-            'urn:typ:4', 'MBL', 4, false, 'Type', 'Meublé', true
+            'urn:typ:4', 'MBL', 4, false, 'Type', 'Meublé', '1'
         );
     }
 
-    public static function CAMPING(): Urn
+    public static function camping(): Urn
     {
         return new Urn(
-            'urn:typ:5', 'CMP', 5, false, 'Type', 'Camping', true
+            'urn:typ:5', 'CMP', 5, false, 'Type', 'Camping', '1'
         );
     }
 
-    public static function BUDGET_HOLIDAY(): Urn
+    public static function budgetHoliday(): Urn
     {
         return new Urn(
-            'urn:typ:6', 'BDG', 6, false, 'Type', 'Budget Holiday', true
+            'urn:typ:6', 'BDG', 6, false, 'Type', 'Budget Holiday', '1'
         );
     }
 
-    public static function VILLAGE_DE_VACANCES(): Urn
+    public static function villageDeVacances(): Urn
     {
         return new Urn(
-            'urn:typ:7', 'VLG', 7, false, 'Type', 'Village de vacances', true
+            'urn:typ:7', 'VLG', 7, false, 'Type', 'Village de vacances', '1'
         );
     }
 
-    public static function ITINERAIRE(): Urn
+    public static function itineraire(): Urn
     {
         return new Urn(
-            'urn:typ:8', 'ITB', 8, false, 'Type', 'Itinéraire', true
+            'urn:typ:8', 'ITB', 8, false, 'Type', 'Itinéraire', '1'
         );
     }
 
-    public static function EVENEMENT(): Urn
+    public static function evenement(): Urn
     {
         return new Urn(
-            'urn:typ:9', 'EVT', 9, false, 'Type', 'Événement', true
+            'urn:typ:9', 'EVT', 9, false, 'Type', 'Événement', '1'
         );
     }
 
-    public static function INFORMATION_DE_PARCOURS(): Urn
+    public static function informationDeParcours(): Urn
     {
         return new Urn(
-            'urn:typ:10', 'IFP', 10, false, 'Type', 'Information de parcours', false
+            'urn:typ:10', 'IFP', 10, false, 'Type', 'Information de parcours', ''
         );
     }
 
-    public static function DECOUVERTE_ET_DIVERTISSEMENT(): Urn
+    public static function decouverteEtDivertissement(): Urn
     {
         return new Urn(
-            'urn:typ:11', 'ALD', 11, false, 'Type', 'Découverte et Divertissement', true
+            'urn:typ:11', 'ALD', 11, false, 'Type', 'Découverte et Divertissement', '1'
         );
     }
 
-    public static function GUIDE_TOURISTIQUE(): Urn
+    public static function guideTouristique(): Urn
     {
         return new Urn(
-            'urn:typ:12', 'GTR', 12, false, 'Type', 'Guide touristique', true
+            'urn:typ:12', 'GTR', 12, false, 'Type', 'Guide touristique', '1'
         );
     }
 
-    public static function ARTICLE(): Urn
+    public static function article(): Urn
     {
         return new Urn(
-            'urn:typ:13', 'ART', 13, false, 'Type', 'Article', true
+            'urn:typ:13', 'ART', 13, false, 'Type', 'Article', '1'
         );
     }
 
-    public static function ORGANISME_TOURISTIQUE(): Urn
+    public static function organismeTouristique(): Urn
     {
         return new Urn(
-            'urn:typ:14', 'OGT', 14, false, 'Type', 'Organisme touristique', true
+            'urn:typ:14', 'OGT', 14, false, 'Type', 'Organisme touristique', '1'
         );
     }
 
-    public static function FORFAIT_INDIVIDUEL(): Urn
+    public static function forfaitIndividuel(): Urn
     {
         return new Urn(
-            'urn:typ:15', 'FTI', 15, false, 'Type', 'Forfait individuel', true
+            'urn:typ:15', 'FTI', 15, false, 'Type', 'Forfait individuel', '1'
         );
     }
 
-    public static function FORFAIT_GROUPE(): Urn
+    public static function forfaitGroupe(): Urn
     {
         return new Urn(
-            'urn:typ:16', 'FTG', 16, false, 'Type', 'Forfait groupe', true
+            'urn:typ:16', 'FTG', 16, false, 'Type', 'Forfait groupe', '1'
         );
     }
 
-    public static function AGENCE_DE_VOYAGE(): Urn
+    public static function agenceDeVoyage(): Urn
     {
         return new Urn(
-            'urn:typ:17', 'AGV', 17, false, 'Type', 'Agence de voyage', true
+            'urn:typ:17', 'AGV', 17, false, 'Type', 'Agence de voyage', '1'
         );
     }
 
-    public static function MICE_INFRASTRUCTURE(): Urn
+    public static function mICEInfrastructure(): Urn
     {
         return new Urn(
-            'urn:typ:18', 'MIF', 18, false, 'Type', 'MICE - Infrastructure', true
+            'urn:typ:18', 'MIF', 18, false, 'Type', 'MICE - Infrastructure', '1'
         );
     }
 
-    public static function MICE_ORGANISATEUR(): Urn
+    public static function mICEOrganisateur(): Urn
     {
         return new Urn(
-            'urn:typ:19', 'MOG', 19, false, 'Type', 'MICE - Organisateur', true
+            'urn:typ:19', 'MOG', 19, false, 'Type', 'MICE - Organisateur', '1'
         );
     }
 
-    public static function MICE_PRESTATAIRE(): Urn
+    public static function mICEPrestataire(): Urn
     {
         return new Urn(
-            'urn:typ:20', 'MPR', 20, false, 'Type', 'MICE - Prestataire', true
+            'urn:typ:20', 'MPR', 20, false, 'Type', 'MICE - Prestataire', '1'
         );
     }
 
-    public static function MICE_DIVERTISSEMENT(): Urn
+    public static function mICEDivertissement(): Urn
     {
         return new Urn(
-            'urn:typ:21', 'MDV', 21, false, 'Type', 'MICE - Divertissement', true
+            'urn:typ:21', 'MDV', 21, false, 'Type', 'MICE - Divertissement', '1'
         );
     }
 
-    public static function MICE_ANIMATION(): Urn
+    public static function mICEAnimation(): Urn
     {
         return new Urn(
-            'urn:typ:22', 'MAM', 22, false, 'Type', 'MICE - Animation', true
+            'urn:typ:22', 'MAM', 22, false, 'Type', 'MICE - Animation', '1'
         );
     }
 
-    public static function CONTACT_PUBLIC(): Urn
+    public static function contactPublic(): Urn
     {
         return new Urn(
-            'urn:typ:23', 'CTP', 23, false, 'Type', 'Contact public', true
+            'urn:typ:23', 'CTP', 23, false, 'Type', 'Contact public', '1'
         );
     }
 
-    public static function SALLE(): Urn
+    public static function salle(): Urn
     {
         return new Urn(
-            'urn:typ:24', 'SAL', 24, false, 'Type', 'Salle', false
+            'urn:typ:24', 'SAL', 24, false, 'Type', 'Salle', ''
         );
     }
 
-    public static function AUTRE_HEBERGEMENT(): Urn
+    public static function autreHebergement(): Urn
     {
         return new Urn(
-            'urn:typ:25', 'ATH', 25, false, 'Type', 'Autre hébergement', true
+            'urn:typ:25', 'ATH', 25, false, 'Type', 'Autre hébergement', '1'
         );
     }
 
-    public static function AIRE_POUR_MOTOR_HOMES(): Urn
+    public static function airePourMotorHomes(): Urn
     {
         return new Urn(
-            'urn:typ:26', 'AMH', 26, false, 'Type', 'Aire pour motor-homes', true
+            'urn:typ:26', 'AMH', 26, false, 'Type', 'Aire pour motor-homes', '1'
         );
     }
 
-    public static function STRUCTURE_ASSOCIATIVE(): Urn
+    public static function structureAssociative(): Urn
     {
         return new Urn(
-            'urn:typ:27', 'ASC', 27, false, 'Type', 'Structure associative', true
+            'urn:typ:27', 'ASC', 27, false, 'Type', 'Structure associative', '1'
         );
     }
 
-    public static function ENDROIT_DE_CAMP(): Urn
+    public static function endroitDeCamp(): Urn
     {
         return new Urn(
-            'urn:typ:28', 'EDC', 28, false, 'Type', 'Endroit de camp', true
+            'urn:typ:28', 'EDC', 28, false, 'Type', 'Endroit de camp', '1'
         );
     }
 
-    public static function POINT_NOEUD(): Urn
+    public static function pointNoeud(): Urn
     {
         return new Urn(
-            'urn:typ:29', 'PND', 29, false, 'Type', 'Point nœud', true
+            'urn:typ:29', 'PND', 29, false, 'Type', 'Point nœud', '1'
         );
     }
 
-    public static function TRONCON(): Urn
+    public static function troncon(): Urn
     {
         return new Urn(
-            'urn:typ:30', 'TRN', 30, false, 'Type', 'Tronçon', true
+            'urn:typ:30', 'TRN', 30, false, 'Type', 'Tronçon', '1'
         );
     }
 
-    public static function PRODUIT_TOURISTIQUE(): Urn
+    public static function produitTouristique(): Urn
     {
         return new Urn(
-            'urn:typ:31', 'PTR', 31, false, 'Type', 'Produit touristique', true
+            'urn:typ:31', 'PTR', 31, false, 'Type', 'Produit touristique', '1'
         );
     }
 
-    public static function AIRE_DE_BIVOUAC(): Urn
+    public static function aireDeBivouac(): Urn
     {
         return new Urn(
-            'urn:typ:32', 'ABV', 32, false, 'Type', 'Aire de bivouac', true
+            'urn:typ:32', 'ABV', 32, false, 'Type', 'Aire de bivouac', '1'
         );
     }
 
-    public static function ZONE_DE_FERMETURE(): Urn
+    public static function zoneDeFermeture(): Urn
     {
         return new Urn(
-            'urn:typ:33', 'ZFM', 33, false, 'Type', 'Zone de fermeture', true
+            'urn:typ:33', 'ZFM', 33, false, 'Type', 'Zone de fermeture', '1'
         );
     }
 
-    public static function GROUPE_D_EVENEMENTS(): Urn
+    public static function groupeDEvenements(): Urn
     {
         return new Urn(
-            'urn:typ:256', 'EGP', 256, false, 'Type', 'Groupe d’événements', true
+            'urn:typ:256', 'EGP', 256, false, 'Type', 'Groupe d’événements', '1'
         );
     }
 
-    public static function ANIMATION_PEDAGOGIQUE(): Urn
+    public static function animationPedagogique(): Urn
     {
         return new Urn(
-            'urn:typ:257', 'APD', 257, false, 'Type', 'Animation pédagogique', true
+            'urn:typ:257', 'APD', 257, false, 'Type', 'Animation pédagogique', '1'
         );
     }
 
-    public static function PRODUCTEUR(): Urn
+    public static function producteur(): Urn
     {
         return new Urn(
-            'urn:typ:258', 'PRD', 258, false, 'Type', 'Producteur', true
+            'urn:typ:258', 'PRD', 258, false, 'Type', 'Producteur', '1'
         );
     }
 
-    public static function ARTISAN(): Urn
+    public static function artisan(): Urn
     {
         return new Urn(
-            'urn:typ:259', 'ATS', 259, false, 'Type', 'Artisan', true
+            'urn:typ:259', 'ATS', 259, false, 'Type', 'Artisan', '1'
         );
     }
 
-    public static function BOUTIQUE_DE_TERROIR(): Urn
+    public static function boutiqueDeTerroir(): Urn
     {
         return new Urn(
-            'urn:typ:260', 'BTQ', 260, false, 'Type', 'Boutique de terroir', true
+            'urn:typ:260', 'BTQ', 260, false, 'Type', 'Boutique de terroir', '1'
         );
     }
 
-    public static function RESTAURATION(): Urn
+    public static function restauration(): Urn
     {
         return new Urn(
-            'urn:typ:261', 'RST', 261, false, 'Type', 'Restauration', true
+            'urn:typ:261', 'RST', 261, false, 'Type', 'Restauration', '1'
         );
     }
 
-    public static function RECETTE(): Urn
+    public static function recette(): Urn
     {
         return new Urn(
-            'urn:typ:262', 'RCT', 262, false, 'Type', 'Recette', true
+            'urn:typ:262', 'RCT', 262, false, 'Type', 'Recette', '1'
         );
     }
 
-    public static function STRUCTURE_EVENEMENTIELLE(): Urn
+    public static function structureEvenementielle(): Urn
     {
         return new Urn(
-            'urn:typ:263', 'SMN', 263, false, 'Type', 'Structure événementielle', true
+            'urn:typ:263', 'SMN', 263, false, 'Type', 'Structure événementielle', '1'
         );
     }
 
-    public static function PRODUIT_DE_TERROIR(): Urn
+    public static function produitDeTerroir(): Urn
     {
         return new Urn(
-            'urn:typ:267', 'PDT', 267, false, 'Type', 'Produit de terroir', true
+            'urn:typ:267', 'PDT', 267, false, 'Type', 'Produit de terroir', '1'
         );
     }
 
-    public static function MEDIA(): Urn
+    public static function media(): Urn
     {
         return new Urn(
-            'urn:typ:268', 'ANX', 268, false, 'Type', 'Média', false
+            'urn:typ:268', 'ANX', 268, false, 'Type', 'Média', ''
         );
     }
 
-    public static function POINT_D_INTERET(): Urn
+    public static function pointDInteret(): Urn
     {
         return new Urn(
-            'urn:typ:269', 'POI', 269, false, 'Type', 'Point d’intérêt', true
+            'urn:typ:269', 'POI', 269, false, 'Type', 'Point d’intérêt', '1'
         );
     }
 
-    public static function HEBERGEMENTS(): Urn
+    public static function hebergements(): Urn
     {
         return new Urn(
-            'urn:typ:270', 'GHB', 270, false, 'Type', 'Hébergements', true
+            'urn:typ:270', 'GHB', 270, false, 'Type', 'Hébergements', '1'
         );
     }
 
-    public static function CONTACT_PRIVE(): Urn
+    public static function contactPrive(): Urn
     {
         return new Urn(
-            'urn:typ:513', 'CTD', 513, false, 'Type', 'Contact privé', true
+            'urn:typ:513', 'CTD', 513, false, 'Type', 'Contact privé', '1'
         );
     }
 
-    public static function SUIVI_DE_CONTACT(): Urn
+    public static function suiviDeContact(): Urn
     {
         return new Urn(
-            'urn:typ:514', 'SCT', 514, false, 'Type', 'Suivi de contact', false
+            'urn:typ:514', 'SCT', 514, false, 'Type', 'Suivi de contact', ''
         );
     }
 
-    public static function REQUETE(): Urn
+    public static function requete(): Urn
     {
         return new Urn(
-            'urn:typ:768', 'QRY', 768, false, 'Type', 'Requête', false
+            'urn:typ:768', 'QRY', 768, false, 'Type', 'Requête', ''
         );
     }
 
-    public static function PROTOTYPE(): Urn
+    public static function prototype(): Urn
     {
         return new Urn(
-            'urn:typ:769', 'PRO', 769, false, 'Type', 'Prototype', false
+            'urn:typ:769', 'PRO', 769, false, 'Type', 'Prototype', ''
         );
     }
 
-    public static function MODELE(): Urn
+    public static function modele(): Urn
     {
         return new Urn(
-            'urn:typ:770', 'TPL', 770, false, 'Type', 'Modèle', false
+            'urn:typ:770', 'TPL', 770, false, 'Type', 'Modèle', ''
         );
+    }
+
+    public static function getAllCode(): array
+    {
+        return [
+            'HTL',
+            'GIT',
+            'CHB',
+            'MBL',
+            'CMP',
+            'BDG',
+            'VLG',
+            'ITB',
+            'EVT',
+            'IFP',
+            'ALD',
+            'GTR',
+            'ART',
+            'OGT',
+            'FTI',
+            'FTG',
+            'AGV',
+            'MIF',
+            'MOG',
+            'MPR',
+            'MDV',
+            'MAM',
+            'CTP',
+            'SAL',
+            'ATH',
+            'AMH',
+            'ASC',
+            'EDC',
+            'PND',
+            'TRN',
+            'PTR',
+            'ABV',
+            'ZFM',
+            'EGP',
+            'APD',
+            'PRD',
+            'ATS',
+            'BTQ',
+            'RST',
+            'RCT',
+            'SMN',
+            'PDT',
+            'ANX',
+            'POI',
+            'GHB',
+            'CTD',
+            'SCT',
+            'QRY',
+            'PRO',
+            'TPL',
+        ];
     }
 }
