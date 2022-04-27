@@ -27,13 +27,14 @@ class PivotRepository
     }
 
     /**
-     * @throws \Psr\Cache\InvalidArgumentException
      * @return Offre[]
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function getOffres(array $filtres): array
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
+
         $offresShort = PivotFilter::filterByTypes($responseQuery, $filtres);
 
         foreach ($offresShort as $offreShort) {
@@ -203,6 +204,30 @@ class PivotRepository
         }
 
         return null;
+    }
+
+    public function getTypesOffre(): array
+    {
+        return $this->cache->get('pivotAllTypes', function () {
+            $resultString = $this->pivotRemoteRepository->query();
+
+            $data = json_decode($resultString);
+
+            $types = [];
+            foreach ($data->offre as $offreInline) {
+                $offreString = $this->pivotRemoteRepository->offreByCgt($offreInline->codeCgt);
+                $offreObject = json_decode($offreString);
+                $offre = $offreObject->offre[0];
+                $type = $offre->typeOffre;
+                $idType = $type->idTypeOffre;
+                $labelType = $type->label[0]->value;
+                $types[$idType] = $labelType;
+            }
+
+            ksort($types);
+
+            return $types;
+        });
     }
 
 }
