@@ -15,9 +15,13 @@ class PivotFilter
     public static function filterByTypes(ResponseQuery $data, array $pivotTypes): array
     {
         $offres = [];
-
+        $count = count($pivotTypes);
         foreach ($data->offre as $row) {
-            if (in_array($row->typeOffre->idTypeOffre, $pivotTypes)) {
+            if ($count > 0) {
+                if (in_array($row->typeOffre->idTypeOffre, $pivotTypes)) {
+                    $offres[] = $row;
+                }
+            } else {
                 $offres[] = $row;
             }
         }
