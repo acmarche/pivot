@@ -21,6 +21,7 @@ class Offre
      * @var string $dataRaw
      */
     public string $dataRaw;
+    public ?bool $active;
     public string $dateCreation;
     public string $dateModification;
     public User $userCreation;
@@ -28,6 +29,10 @@ class Offre
     public UserGlobalModification $userModification;
     public UserGlobalModification $userGlobalModification;
     public string $nom;
+    public string $email;
+    public string $tel;
+    public string|SpecData|null $tarif;
+
     /**
      * @deprecated $estActive
      */
@@ -43,20 +48,30 @@ class Offre
     /**
      * @var SpecData[] $spec
      */
-    public $spec;
+    public array $spec = [];
     /**
      * @var RelOffre[] $relOffre
      */
-    public $relOffre;
+    public array $relOffre = [];
     public array $images = [];
+    public array $voir_aussis = [];
     public array $hades_ids = [];
-    public array $enfants = [];
-    public array $parents = [];
+    /**
+     * @var SpecData[]
+     */
+    public array $adresse_rue;
+
+    public string|SpecData|null $description;
+
+    public ?string $image = null;
 
     /**
      * utilise pour wp
      */
     public ?string $url = null;
+    public array $tags = [];
+    public array $enfants = [];
+    public array $parents = [];
 
     /**
      * Alias
@@ -64,12 +79,6 @@ class Offre
     public function getAdresse(): ?Adresse
     {
         return $this->adresse1;
-    }
-
-    //todo
-    public function getNom2(string $language)
-    {
-
     }
 
     public function nomByLanguage(string $language = 'fr'): ?string
