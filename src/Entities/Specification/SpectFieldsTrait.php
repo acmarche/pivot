@@ -31,6 +31,14 @@ trait SpectFieldsTrait
      */
     public array $communications = [];
     /**
+     * @var SpecData[] $equipements
+     */
+    public array $equipements = [];
+    /**
+     * @var SpecData[] $accueils
+     */
+    public array $accueils = [];
+    /**
      * @var SpecData[] $webs
      */
     public array $webs = [];

@@ -63,6 +63,8 @@ class Offre
 
     public string|SpecData|null $description;
 
+   public $contact_direction =null;
+
     public ?string $image = null;
 
     /**

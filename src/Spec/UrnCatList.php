@@ -10,4 +10,6 @@ enum UrnCatList: string
     case CATEGORIE = "urn:cat:classlab";
     case COMMUNICATION = "urn:cat:moycom";
     case DESCRIPTION = "urn:cat:descmarket";
+    case EQUIPEMENTS = "urn:cat:eqpsrv";
+    case ACCUEIL = "urn:cat:accueil";
 }

@@ -45,6 +45,8 @@ class PivotParser
 
         $offre->communications = $this->findByUrnCat(UrnCatList::COMMUNICATION);
         $offre->adresse_rue = $this->findByUrn(UrnList::ADRESSE_RUE);
+        $offre->equipements = $this->findByUrnCat(UrnCatList::EQUIPEMENTS);
+        $offre->accueils = $this->findByUrnCat(UrnCatList::ACCUEIL);
 
         $cats = $this->findByUrnCat(UrnCatList::CATEGORIE);
         foreach ($cats as $cat) {
