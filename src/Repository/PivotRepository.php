@@ -183,6 +183,10 @@ class PivotRepository
                                     $offre->voirs_aussi[] = $voir;
                                 }
                             }
+                            $direction = $this->findByUrn(UrnList::CONTACT_DIRECTION);
+                            if (count($direction) > 0) {
+                                $offre->contact_direction = $direction[0];
+                            }
                         }
                     } catch (\Exception $exception) {
 
