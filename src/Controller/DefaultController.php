@@ -44,11 +44,10 @@ class DefaultController extends AbstractController
         );
     }
 
-    #[Route(path: '/hotels', name: 'pivot_hotels')]
-    public function hotel(): Response
+    #[Route(path: '/offres', name: 'pivot_offres')]
+    public function offres(): Response
     {
-        $hotels = $this->pivotRepository->getHotels();
-        $this->pivotParser->parseHotels($hotels);
+        $hotels = $this->pivotRepository->getOffres([]);
 
         dump($hotels);
 
