@@ -10,9 +10,9 @@ use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Parser\PivotParser;
 use AcMarche\Pivot\Parser\PivotSerializer;
-use AcMarche\Pivot\PivotTypeEnum;
 use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
+use AcMarche\Pivot\Spec\UrnTypeList;
 use AcMarche\Pivot\Utils\SortUtils;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -67,7 +67,7 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotFilter::filterByTypes($responseQuery, [PivotTypeEnum::EVENEMENT]);
+        $offresShort = PivotFilter::filterByTypes($responseQuery, [UrnTypeList::EVENEMENT()->order]);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->getOffreByCgt(
                 $offreShort->codeCgt,
@@ -229,6 +229,20 @@ class PivotRepository
             if (count($event->hades_ids) > 0) {
                 if ($idHades == $event->hades_ids[0]->value) {
                     return $event;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function getOffreByIdHades(int $idHades): ?Offre
+    {
+        $offres = $this->getOffres([]);
+        foreach ($offres as $offre) {
+            if (count($offre->hades_ids) > 0) {
+                if ($idHades == $offre->hades_ids[0]->value) {
+                    return $offre;
                 }
             }
         }
