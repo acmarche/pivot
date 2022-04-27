@@ -34,4 +34,20 @@ trait SpectFieldsTrait
      * @var SpecData[] $webs
      */
     public array $webs = [];
+
+    /**
+     * @param string $language
+     * @return SpecData[]
+     */
+    public function descriptionsByLanguage(string $language = 'fr'): array
+    {
+        $descriptions = [];
+        foreach ($this->descriptions as $description) {
+            if (str_starts_with($language.':urn', $description->urn)) {
+                $descriptions[] = $description;
+            }
+        }
+
+        return $descriptions;
+    }
 }
