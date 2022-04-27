@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Command;
 
-use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -16,7 +15,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsCommand(
     name: 'pivot:offre-list',
@@ -28,9 +26,7 @@ class OffreListCommand extends Command
     private OutputInterface $output;
 
     public function __construct(
-        private PivotRemoteRepository $pivotRemoteRepository,
         private PivotRepository $pivotRepository,
-        private CacheInterface $cache,
         string $name = null
     ) {
         parent::__construct($name);
@@ -63,9 +59,16 @@ class OffreListCommand extends Command
         }
 
         $this->io->success($response.": ");
-        $offres = $this->pivotRepository->getOffres([$typeSelected]);
+        if ($typeSelected === 0) {
+            $args = [];
+        } else {
+            $args = [$typeSelected];
+        }
+
+        $this->io->info("Chargement des offres...");
+        $offres = $this->pivotRepository->getOffres($args);
         $count = count($offres);
-        $this->io->info("Chargement des $count offres...");
+        $this->io->info("$count offres trouvées");
         $rows = [];
         foreach ($offres as $offre) {
             $rows[] = [$offre->nom, $offre->codeCgt, $offre->dateModification];
@@ -94,52 +97,32 @@ class OffreListCommand extends Command
         return $this->io->askQuestion($choice);
     }
 
-    protected function getAllTypes(): array
-    {
-        return $this->cache->get('pivote_list_types', function () {
-            return $this->createLisiting();
-        });
-    }
-
-    private function groupingOffres()
+    private function groupingOffres(array $offres)
     {
         $groupe = [];
-
-        if (!isset($groupe[$labelType])) {
-            $groupe[$labelType] = 1;
-        } else {
-            $groupe[$labelType]++;
-        }
-
-    }
-
-    private function createLisiting(): array
-    {
-        $this->io->info("Création du listing des types...");
-        $progressBar = new ProgressBar($this->output, 0);
-        $progressBar->start();
-
-        $resultString = $this->pivotRemoteRepository->query();
-        $progressBar->advance(30);
-
-        $data = json_decode($resultString);
-
-        $types = [];
-        foreach ($data->offre as $offreInline) {
-            $offreString = $this->pivotRemoteRepository->offreByCgt($offreInline->codeCgt);
-            $offreObject = json_decode($offreString);
-            $offre = $offreObject->offre[0];
+        foreach ($offres as $offre) {
             $type = $offre->typeOffre;
             $idType = $type->idTypeOffre;
             $labelType = $type->label[0]->value;
             $types[$idType] = $labelType;
-
-            $progressBar->advance();
+            if (!isset($groupe[$labelType])) {
+                $groupe[$labelType] = 1;
+            } else {
+                $groupe[$labelType]++;
+            }
         }
+    }
 
+    private function getAllTypes(): array
+    {
+        $this->io->info("Création du listing des types...");
+        $progressBar = new ProgressBar($this->output, 0);
+        $progressBar->start();
+        $progressBar->advance(30);
+        $types = $this->pivotRepository->getTypesOffre();
+        $types[0] = 'Tout';
+        $progressBar->advance(70);
         $progressBar->finish();
-
-        ksort($types);
 
         return $types;
     }
