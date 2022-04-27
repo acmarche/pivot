@@ -23,7 +23,9 @@ class PivotContainer
         $container = $kernel->getContainer();
 
         $loader = $container->get('dotenv');
-        $loader->loadEnv('.env');
+        // AcMarche/Pivot
+        $projectDir = $kernel->getProjectDir();
+        $loader->loadEnv($projectDir.'/../../.env');
         /**
          * @var PivotRepository $pivotRepository
          */
