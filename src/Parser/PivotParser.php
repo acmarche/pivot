@@ -4,48 +4,55 @@ namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Category;
 use AcMarche\Pivot\Entities\Event\Event;
-use AcMarche\Pivot\Entities\Hebergement\Hotel;
 use AcMarche\Pivot\Entities\Offre\Offre;
-use AcMarche\Pivot\Entities\Specification\SpecEvent;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Event\EventUtils;
+use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\SpecTypeEnum;
+use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnUtils;
 
 class PivotParser
 {
+    use SpecTrait, ParserEventTrait;
+
     public function __construct(private UrnUtils $urnUtils)
     {
     }
 
-    public function parse(Offre|Event|Hotel $offre)
+    public function parseOffre(Offre $offre)
     {
-        $eventSpec       = new SpecEvent($offre->spec);
-        $offre->homepage = $eventSpec->getHomePage();
-        $offre->active   = $eventSpec->isActive();
-        foreach ($eventSpec->findByType(SpecTypeEnum::EMAIL) as $spec) {
+        $this->specs = $offre->spec;
+        foreach ($offre->spec as $spec) {
+            $offre->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
+        }
+        $offre->homepage = $this->findByUrnReturnValue(UrnList::HOMEPAGE);
+        $offre->active = $this->findByUrnReturnValue(UrnList::ACTIVE);
+
+        foreach ($this->findByType(SpecTypeEnum::EMAIL) as $spec) {
             $offre->emails[] = $spec->value;
         }
-        foreach ($eventSpec->findByType(SpecTypeEnum::TEL) as $spec) {
+        foreach ($this->findByType(SpecTypeEnum::TEL) as $spec) {
             $offre->tels[] = $spec->value;
         }
 
-        $offre->descriptions = $eventSpec->findByUrn(UrnList::DESCRIPTION_SHORT, true);
-        $offre->tarifs       = $eventSpec->findByUrn(UrnList::TARIF);
-        $offre->webs         = $eventSpec->findByUrn(UrnList::WEB);
-        $offre->hades_ids     = $eventSpec->findByUrn(UrnList::HADES_ID);
+        $offre->descriptions = $this->findByUrnCat(UrnCatList::DESCRIPTION);
 
-        $offre->communications = $eventSpec->findByUrn(UrnList::COMMUNICATION);
-        $offre->adresse_rue = $eventSpec->findByUrn(UrnList::ADRESSE_RUE);
+        $offre->tarifs = $this->findByUrn(UrnList::TARIF);
+        $offre->webs = $this->findByUrn(UrnList::WEB);
+        $offre->hades_ids = $this->findByUrn(UrnList::HADES_ID);
 
-        $cats = $eventSpec->findByUrnCat(UrnList::CATEGORIE);
+        $offre->communications = $this->findByUrnCat(UrnCatList::COMMUNICATION);
+        $offre->adresse_rue = $this->findByUrn(UrnList::ADRESSE_RUE);
+
+        $cats = $this->findByUrnCat(UrnCatList::CATEGORIE);
         foreach ($cats as $cat) {
             $info = $this->urnUtils->getInfosUrn($cat->urn);
             if ($info) {
-                $order  = $cat->order;
+                $order = $cat->order;
                 $labels = $info->label;
-                //   $offre->categories[] = new Category($order, $labels);
+                $offre->categories[] = new Category($order, $labels);
             }
         }
     }
@@ -65,18 +72,13 @@ class PivotParser
 
     public function parseEvent(Event $event, bool $removeObsolete = false): void
     {
-        foreach ($event->spec as $spec) {
-            $event->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
-        }
-        $this->parse($event);
-        $eventSpec     = new SpecEvent($event->spec);
-        $datesValidite = $eventSpec->dateBeginAndEnd();
+        $this->parseOffre($event);
 
-        $event->dates = $eventSpec->getDates();
-        $fistDate     = $event->firstDate();
+        $event->dates = $this->getDates();
+        $fistDate = $event->firstDate();
         if ($fistDate) {
             $event->dateBegin = $fistDate->date_begin;
-            $event->dateEnd   = $fistDate->date_end;
+            $event->dateEnd = $fistDate->date_end;
         }
 
         if ($removeObsolete) {
@@ -88,39 +90,18 @@ class PivotParser
             $fistDate = $event->firstDate();
             if ($fistDate) {
                 $event->dateBegin = $fistDate->date_begin;
-                $event->dateEnd   = $fistDate->date_end;
+                $event->dateEnd = $fistDate->date_end;
             }
         }
 
-        $cats = $eventSpec->findByUrn(UrnList::CATEGORIE_EVENT, true);
+        $cats = $this->findByUrn(UrnList::CATEGORIE_EVENT, true);
         foreach ($cats as $cat) {
             $info = $this->urnUtils->getInfosUrn($cat->urn);
             if ($info) {
-                $order               = $cat->order;
-                $labels              = $info->label;
+                $order = $cat->order;
+                $labels = $info->label;
                 $event->categories[] = new Category($order, $labels);
             }
         }
-    }
-
-    /**
-     * @param Hotel[] $hotels
-     */
-    public function parseHotels(array $hotels): void
-    {
-        array_map(function ($hotel) {
-            $this->parseHotel($hotel);
-        }, $hotels);
-    }
-
-    /**
-     * @param Hotel $hotel
-     */
-    public function parseHotel(Hotel $hotel): void
-    {
-        foreach ($hotel->spec as $spec) {
-            $hotel->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
-        }
-        $this->parse($hotel);
     }
 }

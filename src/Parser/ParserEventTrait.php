@@ -1,29 +1,18 @@
 <?php
 
-namespace AcMarche\Pivot\Entities\Specification;
+namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Event\DateBeginEnd;
-use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Utils\DateUtils;
 use AcMarche\Pivot\Utils\SortUtils;
 
-class SpecEvent
+trait ParserEventTrait
 {
-    use SpecTrait;
-
-    /**
-     * @param SpecData[] $specs
-     */
-    public function __construct(array $specs)
-    {
-        $this->specs = $specs;
-    }
-
     public function dateBeginAndEnd(): array
     {
-        $dates     = [];
-        $format    = "d/m/Y";
+        $dates = [];
+        $format = "d/m/Y";
         $dateDebut = $this->findByUrn(UrnList::DATE_DEB_VALID);
         if (count($dateDebut) > 0) {
             $dates[] = DateUtils::convertStringToDateTime($dateDebut[0]->value, $format);
@@ -35,26 +24,6 @@ class SpecEvent
         }
 
         return $dates;
-    }
-
-    public function getHomePage(): ?string
-    {
-        $specs = $this->findByUrn(UrnList::HOMEPAGE);
-        if (count($specs) > 0) {
-            return $specs[0]->value;
-        }
-
-        return null;
-    }
-
-    public function isActive(): bool
-    {
-        $specs = $this->findByUrn(UrnList::ACTIVE);
-        if (count($specs) > 0) {
-            return (bool)$specs[0]->value;
-        }
-
-        return false;
     }
 
     /**

@@ -20,10 +20,10 @@ enum UrnList: string
     case ACTIVE = "urn:fld:typeevt:activrecur";
     case DATE_OBJECT = "urn:obj:date";
     case URL = "urn:fld:url";
-    case CATEGORIE = "urn:cat:classlab";
     case CATEGORIE_EVENT = "urn:fld:catevt";
-    case COMMUNICATION = "urn:cat:moycom";
     case WEB = "urn:fld:urlweb";
     case HADES_ID = "urn:fld:idhades";
     case ADRESSE_RUE = "urn:fld:adr";
+    case VOIR_AUSSI = "urn:lnk:offre:voiraussi";
+    case MEDIAS_PARTIAL = "urn:lnk:media";
 }

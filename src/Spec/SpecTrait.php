@@ -14,12 +14,12 @@ trait SpecTrait
     /**
      * @return SpecData[]
      */
-    public function findByUrn(UrnList $keywordSearch, bool $like = false): array
+    public function findByUrn(UrnList $keywordSearch, bool $contains = false): array
     {
         $specs = [];
 
         foreach ($this->specs as $spec) {
-            if ($like) {
+            if ($contains) {
                 if (\str_contains($spec->urn, $keywordSearch->value)) {
                     $specs[] = $spec;
                 }
@@ -33,6 +33,16 @@ trait SpecTrait
         return $specs;
     }
 
+    public function findByUrnReturnValue(UrnList $urnName): ?string
+    {
+        $specs = $this->findByUrn($urnName);
+        if (count($specs) > 0) {
+            return $specs[0]->value;
+        }
+
+        return null;
+    }
+
 
     /**
      * @param string $keywordSearch
@@ -40,7 +50,7 @@ trait SpecTrait
      *
      * @return SpecData[]
      */
-    public function findByUrnCat(UrnList $keywordSearch): array
+    public function findByUrnCat(UrnCatList $keywordSearch): array
     {
         $data = [];
         foreach ($this->specs as $spec) {
