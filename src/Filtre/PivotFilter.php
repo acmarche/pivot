@@ -3,13 +3,12 @@
 namespace AcMarche\Pivot\Filtre;
 
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
-use AcMarche\Pivot\PivotTypeEnum;
 
 class PivotFilter
 {
     /**
      * @param ResponseQuery $data
-     * @param PivotTypeEnum[] $pivotTypes
+     * @param int[] $pivotTypes
      * @return array
      */
     public static function filterByTypes(ResponseQuery $data, array $pivotTypes): array
