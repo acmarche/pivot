@@ -20,6 +20,7 @@ class Adresse
      * @var Label[] $commune
      */
     public array $commune;
+    public ?string $lieuDit = null;
     public string $province;
     public UrnLabel $provinceUrn;
     public string $pays;
