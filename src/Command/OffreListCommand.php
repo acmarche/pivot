@@ -115,14 +115,14 @@ class OffreListCommand extends Command
 
     private function getAllTypes(): array
     {
-        $this->io->info("Création du listing des types...");
-        $progressBar = new ProgressBar($this->output, 0);
-        $progressBar->start();
-        $progressBar->advance(30);
+        //$this->io->info("Création du listing des types...");
+       // $progressBar = new ProgressBar($this->output, 0);
+      //  $progressBar->start();
+      //  $progressBar->advance(30);
         $types = $this->pivotRepository->getTypesOffre();
         $types[0] = 'Tout';
-        $progressBar->advance(70);
-        $progressBar->finish();
+      //  $progressBar->advance(70);
+      //  $progressBar->finish();
 
         return $types;
     }
