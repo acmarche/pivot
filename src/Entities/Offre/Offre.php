@@ -43,7 +43,8 @@ class Offre
      */
     public int $visibilite;
     public UrnLabel $visibiliteUrn;
-    public TypeOffre $typeOffre;
+    public TypeOffre $typeOffre2;
+    public TypeOffreShort2 $typeOffre;
     public Adresse $adresse1;
     /**
      * @var SpecData[] $spec
