@@ -13,7 +13,7 @@ use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnUtils;
 
-class PivotParser
+class OffreParser
 {
     use SpecTrait, ParserEventTrait;
 
