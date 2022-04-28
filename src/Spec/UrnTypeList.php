@@ -412,6 +412,7 @@ class UrnTypeList
             'QRY',
             'PRO',
             'TPL',
+            'HBG'//gloriette inconnu
         ];
     }
 }
