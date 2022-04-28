@@ -15,7 +15,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'pivot:offre-dump',
-    description: 'Add a short description for your command',
+    description: 'Affichage d\'une offre suivant le code cgt',
 )]
 class OffreDumpCommand extends Command
 {

@@ -17,10 +17,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'pivot:classement',
-    description: 'Add a short description for your command',
+    name: 'pivot:filtre',
+    description: 'Extrait tous les filtres des offres par type',
 )]
-class ClassementCommand extends Command
+class FiltreCommand extends Command
 {
     use SpecTrait, ParserEventTrait;
 
@@ -54,7 +54,7 @@ class ClassementCommand extends Command
             $io->section($type);
             $offres = $this->pivotRepository->getOffres([$id]);
             $count = count($offres);
-            $io->info("$count offres trouvées");
+            $io->title("$count offres trouvées");
             $rows = [];
             foreach ($offres as $offre) {
                 $this->specs = $offre->spec;
@@ -63,7 +63,7 @@ class ClassementCommand extends Command
                     $info = $this->urnUtils->getInfosUrn($classement->urn);
                     if ($classement->type == 'Boolean') {
                         $rows[$classement->order] = [$classement->order, $info->labelByLanguage('fr')];
-                        $io->writeln($info->labelByLanguage('fr'));
+                       // $io->writeln($info->labelByLanguage('fr'));
                     }
                 }
             }

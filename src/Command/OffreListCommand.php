@@ -7,7 +7,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Completion\CompletionSuggestions;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'pivot:offre-list',
-    description: 'Add a short description for your command',
+    description: 'Liste les offres suivant un type choisis',
 )]
 class OffreListCommand extends Command
 {
@@ -51,7 +50,7 @@ class OffreListCommand extends Command
                 $typeSelected = $this->catchResponseSelected($response);
             }
         } else {
-            if (!$response = $this->catchTypeSelected($typeSelected)) {
+            if (!$response = $this->catchTypeGiven($typeSelected)) {
                 $this->io->error('Ce type n\'exite pas dans la liste');
 
                 return Command::FAILURE;
@@ -116,13 +115,13 @@ class OffreListCommand extends Command
     private function getAllTypes(): array
     {
         //$this->io->info("Création du listing des types...");
-       // $progressBar = new ProgressBar($this->output, 0);
-      //  $progressBar->start();
-      //  $progressBar->advance(30);
+        // $progressBar = new ProgressBar($this->output, 0);
+        //  $progressBar->start();
+        //  $progressBar->advance(30);
         $types = $this->pivotRepository->getTypesOffre();
         $types[0] = 'Tout';
-      //  $progressBar->advance(70);
-      //  $progressBar->finish();
+        //  $progressBar->advance(70);
+        //  $progressBar->finish();
 
         return $types;
     }
@@ -139,7 +138,7 @@ class OffreListCommand extends Command
         return array_search($response, $this->getAllTypes());
     }
 
-    private function catchTypeSelected(int $typeGiven): ?string
+    private function catchTypeGiven(int $typeGiven): ?string
     {
         return $this->getAllTypes()[$typeGiven] ?? null;
     }
