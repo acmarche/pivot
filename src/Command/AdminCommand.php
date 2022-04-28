@@ -18,14 +18,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class AdminCommand extends Command
 {
-    private SymfonyStyle $io;
-    private OutputInterface $output;
-
     public function __construct(
         private GenerateClass $generateClass,
         string $name = null
     ) {
         parent::__construct($name);
+    }
+
+    protected function configure(): void
+    {
+
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -35,6 +37,5 @@ class AdminCommand extends Command
 
         return Command::SUCCESS;
     }
-
 
 }

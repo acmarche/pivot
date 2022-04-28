@@ -63,7 +63,7 @@ class FiltreCommand extends Command
                     $info = $this->urnUtils->getInfosUrn($classement->urn);
                     if ($classement->type == 'Boolean') {
                         $rows[$classement->order] = [$classement->order, $info->labelByLanguage('fr')];
-                       // $io->writeln($info->labelByLanguage('fr'));
+                        // $io->writeln($info->labelByLanguage('fr'));
                     }
                 }
             }
@@ -76,6 +76,5 @@ class FiltreCommand extends Command
 
         return Command::SUCCESS;
     }
-
 
 }
