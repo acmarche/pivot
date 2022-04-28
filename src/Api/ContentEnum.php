@@ -1,6 +1,6 @@
 <?php
 
-namespace AcMarche\Pivot;
+namespace AcMarche\Pivot\Api;
 
 /**
  * • 0 = génère une offre ne contenant que le codeCgt et les dates de création et de dernière

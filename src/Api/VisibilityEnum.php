@@ -1,6 +1,6 @@
 <?php
 
-namespace AcMarche\Pivot;
+namespace AcMarche\Pivot\Api;
 
 enum VisibilityEnum: int
 {
