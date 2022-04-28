@@ -2,20 +2,18 @@
 
 namespace AcMarche\Pivot\Controller;
 
-use AcMarche\Pivot\Parser\PivotParser;
+use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Repository\PivotRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route(path: '/')]
 class DefaultController extends AbstractController
 {
     public function __construct(
-        private SerializerInterface $serializer,
         private PivotRepository $pivotRepository,
-        private PivotParser $pivotParser
+        private OffreParser $pivotParser
     ) {
     }
 
