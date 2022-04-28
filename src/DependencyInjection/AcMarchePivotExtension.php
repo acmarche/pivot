@@ -39,6 +39,10 @@ class AcMarchePivotExtension extends Extension implements PrependExtensionInterf
                 case 'framework':
                     $this->loadConfig('framekork');
                     break;
+                case 'monolog':
+                    $this->loadConfig('monolo');
+                    break;
+
                 case 'vich_uploader':
 
                     break;
