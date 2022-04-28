@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use AcMarche\Pivot\FormatEnum;
+use AcMarche\Pivot\Api\FormatEnum;
 use Exception;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;

@@ -8,7 +8,7 @@ use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Filtre\PivotFilter;
-use AcMarche\Pivot\Parser\PivotParser;
+use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Parser\PivotSerializer;
 use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
@@ -22,7 +22,7 @@ class PivotRepository
 
     public function __construct(
         private PivotRemoteRepository $pivotRemoteRepository,
-        private PivotParser $pivotParser,
+        private OffreParser $pivotParser,
         private PivotSerializer $pivotSerializer,
         private CacheInterface $cache
     ) {
@@ -67,7 +67,7 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotFilter::filterByTypes($responseQuery, [UrnTypeList::EVENEMENT()->order]);
+        $offresShort = PivotFilter::filterByTypes($responseQuery, [UrnTypeList::evenement()->order]);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->getOffreByCgt(
                 $offreShort->codeCgt,
@@ -134,6 +134,16 @@ class PivotRepository
         $this->parseRelOffres([$event]);
 
         return $event;
+    }
+
+    public function getOffreByCgtAndParse(string $codeCgt, string $class): Offre
+    {
+        $offre = $this->getOffreByCgt($codeCgt, $codeCgt, $class);
+
+        $this->pivotParser->parseOffre($offre);
+        $this->parseRelOffres([$offre]);
+
+        return $offre;
     }
 
     /**
@@ -220,6 +230,25 @@ class PivotRepository
 
         return $data;
 
+    }
+
+    /**
+     * @param Offre $eventReffer
+     *
+     * @return Offre[]
+     */
+    public function getSameOffres(Offre $offreReffer): array
+    {
+        $filtres = [$offreReffer->typeOffre->idTypeOffre];
+        $data = [];
+        $offres = $this->getOffres($filtres);
+        foreach ($offres as $offre) {
+            if ($offreReffer->codeCgt != $offre->codeCgt) {
+                $data[] = $offre;
+            }
+        }
+
+        return $data;
     }
 
     public function getEventByIdHades(int $idHades): ?Event
