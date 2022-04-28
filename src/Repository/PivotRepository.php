@@ -36,18 +36,19 @@ class PivotRepository
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
-
         $offresShort = PivotFilter::filterByTypes($responseQuery, $filtres);
 
         foreach ($offresShort as $offreShort) {
-            $resultOfferDetail = $this->getOffreByCgt(
+            $offre = $this->getOffreByCgt(
                 $offreShort->codeCgt,
-                $offreShort->dateModification,
-                Offre::class
+                Offre::class,
+                $offreShort->dateModification
             );
-            $offre = $resultOfferDetail;
             $offres[] = $offre;
-            //    break;
+            if (!$offre instanceof Offre) {
+                dump($offreShort);
+                dd($offre);
+            }
         }
 
         array_map(function ($offre) {
@@ -71,12 +72,11 @@ class PivotRepository
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->getOffreByCgt(
                 $offreShort->codeCgt,
-                $offreShort->dateModification,
-                Event::class
+                Event::class,
+                $offreShort->dateModification
             );
             $offre = $resultOfferDetail;
             $events[] = $offre;
-            //break;
         }
         $this->pivotParser->parseEvents($events, $removeObsolete);
         $this->parseRelOffres($events);
@@ -103,11 +103,17 @@ class PivotRepository
      */
     public function getOffreByCgt(
         string $codeCgt,
-        ?string $dateModification = "xx",
-        string $class = ResultOfferDetail::class
+        string $class = ResultOfferDetail::class,
+        string $cacheKeyPlus = null
     ): ResultOfferDetail|Event|Offre|null {
+
+        $cacheKey = $codeCgt.$class;
+        if ($cacheKeyPlus) {
+            $cacheKey .= $cacheKeyPlus;
+        }
+
         return $this->cache->get(
-            'offre-'.$codeCgt.'-'.$dateModification,
+            'offre-'.$cacheKey,
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
@@ -129,7 +135,7 @@ class PivotRepository
 
     public function getEvent(string $codeCgt): ?Event
     {
-        $event = $this->getOffreByCgt($codeCgt, $codeCgt, Event::class);
+        $event = $this->getOffreByCgt($codeCgt, Event::class);
         $this->pivotParser->parseEvent($event);
         $this->parseRelOffres([$event]);
 
@@ -138,7 +144,7 @@ class PivotRepository
 
     public function getOffreByCgtAndParse(string $codeCgt, string $class): Offre
     {
-        $offre = $this->getOffreByCgt($codeCgt, $codeCgt, $class);
+        $offre = $this->getOffreByCgt($codeCgt, $class);
 
         $this->pivotParser->parseOffre($offre);
         $this->parseRelOffres([$offre]);
@@ -159,48 +165,46 @@ class PivotRepository
     }
 
     /**
-     * @param array $offres
+     * @param Offre[] $offres
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
     public function parseRelOffres(array $offres): void
     {
         foreach ($offres as $offre) {
-            if (is_array($offre->relOffre)) {
-                foreach ($offre->relOffre as $relation) {
-                    $item = $relation->offre;
-                    $code = $item['codeCgt'];
-                    $idType = $item['typeOffre']['idTypeOffre'];
-                    try {
-                        $sOffre = $this->getOffreByCgt($code, $item['dateModification']);
-                        if ($sOffre) {
-                            $this->specs = $sOffre->getOffre()->spec;
-                            $images = $this->findByUrn(UrnList::URL);
-                            if (count($images) > 0) {
-                                foreach ($images as $image) {
-                                    $offre->images[] = $image->value;
-                                }
-                            }
-                            $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL, true);
-                            if (count($images) > 0) {
-                                foreach ($images as $image) {
-                                    $offre->images[] = $image->value;
-                                }
-                            }
-                            $voirs = $this->findByUrn(UrnList::VOIR_AUSSI);
-                            if (count($voirs) > 0) {
-                                foreach ($voirs as $voir) {
-                                    $offre->voirs_aussi[] = $voir;
-                                }
-                            }
-                            $direction = $this->findByUrn(UrnList::CONTACT_DIRECTION);
-                            if (count($direction) > 0) {
-                                $offre->contact_direction = $direction[0];
+            foreach ($offre->relOffre as $relation) {
+                $item = $relation->offre;
+                $code = $item['codeCgt'];
+                $idType = $item['typeOffre']['idTypeOffre'];
+                try {
+                    $sOffre = $this->getOffreByCgt($code);
+                    if ($sOffre) {
+                        $this->specs = $sOffre->getOffre()->spec;
+                        $images = $this->findByUrn(UrnList::URL);
+                        if (count($images) > 0) {
+                            foreach ($images as $image) {
+                                $offre->images[] = $image->value;
                             }
                         }
-                    } catch (\Exception $exception) {
-
+                        $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL, true);
+                        if (count($images) > 0) {
+                            foreach ($images as $image) {
+                                $offre->images[] = $image->value;
+                            }
+                        }
+                        $voirs = $this->findByUrn(UrnList::VOIR_AUSSI);
+                        if (count($voirs) > 0) {
+                            foreach ($voirs as $voir) {
+                                $offre->voir_aussis[] = $voir;
+                            }
+                        }
+                        $direction = $this->findByUrn(UrnList::CONTACT_DIRECTION);
+                        if (count($direction) > 0) {
+                            $offre->contact_direction = $direction[0];
+                        }
                     }
+                } catch (\Exception $exception) {
+
                 }
             }
         }
