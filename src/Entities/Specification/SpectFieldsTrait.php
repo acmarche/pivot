@@ -45,14 +45,25 @@ trait SpectFieldsTrait
 
     /**
      * @param string $language
+     * @param string|null $skip
      * @return SpecData[]
      */
-    public function descriptionsByLanguage(string $language = 'fr'): array
+    public function descriptionsByLanguage(string $language = 'fr', ?string $skip = "descmarket30"): array
     {
         $descriptions = [];
+        $startString = "$language:urn";
+        if ($language === 'fr') {
+            $startString = 'urn:';
+        }
         foreach ($this->descriptions as $description) {
-            if (str_starts_with($language.':urn', $description->urn)) {
-                $descriptions[] = $description;
+            if (str_starts_with($description->urn, $startString)) {
+                if ($skip !== null) {
+                    if (!str_contains($description->urn, $skip)) {
+                        $descriptions[] = $description;
+                    }
+                } else {
+                    $descriptions[] = $description;
+                }
             }
         }
 
