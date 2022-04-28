@@ -2,9 +2,9 @@
 
 namespace AcMarche\Pivot\Utils;
 
+use AcMarche\Pivot\Api\ThesaurusEnum;
 use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
-use AcMarche\Pivot\ThesaurusEnum;
 use Symfony\Component\String\UnicodeString;
 
 class GenerateClass

@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Utils;
 
-use AcMarche\Pivot\Entities\Libelle;
+use AcMarche\Pivot\Entities\Label;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -57,12 +57,12 @@ class PropertyUtils
         }
     }
 
-    private function getTypeOfProperty(string $class, string $property): string|int|null|Libelle|array
+    private function getTypeOfProperty(string $class, string $property): string|int|null|Label|array
     {
         $types = $this->propertyInfo->getTypes($class, $property);
 
         if ('lib' === $property) {
-            return new Libelle();
+            return new Label();
         }
         if (!is_array($types)) {
             return null;
