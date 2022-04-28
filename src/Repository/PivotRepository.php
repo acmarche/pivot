@@ -45,10 +45,6 @@ class PivotRepository
                 $offreShort->dateModification
             );
             $offres[] = $offre;
-            if (!$offre instanceof Offre) {
-                dump($offreShort);
-                dd($offre);
-            }
         }
 
         array_map(function ($offre) {
@@ -117,6 +113,7 @@ class PivotRepository
             'offre-'.$cacheKey,
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
+
                 if ($class != ResultOfferDetail::class) {
                     $tmp = json_decode($dataString);
                     $dataStringOffre = json_encode($tmp->offre[0]);
@@ -127,7 +124,9 @@ class PivotRepository
                     return $object;
                 }
                 $object = $this->pivotSerializer->deserializeToClass($dataString, ResultOfferDetail::class);
-                $object->dataRaw = $dataString;
+                if ($object) {
+                    $object->dataRaw = $dataString;
+                }
 
                 return $object;
             }
@@ -178,6 +177,10 @@ class PivotRepository
                 $item = $relation->offre;
                 $code = $item['codeCgt'];
                 $sOffre = $this->getOffreByCgt($code);
+                /* if (!$sOffre) {
+                     dd($code);
+                     continue;
+                 }*/
                 $this->specs = $sOffre->getOffre()->spec;
                 if ($relation->urn == UrnList::MEDIAS_AUTRE->value) {
                     //   $offre->images[] = $this->getOffreByCgt($code, Offre::class);

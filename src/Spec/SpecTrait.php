@@ -63,6 +63,24 @@ trait SpecTrait
     }
 
     /**
+     * @param string $keywordSearch
+     * @param bool $value
+     *
+     * @return SpecData[]
+     */
+    public function findByUrnSubCat(UrnSubCatList $keywordSearch): array
+    {
+        $data = [];
+        foreach ($this->specs as $spec) {
+            if (isset($spec->urnSubCat) && $spec->urnSubCat === $keywordSearch->value) {
+                $data[] = $spec;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * @param SpecTypeEnum $keywordSearch
      *
      * @return SpecData[]

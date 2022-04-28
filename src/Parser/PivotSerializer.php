@@ -26,10 +26,17 @@ class PivotSerializer
         string $class,
         string $format = 'json'
     ): Offre|Event|Hotel|ResultOfferDetail|ResponseQuery|null {
-        return $this->serializer->deserialize($data, $class, $format, [
-            DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
-            AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES            => true,
-        ]);
+        try {
+            return $this->serializer->deserialize($data, $class, $format, [
+                DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
+                AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
+            ]);
+        } catch (PartialDenormalizationException $exception) {
+            echo $data;
+            $this->getErrors($exception);
+        }
+
+        return null;
     }
 
     public function deserializeOffer(string $data, string $class): ?ResultOfferDetail
@@ -37,7 +44,7 @@ class PivotSerializer
         try {
             $t = $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
                 DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
-                AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES            => true,
+                AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
             ]);
 
             return $t;

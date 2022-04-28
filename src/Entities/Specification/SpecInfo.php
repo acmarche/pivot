@@ -10,12 +10,12 @@ use AcMarche\Pivot\Entities\UrnDefinition;
  */
 class SpecInfo
 {
-    public ?UrnDefinition $specDefinition;
+    public ?UrnDefinition $urnDefinition;
     public ?SpecData $specData;
 
     public function __construct($specDefinition, $spacData)
     {
-        $this->specDefinition = $specDefinition;
+        $this->urnDefinition = $specDefinition;
         $this->specData = $spacData;
     }
 }

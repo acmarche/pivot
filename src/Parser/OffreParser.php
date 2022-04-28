@@ -11,6 +11,7 @@ use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnList;
+use AcMarche\Pivot\Spec\UrnSubCatList;
 use AcMarche\Pivot\Spec\UrnUtils;
 
 class OffreParser
@@ -41,14 +42,17 @@ class OffreParser
 
         $offre->tarifs = $this->findByUrn(UrnList::TARIF);
         $offre->webs = $this->findByUrn(UrnList::WEB);
+        $classements = $this->findByUrnSubCat(UrnSubCatList::CLASSIF);
+        foreach ($classements as $classement) {
+            $offre->classements[] = new SpecInfo($this->urnUtils->getInfosUrn($classement->urn), $classement);
+        }
         $offre->hades_ids = $this->findByUrn(UrnList::HADES_ID);
-
         $offre->communications = $this->findByUrnCat(UrnCatList::COMMUNICATION);
         $offre->adresse_rue = $this->findByUrn(UrnList::ADRESSE_RUE);
         $offre->equipements = $this->findByUrnCat(UrnCatList::EQUIPEMENTS);
         $offre->accueils = $this->findByUrnCat(UrnCatList::ACCUEIL);
 
-        $cats = $this->findByUrnCat(UrnCatList::CATEGORIE);
+        $cats = $this->findByUrnCat(UrnCatList::CLASS_LAB);
         foreach ($cats as $cat) {
             $info = $this->urnUtils->getInfosUrn($cat->urn);
             if ($info) {

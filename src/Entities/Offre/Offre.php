@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\Entities\Offre;
 
 use AcMarche\Pivot\Entities\Communication\Adresse;
 use AcMarche\Pivot\Entities\Specification\SpecData;
+use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Entities\Specification\SpectFieldsTrait;
 use AcMarche\Pivot\Entities\UrnLabel;
 use AcMarche\Pivot\Entities\User\User;
@@ -79,6 +80,10 @@ class Offre
     public array $tags = [];
     public array $enfants = [];
     public array $parents = [];
+    /**
+     * @var SpecInfo[]
+     */
+    public array $classements=[];
 
     /**
      * Alias

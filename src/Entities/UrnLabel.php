@@ -9,6 +9,6 @@ class UrnLabel
 {
     use LabelTrait;
 
-    public string $urn;
+    public ?string $urn = null;
 
 }
