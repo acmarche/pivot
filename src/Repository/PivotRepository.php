@@ -56,6 +56,7 @@ class PivotRepository
         }, $offres);
 
         $this->parseRelOffres($offres);
+        $this->parseRelOffresTgt($offres);
 
         return $offres;
     }
@@ -148,6 +149,7 @@ class PivotRepository
 
         $this->pivotParser->parseOffre($offre);
         $this->parseRelOffres([$offre]);
+        $this->parseRelOffresTgt([$offre]);
 
         return $offre;
     }
@@ -175,36 +177,46 @@ class PivotRepository
             foreach ($offre->relOffre as $relation) {
                 $item = $relation->offre;
                 $code = $item['codeCgt'];
-                $idType = $item['typeOffre']['idTypeOffre'];
-                try {
-                    $sOffre = $this->getOffreByCgt($code);
-                    if ($sOffre) {
-                        $this->specs = $sOffre->getOffre()->spec;
-                        $images = $this->findByUrn(UrnList::URL);
-                        if (count($images) > 0) {
-                            foreach ($images as $image) {
-                                $offre->images[] = $image->value;
-                            }
-                        }
-                        $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL, true);
-                        if (count($images) > 0) {
-                            foreach ($images as $image) {
-                                $offre->images[] = $image->value;
-                            }
-                        }
-                        $voirs = $this->findByUrn(UrnList::VOIR_AUSSI);
-                        if (count($voirs) > 0) {
-                            foreach ($voirs as $voir) {
-                                $offre->voir_aussis[] = $voir;
-                            }
-                        }
-                        $direction = $this->findByUrn(UrnList::CONTACT_DIRECTION);
-                        if (count($direction) > 0) {
-                            $offre->contact_direction = $direction[0];
-                        }
+                $sOffre = $this->getOffreByCgt($code);
+                $this->specs = $sOffre->getOffre()->spec;
+                if ($relation->urn == UrnList::MEDIAS_AUTRE->value) {
+                    //   $offre->images[] = $this->getOffreByCgt($code, Offre::class);
+                }
+                $images = $this->findByUrn(UrnList::URL);
+                if (count($images) > 0) {
+                    foreach ($images as $image) {
+                        $offre->images[] = $image->value;
                     }
-                } catch (\Exception $exception) {
+                }
+                $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL, true);
+                if (count($images) > 0) {
+                    foreach ($images as $image) {
+                        $offre->images[] = $image->value;
+                    }
+                }
+                if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
+                    $offre->contact_direction = $this->getOffreByCgt($code, Offre::class);
+                }
+            }
+        }
+    }
 
+    /**
+     * @param Offre[] $offres
+     *
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function parseRelOffresTgt(array $offres): void
+    {
+        foreach ($offres as $offre) {
+            foreach ($offre->relOffreTgt as $relOffreTgt) {
+                $item = $relOffreTgt->offre;
+                $urn = $relOffreTgt->urn;
+                $idType = $item['typeOffre']['idTypeOffre'];
+                $code = $item['codeCgt'];
+                $offreTgt = $this->getOffreByCgt($code, Offre::class);
+                if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
+                    $offre->voir_aussis[] = $this->getOffreByCgt($code, Offre::class);
                 }
             }
         }

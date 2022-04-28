@@ -11,7 +11,6 @@ enum UrnList: string
     case DESCRIPTION_SHORT = "descmarket";
     case TARIF = "urn:fld:tarifcplt";
     case NOMO = "urn:fld:nomofr";
-    case MEDIA = "urn:lnk:media:autre";
     case DATE_DEB_VALID = 'urn:fld:datedebvalid';
     case DATE_DEB = 'urn:fld:date:datedeb';
     case DATE_FIN_VALID = "urn:fld:datefinvalid";
@@ -25,5 +24,7 @@ enum UrnList: string
     case ADRESSE_RUE = "urn:fld:adr";
     case VOIR_AUSSI = "urn:lnk:offre:voiraussi";
     case MEDIAS_PARTIAL = "urn:lnk:media";
+    case MEDIAS_AUTRE = "urn:lnk:media:autre";
     case CONTACT_DIRECTION = "urn:lnk:contact:direction";
+    case OFFRE_ENFANT = "urn:lnk:offre:enfant";
 }

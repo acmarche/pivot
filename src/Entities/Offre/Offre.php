@@ -54,6 +54,10 @@ class Offre
      * @var RelOffre[] $relOffre
      */
     public array $relOffre = [];
+    /**
+     * @var RelOffreTgt[] $relOffreTgt
+     */
+    public array $relOffreTgt = [];
     public array $images = [];
     public array $voir_aussis = [];
     public array $hades_ids = [];
@@ -64,7 +68,7 @@ class Offre
 
     public string|SpecData|null $description;
 
-   public $contact_direction =null;
+    public Offre|null $contact_direction = null;
 
     public ?string $image = null;
 
