@@ -12,7 +12,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -20,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'pivot:filtre',
     description: 'Extrait tous les filtres des offres par type',
 )]
-class FiltreCommand extends Command
+class PivotFiltreCommand extends Command
 {
     use SpecTrait, ParserEventTrait;
 
@@ -38,16 +37,12 @@ class FiltreCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addOption('categories', "ll", InputOption::VALUE_NONE, 'Liste les types');
+
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        //$this->generateClass->generateTypeUrn();
-        $categories = $input->getOption('categories');
-
         $types = $this->pivotRepository->getTypesOffre();
 
         foreach ($types as $id => $type) {
@@ -76,5 +71,4 @@ class FiltreCommand extends Command
 
         return Command::SUCCESS;
     }
-
 }
