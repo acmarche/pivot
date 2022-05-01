@@ -13,7 +13,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'mappings' => [
                     'AcMarche\Pivot' => [
                         'is_bundle' => false,
-                        'dir' => '%kernel.project_dir%/src/Entities',
+                        'dir' => '%kernel.project_dir%/src/Entity',
                         'prefix' => 'AcMarche\Pivot',
                         'alias' => 'AcMarche\Pivot',
                     ],

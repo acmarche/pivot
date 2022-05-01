@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Command;
 
-use AcMarche\Pivot\Entities\Filtre;
+use AcMarche\Pivot\Entity\Filtre;
 use AcMarche\Pivot\Parser\ParserEventTrait;
 use AcMarche\Pivot\Repository\FiltreRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
@@ -50,35 +50,42 @@ class PivotFiltreCommand extends Command
         $csv = [];
 
         foreach ($types as $id => $type) {
-            $filtre = new Filtre($id, $type, 0);
-            $this->filtreRepository->persist($filtre);
+            $this->treatment($id, $type, 0);
             $io->section($type);
             $offres = $this->pivotRepository->getOffres([$id]);
             $count = count($offres);
             $io->title("$count offres trouvées");
             $rows = [];
-            break;
             foreach ($offres as $offre) {
                 $this->specs = $offre->spec;
                 $classements = $this->findByUrnSubCat(UrnSubCatList::CLASSIF);
                 foreach ($classements as $classement) {
                     $info = $this->urnUtils->getInfosUrn($classement->urn);
                     if ($classement->type == 'Boolean') {
-                        $filtre = new Filtre($classement, $info->labelByLanguage('fr'), $id);
-                        $this->filtreRepository->persist($filtre);
+                        $filtre = $this->treatment($classement->order, $info->labelByLanguage('fr'), $id);
                         $rows[$classement->order] = [$classement->order, $info->labelByLanguage('fr')];
                         // $io->writeln($info->labelByLanguage('fr'));
                     }
                 }
             }
-            $this->filtreRepository->flush();
             $table = new Table($output);
             $table
                 ->setHeaders(['Id', 'Nom'])
                 ->setRows($rows);
             $table->render();
         }
+        $this->filtreRepository->flush();
 
         return Command::SUCCESS;
+    }
+
+    private function treatment(int $id, string $nom, int $parent): Filtre
+    {
+        if (!$filtre = $this->filtreRepository->find($id)) {
+            $filtre = new Filtre($id, $nom, $parent);
+            $this->filtreRepository->persist($filtre);
+        }
+
+        return $filtre;
     }
 }
