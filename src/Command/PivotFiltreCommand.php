@@ -47,11 +47,10 @@ class PivotFiltreCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $types = $this->pivotRepository->getTypesOffre();
-        $csv = [];
 
-        foreach ($types as $id => $type) {
-            $this->treatment($id, $type, 0);
-            $io->section($type);
+        foreach ($types as $id => $nom) {
+            $this->treatment($id, $nom, 0);
+            $io->section($nom);
             $offres = $this->pivotRepository->getOffres([$id]);
             $count = count($offres);
             $io->title("$count offres trouvées");
@@ -62,11 +61,13 @@ class PivotFiltreCommand extends Command
                 foreach ($classements as $classement) {
                     $info = $this->urnUtils->getInfosUrn($classement->urn);
                     if ($classement->type == 'Boolean') {
-                        $filtre = $this->treatment($classement->order, $info->labelByLanguage('fr'), $id);
                         $rows[$classement->order] = [$classement->order, $info->labelByLanguage('fr')];
                         // $io->writeln($info->labelByLanguage('fr'));
                     }
                 }
+            }
+            foreach ($rows as $childTab) {
+                $filtre = $this->treatment($childTab[0], $childTab[1], $id);
             }
             $table = new Table($output);
             $table
@@ -81,7 +82,7 @@ class PivotFiltreCommand extends Command
 
     private function treatment(int $id, string $nom, int $parent): Filtre
     {
-        if (!$filtre = $this->filtreRepository->find($id)) {
+        if (!$filtre = $this->filtreRepository->findOneBy(['reference'=>$id])) {
             $filtre = new Filtre($id, $nom, $parent);
             $this->filtreRepository->persist($filtre);
         }

@@ -16,11 +16,15 @@ class Filtre
     #[ORM\Column(type: 'string', length: 180)]
     public string $nom;
     #[ORM\Column(type: 'integer')]
+    public int $reference;
+    #[ORM\Column(type: 'integer')]
     public int $parent;
 
-    public function __construct(int $id, string $nom, int $parent)
+    public array $children = [];
+
+    public function __construct(int $reference, string $nom, int $parent)
     {
-        $this->id = $id;
+        $this->reference = $reference;
         $this->nom = $nom;
         $this->parent = $parent;
     }

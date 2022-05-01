@@ -19,6 +19,39 @@ class FiltreRepository extends ServiceEntityRepository
         parent::__construct($registry, Filtre::class);
     }
 
+    /**
+     * @return Filtre[]
+     */
+    public function findWithChildren(): array
+    {
+        $roots = $this->createQueryBuilder('filtre')
+            ->andWhere('filtre.parent = 0')
+            ->orderBy('filtre.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+        $filtres = [];
+        foreach ($roots as $root) {
+            $root->children = $this->findByParent($root->reference);
+            $filtres[] = $root;
+        }
+
+        return $filtres;
+    }
+
+    /**
+     * @param integer $id
+     * @return Filtre[]
+     */
+    private function findByParent(int $id): array
+    {
+        return $this->createQueryBuilder('filtre')
+            ->andWhere('filtre.parent = :id')
+            ->setParameter('id', $id)
+            ->orderBy('filtre.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function insert(object $object): void
     {
         $this->persist($object);
@@ -39,4 +72,5 @@ class FiltreRepository extends ServiceEntityRepository
     {
         $this->_em->remove($object);
     }
+
 }
