@@ -60,6 +60,20 @@ class FiltreRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @param integer[] $ids
+     * @return Filtre[]
+     */
+    public function findByReferences(array $ids): array
+    {
+        return $this->createQueryBuilder('filtre')
+            ->andWhere('filtre.reference IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->orderBy('filtre.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function insert(object $object): void
     {
         $this->persist($object);
