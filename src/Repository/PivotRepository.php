@@ -29,6 +29,7 @@ class PivotRepository
     }
 
     /**
+     * @param int[] $filtres
      * @return Offre[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
