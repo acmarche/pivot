@@ -15,11 +15,20 @@ class Filtre
     public int $id;
     #[ORM\Column(type: 'string', length: 180)]
     public string $nom;
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', unique: false, nullable: false)]
     public int $reference;
     #[ORM\Column(type: 'integer')]
     public int $parent;
+    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    public ?string $name_fr;
+    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    public ?string $name_nl;
+    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    public ?string $name_en;
 
+    /**
+     * @var Filtre[] $children
+     */
     public array $children = [];
 
     public function __construct(int $reference, string $nom, int $parent)
