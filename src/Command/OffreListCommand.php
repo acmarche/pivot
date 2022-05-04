@@ -83,7 +83,7 @@ class OffreListCommand extends Command
 
     protected function askType()
     {
-        $typesOffre = $this->getAllTypes();
+        $typesOffre = $this->filtreRepository->findRoots();
 
         $choice = new ChoiceQuestion(
             question: 'Quelle type d\'offre ?',
@@ -91,11 +91,6 @@ class OffreListCommand extends Command
         );
 
         return $this->io->askQuestion($choice);
-    }
-
-    private function getAllTypes(): array
-    {
-        return $this->filtreRepository->findRoots();
     }
 
     private function groupingOffres(array $offres)
@@ -117,7 +112,7 @@ class OffreListCommand extends Command
     public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
     {
         if ($input->mustSuggestArgumentValuesFor(argumentName: 'type')) {
-            $suggestions->suggestValues($this->getAllTypes());
+            $suggestions->suggestValues($this->filtreRepository->findRoots());
         }
     }
 }
