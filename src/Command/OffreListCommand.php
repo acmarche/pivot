@@ -2,13 +2,14 @@
 
 namespace AcMarche\Pivot\Command;
 
+use AcMarche\Pivot\Entity\Filtre;
+use AcMarche\Pivot\Repository\FiltreRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Completion\CompletionSuggestions;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,6 +27,7 @@ class OffreListCommand extends Command
 
     public function __construct(
         private PivotRepository $pivotRepository,
+        private FiltreRepository $filtreRepository,
         string $name = null
     ) {
         parent::__construct($name);
@@ -33,36 +35,31 @@ class OffreListCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('type', InputArgument::OPTIONAL, 'Type offre', null)
-            ->addOption('listing', "ll", InputOption::VALUE_NONE, 'Liste les types');
+        $this->addOption('all', "all", InputOption::VALUE_NONE, 'Toutes les offres');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
         $this->io = new SymfonyStyle($input, $output);
-        $typeSelected = $input->getArgument('type');
 
-        if (!$typeSelected) {
+        $all = (bool)$input->getOption('all');
+
+        if (!$all) {
             $response = $this->askType();
-            if ($response) {
-                $typeSelected = $this->catchResponseSelected($response);
-            }
-        } else {
-            if (!$response = $this->catchTypeGiven($typeSelected)) {
+            if (!$response instanceof Filtre) {
                 $this->io->error('Ce type n\'exite pas dans la liste');
 
                 return Command::FAILURE;
             }
+            $choix = $response->nom;
+            $args = [$response->reference];
+        } else {
+            $args = [];
+            $choix = "Tout";
         }
 
-        $this->io->success($response.": ");
-        if ($typeSelected === 0) {
-            $args = [];
-        } else {
-            $args = [$typeSelected];
-        }
+        $this->io->success($choix.": ");
 
         $this->io->info("Chargement des offres...");
         $offres = $this->pivotRepository->getOffres($args);
@@ -96,6 +93,11 @@ class OffreListCommand extends Command
         return $this->io->askQuestion($choice);
     }
 
+    private function getAllTypes(): array
+    {
+        return $this->filtreRepository->findRoots();
+    }
+
     private function groupingOffres(array $offres)
     {
         $groupe = [];
@@ -112,34 +114,10 @@ class OffreListCommand extends Command
         }
     }
 
-    private function getAllTypes(): array
-    {
-        //$this->io->info("Création du listing des types...");
-        // $progressBar = new ProgressBar($this->output, 0);
-        //  $progressBar->start();
-        //  $progressBar->advance(30);
-        $types = $this->pivotRepository->getTypesOffre();
-        $types[0] = 'Tout';
-        //  $progressBar->advance(70);
-        //  $progressBar->finish();
-
-        return $types;
-    }
-
     public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
     {
         if ($input->mustSuggestArgumentValuesFor(argumentName: 'type')) {
             $suggestions->suggestValues($this->getAllTypes());
         }
-    }
-
-    private function catchResponseSelected(string $response): int
-    {
-        return array_search($response, $this->getAllTypes());
-    }
-
-    private function catchTypeGiven(int $typeGiven): ?string
-    {
-        return $this->getAllTypes()[$typeGiven] ?? null;
     }
 }
