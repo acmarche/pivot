@@ -25,7 +25,7 @@ class FiltreRepository extends ServiceEntityRepository
     public function findRoots(): array
     {
         return $this->createQueryBuilder('filtre')
-            ->andWhere('filtre.parent = 0')
+            ->andWhere('filtre.parent IS NULL')
             ->orderBy('filtre.nom', 'ASC')
             ->getQuery()
             ->getResult();
@@ -39,7 +39,7 @@ class FiltreRepository extends ServiceEntityRepository
         $roots = $this->findRoots();
         $filtres = [];
         foreach ($roots as $root) {
-            $root->children = $this->findByParent($root->reference);
+            $root->children = $this->findByParent($root->id);
             $filtres[] = $root;
         }
 
@@ -83,7 +83,7 @@ class FiltreRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('filtre')
             ->andWhere('filtre.reference = :id')
-            ->setParameter('ids', $id)
+            ->setParameter('id', $id)
             ->orderBy('filtre.nom', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();

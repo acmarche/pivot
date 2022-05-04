@@ -17,8 +17,9 @@ class Filtre
     public string $nom;
     #[ORM\Column(type: 'integer', unique: false, nullable: false)]
     public int $reference;
-    #[ORM\Column(type: 'integer')]
-    public int $parent;
+    #[ORM\ManyToOne(targetEntity: Filtre::class)]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    public ?Filtre $parent = null;
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
     public ?string $name_fr;
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
@@ -31,7 +32,7 @@ class Filtre
      */
     public array $children = [];
 
-    public function __construct(int $reference, string $nom, int $parent)
+    public function __construct(int $reference, string $nom, ?Filtre $parent)
     {
         $this->reference = $reference;
         $this->nom = $nom;
@@ -40,6 +41,6 @@ class Filtre
 
     public function __toString(): string
     {
-      return $this->nom  ;
+        return $this->nom;
     }
 }

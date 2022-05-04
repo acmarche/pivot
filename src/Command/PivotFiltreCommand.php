@@ -45,15 +45,24 @@ class PivotFiltreCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $this->io = new SymfonyStyle($input, $output);
+        $this->output = $output;
+
+        $this->createListing();
+
+        return Command::SUCCESS;
+    }
+
+    private function createListing()
+    {
         $types = $this->pivotRepository->getTypesOffre();
 
         foreach ($types as $id => $nom) {
-            $this->treatment($id, $nom, 0);
-            $io->section($nom);
+            $parent = $this->treatment($id, $nom, null);
+            $this->io->section($nom);
             $offres = $this->pivotRepository->getOffres([$id]);
             $count = count($offres);
-            $io->title("$count offres trouvées");
+            $this->io->title("$count offres trouvées");
             $rows = [];
             foreach ($offres as $offre) {
                 $this->specs = $offre->spec;
@@ -67,22 +76,20 @@ class PivotFiltreCommand extends Command
                 }
             }
             foreach ($rows as $childTab) {
-                $filtre = $this->treatment($childTab[0], $childTab[1], $id);
+                $this->treatment($childTab[0], $childTab[1], $parent);
             }
-            $table = new Table($output);
+            $table = new Table($this->output);
             $table
                 ->setHeaders(['Id', 'Nom'])
                 ->setRows($rows);
             $table->render();
         }
         $this->filtreRepository->flush();
-
-        return Command::SUCCESS;
     }
 
-    private function treatment(int $id, string $nom, int $parent): Filtre
+    private function treatment(int $id, string $nom, ?Filtre $parent): Filtre
     {
-        if (!$filtre = $this->filtreRepository->findOneBy(['reference'=>$id])) {
+        if (!$filtre = $this->filtreRepository->findByReference($id)) {
             $filtre = new Filtre($id, $nom, $parent);
             $this->filtreRepository->persist($filtre);
         }
