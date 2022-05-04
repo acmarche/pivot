@@ -62,20 +62,7 @@ class OffreParser
                 $offre->categories[] = new Category($order, $labels);
             }
         }
-        $labels = [];
-        $noms = $this->findByUrnSubCat(UrnSubCatList::NOM_OFFRE);
-        foreach ($noms as $nom) {
-            $label = new Label();
-            $label->value = $nom->value;
-            $language = substr($nom->urn, 0, 2);
-            $label->lang = $language;
-            $labels[] = $label;
-        }
-        $label = new Label();
-        $label->value = $offre->nom;
-        $label->lang = "fr";
-        $labels[] = $label;
-        $offre->label = $labels;
+        $this->setNameByLanguages($offre);
     }
 
     /**
@@ -124,5 +111,23 @@ class OffreParser
                 $event->categories[] = new Category($order, $labels);
             }
         }
+    }
+
+    private function setNameByLanguages(Offre $offre)
+    {
+        $labels = [];
+        $noms = $this->findByUrnSubCat(UrnSubCatList::NOM_OFFRE);
+        foreach ($noms as $nom) {
+            $label = new Label();
+            $label->value = $nom->value;
+            $language = substr($nom->urn, 0, 2);
+            $label->lang = $language;
+            $labels[] = $label;
+        }
+        $label = new Label();
+        $label->value = $offre->nom;
+        $label->lang = "fr";
+        $labels[] = $label;
+        $offre->label = $labels;
     }
 }

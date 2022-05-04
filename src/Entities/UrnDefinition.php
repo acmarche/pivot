@@ -17,7 +17,6 @@ class UrnDefinition
     public string $userLocalName;
     public string $userLocalSurname;
     public string $type;
-    public array $label;
     public bool $dynamic;
     public int $visibilite;
     public bool $collapsed;

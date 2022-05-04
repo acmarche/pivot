@@ -222,6 +222,11 @@ class PivotRepository
                 if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
                     $offre->voir_aussis[] = $this->getOffreByCgt($code, Offre::class);
                 }
+                $this->specs = $offre->relOffreTgt;
+                foreach ($this->findByUrn(UrnList::OFFRE_ENFANT) as $enfant) {
+                    $item = $enfant->offre;
+                    $offre->enfants[] = $this->getOffreByCgt($item['codeCgt'], Offre::class);
+                }
             }
         }
     }
