@@ -8,7 +8,7 @@ use Symfony\Component\Dotenv\Dotenv;
 return static function (ContainerConfigurator $containerConfigurator): void {
 
     $containerConfigurator->parameters()
-        ->set('mailer.transport', '%env(HADES_URL)%');
+        ->set('mailer.transport', '%env(MAILER_URL)%');
 
     $services = $containerConfigurator
         ->services()
