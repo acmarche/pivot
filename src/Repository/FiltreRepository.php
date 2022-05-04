@@ -64,14 +64,22 @@ class FiltreRepository extends ServiceEntityRepository
      * @param array $params
      * @return Filtre[]
      */
-    public function findByReferencesOrUrns(array $params): array
+    public function findByReferencesOrUrns(array $filtresData): array
     {
-        return $this->createQueryBuilder('filtre')
-            ->orWhere('filtre.urn IN (:args)')
-            ->orWhere('filtre.reference IN (:args)')
-            ->setParameter('args', $params)
-            ->orderBy('filtre.nom', 'ASC')
-            ->getQuery()->getResult();
+        $filtres = [];
+        foreach ($filtresData as $filtreReference) {
+            if ((int)$filtreReference) {
+                if ($filtre = $this->findByReference($filtreReference)) {
+                    $filtres[] = $filtre;
+                }
+            } else {
+                if ($filtre = $this->findByUrn($filtreReference)) {
+                    $filtres[] = $filtre;
+                }
+            }
+        }
+
+        return $filtres;
     }
 
     /**
