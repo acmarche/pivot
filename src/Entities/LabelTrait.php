@@ -16,7 +16,15 @@ trait LabelTrait
                 return $label->get($language);
             }
         }
+        if ($language != Label::FR) {
+            $language = Label::FR;
+            foreach ($this->label as $label) {
+                if ($label->get($language)) {
+                    return $label->get($language);
+                }
+            }
+        }
 
-        return 'title found';
+        return 'Title found';
     }
 }

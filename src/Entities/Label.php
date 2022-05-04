@@ -10,7 +10,7 @@ class Label
     public const DE = 'de';
 
     public string $lang;
-    public ?string $value;
+    public ?string $value = null;
 
     public function get(string $language): ?string
     {
