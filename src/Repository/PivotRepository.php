@@ -6,6 +6,7 @@ use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
+use AcMarche\Pivot\Entity\Filtre;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Parser\OffreParser;
@@ -29,7 +30,7 @@ class PivotRepository
     }
 
     /**
-     * @param int[] $filtres
+     * @param Filtre[] $filtres
      * @return Offre[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
@@ -37,7 +38,40 @@ class PivotRepository
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotFilter::filterByTypes($responseQuery, $filtres);
+
+        //$offresShort = PivotFilter::filterByReferencesOrUrns($responseQuery, $filtres);
+
+        foreach ($responseQuery->offre as $offreShort) {
+            $offre = $this->getOffreByCgt(
+                $offreShort->codeCgt,
+                Offre::class,
+                $offreShort->dateModification
+            );
+            $offres[] = $offre;
+        }
+
+        $offres = PivotFilter::filterByReferencesOrUrns($offres, $filtres);
+
+        array_map(function ($offre) {
+            $this->pivotParser->parseOffre($offre);
+        }, $offres);
+
+        $this->parseRelOffres($offres);
+        $this->parseRelOffresTgt($offres);
+
+        return $offres;
+    }
+
+    /**
+     * @param int $reference
+     * @return Offre[]
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function getOffresForCreateFiltres(int $reference): array
+    {
+        $offres = [];
+        $responseQuery = $this->getAllDataFromRemote();
+        $offresShort = PivotFilter::filterByTypes($responseQuery, [$reference]);
 
         foreach ($offresShort as $offreShort) {
             $offre = $this->getOffreByCgt(
@@ -51,9 +85,6 @@ class PivotRepository
         array_map(function ($offre) {
             $this->pivotParser->parseOffre($offre);
         }, $offres);
-
-        $this->parseRelOffres($offres);
-        $this->parseRelOffresTgt($offres);
 
         return $offres;
     }
@@ -304,7 +335,7 @@ class PivotRepository
         return null;
     }
 
-    public function getTypesOffre(): array
+    public function getTypesRoot(): array
     {
         return $this->cache->get('pivotAllTypes', function () {
             $resultString = $this->pivotRemoteRepository->query();

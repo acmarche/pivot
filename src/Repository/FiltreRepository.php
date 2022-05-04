@@ -61,17 +61,16 @@ class FiltreRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param integer[] $ids
+     * @param array $params
      * @return Filtre[]
      */
-    public function findByReferences(array $ids): array
+    public function findByReferencesOrUrns(array $params): array
     {
         return $this->createQueryBuilder('filtre')
-            ->andWhere('filtre.reference IN (:ids)')
-            ->setParameter('ids', $ids)
+            ->andWhere('filtre.urn IN (:params)')
+            ->setParameter('params', $params)
             ->orderBy('filtre.nom', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->getQuery()->getResult();
     }
 
     /**
@@ -84,6 +83,16 @@ class FiltreRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('filtre')
             ->andWhere('filtre.reference = :id')
             ->setParameter('id', $id)
+            ->orderBy('filtre.nom', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findByUrn(?string $urn): ?Filtre
+    {
+        return $this->createQueryBuilder('filtre')
+            ->andWhere('filtre.urn = :urn')
+            ->setParameter('urn', $urn)
             ->orderBy('filtre.nom', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();

@@ -53,7 +53,7 @@ class OffreListCommand extends Command
                 return Command::FAILURE;
             }
             $choix = $response->nom;
-            $args = [$response->reference];
+            $args = [$response];
         } else {
             $args = [];
             $choix = "Tout";
