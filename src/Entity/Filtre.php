@@ -2,6 +2,8 @@
 
 namespace AcMarche\Pivot\Entity;
 
+use AcMarche\Pivot\Entities\Label;
+use AcMarche\Pivot\Entities\LabelTrait;
 use AcMarche\Pivot\Repository\FiltreRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -41,9 +43,9 @@ class Filtre
         string $nom,
         ?string $urn,
         ?Filtre $parent,
-        ?string $name_nl=null,
-        ?string $name_en=null,
-        ?string $name_de=null
+        ?string $name_nl = null,
+        ?string $name_en = null,
+        ?string $name_de = null
     ) {
         $this->reference = $reference;
         $this->nom = $nom;
@@ -57,5 +59,15 @@ class Filtre
     public function __toString(): string
     {
         return $this->nom;
+    }
+
+    public function labelByLanguage(string $language = Label::FR): string
+    {
+        $property = 'name_'.$language;
+        if (isset($this->$property) && $this->$property != null) {
+            return $this->$property;
+        } else {
+            return $this->nom;
+        }
     }
 }
