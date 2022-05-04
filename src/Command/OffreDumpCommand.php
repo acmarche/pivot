@@ -5,8 +5,6 @@ namespace AcMarche\Pivot\Command;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Completion\CompletionInput;
-use Symfony\Component\Console\Completion\CompletionSuggestions;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,18 +28,18 @@ class OffreDumpCommand extends Command
     {
         $this
             ->addArgument('codeCgt', InputArgument::REQUIRED, 'code cgt', null)
-            ->addOption('raw', "raw", InputOption::VALUE_OPTIONAL, 'display raw offre', true);
+            ->addOption('json', "json", InputOption::VALUE_NONE, 'Afficher le json');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $codeCgt = $input->getArgument('codeCgt');
-        $raw = $input->getOption('raw');
+        $raw = (bool)$input->getOption('json');
 
         $resultString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
 
-        if (!$raw) {
+        if ($raw) {
             echo $resultString;
             $io->writeln("");
 
@@ -60,12 +58,5 @@ class OffreDumpCommand extends Command
         $io->writeln("");
 
         return Command::SUCCESS;
-    }
-
-    public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
-    {
-        if ($input->mustSuggestArgumentValuesFor(argumentName: 'someArgument')) {
-            $suggestions->suggestValues(['someSuggestion', 'otherSuggestion']);
-        }
     }
 }
