@@ -27,4 +27,5 @@ enum UrnList: string
     case MEDIAS_AUTRE = "urn:lnk:media:autre";
     case CONTACT_DIRECTION = "urn:lnk:contact:direction";
     case OFFRE_ENFANT = "urn:lnk:offre:enfant";
+    case CATEGORIE = "urn:fld:cat";
 }
