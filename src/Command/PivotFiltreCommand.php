@@ -12,7 +12,6 @@ use AcMarche\Pivot\Spec\UrnUtils;
 use AcMarche\Pivot\Utils\GenerateClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -55,12 +54,13 @@ class PivotFiltreCommand extends Command
 
     private function createListing()
     {
-        $types = $this->pivotRepository->getTypesOffre();
+        $types = $this->pivotRepository->getTypesRoot();
 
         foreach ($types as $id => $nom) {
-            $parent = $this->treatment($id, $nom, null);
+            $filtre = $this->filtreRepository->findByReference($id);
+            $parent = $this->treatmentRoot($id, $nom);
             $this->io->section($nom);
-            $offres = $this->pivotRepository->getOffres([$id]);
+            $offres = $this->pivotRepository->getOffres([$filtre]);
             $count = count($offres);
             $this->io->title("$count offres trouvées");
             $rows = [];
@@ -70,27 +70,40 @@ class PivotFiltreCommand extends Command
                 foreach ($classements as $classement) {
                     $info = $this->urnUtils->getInfosUrn($classement->urn);
                     if ($classement->type == 'Boolean') {
-                        $rows[$classement->order] = [$classement->order, $info->labelByLanguage('fr')];
-                        // $io->writeln($info->labelByLanguage('fr'));
+                        $filtre = new Filtre(
+                            $classement->order,
+                            $info->labelByLanguage('fr'),
+                            $classement->urn,
+                            $parent,
+                            $info->labelByLanguage('nl'),
+                            $info->labelByLanguage('en'),
+                            $info->labelByLanguage('de'),
+                        );
+                        $rows[$classement->urn] = $filtre;
                     }
                 }
             }
-            foreach ($rows as $childTab) {
-                $this->treatment($childTab[0], $childTab[1], $parent);
+            foreach ($rows as $filtre) {
+                $this->treatmentChild($filtre);
             }
-            $table = new Table($this->output);
-            $table
-                ->setHeaders(['Id', 'Nom'])
-                ->setRows($rows);
-            $table->render();
         }
-        $this->filtreRepository->flush();
+        // $this->filtreRepository->flush();
     }
 
-    private function treatment(int $id, string $nom, ?Filtre $parent): Filtre
+    private function treatmentRoot(int $id, string $nom): Filtre
     {
         if (!$filtre = $this->filtreRepository->findByReference($id)) {
-            $filtre = new Filtre($id, $nom, $parent);
+            $filtre = new Filtre($id, $nom, null, null);
+            $this->filtreRepository->persist($filtre);
+        }
+
+        return $filtre;
+    }
+
+    private function treatmentChild(Filtre $filtre): Filtre
+    {
+        $this->io->title($filtre->nom);
+        if (!$this->filtreRepository->findByUrn($filtre->urn)) {
             $this->filtreRepository->persist($filtre);
         }
 
