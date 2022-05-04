@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Entities\Offre;
 
 
 use AcMarche\Pivot\Entities\Communication\Adresse;
+use AcMarche\Pivot\Entities\LabelTrait;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Entities\Specification\SpectFieldsTrait;
@@ -15,6 +16,7 @@ use AcMarche\Pivot\Entities\User\UserGlobalModification;
 class Offre
 {
     use SpectFieldsTrait;
+    use LabelTrait;
 
     public string $codeCgt;
     /**
@@ -83,7 +85,7 @@ class Offre
     /**
      * @var SpecInfo[]
      */
-    public array $classements=[];
+    public array $classements = [];
 
     /**
      * Alias
@@ -95,7 +97,7 @@ class Offre
 
     public function nomByLanguage(string $language = 'fr'): ?string
     {
-        return $this->nom;
+        return $this->labelByLanguage($language);
     }
 
     public function firstImage(): ?string

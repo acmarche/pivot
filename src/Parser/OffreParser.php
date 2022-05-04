@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Category;
 use AcMarche\Pivot\Entities\Event\Event;
+use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Event\EventUtils;
@@ -25,7 +26,7 @@ class OffreParser
     public function parseOffre(Offre $offre)
     {
         $this->specs = $offre->spec;
-        foreach ($offre->spec as $spec) {
+        foreach ($this->specs as $spec) {
             $offre->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
         }
         $offre->homepage = $this->findByUrnReturnValue(UrnList::HOMEPAGE);
@@ -61,6 +62,20 @@ class OffreParser
                 $offre->categories[] = new Category($order, $labels);
             }
         }
+        $labels = [];
+        $noms = $this->findByUrnSubCat(UrnSubCatList::NOM_OFFRE);
+        foreach ($noms as $nom) {
+            $label = new Label();
+            $label->value = $nom->value;
+            $language = substr($nom->urn, 0, 2);
+            $label->lang = $language;
+            $labels[] = $label;
+        }
+        $label = new Label();
+        $label->value = $offre->nom;
+        $label->lang = "fr";
+        $labels[] = $label;
+        $offre->label = $labels;
     }
 
     /**

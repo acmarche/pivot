@@ -7,7 +7,7 @@ trait LabelTrait
     /**
      * @var Label[] $label
      */
-    public array $label;
+    public array $label = [];
 
     public function labelByLanguage(string $language = Label::FR): string
     {
