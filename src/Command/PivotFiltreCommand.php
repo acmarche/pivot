@@ -54,7 +54,7 @@ class PivotFiltreCommand extends Command
 
     private function createListing()
     {
-        $types = $this->pivotRepository->getTypesRoot();
+        $types = $this->pivotRepository->getTypesRootForCreateFiltres();
 
         foreach ($types as $reference => $nom) {
             $parent = $this->treatmentRoot($reference, $nom);

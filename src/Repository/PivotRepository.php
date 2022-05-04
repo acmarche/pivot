@@ -63,33 +63,6 @@ class PivotRepository
     }
 
     /**
-     * @param int $reference
-     * @return Offre[]
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    public function getOffresForCreateFiltres(int $reference): array
-    {
-        $offres = [];
-        $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotFilter::filterByTypes($responseQuery, [$reference]);
-
-        foreach ($offresShort as $offreShort) {
-            $offre = $this->getOffreByCgt(
-                $offreShort->codeCgt,
-                Offre::class,
-                $offreShort->dateModification
-            );
-            $offres[] = $offre;
-        }
-
-        array_map(function ($offre) {
-            $this->pivotParser->parseOffre($offre);
-        }, $offres);
-
-        return $offres;
-    }
-
-    /**
      * Retourne la liste des events
      * @return Event[]
      */
@@ -202,7 +175,7 @@ class PivotRepository
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function parseRelOffres(array $offres): void
+    private function parseRelOffres(array $offres): void
     {
         foreach ($offres as $offre) {
             foreach ($offre->relOffre as $relation) {
@@ -241,7 +214,7 @@ class PivotRepository
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function parseRelOffresTgt(array $offres): void
+    private function parseRelOffresTgt(array $offres): void
     {
         foreach ($offres as $offre) {
             foreach ($offre->relOffreTgt as $relOffreTgt) {
@@ -335,7 +308,7 @@ class PivotRepository
         return null;
     }
 
-    public function getTypesRoot(): array
+    public function getTypesRootForCreateFiltres(): array
     {
         return $this->cache->get('pivotAllTypes', function () {
             $resultString = $this->pivotRemoteRepository->query();
@@ -357,6 +330,33 @@ class PivotRepository
 
             return $types;
         });
+    }
+
+    /**
+     * @param int $reference
+     * @return Offre[]
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function getOffresForCreateFiltres(int $reference): array
+    {
+        $offres = [];
+        $responseQuery = $this->getAllDataFromRemote();
+        $offresShort = PivotFilter::filterByTypes($responseQuery, [$reference]);
+
+        foreach ($offresShort as $offreShort) {
+            $offre = $this->getOffreByCgt(
+                $offreShort->codeCgt,
+                Offre::class,
+                $offreShort->dateModification
+            );
+            $offres[] = $offre;
+        }
+
+        array_map(function ($offre) {
+            $this->pivotParser->parseOffre($offre);
+        }, $offres);
+
+        return $offres;
     }
 
 }
