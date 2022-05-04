@@ -56,11 +56,10 @@ class PivotFiltreCommand extends Command
     {
         $types = $this->pivotRepository->getTypesRoot();
 
-        foreach ($types as $id => $nom) {
-            $filtre = $this->filtreRepository->findByReference($id);
-            $parent = $this->treatmentRoot($id, $nom);
+        foreach ($types as $reference => $nom) {
+            $parent = $this->treatmentRoot($reference, $nom);
             $this->io->section($nom);
-            $offres = $this->pivotRepository->getOffres([$filtre]);
+            $offres = $this->pivotRepository->getOffresForCreateFiltres($reference);
             $count = count($offres);
             $this->io->title("$count offres trouvées");
             $rows = [];
@@ -71,7 +70,7 @@ class PivotFiltreCommand extends Command
                     $info = $this->urnUtils->getInfosUrn($classement->urn);
                     if ($classement->type == 'Boolean') {
                         $filtre = new Filtre(
-                            $classement->order,
+                            0,
                             $info->labelByLanguage('fr'),
                             $classement->urn,
                             $parent,
@@ -87,7 +86,7 @@ class PivotFiltreCommand extends Command
                 $this->treatmentChild($filtre);
             }
         }
-        // $this->filtreRepository->flush();
+        $this->filtreRepository->flush();
     }
 
     private function treatmentRoot(int $id, string $nom): Filtre
