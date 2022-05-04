@@ -147,14 +147,14 @@ class PivotRepository
         return $event;
     }
 
-    public function getOffreByCgtAndParse(string $codeCgt, string $class): Offre
+    public function getOffreByCgtAndParse(string $codeCgt, string $class): ?Offre
     {
         $offre = $this->getOffreByCgt($codeCgt, $class);
-
-        $this->pivotParser->parseOffre($offre);
-        $this->parseRelOffres([$offre]);
-        $this->parseRelOffresTgt([$offre]);
-
+        if ($offre) {
+            $this->pivotParser->parseOffre($offre);
+            $this->parseRelOffres([$offre]);
+            $this->parseRelOffresTgt([$offre]);
+        }
         return $offre;
     }
 
