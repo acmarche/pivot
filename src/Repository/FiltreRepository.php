@@ -74,6 +74,21 @@ class FiltreRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @param int $id
+     * @return Filtre|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findByReference(int $id): ?Filtre
+    {
+        return $this->createQueryBuilder('filtre')
+            ->andWhere('filtre.reference = :id')
+            ->setParameter('ids', $id)
+            ->orderBy('filtre.nom', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function insert(object $object): void
     {
         $this->persist($object);
