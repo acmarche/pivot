@@ -67,8 +67,9 @@ class FiltreRepository extends ServiceEntityRepository
     public function findByReferencesOrUrns(array $params): array
     {
         return $this->createQueryBuilder('filtre')
-            ->andWhere('filtre.urn IN (:params)')
-            ->setParameter('params', $params)
+            ->orWhere('filtre.urn IN (:args)')
+            ->orWhere('filtre.reference IN (:args)')
+            ->setParameter('args', $params)
             ->orderBy('filtre.nom', 'ASC')
             ->getQuery()->getResult();
     }
