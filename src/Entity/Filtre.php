@@ -37,4 +37,9 @@ class Filtre
         $this->nom = $nom;
         $this->parent = $parent;
     }
+
+    public function __toString(): string
+    {
+      return $this->nom  ;
+    }
 }
