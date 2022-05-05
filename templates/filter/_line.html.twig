@@ -1,0 +1,22 @@
+<tr>
+    <td>
+        {% if level == 1 %}
+            {{ filter.nom }}
+        {% endif %}
+    </td>
+    <td>
+        {% if level == 2 %}
+            {{ filter.nom }}
+        {% endif %}
+    </td>
+    <td>
+        {% include '@AcMarchePivot/filter/_flags.html.twig' %}
+    </td>
+    <td>
+        {% if filter.identifiant %}
+            <a href="{{ path('pivot_filtre_show', {'id': filter.id}) }}" title="Détails">
+                {{ filter.identifiant }}
+            </a>
+        {% endif %}
+    </td>
+</tr>

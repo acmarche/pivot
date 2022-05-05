@@ -61,6 +61,20 @@ class FiltreRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string $name
+     * @return Filtre[]
+     */
+    public function findByName(string $name): array
+    {
+        return $this->createQueryBuilder('filtre')
+            ->andWhere('filtre.nom LIKE :nom')
+            ->setParameter('nom', '%'.$name.'%')
+            ->orderBy('filtre.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param array $params
      * @return Filtre[]
      */

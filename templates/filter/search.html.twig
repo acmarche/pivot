@@ -1,0 +1,38 @@
+{% extends '@AcMarchePivot/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="card">
+        <h3 class="card-header">Recherche</h3>
+        <div class="card-body">
+
+            {% include '@AcMarchePivot/filter/_search.html.twig' %}
+
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>Nom</th>
+                    <th>Mot clef</th>
+                    <th>Traductions</th>
+                    <th></th>
+                </tr>
+                {% for filter in filters %}
+                    <tr>
+                        <td>{{ filter }}</td>
+                        <td>{{ filter.identifiant }}</td>
+                        <td>
+                            {% include '@AcMarchePivot/filter/_flags.html.twig' %}
+                        </td>
+                        <td>
+                            {% if  filter.identifiant %}
+                                <a href="{{ path('pivot_filtre_edit', {'id': filter.id}) }}" title="Traduire">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

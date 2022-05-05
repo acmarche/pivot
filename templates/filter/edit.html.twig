@@ -1,0 +1,26 @@
+{% extends '@AcMarchePivot/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="card">
+        <h3 class="card-header">{{ filter.nom }}</h3>
+
+        <div class="card-body">
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+            {{ form_row(form.name_fr) }}
+            {{ form_row(form.name_en) }}
+            {{ form_row(form.name_nl) }}
+
+            <button type="submit" name="save" class="btn btn-primary"><i class="fas fa-save"></i> Sauvegarder</button>
+
+            {{ form_end(form) }}
+        </div>
+
+        <div class="card-footer">
+
+        </div>
+
+    </div>
+{% endblock %}
+

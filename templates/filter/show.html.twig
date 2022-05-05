@@ -1,0 +1,25 @@
+{% extends '@AcMarchePivot/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="card">
+        <h3 class="card-header">{{ filter.nom }}</h3>
+        <div class="card-body">
+            {% include '@AcMarchePivot/filter/_actions.html.twig' %}
+            <table class="table table-bordered">
+                <tr>
+                    <th>Français</th>
+                    <td>{{ filter.name_fr }}</td>
+                </tr>
+                <tr>
+                    <th>Anglais</th>
+                    <td>{{ filter.name_en }}</td>
+                </tr>
+                <tr>
+                    <th>Néerlandais</th>
+                    <td>{{ filter.name_nl }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% endblock %}
