@@ -165,4 +165,15 @@ class PivotRemoteRepository
         return $this->executeRequest($this->base_uri.'/query/'.$this->code_query);
     }
 
+    /**
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=xml
+     * @param int $typeId
+     */
+    public function fetchSousTypes(int $typeId)
+    {
+        $url = $this->base_uri.'/thesaurus/typeofr/'.$typeId.'/urn:fld:cat';
+
+        return $this->executeRequest($url);
+    }
+
 }

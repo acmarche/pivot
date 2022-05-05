@@ -6,6 +6,7 @@ use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\LabelTrait;
 use AcMarche\Pivot\Repository\FiltreRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Boolean;
 
 #[ORM\Entity(repositoryClass: FiltreRepository::class)]
 #[ORM\Table(name: 'pivot_filtre')]
@@ -17,6 +18,10 @@ class Filtre
     public int $id;
     #[ORM\Column(type: 'string', length: 180)]
     public string $nom;
+    #[ORM\Column(type: 'string', nullable:true, length: 50)]
+    public ?string $code = null;
+    #[ORM\Column(type: 'boolean')]
+    public bool $root = false;
     #[ORM\Column(type: 'string', length: 250, nullable: true)]
     public ?string $urn;
     #[ORM\Column(type: 'integer', unique: false, nullable: false)]
@@ -39,8 +44,8 @@ class Filtre
     public array $children = [];
 
     public function __construct(
-        int $reference,
         string $nom,
+        int $reference,
         ?string $urn,
         ?Filtre $parent,
         ?string $name_nl = null,

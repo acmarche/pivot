@@ -7,7 +7,6 @@ use AcMarche\Pivot\Parser\ParserEventTrait;
 use AcMarche\Pivot\Repository\FiltreRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecTrait;
-use AcMarche\Pivot\Spec\UrnSubCatList;
 use AcMarche\Pivot\Spec\UrnUtils;
 use AcMarche\Pivot\Utils\GenerateClass;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -54,49 +53,15 @@ class PivotFiltreCommand extends Command
 
     private function createListing()
     {
-        $types = $this->pivotRepository->getTypesRootForCreateFiltres();
-
-        foreach ($types as $reference => $nom) {
-            $parent = $this->treatmentRoot($reference, $nom);
-            $this->io->section($nom);
-            $offres = $this->pivotRepository->getOffresForCreateFiltres($reference);
-            $count = count($offres);
-            $this->io->title("$count offres trouvées");
-            $rows = [];
-            foreach ($offres as $offre) {
-                $this->specs = $offre->spec;
-                $classements = $this->findByUrnSubCat(UrnSubCatList::CLASSIF);
-                foreach ($classements as $classement) {
-                    $info = $this->urnUtils->getInfosUrn($classement->urn);
-                    if ($classement->type == 'Boolean') {
-                        $filtre = new Filtre(
-                            0,
-                            $info->labelByLanguage('fr'),
-                            $classement->urn,
-                            $parent,
-                            $info->labelByLanguage('nl'),
-                            $info->labelByLanguage('en'),
-                            $info->labelByLanguage('de'),
-                        );
-                        $rows[$classement->urn] = $filtre;
-                    }
-                }
-            }
-            foreach ($rows as $filtre) {
+        foreach ($this->pivotRepository->getTypesRootForCreateFiltres() as $root) {
+            $this->filtreRepository->persist($root);
+            $this->io->section($root->nom);
+            $types = $this->pivotRepository->getSousTypesForCreateFiltres($root);
+            foreach ($types as $filtre) {
                 $this->treatmentChild($filtre);
             }
         }
         $this->filtreRepository->flush();
-    }
-
-    private function treatmentRoot(int $id, string $nom): Filtre
-    {
-        if (!$filtre = $this->filtreRepository->findByReference($id)) {
-            $filtre = new Filtre($id, $nom, null, null);
-            $this->filtreRepository->persist($filtre);
-        }
-
-        return $filtre;
     }
 
     private function treatmentChild(Filtre $filtre): Filtre

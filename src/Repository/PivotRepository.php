@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Repository;
 
+use AcMarche\Pivot\Api\ThesaurusEnum;
 use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
@@ -314,59 +315,67 @@ class PivotRepository
         return null;
     }
 
+    /**
+     * @return Filtre[]
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
     public function getTypesRootForCreateFiltres(): array
     {
-        return $this->cache->get('pivotAllTypes', function () {
-            $resultString = $this->pivotRemoteRepository->query();
+        $thesaurus = json_decode(
+            $this->pivotRemoteRepository->getThesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)
+        );
 
-            $data = json_decode($resultString);
+        $filtres = [];
+        foreach ($thesaurus->spec as $spec) {
+            $filtre = new Filtre($spec->label[0]->value, $spec->order, $spec->urn, null);
+            $filtre->root = $spec->root;
+            $filtre->code = $spec->code;
+            $filtres[] = $filtre;
+        }
 
-            $types = [];
-            foreach ($data->offre as $offreInline) {
-                $offreString = $this->pivotRemoteRepository->offreByCgt($offreInline->codeCgt);
-                $offreObject = json_decode($offreString);
-                $offre = $offreObject->offre[0];
-                $type = $offre->typeOffre;
-                $idType = $type->idTypeOffre;
-                $labelType = $type->label[0]->value;
-                $types[$idType] = $labelType;
-            }
-
-            ksort($types);
-
-            return $types;
-        });
+        return $filtres;
     }
 
     /**
      * @param int $reference
-     * @return Offre[]
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @param Filtre $parent
+     * @return Filtre[]
      */
-    public function getOffresForCreateFiltres(int $reference): array
+    public function getSousTypesForCreateFiltres(Filtre $parent): array
     {
-        $offres = [];
-        $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotFilter::filterByTypes($responseQuery, [$reference]);
+        $filtres = [];
+        $dataString = json_decode($this->pivotRemoteRepository->fetchSousTypes($parent->reference));
 
-        foreach ($offresShort as $offreShort) {
-            try {
-                $offre = $this->getOffreByCgt(
-                    $offreShort->codeCgt,
-                    Offre::class,
-                    $offreShort->dateModification
+        foreach ($dataString->spec as $spec) {
+            if (!isset($spec->spec)) {
+                continue;
+            }
+            foreach ($spec->spec as $item) {
+                $labels = $item->label;
+                $filtre = new Filtre(
+                    $item->label[0]->value,
+                    $item->order,
+                    $item->urn,
+                    $parent,
+                    self::getLabel($labels, 'nl'),
+                    self::getLabel($labels, 'en'),
+                    self::getLabel($labels, 'de'),
                 );
-                $offres[] = $offre;
-            } catch (\Exception $exception) {
-
+                $filtres[] = $filtre;
             }
         }
 
-        array_map(function ($offre) {
-            $this->pivotParser->parseOffre($offre);
-        }, $offres);
-
-        return $offres;
+        return $filtres;
     }
 
+    private static function getLabel(array $labels, string $language): ?string
+    {
+        foreach ($labels as $label) {
+            if ($label->lang == $language) {
+                return $label->value;
+            }
+        }
+
+        return null;
+    }
 }
