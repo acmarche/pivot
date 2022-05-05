@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[AsCommand(
     name: 'pivot:offre-dump',
@@ -37,7 +38,13 @@ class OffreDumpCommand extends Command
         $codeCgt = $input->getArgument('codeCgt');
         $raw = (bool)$input->getOption('json');
 
-        $resultString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
+        try {
+            $resultString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
+        } catch (\Exception|TransportExceptionInterface $e) {
+            $io->error($e->getMessage());
+
+            return Command::FAILURE;
+        }
 
         if ($raw) {
             echo $resultString;

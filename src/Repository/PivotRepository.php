@@ -42,12 +42,16 @@ class PivotRepository
         //$offresShort = PivotFilter::filterByReferencesOrUrns($responseQuery, $filtres);
 
         foreach ($responseQuery->offre as $offreShort) {
-            $offre = $this->getOffreByCgt(
-                $offreShort->codeCgt,
-                Offre::class,
-                $offreShort->dateModification
-            );
-            $offres[] = $offre;
+            try {
+                $offre = $this->getOffreByCgt(
+                    $offreShort->codeCgt,
+                    Offre::class,
+                    $offreShort->dateModification
+                );
+                $offres[] = $offre;
+            } catch (\Exception $exception) {
+
+            }
         }
 
         $offres = PivotFilter::filterByReferencesOrUrns($offres, $filtres);
@@ -155,6 +159,7 @@ class PivotRepository
             $this->parseRelOffres([$offre]);
             $this->parseRelOffresTgt([$offre]);
         }
+
         return $offre;
     }
 
@@ -181,11 +186,11 @@ class PivotRepository
             foreach ($offre->relOffre as $relation) {
                 $item = $relation->offre;
                 $code = $item['codeCgt'];
-                $sOffre = $this->getOffreByCgt($code);
-                /* if (!$sOffre) {
-                     dd($code);
-                     continue;
-                 }*/
+                try {
+                    $sOffre = $this->getOffreByCgt($code);
+                } catch (\Exception $exception) {
+                    continue;
+                }
                 $this->specs = $sOffre->getOffre()->spec;
                 if ($relation->urn == UrnList::MEDIAS_AUTRE->value) {
                     //   $offre->images[] = $this->getOffreByCgt($code, Offre::class);
@@ -219,17 +224,18 @@ class PivotRepository
         foreach ($offres as $offre) {
             foreach ($offre->relOffreTgt as $relOffreTgt) {
                 $item = $relOffreTgt->offre;
-                $urn = $relOffreTgt->urn;
-                $idType = $item['typeOffre']['idTypeOffre'];
                 $code = $item['codeCgt'];
-                $offreTgt = $this->getOffreByCgt($code, Offre::class);
+                try {
+                    $offreTgt = $this->getOffreByCgt($code, Offre::class);
+                } catch (\Exception $exception) {
+                    continue;
+                }
                 if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
-                    $offre->voir_aussis[] = $this->getOffreByCgt($code, Offre::class);
+                    $offre->voir_aussis[] = $offreTgt;
                 }
                 $this->specs = $offre->relOffreTgt;
                 foreach ($this->findByUrn(UrnList::OFFRE_ENFANT) as $enfant) {
-                    $item = $enfant->offre;
-                    $offre->enfants[] = $this->getOffreByCgt($item['codeCgt'], Offre::class);
+                    $offre->enfants[] = $offreTgt;
                 }
             }
         }
@@ -344,12 +350,16 @@ class PivotRepository
         $offresShort = PivotFilter::filterByTypes($responseQuery, [$reference]);
 
         foreach ($offresShort as $offreShort) {
-            $offre = $this->getOffreByCgt(
-                $offreShort->codeCgt,
-                Offre::class,
-                $offreShort->dateModification
-            );
-            $offres[] = $offre;
+            try {
+                $offre = $this->getOffreByCgt(
+                    $offreShort->codeCgt,
+                    Offre::class,
+                    $offreShort->dateModification
+                );
+                $offres[] = $offre;
+            } catch (\Exception $exception) {
+
+            }
         }
 
         array_map(function ($offre) {

@@ -29,8 +29,7 @@ class CacheDumpCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-
-        $offres = $this->pivotRepository->getOffres([]);
+        $this->pivotRepository->getOffres([]);
 
         return Command::SUCCESS;
     }
