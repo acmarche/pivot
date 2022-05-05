@@ -316,6 +316,7 @@ class PivotRepository
     }
 
     /**
+     * https://organismes.tourismewallonie.be/doc-pivot-gest/liste-des-types-durn/
      * @return Filtre[]
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
@@ -337,6 +338,7 @@ class PivotRepository
     }
 
     /**
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=xml
      * @param Filtre $parent
      * @return Filtre[]
      */
