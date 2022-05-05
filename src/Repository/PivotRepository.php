@@ -337,7 +337,6 @@ class PivotRepository
     }
 
     /**
-     * @param int $reference
      * @param Filtre $parent
      * @return Filtre[]
      */

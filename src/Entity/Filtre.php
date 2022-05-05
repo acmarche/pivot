@@ -18,7 +18,7 @@ class Filtre
     public int $id;
     #[ORM\Column(type: 'string', length: 180)]
     public string $nom;
-    #[ORM\Column(type: 'string', nullable:true, length: 50)]
+    #[ORM\Column(type: 'string', nullable: true, length: 50)]
     public ?string $code = null;
     #[ORM\Column(type: 'boolean')]
     public bool $root = false;
@@ -73,6 +73,15 @@ class Filtre
             return $this->$property;
         } else {
             return $this->nom;
+        }
+    }
+
+    public function getIdentifiant(): string|int
+    {
+        if ($this->root) {
+            return $this->reference;
+        } else {
+            return $this->urn;
         }
     }
 }
