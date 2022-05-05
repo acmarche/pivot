@@ -95,6 +95,7 @@ class OffreParser
                     unset($event->dates[$key]);
                 }
             }
+            $event->dates = array_values($event->dates);//reset index
             $fistDate = $event->firstDate();
             if ($fistDate) {
                 $event->dateBegin = $fistDate->date_begin;
