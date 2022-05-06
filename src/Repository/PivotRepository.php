@@ -39,6 +39,7 @@ class PivotRepository
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
+        dd($responseQuery);
 
         //$offresShort = PivotFilter::filterByReferencesOrUrns($responseQuery, $filtres);
 
