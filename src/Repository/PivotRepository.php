@@ -53,7 +53,7 @@ class PivotRepository
                 $offres[] = $offre;
             } catch (\Exception $exception) {
                 //todo add logger
-                dump($exception);
+                var_dump($exception);
             }
         }
 

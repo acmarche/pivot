@@ -49,8 +49,6 @@ class DefaultController extends AbstractController
     {
         $hotels = $this->pivotRepository->getOffres([]);
 
-        dump($hotels);
-
         //$this->pivotParser->parseEvents($events);
 
         return $this->render(
