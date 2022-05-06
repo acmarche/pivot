@@ -61,7 +61,7 @@ class PivotFiltreCommand extends Command
                 $this->treatmentChild($filtre);
             }
         }
-        $this->filtreRepository->flush();
+     //   $this->filtreRepository->flush();
     }
 
     private function treatmentChild(Filtre $filtre): Filtre
