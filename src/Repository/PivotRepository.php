@@ -16,6 +16,7 @@ use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use AcMarche\Pivot\Utils\SortUtils;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class PivotRepository
@@ -49,11 +50,11 @@ class PivotRepository
                 );
                 $offres[] = $offre;
             } catch (\Exception $exception) {
-dump($exception);
+                dump($exception);
             }
         }
 
-        dump(99999,$offres);
+        dump(99999, $offres);
         $offres = PivotFilter::filterByReferencesOrUrns($offres, $filtres);
 
         array_map(function ($offre) {
@@ -118,8 +119,11 @@ dump($exception);
             $cacheKey .= $cacheKeyPlus;
         }
 
+        $keyUnicode = new UnicodeString($cacheKey);
+        $keyUnicode->ascii();
+
         return $this->cache->get(
-            'offre-'.$cacheKey,
+            'offre-'.$keyUnicode,
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
 
