@@ -162,7 +162,9 @@ class PivotRemoteRepository
         }
         $params = substr($params, 0, -1);
 
-        return $this->executeRequest($this->base_uri.'/query/'.$this->code_query);
+        $t =  $this->executeRequest($this->base_uri.'/query/'.$this->code_query);
+        var_dump(55555, $t);
+        return $t;
     }
 
     /**
