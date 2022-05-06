@@ -51,7 +51,8 @@ trait ConnectionPivotTrait
 
             return $response->getContent();
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
+            //todo remove visit !!
+            Mailer::sendError('Erreur avec le json pivot', $exception->getMessage());
             throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
