@@ -39,7 +39,6 @@ class PivotRepository
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
-        dump(6666666, $responseQuery);
 
         foreach ($responseQuery->offre as $offreShort) {
             try {
@@ -50,7 +49,7 @@ class PivotRepository
                 );
                 $offres[] = $offre;
             } catch (\Exception $exception) {
-
+dump($exception);
             }
         }
 
