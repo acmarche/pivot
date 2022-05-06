@@ -49,10 +49,8 @@ trait ConnectionPivotTrait
                 $url,
                 $options
             );
-            $content = $response->getContent();
-            $this->debug($response);
-
-            return $content;
+            var_dump($url, $options, $this->httpClient);
+            return $response->getContent();
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
             var_dump($exception);
