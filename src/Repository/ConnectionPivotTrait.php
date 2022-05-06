@@ -12,6 +12,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use VisitMarche\Theme\Lib\Mailer;
 
 trait ConnectionPivotTrait
 {
@@ -51,7 +52,7 @@ trait ConnectionPivotTrait
 
             return $response->getContent();
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            // Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
+            Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
             throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
     }

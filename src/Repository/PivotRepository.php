@@ -39,7 +39,7 @@ class PivotRepository
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
-        dd($responseQuery);
+        var_dump($responseQuery);
 
         //$offresShort = PivotFilter::filterByReferencesOrUrns($responseQuery, $filtres);
 
@@ -170,7 +170,7 @@ class PivotRepository
      */
     private function getAllDataFromRemote(): ?ResponseQuery
     {
-        return $this->cache->get('pivotAllData', function () {
+        return $this->cache->get('pivotAllData23', function () {
             $dataString = $this->pivotRemoteRepository->query();
 
             return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
