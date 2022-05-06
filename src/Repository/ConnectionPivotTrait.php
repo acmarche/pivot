@@ -23,8 +23,8 @@ trait ConnectionPivotTrait
 
     public function connect(string $output): void
     {
-        $this->base_uri   = $_ENV['PIVOT_BASE_URI'] ?? null;
-        $this->ws_key     = $_ENV['PIVOT_WS_KEY'] ?? null;
+        $this->base_uri = $_ENV['PIVOT_BASE_URI'] ?? null;
+        $this->ws_key = $_ENV['PIVOT_WS_KEY'] ?? null;
         $this->code_query = $_ENV['PIVOT_CODE'] ?? null;
 
         $headers = [
@@ -49,8 +49,10 @@ trait ConnectionPivotTrait
                 $url,
                 $options
             );
+            $content = $response->getContent();
+            $this->debug($response);
 
-            return $response->getContent();
+            return $content;
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
             var_dump($exception);
