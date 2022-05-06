@@ -1,6 +1,7 @@
 <?php
 
 use AcMarche\Pivot\Repository\FiltreRepository;
+use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Dotenv\Dotenv;
@@ -29,6 +30,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set('dotenv', Dotenv::class)->public();
 
     $services->set('pivotRepository', PivotRepository::class)
+        ->public();
+
+    $services->set('pivotRemoteRepository', PivotRemoteRepository::class)
         ->public();
 
     $services->set('filtreRepository', FiltreRepository::class)
