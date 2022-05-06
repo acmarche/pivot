@@ -16,6 +16,7 @@ use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use AcMarche\Pivot\Utils\SortUtils;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -27,7 +28,8 @@ class PivotRepository
         private PivotRemoteRepository $pivotRemoteRepository,
         private OffreParser $pivotParser,
         private PivotSerializer $pivotSerializer,
-        private CacheInterface $cache
+        private CacheInterface $cache,
+        private SluggerInterface $slugger
     ) {
     }
 
@@ -120,10 +122,10 @@ class PivotRepository
         }
 
         $keyUnicode = new UnicodeString($cacheKey);
-        $keyUnicode->ascii();
+        $key = $this->slugger->slug($keyUnicode->ascii()->toString());
 
         return $this->cache->get(
-            'offre-'.$keyUnicode,
+            'offre-'.$key,
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
 
