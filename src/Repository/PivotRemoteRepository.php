@@ -152,7 +152,7 @@ class PivotRemoteRepository
     public function query(): string
     {
         $options = [
-            'content' => ContentEnum::LVL_DEFAULT->value,
+            'content' => 2,//ContentEnum::LVL_DEFAULT->value,
             'info' => true,
             'infolvl' => 0,
         ];
