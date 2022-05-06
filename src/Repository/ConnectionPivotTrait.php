@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use AcMarche\Pivot\Api\FormatEnum;
 use Exception;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
@@ -49,10 +48,10 @@ trait ConnectionPivotTrait
                 $url,
                 $options
             );
+
             return $response->getContent();
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             Mailer::sendError('Erreur avec le xml hades', $exception->getMessage());
-            var_dump($exception);
             throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
     }

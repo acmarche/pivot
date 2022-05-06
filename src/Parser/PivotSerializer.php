@@ -32,7 +32,7 @@ class PivotSerializer
                 AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
             ]);
         } catch (PartialDenormalizationException $exception) {
-            echo $data;
+            var_dump(888888,$data);
             $this->getErrors($exception);
         }
 

@@ -3,7 +3,6 @@
 namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Api\ContentEnum;
-use AcMarche\Pivot\Api\FormatEnum;
 use AcMarche\Pivot\Api\ThesaurusEnum;
 use Exception;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -162,9 +161,7 @@ class PivotRemoteRepository
         }
         $params = substr($params, 0, -1);
 
-        $t =  $this->executeRequest($this->base_uri.'/query/'.$this->code_query);
-        var_dump(55555, $t);
-        return $t;
+        return $this->executeRequest($this->base_uri.'/query/'.$this->code_query);
     }
 
     /**
