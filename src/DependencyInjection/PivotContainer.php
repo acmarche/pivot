@@ -59,11 +59,11 @@ class PivotContainer
     {
         $container = self::init();
         /**
-         * @var PivotRemoteRepository $pivotRepository
+         * @var PivotRemoteRepository $pivotRemoteRepository
          */
-        $pivotRepository = $container->get('pivotRemoteRepository');
+        $pivotRemoteRepository = $container->get('pivotRemoteRepository');
 
-        return $pivotRepository;
+        return $pivotRemoteRepository;
     }
 
 }
