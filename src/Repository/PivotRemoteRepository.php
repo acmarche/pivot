@@ -12,9 +12,9 @@ class PivotRemoteRepository
 {
     use ConnectionPivotTrait;
 
-    public function __construct(FormatEnum $output = FormatEnum::JSON_HEADER)
+    public function __construct()
     {
-        $this->connect($output);
+        $this->connect('application/json');
     }
 
     /**

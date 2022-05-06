@@ -20,7 +20,7 @@ trait ConnectionPivotTrait
     private ?string $base_uri = null;
     private ?string $ws_key;
 
-    public function connect(FormatEnum $output): void
+    public function connect(string $output): void
     {
         $this->base_uri   = $_ENV['PIVOT_BASE_URI'] ?? null;
         $this->ws_key     = $_ENV['PIVOT_WS_KEY'] ?? null;
