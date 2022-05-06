@@ -28,7 +28,7 @@ trait ConnectionPivotTrait
 
         $headers = [
             'headers' => [
-                'Accept' => $output->value,
+                'Accept' => $output,
                 'ws_key' => $this->ws_key,
             ],
         ];
