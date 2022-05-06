@@ -44,7 +44,7 @@ class AcMarchePivotExtension extends Extension implements PrependExtensionInterf
                     $this->loadConfig('monolog');
                     break;
                 case 'doctrine':
-                //    $this->loadConfig('doctrine');
+                    $this->loadConfig('doctrine');
                     break;
             }
         }
