@@ -39,7 +39,7 @@ class PivotRepository
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
-        var_dump(6666666, $responseQuery);
+        dump(6666666, $responseQuery);
 
         foreach ($responseQuery->offre as $offreShort) {
             try {
@@ -54,6 +54,7 @@ class PivotRepository
             }
         }
 
+        dump(99999,$offres);
         $offres = PivotFilter::filterByReferencesOrUrns($offres, $filtres);
 
         array_map(function ($offre) {
@@ -170,7 +171,6 @@ class PivotRepository
     {
         return $this->cache->get('pivotAllData55', function () {
             $dataString = $this->pivotRemoteRepository->query();
-            var_dump(555555, $dataString);
 
             return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
         });
