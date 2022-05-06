@@ -52,11 +52,11 @@ class PivotRepository
                 );
                 $offres[] = $offre;
             } catch (\Exception $exception) {
+                //todo add logger
                 dump($exception);
             }
         }
 
-        dump(99999, $offres);
         $offres = PivotFilter::filterByReferencesOrUrns($offres, $filtres);
 
         array_map(function ($offre) {
