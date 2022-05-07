@@ -10,6 +10,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'url' => '%env(resolve:DATABASE_PIVOT_URL)%',
             ],
             'orm' => [
+                'auto_generate_proxy_classes' => true,
                 'mappings' => [
                     'AcMarchePivot' => [
                         'is_bundle' => false,
