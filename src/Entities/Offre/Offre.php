@@ -21,7 +21,6 @@ class Offre
     public string $codeCgt;
     /**
      * L'offre au format original
-     * @var string $dataRaw
      */
     public string $dataRaw;
     public ?bool $active;

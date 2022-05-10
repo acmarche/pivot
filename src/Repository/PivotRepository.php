@@ -134,13 +134,13 @@ class PivotRepository
                     $dataStringOffre = json_encode($tmp->offre[0]);
 
                     $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, $class);
-                    $object->dataRaw = $dataString;
+                 //   $object->dataRaw = $dataString;
 
                     return $object;
                 }
                 $object = $this->pivotSerializer->deserializeToClass($dataString, ResultOfferDetail::class);
                 if ($object) {
-                    $object->dataRaw = $dataString;
+                //    $object->dataRaw = $dataString;
                 }
 
                 return $object;
