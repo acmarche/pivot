@@ -19,4 +19,8 @@ class Kernel extends BaseKernel
         return dirname(__DIR__).'/../../../var/log';
     }
 
+    public static function getDir() {
+        return dirname(__DIR__).'/../../../';
+    }
+
 }
