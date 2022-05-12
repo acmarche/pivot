@@ -15,10 +15,10 @@ class Mailer
     public function sendError(string $subject, string $message): void
     {
         if ($message = $this->createMessage($subject, $message)) {
-
             try {
                 $this->mailer->send($message);
             } catch (TransportExceptionInterface $e) {
+                //dump($this->mailer,$e->getMessage());
             }
         }
     }

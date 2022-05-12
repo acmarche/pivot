@@ -108,7 +108,7 @@ class PivotRepository
      * @param string $class
      *
      * @return ResultOfferDetail|Event|Offre|null
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws \Psr\Cache\InvalidArgumentException|\Exception
      */
     public function getOffreByCgt(
         string $codeCgt,
@@ -128,19 +128,19 @@ class PivotRepository
             'offre-'.$key,
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
-
                 if ($class != ResultOfferDetail::class) {
                     $tmp = json_decode($dataString);
                     $dataStringOffre = json_encode($tmp->offre[0]);
 
                     $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, $class);
-                 //   $object->dataRaw = $dataString;
+
+                    $object->dataRaw = $dataString;
 
                     return $object;
                 }
                 $object = $this->pivotSerializer->deserializeToClass($dataString, ResultOfferDetail::class);
                 if ($object) {
-                //    $object->dataRaw = $dataString;
+                    $object->dataRaw = $dataString;
                 }
 
                 return $object;
@@ -171,13 +171,17 @@ class PivotRepository
 
     /**
      * Retourne le json (string) complet du query
+     * @return ResponseQuery|null
+     * @throws \Psr\Cache\InvalidArgumentException|\Exception
      */
     private function getAllDataFromRemote(): ?ResponseQuery
     {
         return $this->cache->get('pivotAllData55', function () {
-            $dataString = $this->pivotRemoteRepository->query();
+            if ($dataString = $this->pivotRemoteRepository->query()) {
+                return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
+            }
 
-            return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
+            return null;
         });
     }
 
@@ -324,19 +328,19 @@ class PivotRepository
      * https://organismes.tourismewallonie.be/doc-pivot-gest/liste-des-types-durn/
      * @return Filtre[]
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws \Exception
      */
     public function getTypesRootForCreateFiltres(): array
     {
-        $thesaurus = json_decode(
-            $this->pivotRemoteRepository->getThesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)
-        );
-
         $filtres = [];
-        foreach ($thesaurus->spec as $spec) {
-            $filtre = new Filtre($spec->label[0]->value, $spec->order, $spec->urn, null);
-            $filtre->root = $spec->root;
-            $filtre->code = $spec->code;
-            $filtres[] = $filtre;
+        if ($data = $this->pivotRemoteRepository->getThesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)) {
+            $thesaurus = json_decode($data);
+            foreach ($thesaurus->spec as $spec) {
+                $filtre = new Filtre($spec->label[0]->value, $spec->order, $spec->urn, null);
+                $filtre->root = $spec->root;
+                $filtre->code = $spec->code;
+                $filtres[] = $filtre;
+            }
         }
 
         return $filtres;
@@ -346,13 +350,20 @@ class PivotRepository
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=xml
      * @param Filtre $parent
      * @return Filtre[]
+     * @throws \Exception
      */
     public function getSousTypesForCreateFiltres(Filtre $parent): array
     {
         $filtres = [];
-        $dataString = json_decode($this->pivotRemoteRepository->fetchSousTypes($parent->reference));
+        $urn = match ($parent->reference) {
+            9, 267, 258, 259 => $parent->code,
+            default => ''
+        };
 
-        foreach ($dataString->spec as $spec) {
+        $dataString = $this->pivotRemoteRepository->fetchSousTypes($parent->reference, $urn);
+
+        $data = json_decode($dataString);
+        foreach ($data->spec as $spec) {
             if (!isset($spec->spec)) {
                 continue;
             }

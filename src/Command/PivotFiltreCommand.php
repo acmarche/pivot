@@ -56,17 +56,22 @@ class PivotFiltreCommand extends Command
         foreach ($this->pivotRepository->getTypesRootForCreateFiltres() as $root) {
             $this->filtreRepository->persist($root);
             $this->io->section($root->nom);
-            $types = $this->pivotRepository->getSousTypesForCreateFiltres($root);
-            foreach ($types as $filtre) {
-                $this->treatmentChild($filtre);
+            try {
+                $types = $this->pivotRepository->getSousTypesForCreateFiltres($root);
+            } catch (\Exception $e) {
+                $this->io->error($e->getMessage());
+                continue;
+            }
+            foreach ($types as $type) {
+                $this->io->writeln($type->nom);
+                $this->treatmentChild($type);
             }
         }
-     //   $this->filtreRepository->flush();
+        $this->filtreRepository->flush();
     }
 
     private function treatmentChild(Filtre $filtre): Filtre
     {
-        $this->io->title($filtre->nom);
         if (!$this->filtreRepository->findByUrn($filtre->urn)) {
             $this->filtreRepository->persist($filtre);
         }

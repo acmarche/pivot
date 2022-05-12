@@ -5,7 +5,6 @@ namespace AcMarche\Pivot\Repository;
 use AcMarche\Pivot\Api\ContentEnum;
 use AcMarche\Pivot\Api\ThesaurusEnum;
 use Exception;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class PivotRemoteRepository
 {
@@ -17,9 +16,12 @@ class PivotRemoteRepository
     }
 
     /**
-     * @throws Exception|TransportExceptionInterface
+     * @param string $codeCgt
+     * @param array $options
+     * @return string|null
+     * @throws Exception
      */
-    public function offreByCgt(string $codeCgt, array $options = []): string
+    public function offreByCgt(string $codeCgt, array $options = []): ?string
     {
         $options = [
             'output' => 'html',
@@ -44,13 +46,10 @@ class PivotRemoteRepository
         $params = substr($params, 0, -1);
 
         return $this->executeRequest($this->base_uri.'/offer/'.$codeCgt);
+
     }
 
-    /**
-     *
-     * @throws Exception|TransportExceptionInterface
-     */
-    public function offreExist(string $codeCgt): string
+    public function offreExist(string $codeCgt): ?string
     {
         return $this->executeRequest($this->base_uri.'/offer/'.$codeCgt.'/exists');
     }
@@ -58,10 +57,9 @@ class PivotRemoteRepository
     /**
      * tins
      * /thesaurus/typeofr;fmt=xml
-     *
-     * @throws Exception|TransportExceptionInterface
+     * @throws Exception
      */
-    public function getThesaurus(string $type): string
+    public function getThesaurus(string $type): ?string
     {
         return $this->executeRequest($this->base_uri.'/thesaurus/'.$type);
     }
@@ -71,8 +69,10 @@ class PivotRemoteRepository
      *
      * @param string $type
      * @param string|null $sousType
+     * @return string|null
+     * @throws Exception
      */
-    public function thesaurusFamily(string $type, ?string $sousType): string
+    public function thesaurusFamily(string $type, ?string $sousType): ?string
     {
         $url = $this->base_uri.'/thesaurus/'.ThesaurusEnum::THESAURUS_FAMILY->value.'/'.$type;
         if ($sousType) {
@@ -87,16 +87,17 @@ class PivotRemoteRepository
      *
      * @param int $sousType
      *
-     * @return string
+     * @return string|null
+     * @throws Exception
      */
-    public function thesaurusLogique($sousType): string
+    public function thesaurusLogique($sousType): ?string
     {
         $url = $this->base_uri.'/'.ThesaurusEnum::THESAURUS_TYPE_OFFRE->value.'/'.$sousType;
 
         return $this->executeRequest($url);
     }
 
-    public function thesaurusLocalite(?int $idLocalite = null): string
+    public function thesaurusLocalite(?int $idLocalite = null): ?string
     {
         $url = $this->base_uri.'/thesaurus/'.ThesaurusEnum::THESAURUS_TYPE_TINS->value;
         if ($idLocalite) {
@@ -115,17 +116,22 @@ class PivotRemoteRepository
      * pn = parc naturel (identifiant du parc naturel)
      * mix = recherche sur les colonnes code postal, localité et commune
      *
-     * @param int|null $idLocalite
-     *
-     * @return string
+     * @param string $field
+     * @param string $value
+     * @return string|null
+     * @throws Exception
      */
-    public function thesaurusLocaliteSearch(string $field, string $value): string
+    public function thesaurusLocaliteSearch(string $field, string $value): ?string
     {
         $url = $this->base_uri.'/'.ThesaurusEnum::THESAURUS_TYPE_TINS->value.'/'.$field.'/'.$value;
 
         return $this->executeRequest($url);
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function thesaurusCategories(): string
     {
         $url = $this->base_uri.'/cat/urn:fld:filtcat;content=2';
@@ -136,9 +142,9 @@ class PivotRemoteRepository
     /**
      * tins
      * /thesaurus/typeofr;fmt=xml
-     * @throws Exception|TransportExceptionInterface
+     * @throws Exception
      */
-    public function getImage(string $codeCgt): string
+    public function getImage(string $codeCgt): ?string
     {
         return $this->executeRequest($this->base_uri.'/img/'.$codeCgt);
     }
@@ -146,9 +152,9 @@ class PivotRemoteRepository
     /**
      * Ces requêtes sont créées et stockées par les opérateurs de PIVOT afin de fournir des flux
      * de données. Les requêtes sont accessibles au moyen d’un code identifiant unique (codeCgt).
-     * @throws Exception|TransportExceptionInterface
+     * @throws Exception
      */
-    public function query(): string
+    public function query(): ?string
     {
         $options = [
             'content' => 2,//ContentEnum::LVL_DEFAULT->value,
@@ -166,13 +172,16 @@ class PivotRemoteRepository
 
     /**
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=xml
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/9/urn:fld:catevt;fmt=xml
      * @param int $typeId
+     * @param string $urn
+     * @return string|null
+     * @throws Exception
      */
-    public function fetchSousTypes(int $typeId)
+    public function fetchSousTypes(int $typeId, string $urn): ?string
     {
-        $url = $this->base_uri.'/thesaurus/typeofr/'.$typeId.'/urn:fld:cat';
+        $url = $this->base_uri.'/thesaurus/typeofr/'.$typeId.'/urn:fld:cat'.$urn;
 
         return $this->executeRequest($url);
     }
-
 }

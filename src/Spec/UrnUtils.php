@@ -26,15 +26,18 @@ class UrnUtils
 
     /**
      * @return array|UrnDefinition[]
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface|\Psr\Cache\InvalidArgumentException
      */
     public function loadAll(): array
     {
         return $this->cache->get('54alkllUrnsdsd789', function () {
-            $data = $this->pivotRemoteRepository->getThesaurus('urn');
-            $urnResponse = $this->serializer->deserialize($data, UrnResponse::class, 'json');
+            if ($data = $this->pivotRemoteRepository->getThesaurus('urn')) {
+                $urnResponse = $this->serializer->deserialize($data, UrnResponse::class, 'json');
 
-            return $urnResponse->spec;
+                return $urnResponse->spec;
+            }
+
+            return [];
         });
     }
 
