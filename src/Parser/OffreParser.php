@@ -30,7 +30,7 @@ class OffreParser
             $offre->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
         }
         $offre->homepage = $this->findByUrnReturnValue(UrnList::HOMEPAGE);
-        $offre->active = $this->findByUrnReturnValue(UrnList::ACTIVE);
+        $offre->active   = $this->findByUrnReturnValue(UrnList::ACTIVE);
 
         foreach ($this->findByType(SpecTypeEnum::EMAIL) as $spec) {
             $offre->emails[] = $spec->value;
@@ -42,26 +42,18 @@ class OffreParser
         $offre->descriptions = $this->findByUrnCat(UrnCatList::DESCRIPTION);
 
         $offre->tarifs = $this->findByUrn(UrnList::TARIF);
-        $offre->webs = $this->findByUrn(UrnList::WEB);
-        $classements = $this->findByUrnSubCat(UrnSubCatList::CLASSIF);
+        $offre->webs   = $this->findByUrn(UrnList::WEB);
+        $classements   = $this->findByUrnSubCat(UrnSubCatList::CLASSIF);
         foreach ($classements as $classement) {
             $offre->classements[] = new SpecInfo($this->urnUtils->getInfosUrn($classement->urn), $classement);
         }
-        $offre->hades_ids = $this->findByUrn(UrnList::HADES_ID);
+        $offre->hades_ids      = $this->findByUrn(UrnList::HADES_ID);
         $offre->communications = $this->findByUrnCat(UrnCatList::COMMUNICATION);
-        $offre->adresse_rue = $this->findByUrn(UrnList::ADRESSE_RUE);
-        $offre->equipements = $this->findByUrnCat(UrnCatList::EQUIPEMENTS);
-        $offre->accueils = $this->findByUrnCat(UrnCatList::ACCUEIL);
+        $offre->adresse_rue    = $this->findByUrn(UrnList::ADRESSE_RUE);
+        $offre->equipements    = $this->findByUrnCat(UrnCatList::EQUIPEMENTS);
+        $offre->accueils       = $this->findByUrnCat(UrnCatList::ACCUEIL);
 
-        $cats = $this->findByUrnCat(UrnCatList::CLASS_LAB);
-        foreach ($cats as $cat) {
-            $info = $this->urnUtils->getInfosUrn($cat->urn);
-            if ($info) {
-                $order = $cat->order;
-                $labels = $info->label;
-                $offre->categories[] = new Category($order, $labels);
-            }
-        }
+        $this->setCategories($offre);
         $this->setNameByLanguages($offre);
     }
 
@@ -83,10 +75,10 @@ class OffreParser
         $this->parseOffre($event);
 
         $event->dates = $this->getDates();
-        $fistDate = $event->firstDate();
+        $fistDate     = $event->firstDate();
         if ($fistDate) {
             $event->dateBegin = $fistDate->date_begin;
-            $event->dateEnd = $fistDate->date_end;
+            $event->dateEnd   = $fistDate->date_end;
         }
 
         if ($removeObsolete) {
@@ -96,39 +88,50 @@ class OffreParser
                 }
             }
             $event->dates = array_values($event->dates);//reset index
-            $fistDate = $event->firstDate();
+            $fistDate     = $event->firstDate();
             if ($fistDate) {
                 $event->dateBegin = $fistDate->date_begin;
-                $event->dateEnd = $fistDate->date_end;
+                $event->dateEnd   = $fistDate->date_end;
             }
         }
-
-        $cats = $this->findByUrn(UrnList::CATEGORIE_EVENT, true);
-        foreach ($cats as $cat) {
-            $info = $this->urnUtils->getInfosUrn($cat->urn);
-            if ($info) {
-                $order = $cat->order;
-                $labels = $info->label;
-                $event->categories[] = new Category($order, $labels);
-            }
-        }
+        $this->setCategories($event);
     }
 
     private function setNameByLanguages(Offre $offre)
     {
         $labels = [];
-        $noms = $this->findByUrnSubCat(UrnSubCatList::NOM_OFFRE);
+        $noms   = $this->findByUrnSubCat(UrnSubCatList::NOM_OFFRE);
         foreach ($noms as $nom) {
-            $label = new Label();
+            $label        = new Label();
             $label->value = $nom->value;
-            $language = substr($nom->urn, 0, 2);
-            $label->lang = $language;
-            $labels[] = $label;
+            $language     = substr($nom->urn, 0, 2);
+            $label->lang  = $language;
+            $labels[]     = $label;
         }
-        $label = new Label();
+        $label        = new Label();
         $label->value = $offre->nom;
-        $label->lang = "fr";
-        $labels[] = $label;
+        $label->lang  = "fr";
+        $labels[]     = $label;
         $offre->label = $labels;
+    }
+
+    private function setCategories(Offre $offre)
+    {
+        $urn = match ($offre->typeOffre->idTypeOffre) {
+            9 => UrnList::CATEGORIE_EVENT,
+            267 => UrnList::CATEGORIE_PDT,
+            258 => UrnList::CATEGORIE_PRD,
+            259 => UrnList::CATEGORIE_ATS,
+            default => UrnList::CATEGORIE
+        };
+        $cats = $this->findByUrn($urn, true);
+        foreach ($cats as $cat) {
+            $info = $this->urnUtils->getInfosUrn($cat->urn);
+            if ($info) {
+                $order               = $cat->order;
+                $labels              = $info->label;
+                $offre->categories[] = new Category($order, $labels);
+            }
+        }
     }
 }

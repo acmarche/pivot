@@ -19,6 +19,10 @@ enum UrnList: string
     case DATE_OBJECT = "urn:obj:date";
     case URL = "urn:fld:url";
     case CATEGORIE_EVENT = "urn:fld:catevt";
+    case CATEGORIE_PDT = "urn:fld:catpdt";
+    const CATEGORIE_PRD = "urn:fld:catprd";
+    const CATEGORIE_ATS = "urn:fld:catats";
+    case CATEGORIE = "urn:fld:cat";
     case WEB = "urn:fld:urlweb";
     case HADES_ID = "urn:fld:idhades";
     case ADRESSE_RUE = "urn:fld:adr";
@@ -27,5 +31,4 @@ enum UrnList: string
     case MEDIAS_AUTRE = "urn:lnk:media:autre";
     case CONTACT_DIRECTION = "urn:lnk:contact:direction";
     case OFFRE_ENFANT = "urn:lnk:offre:enfant";
-    case CATEGORIE = "urn:fld:cat";
 }
