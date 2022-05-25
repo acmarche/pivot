@@ -130,7 +130,7 @@ class OffreParser
             if ($info) {
                 $order               = $cat->order;
                 $labels              = $info->label;
-                $offre->categories[] = new Category($order, $labels);
+                $offre->categories[$cat->order] = new Category($order, $labels);
             }
         }
     }
