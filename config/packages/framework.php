@@ -5,7 +5,8 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
         'default_locale' => 'fr',
-        'mailer' => [
+        'secret'         => "%env(APP_SECRET)%",
+        'mailer'         => [
             'dsn' => '%env(MAILER_DSN)%',
         ],
     ]);
