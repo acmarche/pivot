@@ -4,8 +4,8 @@ namespace AcMarche\Pivot\Command;
 
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Parser\ParserEventTrait;
-use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
+use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnUtils;
 use AcMarche\Pivot\Utils\GenerateClass;
@@ -52,6 +52,37 @@ class TypeOffreCommand extends Command
     }
 
     private function createListing()
+    {
+        $families = $this->pivotRepository->getFamilies();
+
+        foreach ($families as $family) {
+            $this->io->section($family->labelByLanguage('fr'));
+            $root = new TypeOffre(
+                $family->labelByLanguage('fr'),
+                $family->order,
+                $family->value,
+                $family->urn,
+                $family->type,
+                null
+            );
+            $this->typeOffreRepository->persist($root);
+            foreach ($family->spec as $child) {
+                $this->io->writeln($child->labelByLanguage('fr'));
+                $childObject = new TypeOffre(
+                    $child->labelByLanguage('fr'),
+                    $child->order,
+                    $child->value,
+                    $child->urn,
+                    $child->type,
+                    null
+                );
+                $this->treatmentChild($childObject);
+            }
+        }
+        $this->typeOffreRepository->flush();
+    }
+
+    private function createListingold()
     {
         foreach ($this->pivotRepository->getTypesRootForCreateTypesOffre() as $root) {
             $this->typeOffreRepository->persist($root);

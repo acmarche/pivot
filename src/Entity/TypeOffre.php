@@ -16,14 +16,14 @@ class TypeOffre
     public int $id;
     #[ORM\Column(type: 'string', length: 180)]
     public string $nom;
+    #[ORM\Column(type: 'integer', nullable: true, length: 50)]
+    public ?string $display_order = null;
     #[ORM\Column(type: 'string', nullable: true, length: 50)]
-    public ?string $code = null;
-    #[ORM\Column(type: 'boolean')]
-    public bool $root = false;
+    public ?string $type = null;
     #[ORM\Column(type: 'string', length: 250, nullable: true)]
     public ?string $urn;
-    #[ORM\Column(type: 'integer', unique: false, nullable: false)]
-    public int $reference;
+    #[ORM\Column(type: 'string', unique: false, nullable: true)]
+    public ?string $reference;
     #[ORM\ManyToOne(targetEntity: TypeOffre::class)]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     public ?TypeOffre $parent = null;
@@ -43,16 +43,20 @@ class TypeOffre
 
     public function __construct(
         string $nom,
-        int $reference,
+        int $display_order,
+        ?string $value,
         ?string $urn,
+        ?string $type,
         ?TypeOffre $parent,
         ?string $name_nl = null,
         ?string $name_en = null,
         ?string $name_de = null
     ) {
-        $this->reference = $reference;
+        $this->display_order = $display_order;
+        $this->reference = $value;
         $this->nom = $nom;
         $this->urn = $urn;
+        $this->type = $type;
         $this->parent = $parent;
         $this->name_nl = $name_nl;
         $this->name_en = $name_en;
@@ -76,7 +80,7 @@ class TypeOffre
 
     public function getIdentifiant(): string|int
     {
-        if ($this->root) {
+        if (!$this->parent) {
             return $this->reference;
         } else {
             return $this->urn;

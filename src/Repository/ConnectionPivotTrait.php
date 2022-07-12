@@ -18,6 +18,7 @@ trait ConnectionPivotTrait
     private ?string $code_query;
     private ?string $base_uri = null;
     private ?string $ws_key;
+    public ?string $url_executed = null;
 
     public function connect(string $output): void
     {
@@ -41,6 +42,7 @@ trait ConnectionPivotTrait
      */
     private function executeRequest(string $url, array $options = [], string $method = 'GET'): string
     {
+        $this->url_executed = $url;
         try {
             $response = $this->httpClient->request(
                 $method,

@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Api\ThesaurusEnum;
 use AcMarche\Pivot\Entities\Event\Event;
+use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
@@ -322,6 +323,20 @@ class PivotRepository
         }
 
         return null;
+    }
+
+    /**
+     * @return Family[]
+     * @throws \Exception
+     */
+    public function getFamilies(): array
+    {
+        $familiesObject = json_decode($this->pivotRemoteRepository->thesaurusFamily());
+
+        return $this->pivotSerializer->deserializeToClass(
+            json_encode($familiesObject->spec),
+            'AcMarche\Pivot\Entities\Family\Family[]',
+        );
     }
 
     /**

@@ -67,14 +67,17 @@ class PivotRemoteRepository
     /**
      * thesaurus/family/urn:fam:1;fmt=xml (fam:1: hebergements)
      *
-     * @param string $type
+     * @param string|null $type
      * @param string|null $sousType
      * @return string|null
      * @throws Exception
      */
-    public function thesaurusFamily(string $type, ?string $sousType): ?string
+    public function thesaurusFamily(?string $type = null, ?string $sousType = null): ?string
     {
-        $url = $this->base_uri.'/thesaurus/'.ThesaurusEnum::THESAURUS_FAMILY->value.'/'.$type;
+        $url = $this->base_uri.'/thesaurus/'.ThesaurusEnum::THESAURUS_FAMILY->value;
+        if ($type) {
+            $url .= '/'.$type;
+        }
         if ($sousType) {
             $url .= '';
         }
