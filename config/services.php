@@ -1,6 +1,6 @@
 <?php
 
-use AcMarche\Pivot\Repository\FiltreRepository;
+use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -32,7 +32,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set('pivotRemoteRepository', PivotRemoteRepository::class)
         ->public();
 
-    $services->set('filtreRepository', FiltreRepository::class)
+    $services->set('typeOffreRepository', TypeOffreRepository::class)
         ->public();
 
 };
