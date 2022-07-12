@@ -12,12 +12,13 @@ use AcMarche\Pivot\Utils\GenerateClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'pivot:types-offre',
-    description: 'Extrait tous les types d\'offres',
+    description: 'Génère une table avec tous les types d\'offres',
 )]
 class TypeOffreCommand extends Command
 {
@@ -38,7 +39,7 @@ class TypeOffreCommand extends Command
 
     protected function configure(): void
     {
-
+        $this->addOption('flush', "flush", InputOption::VALUE_NONE, 'Enregistrer dans la DB');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -47,6 +48,10 @@ class TypeOffreCommand extends Command
         $this->output = $output;
 
         $this->createListing();
+        $flush = (bool)$input->getOption('flush');
+        if ($flush) {
+            $this->typeOffreRepository->flush();
+        }
 
         return Command::SUCCESS;
     }
@@ -74,31 +79,11 @@ class TypeOffreCommand extends Command
                     $child->value,
                     $child->urn,
                     $child->type,
-                    null
+                    $root
                 );
                 $this->treatmentChild($childObject);
             }
         }
-        $this->typeOffreRepository->flush();
-    }
-
-    private function createListingold()
-    {
-        foreach ($this->pivotRepository->getTypesRootForCreateTypesOffre() as $root) {
-            $this->typeOffreRepository->persist($root);
-            $this->io->section($root->nom);
-            try {
-                $types = $this->pivotRepository->getSousTypesForCreateTypesOffre($root);
-            } catch (\Exception $e) {
-                $this->io->error($e->getMessage());
-                continue;
-            }
-            foreach ($types as $type) {
-                $this->io->writeln($type->nom);
-                $this->treatmentChild($type);
-            }
-        }
-        $this->typeOffreRepository->flush();
     }
 
     private function treatmentChild(TypeOffre $typeOffre): TypeOffre
