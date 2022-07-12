@@ -1,19 +1,19 @@
 <div class="d-flex flex-nowrap gap-2">
-    {% if filter.name_fr %}
+    {% if typeOffre.name_fr %}
         <img src="{{ asset('bundles/acmarchepivot/images/fr.png') }}" alt="drapeau fr"
              style="width: 30px; height: 30px;"
-             title="Fr: {{ filter.name_fr }}">
+             title="Fr: {{ typeOffre.name_fr }}">
     {% endif %}
 
-    {% if filter.name_nl %}
+    {% if typeOffre.name_nl %}
         <img src="{{ asset('bundles/acmarchepivot/images/nl.png') }}" alt="drapeau nl"
              style="width: 30px; height: 30px;"
-             title="Nl: {{ filter.name_nl }}">
+             title="Nl: {{ typeOffre.name_nl }}">
     {% endif %}
 
-    {% if filter.name_fr %}
+    {% if typeOffre.name_fr %}
         <img src="{{ asset('bundles/acmarchepivot/images/en.png') }}" alt="drapeau en"
              style="width: 30px; height: 30px;"
-             title="En: {{ filter.name_en }}">
+             title="En: {{ typeOffre.name_en }}">
     {% endif %}
 </div>

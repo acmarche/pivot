@@ -2,8 +2,8 @@
 
 namespace AcMarche\Pivot\Command;
 
-use AcMarche\Pivot\Entity\Filtre;
-use AcMarche\Pivot\Repository\FiltreRepository;
+use AcMarche\Pivot\Entity\TypeOffre;
+use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -27,7 +27,7 @@ class OffreListCommand extends Command
 
     public function __construct(
         private PivotRepository $pivotRepository,
-        private FiltreRepository $filtreRepository,
+        private TypeOffreRepository $typeOffreRepository,
         string $name = null
     ) {
         parent::__construct($name);
@@ -47,7 +47,7 @@ class OffreListCommand extends Command
 
         if (!$all) {
             $response = $this->askType();
-            if (!$response instanceof Filtre) {
+            if (!$response instanceof TypeOffre) {
                 $this->io->error('Ce type n\'exite pas dans la liste');
 
                 return Command::FAILURE;
@@ -83,7 +83,7 @@ class OffreListCommand extends Command
 
     protected function askType()
     {
-        $typesOffre = $this->filtreRepository->findRoots();
+        $typesOffre = $this->typeOffreRepository->findRoots();
 
         $choice = new ChoiceQuestion(
             question: 'Quelle type d\'offre ?',
@@ -112,7 +112,7 @@ class OffreListCommand extends Command
     public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
     {
         if ($input->mustSuggestArgumentValuesFor(argumentName: 'type')) {
-            $suggestions->suggestValues($this->filtreRepository->findRoots());
+            $suggestions->suggestValues($this->typeOffreRepository->findRoots());
         }
     }
 }

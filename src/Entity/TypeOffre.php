@@ -3,14 +3,12 @@
 namespace AcMarche\Pivot\Entity;
 
 use AcMarche\Pivot\Entities\Label;
-use AcMarche\Pivot\Entities\LabelTrait;
-use AcMarche\Pivot\Repository\FiltreRepository;
+use AcMarche\Pivot\Repository\TypeOffreRepository;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Boolean;
 
-#[ORM\Entity(repositoryClass: FiltreRepository::class)]
-#[ORM\Table(name: 'pivot_filtre')]
-class Filtre
+#[ORM\Entity(repositoryClass: TypeOffreRepository::class)]
+#[ORM\Table(name: 'pivot_type_offre')]
+class TypeOffre
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,9 +24,9 @@ class Filtre
     public ?string $urn;
     #[ORM\Column(type: 'integer', unique: false, nullable: false)]
     public int $reference;
-    #[ORM\ManyToOne(targetEntity: Filtre::class)]
+    #[ORM\ManyToOne(targetEntity: TypeOffre::class)]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
-    public ?Filtre $parent = null;
+    public ?TypeOffre $parent = null;
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
     public ?string $name_fr;
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
@@ -39,7 +37,7 @@ class Filtre
     public ?string $name_de;
 
     /**
-     * @var Filtre[] $children
+     * @var TypeOffre[] $children
      */
     public array $children = [];
 
@@ -47,7 +45,7 @@ class Filtre
         string $nom,
         int $reference,
         ?string $urn,
-        ?Filtre $parent,
+        ?TypeOffre $parent,
         ?string $name_nl = null,
         ?string $name_en = null,
         ?string $name_de = null

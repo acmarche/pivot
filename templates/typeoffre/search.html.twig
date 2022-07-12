@@ -6,7 +6,7 @@
         <h3 class="card-header">Recherche</h3>
         <div class="card-body">
 
-            {% include '@AcMarchePivot/filter/_search.html.twig' %}
+            {% include '@AcMarchePivot/typeOffre/_search.html.twig' %}
 
             <table class="table table-bordered table-striped">
                 <tr>
@@ -15,16 +15,16 @@
                     <th>Traductions</th>
                     <th></th>
                 </tr>
-                {% for filter in filters %}
+                {% for typeOffre in typeOffres %}
                     <tr>
-                        <td>{{ filter }}</td>
-                        <td>{{ filter.identifiant }}</td>
+                        <td>{{ typeOffre }}</td>
+                        <td>{{ typeOffre.identifiant }}</td>
                         <td>
-                            {% include '@AcMarchePivot/filter/_flags.html.twig' %}
+                            {% include '@AcMarchePivot/typeOffre/_flags.html.twig' %}
                         </td>
                         <td>
-                            {% if  filter.identifiant %}
-                                <a href="{{ path('pivot_filtre_edit', {'id': filter.id}) }}" title="Traduire">
+                            {% if  typeOffre.identifiant %}
+                                <a href="{{ path('pivot_typeoffre_edit', {'id': typeOffre.id}) }}" title="Traduire">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>
                             {% endif %}

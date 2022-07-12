@@ -7,14 +7,14 @@ use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
-use AcMarche\Pivot\Entity\Filtre;
+use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventUtils;
-use AcMarche\Pivot\Filtre\PivotFilter;
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Parser\PivotSerializer;
 use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
+use AcMarche\Pivot\TypeOffre\PivotType;
 use AcMarche\Pivot\Utils\SortUtils;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
@@ -34,11 +34,11 @@ class PivotRepository
     }
 
     /**
-     * @param Filtre[] $filtres
+     * @param TypeOffre[] $typesOffre
      * @return Offre[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function getOffres(array $filtres): array
+    public function getOffres(array $typesOffre): array
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
@@ -57,7 +57,7 @@ class PivotRepository
             }
         }
 
-        $offres = PivotFilter::filterByReferencesOrUrns($offres, $filtres);
+        $offres = PivotType::filterByReferencesOrUrns($offres, $typesOffre);
 
         array_map(function ($offre) {
             $this->pivotParser->parseOffre($offre);
@@ -77,7 +77,7 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotFilter::filterByTypes($responseQuery, [UrnTypeList::evenement()->order]);
+        $offresShort = PivotType::filterByTypes($responseQuery, [UrnTypeList::evenement()->order]);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->getOffreByCgt(
                 $offreShort->codeCgt,
@@ -284,9 +284,9 @@ class PivotRepository
      */
     public function getSameOffres(Offre $offreReffer): array
     {
-        $filtres = [$offreReffer->typeOffre->idTypeOffre];
+        $typesOffre = [$offreReffer->typeOffre->idTypeOffre];
         $data = [];
-        $offres = $this->getOffres($filtres);
+        $offres = $this->getOffres($typesOffre);
         foreach ($offres as $offre) {
             if ($offreReffer->codeCgt != $offre->codeCgt) {
                 $data[] = $offre;
@@ -326,35 +326,35 @@ class PivotRepository
 
     /**
      * https://organismes.tourismewallonie.be/doc-pivot-gest/liste-des-types-durn/
-     * @return Filtre[]
+     * @return TypeOffre[]
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      * @throws \Exception
      */
-    public function getTypesRootForCreateFiltres(): array
+    public function getTypesRootForCreateTypesOffre(): array
     {
-        $filtres = [];
+        $typesOffre = [];
         if ($data = $this->pivotRemoteRepository->getThesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)) {
             $thesaurus = json_decode($data);
             foreach ($thesaurus->spec as $spec) {
-                $filtre = new Filtre($spec->label[0]->value, $spec->order, $spec->urn, null);
-                $filtre->root = $spec->root;
-                $filtre->code = $spec->code;
-                $filtres[] = $filtre;
+                $typeOffre = new TypeOffre($spec->label[0]->value, $spec->order, $spec->urn, null);
+                $typeOffre->root = $spec->root;
+                $typeOffre->code = $spec->code;
+                $typesOffre[] = $typeOffre;
             }
         }
 
-        return $filtres;
+        return $typesOffre;
     }
 
     /**
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=xml
-     * @param Filtre $parent
-     * @return Filtre[]
+     * @param TypeOffre $parent
+     * @return TypeOffre[]
      * @throws \Exception
      */
-    public function getSousTypesForCreateFiltres(Filtre $parent): array
+    public function getSousTypesForCreateTypesOffre(TypeOffre $parent): array
     {
-        $filtres = [];
+        $typesOffre = [];
         $urn = match ($parent->reference) {
             9, 267, 258, 259 => $parent->code,
             default => ''
@@ -369,7 +369,7 @@ class PivotRepository
             }
             foreach ($spec->spec as $item) {
                 $labels = $item->label;
-                $filtre = new Filtre(
+                $typeOffre = new TypeOffre(
                     $item->label[0]->value,
                     $item->order,
                     $item->urn,
@@ -378,11 +378,11 @@ class PivotRepository
                     self::getLabel($labels, 'en'),
                     self::getLabel($labels, 'de'),
                 );
-                $filtres[] = $filtre;
+                $typesOffre[] = $typeOffre;
             }
         }
 
-        return $filtres;
+        return $typesOffre;
     }
 
     private static function getLabel(array $labels, string $language): ?string

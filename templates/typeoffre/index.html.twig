@@ -3,10 +3,10 @@
 {% block body %}
 
     <div class="card">
-        <h3 class="card-header">Filtres hades pour pivotmarche.be</h3>
+        <h3 class="card-header">Types d'offre pour pivotmarche.be</h3>
         <div class="card-body">
 
-            {% include '@AcMarchePivot/filter/_search.html.twig' %}
+            {% include '@AcMarchePivot/typeOffre/_search.html.twig' %}
 
             <table class="table table-bordered table-striped">
                 <tr>
@@ -15,10 +15,10 @@
                     <th>Traductions</th>
                     <th>Mot clef</th>
                 </tr>
-                {% for lvl1 in filters %}
-                    {% include '@AcMarchePivot/filter/_line.html.twig' with {'filter':lvl1, 'level':1} %}
+                {% for lvl1 in typeOffres %}
+                    {% include '@AcMarchePivot/typeOffre/_line.html.twig' with {'typeOffre':lvl1, 'level':1} %}
                     {% for lvl2 in lvl1.children %}
-                        {% include '@AcMarchePivot/filter/_line.html.twig' with {'filter':lvl2, 'level':2} %}
+                        {% include '@AcMarchePivot/typeOffre/_line.html.twig' with {'typeOffre':lvl2, 'level':2} %}
                     {% endfor %}
                 {% endfor %}
             </table>

@@ -1,0 +1,22 @@
+<tr>
+    <td>
+        {% if level == 1 %}
+            {{ typeOffre.nom }}
+        {% endif %}
+    </td>
+    <td>
+        {% if level == 2 %}
+            {{ typeOffre.nom }}
+        {% endif %}
+    </td>
+    <td>
+        {% include '@AcMarchePivot/typeoffre/_flags.html.twig' %}
+    </td>
+    <td>
+        {% if typeOffre.identifiant %}
+            <a href="{{ path('pivot_typeoffre_show', {'id': typeOffre.id}) }}" title="Détails">
+                {{ typeOffre.identifiant }}
+            </a>
+        {% endif %}
+    </td>
+</tr>

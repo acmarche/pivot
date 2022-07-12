@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\DependencyInjection;
 
-use AcMarche\Pivot\Repository\FiltreRepository;
+use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -45,15 +45,15 @@ class PivotContainer
         return $pivotRepository;
     }
 
-    static function getFiltreRepository(): FiltreRepository
+    static function getTypeOffreRepository(): TypeOffreRepository
     {
         $container = self::init();
         /**
-         * @var FiltreRepository $filtreRepository
+         * @var TypeOffreRepository $typeOffreRepository
          */
-        $filtreRepository = $container->get('filtreRepository');
+        $typeOffreRepository = $container->get('typeOffreRepository');
 
-        return $filtreRepository;
+        return $typeOffreRepository;
     }
 
     static function getRemoteRepository(): PivotRemoteRepository

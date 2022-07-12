@@ -2,9 +2,9 @@
 
 namespace AcMarche\Pivot\Command;
 
-use AcMarche\Pivot\Entity\Filtre;
+use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Parser\ParserEventTrait;
-use AcMarche\Pivot\Repository\FiltreRepository;
+use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnUtils;
@@ -16,10 +16,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'pivot:filtre',
-    description: 'Extrait tous les filtres des offres par type',
+    name: 'pivot:types-offre',
+    description: 'Extrait tous les types d\'offres',
 )]
-class PivotFiltreCommand extends Command
+class TypeOffreCommand extends Command
 {
     use SpecTrait, ParserEventTrait;
 
@@ -29,7 +29,7 @@ class PivotFiltreCommand extends Command
     public function __construct(
         private GenerateClass $generateClass,
         private PivotRepository $pivotRepository,
-        private FiltreRepository $filtreRepository,
+        private TypeOffreRepository $typeOffreRepository,
         private UrnUtils $urnUtils,
         string $name = null
     ) {
@@ -53,11 +53,11 @@ class PivotFiltreCommand extends Command
 
     private function createListing()
     {
-        foreach ($this->pivotRepository->getTypesRootForCreateFiltres() as $root) {
-            $this->filtreRepository->persist($root);
+        foreach ($this->pivotRepository->getTypesRootForCreateTypesOffre() as $root) {
+            $this->typeOffreRepository->persist($root);
             $this->io->section($root->nom);
             try {
-                $types = $this->pivotRepository->getSousTypesForCreateFiltres($root);
+                $types = $this->pivotRepository->getSousTypesForCreateTypesOffre($root);
             } catch (\Exception $e) {
                 $this->io->error($e->getMessage());
                 continue;
@@ -67,15 +67,15 @@ class PivotFiltreCommand extends Command
                 $this->treatmentChild($type);
             }
         }
-        $this->filtreRepository->flush();
+        $this->typeOffreRepository->flush();
     }
 
-    private function treatmentChild(Filtre $filtre): Filtre
+    private function treatmentChild(TypeOffre $typeOffre): TypeOffre
     {
-        if (!$this->filtreRepository->findByUrn($filtre->urn)) {
-            $this->filtreRepository->persist($filtre);
+        if (!$this->typeOffreRepository->findByUrn($typeOffre->urn)) {
+            $this->typeOffreRepository->persist($typeOffre);
         }
 
-        return $filtre;
+        return $typeOffre;
     }
 }

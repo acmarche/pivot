@@ -1,25 +1,25 @@
 <?php
 
-namespace AcMarche\Pivot\Filtre;
+namespace AcMarche\Pivot\TypeOffre;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
-use AcMarche\Pivot\Entity\Filtre;
+use AcMarche\Pivot\Entity\TypeOffre;
 
-class PivotFilter
+class PivotType
 {
     /**
      * @param ResponseQuery $data
-     * @param int[] $filtres
+     * @param int[] $typesOffre
      * @return array
      */
-    public static function filterByTypes(ResponseQuery $data, array $filtres): array
+    public static function filterByTypes(ResponseQuery $data, array $typesOffre): array
     {
         $offres = [];
-        $count = count($filtres);
+        $count = count($typesOffre);
         foreach ($data->offre as $row) {
             if ($count > 0) {
-                if (in_array($row->typeOffre->idTypeOffre, $filtres)) {
+                if (in_array($row->typeOffre->idTypeOffre, $typesOffre)) {
                     $offres[] = $row;
                 }
             } else {
@@ -32,17 +32,17 @@ class PivotFilter
 
     /**
      * @param Offre[] $data
-     * @param Filtre[] $pivotTypes
+     * @param TypeOffre[] $pivotTypes
      * @return array
      */
-    public static function filterByReferencesOrUrns(array $data, array $filtres): array
+    public static function filterByReferencesOrUrns(array $data, array $typesOffre): array
     {
         $offres = [];
-        if (count($filtres) < 1) {
+        if (count($typesOffre) < 1) {
             return $data;
         }
-        $references = array_column($filtres, 'reference');
-        $urns = array_column($filtres, 'urn');
+        $references = array_column($typesOffre, 'reference');
+        $urns = array_column($typesOffre, 'urn');
         foreach ($data as $offre) {
             $specs = array_column($offre->spec, 'urn');
             if (in_array($offre->typeOffre->idTypeOffre, $references) || count(array_intersect($urns, $specs)) > 0

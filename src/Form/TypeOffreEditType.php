@@ -2,13 +2,13 @@
 
 namespace AcMarche\Pivot\Form;
 
-use AcMarche\Pivot\Entity\Filtre;
+use AcMarche\Pivot\Entity\TypeOffre;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FiltreEditType extends AbstractType
+class TypeOffreEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -45,7 +45,7 @@ class FiltreEditType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'data_class' => Filtre::class,
+                'data_class' => TypeOffre::class,
             ]
         );
     }
