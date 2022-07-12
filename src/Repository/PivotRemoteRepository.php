@@ -154,20 +154,13 @@ class PivotRemoteRepository
      * de données. Les requêtes sont accessibles au moyen d’un code identifiant unique (codeCgt).
      * @throws Exception
      */
-    public function query(): ?string
+    public function query(string $query = null): ?string
     {
-        $options = [
-            'content' => 2,//ContentEnum::LVL_DEFAULT->value,
-            'info' => true,
-            'infolvl' => 0,
-        ];
-        $params = ";";
-        foreach ($options as $key => $value) {
-            $params .= $key.'='.$value.';';
+        if (!$query) {
+            $query = $this->code_query;
         }
-        $params = substr($params, 0, -1);
 
-        return $this->executeRequest($this->base_uri.'/query/'.$this->code_query);
+        return $this->executeRequest($this->base_uri.'/query/'.$query);
     }
 
     /**
