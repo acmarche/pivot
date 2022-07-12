@@ -15,7 +15,7 @@
                     <th>Traductions</th>
                     <th>Mot clef</th>
                 </tr>
-                {% for lvl1 in typeOffres %}
+                {% for lvl1 in typesOffre %}
                     {% include '@AcMarchePivot/typeoffre/_line.html.twig' with {'typeOffre':lvl1, 'level':1} %}
                     {% for lvl2 in lvl1.children %}
                         {% include '@AcMarchePivot/typeoffre/_line.html.twig' with {'typeOffre':lvl2, 'level':2} %}
