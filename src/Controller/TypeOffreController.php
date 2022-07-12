@@ -32,13 +32,13 @@ class TypeOffreController extends AbstractController
             $typesoffre = $this->typeOffreRepository->findByName($data['name']);
 
             return $this->render('@AcMarchePivot/typeoffre/search.html.twig', [
-                'typesoffre' => $typesoffre,
+                'typesOffre' => $typesoffre,
                 'form' => $form->createView(),
             ]);
         }
 
         return $this->render('@AcMarchePivot/typeoffre/index.html.twig', [
-            'typesoffre' => $typesoffre,
+            'typesOffre' => $typesoffre,
             'form' => $form->createView(),
         ]);
     }
@@ -49,7 +49,7 @@ class TypeOffreController extends AbstractController
         return $this->render(
             '@AcMarchePivot/typeoffre/show.html.twig',
             [
-                'typeoffre' => $typeoffre,
+                'typeOffre' => $typeoffre,
             ]
         );
     }
@@ -73,7 +73,7 @@ class TypeOffreController extends AbstractController
         return $this->render(
             '@AcMarchePivot/typeoffre/edit.html.twig',
             [
-                'typeoffre' => $typeoffre,
+                'typeOffre' => $typeoffre,
                 'form' => $form->createView(),
             ]
         );
