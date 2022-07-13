@@ -16,14 +16,16 @@ class TypeOffre
     public int $id;
     #[ORM\Column(type: 'string', length: 180)]
     public string $nom;
-    #[ORM\Column(type: 'integer', nullable: true, length: 50)]
-    public ?string $display_order = null;
-    #[ORM\Column(type: 'string', nullable: true, length: 50)]
-    public ?string $type = null;
-    #[ORM\Column(type: 'string', length: 250, nullable: true)]
-    public ?string $urn;
-    #[ORM\Column(type: 'string', unique: false, nullable: true)]
-    public ?string $reference;
+    #[ORM\Column(type: 'integer', nullable: false)]
+    public int $display_order = 0;
+    #[ORM\Column(type: 'string', length: 50, nullable: false)]
+    public string $type;
+    #[ORM\Column(type: 'string', length: 250, nullable: false)]
+    public string $urn;
+    #[ORM\Column(type: 'string', unique: false, nullable: false)]
+    public string $code;
+    #[ORM\Column(type: 'string', nullable: false)]
+    public int|string $typeId;
     #[ORM\ManyToOne(targetEntity: TypeOffre::class)]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     public ?TypeOffre $parent = null;
@@ -43,8 +45,9 @@ class TypeOffre
 
     public function __construct(
         string $nom,
+        int|string $typeId,
         int $display_order,
-        ?string $value,
+        ?string $code,
         ?string $urn,
         ?string $type,
         ?TypeOffre $parent,
@@ -52,9 +55,10 @@ class TypeOffre
         ?string $name_en = null,
         ?string $name_de = null
     ) {
-        $this->display_order = $display_order;
-        $this->reference = $value;
         $this->nom = $nom;
+        $this->typeId = $typeId;
+        $this->display_order = $display_order;
+        $this->code = $code;
         $this->urn = $urn;
         $this->type = $type;
         $this->parent = $parent;
@@ -81,7 +85,7 @@ class TypeOffre
     public function getIdentifiant(): string|int
     {
         if (!$this->parent) {
-            return $this->reference;
+            return $this->code;
         } else {
             return $this->urn;
         }
