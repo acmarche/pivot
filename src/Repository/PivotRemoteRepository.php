@@ -59,97 +59,76 @@ class PivotRemoteRepository
      * /thesaurus/typeofr;fmt=xml
      * @throws Exception
      */
-    public function getThesaurus(string $type): ?string
+    public function thesaurus(string $type, ?string $params = null): ?string
     {
-        return $this->executeRequest($this->base_uri.'/thesaurus/'.$type);
+        $url = $this->base_uri.'/thesaurus/'.$type;
+        if ($params) {
+            $url .= '/'.$params;
+        }
+
+        return $this->executeRequest($url);
     }
 
     /**
-     * thesaurus/family/urn:fam:1;fmt=xml (fam:1: hebergements)
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/11/urn:cat:classlab;fmt=json
+     * @return string
+     * @throws Exception
+     */
+    public function thesaurusCategories(int $catid): string
+    {
+        $params = $catid.'/urn:cat:classlab';
+
+        return $this->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value, $params);
+        //$url = $this->base_uri.'/thesaurus/'.ThesaurusEnum::THESAURUS_TYPE_OFFRE->value.'/'.$catid.'/urn:cat:classlab';
+    }
+
+    /**
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/family/urn:fam:1;fmt=xml
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=xml
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/9/urn:fld:catevt;fmt=xml
+     * @param int $typeId
+     * @param string $urn
+     * @return string|null
+     * @throws Exception
+     */
+    public function thesaurusSousTypes(int $typeId, string $urn): ?string
+    {
+        $params = '/'.$typeId.'/urn:fld:cat'.$urn;
+
+        return $this->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value, $params);
+    }
+
+    /**
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/family/urn:fam:2;fmt=json (fam:2: decouvertes)
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr;fmt=json
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/11;fmt=json
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/11/urn:cat:classlab;fmt=json
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/1/1;fmt=json
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/urn/urn:typ:11;fmt=json
      *
      * @param string|null $type
      * @param string|null $sousType
      * @return string|null
      * @throws Exception
      */
-    public function thesaurusFamily(?string $type = null, ?string $sousType = null): ?string
+    public function thesaurusFamily(): ?string
     {
-        $url = $this->base_uri.'/thesaurus/'.ThesaurusEnum::THESAURUS_FAMILY->value;
-        if ($type) {
-            $url .= '/'.$type;
-        }
-        if ($sousType) {
-            $url .= '';
-        }
-
-        return $this->executeRequest($url);
-    }
-
-    /**
-     * /thesaurus/typeofr/ 1 ; fmt=xml (1 => hotel)
-     *
-     * @param int $sousType
-     *
-     * @return string|null
-     * @throws Exception
-     */
-    public function thesaurusLogique($sousType): ?string
-    {
-        $url = $this->base_uri.'/'.ThesaurusEnum::THESAURUS_TYPE_OFFRE->value.'/'.$sousType;
-
-        return $this->executeRequest($url);
+        return $this->thesaurus(ThesaurusEnum::THESAURUS_FAMILY->value);
     }
 
     public function thesaurusLocalite(?int $idLocalite = null): ?string
     {
-        $url = $this->base_uri.'/thesaurus/'.ThesaurusEnum::THESAURUS_TYPE_TINS->value;
+        $params = null;
         if ($idLocalite) {
-            $url .= '/'.$idLocalite;
+            $params = '/'.$idLocalite;
         }
 
-        return $this->executeRequest($url);
+        return $this->thesaurus(ThesaurusEnum::THESAURUS_TYPE_TINS->value, $params);
     }
 
-    /**
-     * cp = code postal
-     * loc = localité
-     * com = commune
-     * prv = province
-     * mdt = organisme touristique (identifiant de l’organisme)
-     * pn = parc naturel (identifiant du parc naturel)
-     * mix = recherche sur les colonnes code postal, localité et commune
-     *
-     * @param string $field
-     * @param string $value
-     * @return string|null
-     * @throws Exception
-     */
-    public function thesaurusLocaliteSearch(string $field, string $value): ?string
+    public function thesaurusImage(string $codeCgt): ?string
     {
-        $url = $this->base_uri.'/'.ThesaurusEnum::THESAURUS_TYPE_TINS->value.'/'.$field.'/'.$value;
-
-        return $this->executeRequest($url);
-    }
-
-    /**
-     * @return string
-     * @throws Exception
-     */
-    public function thesaurusCategories(): string
-    {
-        $url = $this->base_uri.'/cat/urn:fld:filtcat;content=2';
-
-        return $this->executeRequest($url);
-    }
-
-    /**
-     * tins
-     * /thesaurus/typeofr;fmt=xml
-     * @throws Exception
-     */
-    public function getImage(string $codeCgt): ?string
-    {
-        return $this->executeRequest($this->base_uri.'/img/'.$codeCgt);
+        return $this->thesaurus(ThesaurusEnum::THESAURUS_LISTE_PICTOS->value, $codeCgt);
     }
 
     /**
@@ -164,21 +143,5 @@ class PivotRemoteRepository
         }
 
         return $this->executeRequest($this->base_uri.'/query/'.$query);
-    }
-
-    /**
-     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/family/urn:fam:1;fmt=xml
-     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=xml
-     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/9/urn:fld:catevt;fmt=xml
-     * @param int $typeId
-     * @param string $urn
-     * @return string|null
-     * @throws Exception
-     */
-    public function fetchSousTypes(int $typeId, string $urn): ?string
-    {
-        $url = $this->base_uri.'/thesaurus/typeofr/'.$typeId.'/urn:fld:cat'.$urn;
-
-        return $this->executeRequest($url);
     }
 }
