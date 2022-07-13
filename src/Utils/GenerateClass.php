@@ -22,7 +22,7 @@ class GenerateClass
     public function generateTypeUrn()
     {
         $thesaurus = json_decode(
-            $this->pivotRemoteRepository->getThesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)
+            $this->pivotRemoteRepository->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)
         );
 
         echo "<?php \n ";
