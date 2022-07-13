@@ -22,8 +22,8 @@ class TypeOffre
     public string $type;
     #[ORM\Column(type: 'string', length: 250, nullable: false)]
     public string $urn;
-    #[ORM\Column(type: 'string', unique: false, nullable: false)]
-    public string $code;
+    #[ORM\Column(type: 'string', unique: false, nullable: true)]
+    public ?string $code = null;
     #[ORM\Column(type: 'string', nullable: false)]
     public int|string $typeId;
     #[ORM\ManyToOne(targetEntity: TypeOffre::class)]
