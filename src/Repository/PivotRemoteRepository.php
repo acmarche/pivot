@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Api\ContentEnum;
 use AcMarche\Pivot\Api\ThesaurusEnum;
+use AcMarche\Pivot\Spec\UrnList;
 use Exception;
 
 class PivotRemoteRepository
@@ -74,12 +75,11 @@ class PivotRemoteRepository
      * @return string
      * @throws Exception
      */
-    public function thesaurusCategories(int $catid): string
+    public function thesaurusCategories(int $typeId): string
     {
-        $params = $catid.'/urn:cat:classlab';
+        $params = $typeId.'/'.UrnList::CLASSIFICATION_LABEL->value;
 
         return $this->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value, $params);
-        //$url = $this->base_uri.'/thesaurus/'.ThesaurusEnum::THESAURUS_TYPE_OFFRE->value.'/'.$catid.'/urn:cat:classlab';
     }
 
     /**
