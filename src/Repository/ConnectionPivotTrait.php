@@ -19,6 +19,7 @@ trait ConnectionPivotTrait
     private ?string $base_uri = null;
     private ?string $ws_key;
     public ?string $url_executed = null;
+    public ?string $data_raw = null;
 
     public function connect(string $output): void
     {
@@ -50,7 +51,9 @@ trait ConnectionPivotTrait
                 $options
             );
 
-            return $response->getContent();
+            $this->data_raw = $response->getContent();
+
+            return $this->data_raw;
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
