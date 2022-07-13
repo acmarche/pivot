@@ -31,7 +31,7 @@ class UrnUtils
     public function loadAll(): array
     {
         return $this->cache->get('54alkllUrnsdsd789', function () {
-            if ($data = $this->pivotRemoteRepository->getThesaurus('urn')) {
+            if ($data = $this->pivotRemoteRepository->thesaurus('urn')) {
                 $urnResponse = $this->serializer->deserialize($data, UrnResponse::class, 'json');
 
                 return $urnResponse->spec;
