@@ -84,7 +84,7 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotType::filterByTypes($responseQuery, [UrnTypeList::evenement()->order]);
+        $offresShort = PivotType::filterByTypes($responseQuery, [UrnTypeList::evenement()->typeId]);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->getOffreByCgt(
                 $offreShort->codeCgt,
@@ -335,7 +335,7 @@ class PivotRepository
      * @return Family[]
      * @throws \Exception
      */
-    public function getFamilies(): array
+    public function thesaurusFamilies(): array
     {
         $familiesObject = json_decode($this->pivotRemoteRepository->thesaurusFamily());
 
