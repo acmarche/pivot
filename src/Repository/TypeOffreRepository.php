@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Entity\TypeOffre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -24,7 +25,7 @@ class TypeOffreRepository extends ServiceEntityRepository
      */
     public function findRoots(): array
     {
-        return $this->createQueryBuilder('typeOffre')
+        return $this->createQBL()
             ->andWhere('typeOffre.parent IS NULL')
             ->orderBy('typeOffre.nom', 'ASC')
             ->getQuery()
@@ -52,7 +53,7 @@ class TypeOffreRepository extends ServiceEntityRepository
      */
     public function findByParent(int $id): array
     {
-        return $this->createQueryBuilder('typeOffre')
+        return $this->createQBL()
             ->andWhere('typeOffre.parent = :id')
             ->setParameter('id', $id)
             ->orderBy('typeOffre.nom', 'ASC')
@@ -66,7 +67,7 @@ class TypeOffreRepository extends ServiceEntityRepository
      */
     public function findByName(string $name): array
     {
-        return $this->createQueryBuilder('typeOffre')
+        return $this->createQBL()
             ->andWhere('typeOffre.nom LIKE :nom')
             ->setParameter('nom', '%'.$name.'%')
             ->orderBy('typeOffre.nom', 'ASC')
@@ -103,7 +104,7 @@ class TypeOffreRepository extends ServiceEntityRepository
      */
     public function findByReference(int $id): ?TypeOffre
     {
-        return $this->createQueryBuilder('typeOffre')
+        return $this->createQBL()
             ->andWhere('typeOffre.reference = :id')
             ->setParameter('id', $id)
             ->orderBy('typeOffre.nom', 'ASC')
@@ -113,12 +114,19 @@ class TypeOffreRepository extends ServiceEntityRepository
 
     public function findByUrn(?string $urn): ?TypeOffre
     {
-        return $this->createQueryBuilder('typeOffre')
+        return $this->createQBL()
             ->andWhere('typeOffre.urn = :urn')
             ->setParameter('urn', $urn)
             ->orderBy('typeOffre.nom', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function createQBL(): QueryBuilder
+    {
+        return $this->createQueryBuilder('typeOffre')
+            ->leftJoin('typeOffre.parent', 'parent', 'WITH')
+            ->addSelect('parent');
     }
 
     public function insert(object $object): void

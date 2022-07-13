@@ -44,12 +44,33 @@ class TypeOffreController extends AbstractController
     }
 
     #[Route(path: '/{id}/show', name: 'pivot_typeoffre_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, TypeOffre $typeoffre): Response
+    public function show(Request $request, TypeOffre $typeOffre): Response
     {
+        $lvl1 = $this->typeOffreRepository->findByParent($typeOffre->id);
+        foreach ($lvl1 as $lvl2) {
+            $lvl2->children = $this->typeOffreRepository->findByParent($lvl2->id);
+            foreach ($lvl2->children as $lvl3) {
+                $lvl3->children = $this->typeOffreRepository->findByParent($lvl3->id);
+                foreach ($this->typeOffreRepository->findByParent($lvl3->id) as $lvl4) {
+                    $lvl4->children = $this->typeOffreRepository->findByParent($lvl4->id);
+                    foreach ($this->typeOffreRepository->findByParent($lvl4->id) as $lvl5) {
+                        $lvl5->children = $this->typeOffreRepository->findByParent($lvl5->id);
+                        foreach ($this->typeOffreRepository->findByParent($lvl5->id) as $lvl6) {
+                            $lvl6->children = $this->typeOffreRepository->findByParent($lvl6->id);
+                            foreach ($this->typeOffreRepository->findByParent($lvl6->id) as $lvl7) {
+                                $lvl7->children = $this->typeOffreRepository->findByParent($lvl7->id);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $typeOffre->children = $lvl1;
+
         return $this->render(
             '@AcMarchePivot/typeoffre/show.html.twig',
             [
-                'typeOffre' => $typeoffre,
+                'typeOffre' => $typeOffre,
             ]
         );
     }
