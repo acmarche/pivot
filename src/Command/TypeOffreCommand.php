@@ -74,15 +74,15 @@ class TypeOffreCommand extends Command
                 $this->io->writeln($child->labelByLanguage('fr'));
                 $childObject = $this->createTypeOffre($child, $root);
                 $this->treatmentChild($childObject);
-                $this->treatmentClassification($childObject->idType);
+                $this->treatmentClassification($childObject);
             }
         }
     }
 
-    private function treatmentClassification(int $typeId)
+    private function treatmentClassification(TypeOffre $data)
     {
         $families = json_decode(
-            $this->pivotRemoteRepository->thesaurusCategories($typeId)
+            $this->pivotRemoteRepository->thesaurusCategories($data->idType)
         );
         //$this->io->writeln($this->pivotRemoteRepository->url_executed);
         /**
@@ -93,25 +93,20 @@ class TypeOffreCommand extends Command
             'AcMarche\Pivot\Entities\Family\Family[]',
         );
         foreach ($t as $family) {
-            $this->io->write('-- '.$family->labelByLanguage('fr'));
-            $this->io->writeln(' '.$family->urn);
+            $familyOffreType = $this->treatmentX($family, $data, 2);
             if (isset($family->spec)) {
                 foreach ($family->spec as $family2) {
                     //limite branche classification
                     if ($family2->urn == UrnList::CLASSIFICATION->value) {
-                        $this->io->write('---- '.$family2->labelByLanguage('fr'));
-                        $this->io->writeln(' '.$family2->urn);
+                        $family2OffreType = $this->treatmentX($family2, $familyOffreType, 4);
                         foreach ($family2->spec as $family3) {
-                            $this->io->write('------ '.$family3->labelByLanguage('fr'));
-                            $this->io->writeln(' '.$family3->urn);
+                            $family3OffreType = $this->treatmentX($family3, $family2OffreType, 6);
                             if (isset($family3->spec)) {
                                 foreach ($family3->spec as $family4) {
-                                    $this->io->write('-------- '.$family4->labelByLanguage('fr'));
-                                    $this->io->writeln(' '.$family4->urn);
+                                    $family4OffreType = $this->treatmentX($family4, $family3OffreType, 8);
                                     if (isset($family4->spec)) {
                                         foreach ($family4->spec as $family5) {
-                                            $this->io->write('---------- '.$family5->labelByLanguage('fr'));
-                                            $this->io->writeln(' '.$family5->urn);
+                                            $this->treatmentX($family5, $family4OffreType, 10);
                                         }
                                     }
                                 }
@@ -123,9 +118,14 @@ class TypeOffreCommand extends Command
         }
     }
 
-    private function treatmentX(Family $family) {
-        $this->io->write('---- '.$family->labelByLanguage('fr'));
+    private function treatmentX(Family $family, ?TypeOffre $typeOffre, int $niv): ?TypeOffre
+    {
+        $object = $this->createTypeOffre($family, $typeOffre);
+        $this->io->write(str_repeat('-', $niv).' '.$family->labelByLanguage('fr'));
         $this->io->writeln(' '.$family->urn);
+        $this->typeOffreRepository->persist($typeOffre);
+
+        return $object;
     }
 
     private function treatmentChild(TypeOffre $typeOffre): TypeOffre
@@ -140,6 +140,14 @@ class TypeOffreCommand extends Command
     private function createTypeOffre(Family $data, ?TypeOffre $root): TypeOffre
     {
         list($a, $b, $id) = explode(':', $data->urn);
+
+        if (!isset($data->value)) {
+            $data->value = 'null';
+        }
+
+        if (!is_int($id)) {
+            $id = 0;
+        }
 
         return new TypeOffre(
             $data->labelByLanguage('fr'),
