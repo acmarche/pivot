@@ -122,7 +122,7 @@ class TypeOffreCommand extends Command
         $object = $this->createTypeOffre($family, $typeOffre);
         $this->io->write(str_repeat('-', $niv).' '.$family->labelByLanguage('fr'));
         $this->io->writeln(' '.$family->urn);
-        $this->typeOffreRepository->persist($typeOffre);
+        $this->typeOffreRepository->persist($object);
 
         return $object;
     }
@@ -140,9 +140,7 @@ class TypeOffreCommand extends Command
     {
         list($a, $b, $id) = explode(':', $data->urn);
 
-        if (!isset($data->value)) {
-            $data->value = 'null';
-        }
+
 
         return new TypeOffre(
             $data->labelByLanguage('fr'),
