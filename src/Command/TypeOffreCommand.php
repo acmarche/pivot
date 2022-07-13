@@ -11,7 +11,6 @@ use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
-use AcMarche\Pivot\Spec\UrnTypeList;
 use AcMarche\Pivot\Spec\UrnUtils;
 use AcMarche\Pivot\Utils\GenerateClass;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -82,7 +81,7 @@ class TypeOffreCommand extends Command
     private function treatmentClassification(TypeOffre $data)
     {
         $families = json_decode(
-            $this->pivotRemoteRepository->thesaurusCategories($data->idType)
+            $this->pivotRemoteRepository->thesaurusCategories($data->typeId)
         );
         //$this->io->writeln($this->pivotRemoteRepository->url_executed);
         /**
@@ -143,10 +142,6 @@ class TypeOffreCommand extends Command
 
         if (!isset($data->value)) {
             $data->value = 'null';
-        }
-
-        if (!is_int($id)) {
-            $id = 0;
         }
 
         return new TypeOffre(
