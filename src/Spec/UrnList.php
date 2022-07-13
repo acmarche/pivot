@@ -32,4 +32,6 @@ enum UrnList: string
     case CONTACT_DIRECTION = "urn:lnk:contact:direction";
     case OFFRE_ENFANT = "urn:lnk:offre:enfant";
     case PATRIMOINE_NATUREL = "urn:fld:catdec:patrnat";
+    case CLASSIFICATION_LABEL = "urn:cat:classlab";
+    case CLASSIFICATION = "urn:cat:classlab:classif";
 }
