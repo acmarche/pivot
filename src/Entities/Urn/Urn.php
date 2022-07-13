@@ -3,14 +3,13 @@
 namespace AcMarche\Pivot\Entities\Urn;
 
 //https://organismes.tourismewallonie.be/doc-pivot-gest/liste-des-types-durn/
-use AcMarche\Pivot\Entities\Label;
 
 class Urn
 {
     public int $id;
     public string $urn;
     public string $code;
-    public int $order;
+    public int $typeId;
     public bool $deprecated = false;
     public string $type;
     public string $label;
@@ -27,7 +26,7 @@ class Urn
     ) {
         $this->urn = $urn;
         $this->code = $code;
-        $this->order = $order;
+        $this->typeId = $order;
         $this->id = $order;
         $this->deprecated = $deprecated;
         $this->type = $type;
