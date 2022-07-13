@@ -34,6 +34,12 @@ class PivotRepository
     ) {
     }
 
+    public function getOffresByType(array $typesOffre): array
+    {
+
+        return [];
+    }
+
     /**
      * @param TypeOffre[] $typesOffre
      * @return Offre[]
@@ -348,7 +354,7 @@ class PivotRepository
     public function getTypesRootForCreateTypesOffre(): array
     {
         $typesOffre = [];
-        if ($data = $this->pivotRemoteRepository->getThesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)) {
+        if ($data = $this->pivotRemoteRepository->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)) {
             $thesaurus = json_decode($data);
             foreach ($thesaurus->spec as $spec) {
                 $typeOffre = new TypeOffre($spec->label[0]->value, $spec->order, $spec->urn, null);
@@ -375,7 +381,7 @@ class PivotRepository
             default => ''
         };
 
-        $dataString = $this->pivotRemoteRepository->fetchSousTypes($parent->reference, $urn);
+        $dataString = $this->pivotRemoteRepository->thesaurusSousTypes($parent->reference, $urn);
 
         $data = json_decode($dataString);
         foreach ($data->spec as $spec) {
