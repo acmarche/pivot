@@ -59,6 +59,9 @@ class TypeOffreController extends AbstractController
                             $lvl6->children = $this->typeOffreRepository->findByParent($lvl6->id);
                             foreach ($this->typeOffreRepository->findByParent($lvl6->id) as $lvl7) {
                                 $lvl7->children = $this->typeOffreRepository->findByParent($lvl7->id);
+                                foreach ($this->typeOffreRepository->findByParent($lvl7->id) as $lvl8) {
+                                    $lvl8->children = $this->typeOffreRepository->findByParent($lvl8->id);
+                                }
                             }
                         }
                     }

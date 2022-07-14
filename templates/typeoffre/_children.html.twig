@@ -6,6 +6,8 @@
         <th>Lvl4</th>
         <th>Lvl5</th>
         <th>Lvl6</th>
+        <th>Lvl7</th>
+        <th>Lvl8</th>
     </tr>
     {% for lvl1 in typeOffre.children %}
         {% include '@AcMarchePivot/typeoffre/_line_children.html.twig' with {'typeOffre':lvl1, 'level':1} %}
@@ -19,6 +21,9 @@
                         {% include '@AcMarchePivot/typeoffre/_line_children.html.twig' with {'typeOffre':lvl5, 'level':5} %}
                         {% for lvl6 in lvl5.children %}
                             {% include '@AcMarchePivot/typeoffre/_line_children.html.twig' with {'typeOffre':lvl6, 'level':6} %}
+                            {% for lvl7 in lvl6.children %}
+                                {% include '@AcMarchePivot/typeoffre/_line_children.html.twig' with {'typeOffre':lvl7, 'level':7} %}
+                            {% endfor %}
                         {% endfor %}
                     {% endfor %}
                 {% endfor %}

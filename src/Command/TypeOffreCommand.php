@@ -105,7 +105,12 @@ class TypeOffreCommand extends Command
                                     $family4OffreType = $this->treatmentX($family4, $family3OffreType, 8);
                                     if (isset($family4->spec)) {
                                         foreach ($family4->spec as $family5) {
-                                            $this->treatmentX($family5, $family4OffreType, 10);
+                                            $family5OffreType = $this->treatmentX($family5, $family4OffreType, 10);
+                                            if (isset($family5->spec)) {
+                                                foreach ($family5->spec as $family6) {
+                                                    $this->treatmentX($family6, $family5OffreType, 12);
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -139,7 +144,6 @@ class TypeOffreCommand extends Command
     private function createTypeOffre(Family $data, ?TypeOffre $root): TypeOffre
     {
         list($a, $b, $id) = explode(':', $data->urn);
-
 
 
         return new TypeOffre(
