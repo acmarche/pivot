@@ -34,12 +34,6 @@ class PivotRepository
     ) {
     }
 
-    public function getOffresByType(array $typesOffre): array
-    {
-
-        return [];
-    }
-
     /**
      * @param TypeOffre[] $typesOffre
      * @return Offre[]
@@ -181,7 +175,7 @@ class PivotRepository
      * @return ResponseQuery|null
      * @throws \Psr\Cache\InvalidArgumentException|\Exception
      */
-    private function getAllDataFromRemote(): ?ResponseQuery
+    public function getAllDataFromRemote(): ?ResponseQuery
     {
         return $this->cache->get('pivotAllData55', function () {
             if ($dataString = $this->pivotRemoteRepository->query()) {
@@ -351,7 +345,7 @@ class PivotRepository
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      * @throws \Exception
      */
-    public function getTypesRootForCreateTypesOffre(): array
+    private function getTypesRootForCreateTypesOffre(): array
     {
         $typesOffre = [];
         if ($data = $this->pivotRemoteRepository->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)) {
@@ -373,7 +367,7 @@ class PivotRepository
      * @return TypeOffre[]
      * @throws \Exception
      */
-    public function getSousTypesForCreateTypesOffre(TypeOffre $parent): array
+    private function getSousTypesForCreateTypesOffre(TypeOffre $parent): array
     {
         $typesOffre = [];
         $urn = match ($parent->reference) {
