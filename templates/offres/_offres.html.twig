@@ -1,0 +1,26 @@
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Nom</th>
+        <th>Localité</th>
+        <th>Catégories</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for offre in offres %}
+        <tr>
+            <td>{{ offre.nom }}</td>
+            <td>
+                {% if offre.adresse %}
+                    {{ offre.adresse.localiteByLanguage }}
+                {% endif %}
+            </td>
+            <td class="text-muted">
+                {% for categorie in offre.categories %}
+                    {{ categorie.labelByLanguage }},
+                {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
