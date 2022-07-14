@@ -83,7 +83,7 @@ class TypeOffreCommand extends Command
         $families = json_decode(
             $this->pivotRemoteRepository->thesaurusCategories($data->typeId)
         );
-        //$this->io->writeln($this->pivotRemoteRepository->url_executed);
+        $this->io->writeln($this->pivotRemoteRepository->url_executed);
         /**
          * @var Family[] $t
          */
@@ -143,14 +143,15 @@ class TypeOffreCommand extends Command
 
     private function createTypeOffre(Family $data, ?TypeOffre $root): TypeOffre
     {
-        list($a, $b, $id) = explode(':', $data->urn);
+        $tab = explode(':', $data->urn);
 
+        $id = end($tab);
 
         return new TypeOffre(
             $data->labelByLanguage('fr'),
             $id,
             $data->order,
-            $data->value,
+            $data->value,//code
             $data->urn,
             $data->type,
             $root
