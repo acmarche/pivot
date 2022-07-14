@@ -1,11 +1,13 @@
 {% extends 'base5.html.twig' %}
 
+{% block title %}Pivot{% endblock %}
+
+{% block brand %}
+    <a class="navbar-brand" href="{{ path('pivot_home') }}" title="Accueil">
+        <i class="fas fa-home"></i> Pivot</a>
+{% endblock %}
+
 {% block menu_top %}
-    <li class="nav-item">
-        <a href="{{ path('pivot_home') }}" class="nav-link">
-            <i class="fas fa-search"></i> Home
-        </a>
-    </li>
     <li class="nav-item">
         <a href="{{ path('pivot_typeoffre_index') }}" class="nav-link">
             <i class="fas fa-search"></i> Types d'offre
