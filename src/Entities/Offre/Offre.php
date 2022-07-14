@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Entities\Offre;
 
-
 use AcMarche\Pivot\Entities\Communication\Adresse;
 use AcMarche\Pivot\Entities\LabelTrait;
 use AcMarche\Pivot\Entities\Specification\SpecData;
