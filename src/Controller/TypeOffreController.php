@@ -5,7 +5,9 @@ namespace AcMarche\Pivot\Controller;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Form\TypeOffreEditType;
 use AcMarche\Pivot\Form\TypeOffreSearchType;
+use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
+use AcMarche\Pivot\Utils\SortUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted(data: 'ROLE_PIVOT')]
 class TypeOffreController extends AbstractController
 {
-    public function __construct(private TypeOffreRepository $typeOffreRepository)
+    public function __construct(private TypeOffreRepository $typeOffreRepository,
+        private PivotRepository $pivotRepository,)
     {
     }
 
@@ -44,8 +47,9 @@ class TypeOffreController extends AbstractController
     }
 
     #[Route(path: '/{id}/show', name: 'pivot_typeoffre_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, TypeOffre $typeOffre): Response
+    public function show(TypeOffre $typeOffre): Response
     {
+        $offres = $this->pivotRepository->getOffres([$typeOffre]);
         $lvl1 = $this->typeOffreRepository->findByParent($typeOffre->id);
         foreach ($lvl1 as $lvl2) {
             $lvl2->children = $this->typeOffreRepository->findByParent($lvl2->id);
@@ -69,11 +73,13 @@ class TypeOffreController extends AbstractController
             }
         }
         $typeOffre->children = $lvl1;
+        $offres = SortUtils::sortOffres($offres);
 
         return $this->render(
             '@AcMarchePivot/typeoffre/show.html.twig',
             [
                 'typeOffre' => $typeOffre,
+                'offres' => $offres,
             ]
         );
     }
