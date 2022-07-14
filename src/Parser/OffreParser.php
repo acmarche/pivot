@@ -17,7 +17,8 @@ use AcMarche\Pivot\Spec\UrnUtils;
 
 class OffreParser
 {
-    use SpecTrait, ParserEventTrait;
+    use SpecTrait;
+    use ParserEventTrait;
 
     public function __construct(private UrnUtils $urnUtils)
     {
@@ -124,13 +125,14 @@ class OffreParser
             259 => UrnList::CATEGORIE_ATS,
             default => UrnList::CATEGORIE
         };
+
         $cats = $this->findByUrn($urn, true);
         foreach ($cats as $cat) {
             $info = $this->urnUtils->getInfosUrn($cat->urn);
             if ($info) {
                 $order               = $cat->order;
                 $labels              = $info->label;
-                $offre->categories[$cat->order] = new Category($cat->urn,$order, $labels);
+                $offre->categories[$cat->order] = new Category($cat->urn, $order, $labels);
             }
         }
     }
