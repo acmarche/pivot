@@ -6,6 +6,7 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Utils\SortUtils;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -24,7 +25,11 @@ class OffreController extends AbstractController
     #[Route(path: '/{id}/{urn}', name: 'pivot_offres')]
     public function index(TypeOffre $typeOffre, string $urn): Response
     {
-        $typeOffreUrn = $this->typeOffreRepository->findByUrn($urn);
+        try {
+            $typeOffreUrn = $this->typeOffreRepository->findByUrn($urn);
+        } catch (NonUniqueResultException $e) {
+            $typeOffreUrn = $typeOffre;
+        }
         $offres = $this->pivotRepository->getOffres([$typeOffre]);
         $offres = SortUtils::sortOffres($offres);
 

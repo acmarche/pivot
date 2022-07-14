@@ -112,6 +112,9 @@ class TypeOffreRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findByUrn(?string $urn): ?TypeOffre
     {
         return $this->createQBL()
