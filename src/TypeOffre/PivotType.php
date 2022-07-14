@@ -35,17 +35,17 @@ class PivotType
      * @param TypeOffre[] $pivotTypes
      * @return array
      */
-    public static function filterByReferencesOrUrns(array $data, array $typesOffre): array
+    public static function filterByTypeIdsOrUrns(array $data, array $typesOffre): array
     {
         $offres = [];
         if (count($typesOffre) < 1) {
             return $data;
         }
-        $references = array_column($typesOffre, 'reference');
+        $typeIds = array_column($typesOffre, 'typeId');
         $urns = array_column($typesOffre, 'urn');
         foreach ($data as $offre) {
             $specs = array_column($offre->spec, 'urn');
-            if (in_array($offre->typeOffre->idTypeOffre, $references) || count(array_intersect($urns, $specs)) > 0
+            if (in_array($offre->typeOffre->idTypeOffre, $typeIds) || count(array_intersect($urns, $specs)) > 0
             ) {
                 $offres[] = $offre;
             }

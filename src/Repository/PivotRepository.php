@@ -58,7 +58,7 @@ class PivotRepository
             }
         }
 
-        $offres = PivotType::filterByReferencesOrUrns($offres, $typesOffre);
+        $offres = PivotType::filterByTypeIdsOrUrns($offres, $typesOffre);
 
         array_map(function ($offre) {
             $this->pivotParser->parseOffre($offre);
@@ -370,12 +370,12 @@ class PivotRepository
     private function getSousTypesForCreateTypesOffre(TypeOffre $parent): array
     {
         $typesOffre = [];
-        $urn = match ($parent->reference) {
+        $urn = match ($parent->typeId) {
             9, 267, 258, 259 => $parent->code,
             default => ''
         };
 
-        $dataString = $this->pivotRemoteRepository->thesaurusSousTypes($parent->reference, $urn);
+        $dataString = $this->pivotRemoteRepository->thesaurusSousTypes($parent->typeId, $urn);
 
         $data = json_decode($dataString);
         foreach ($data->spec as $spec) {

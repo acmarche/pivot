@@ -79,16 +79,16 @@ class TypeOffreRepository extends ServiceEntityRepository
      * @param array $params
      * @return TypeOffre[]
      */
-    public function findByReferencesOrUrns(array $typesOffreData): array
+    public function findByIdsOrUrns(array $typesOffreData): array
     {
         $typesOffre = [];
-        foreach ($typesOffreData as $typeOffreReference) {
-            if ((int)$typeOffreReference) {
-                if ($typeOffre = $this->findByReference($typeOffreReference)) {
+        foreach ($typesOffreData as $typeOffreId) {
+            if ((int)$typeOffreId) {
+                if ($typeOffre = $this->findByTypeId($typeOffreId)) {
                     $typesOffre[] = $typeOffre;
                 }
             } else {
-                if ($typeOffre = $this->findByUrn($typeOffreReference)) {
+                if ($typeOffre = $this->findByUrn($typeOffreId)) {
                     $typesOffre[] = $typeOffre;
                 }
             }
@@ -102,10 +102,10 @@ class TypeOffreRepository extends ServiceEntityRepository
      * @return TypeOffre|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByReference(int $id): ?TypeOffre
+    public function findByTypeId(int $id): ?TypeOffre
     {
         return $this->createQBL()
-            ->andWhere('typeOffre.reference = :id')
+            ->andWhere('typeOffre.typeId = :id')
             ->setParameter('id', $id)
             ->orderBy('typeOffre.nom', 'ASC')
             ->getQuery()
