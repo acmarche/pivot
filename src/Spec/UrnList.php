@@ -20,8 +20,8 @@ enum UrnList: string
     case URL = "urn:fld:url";
     case CATEGORIE_EVENT = "urn:fld:catevt";
     case CATEGORIE_PDT = "urn:fld:catpdt";
-    const CATEGORIE_PRD = "urn:fld:catprd";
-    const CATEGORIE_ATS = "urn:fld:catats";
+    case CATEGORIE_PRD = "urn:fld:catprd";
+    case CATEGORIE_ATS = "urn:fld:catats";
     case CATEGORIE = "urn:fld:cat";
     case WEB = "urn:fld:urlweb";
     case HADES_ID = "urn:fld:idhades";
