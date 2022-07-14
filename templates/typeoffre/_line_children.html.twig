@@ -30,6 +30,8 @@
         {% endif %}
     </td>
     <td>
-        {{ typeOffre.urn }} | {{ typeOffre.typeId }} | {{ typeOffre.code }}
+        <a href="{{ path('pivot_offres', {'urn': typeOffre.urn}) }}">
+            {{ typeOffre.urn }} | {{ typeOffre.typeId }} | {{ typeOffre.code }}
+        </a>
     </td>
 </tr>

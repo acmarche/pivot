@@ -44,7 +44,7 @@ class DefaultController extends AbstractController
         );
     }
 
-    #[Route(path: '/offres', name: 'pivot_offres')]
+    #[Route(path: '/offres', name: 'pivot_all_offres')]
     public function offres(): Response
     {
         $hotels = $this->pivotRepository->getOffres([]);
