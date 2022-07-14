@@ -2,7 +2,9 @@
 
 namespace AcMarche\Pivot\Entities\Family;
 
-use AcMarche\Pivot\Entities\Label;//!!Laisser
+//!!Laisser
+use AcMarche\Pivot\Entities\Label;
+
 use AcMarche\Pivot\Entities\LabelTrait;
 
 class Family
@@ -13,7 +15,7 @@ class Family
     public int $order = 0;
     public bool $deprecated;
     public string $type;
-    public string $value;
+    public ?string $value = null;
     public bool $dynamic;
     public int $visibilite;
     /**
