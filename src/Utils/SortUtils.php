@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\Utils;
 
 use AcMarche\Pivot\Entities\Event\DateBeginEnd;
 use AcMarche\Pivot\Entities\Event\Event;
+use AcMarche\Pivot\Entities\Offre\Offre;
 
 class SortUtils
 {
@@ -54,5 +55,27 @@ class SortUtils
         );
 
         return $events;
+    }
+
+    /**
+     * @param Offre[] $offres
+     *
+     * @return Offre[]
+     */
+    public static function sortOffres(array $offres, string $language = 'fr', string $order = 'ASC'): array
+    {
+        usort(
+            $offres,
+            function ($offreA, $offreB) use ($language, $order) {
+                if ($order == 'ASC') {
+                    return $offreA->labelByLanguage($language) <=> $offreB->labelByLanguage($language);
+                } else {
+                    return $offreB->labelByLanguage($language) <=> $offreA->labelByLanguage($language);
+                }
+
+            }
+        );
+
+        return $offres;
     }
 }
