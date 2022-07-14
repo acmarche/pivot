@@ -3,23 +3,29 @@
 {% block body %}
 
     <div class="card">
-        <h3 class="card-header">{{ offres|length }} offre(s)</h3>
+        <h3 class="card-header">
+            {{ offres|length }} offre(s) dans
+            <strong>{{ typeOffreUrn.nom }}</strong> <span class="text-muted">{{ urn }}</span>
+        </h3>
         <div class="card-body">
-
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>Nom</th>
-                    <th>X</th>
-                    <th>Y</th>
+                    <th>Localité</th>
+                    <th>Catégories</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for offre in offres %}
                     <tr>
                         <td>{{ offre.nom }}</td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ offre.adresse.localiteByLanguage }}</td>
+                        <td class="text-muted">
+                            {% for categorie in offre.categories %}
+                                {{ categorie.labelByLanguage }},
+                            {% endfor %}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
