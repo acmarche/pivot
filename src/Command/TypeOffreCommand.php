@@ -145,7 +145,7 @@ class TypeOffreCommand extends Command
     {
         $tab = explode(':', $data->urn);
 
-        $id = end($tab);
+        $id = (int)end($tab);
 
         return new TypeOffre(
             $data->labelByLanguage('fr'),

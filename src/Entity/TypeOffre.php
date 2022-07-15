@@ -24,8 +24,8 @@ class TypeOffre
     public string $urn;
     #[ORM\Column(type: 'string', unique: false, nullable: true)]
     public ?string $code = null;
-    #[ORM\Column(type: 'string', nullable: false)]
-    public int|string $typeId;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    public int $typeId;
     #[ORM\ManyToOne(targetEntity: TypeOffre::class)]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     public ?TypeOffre $parent = null;
@@ -45,7 +45,7 @@ class TypeOffre
 
     public function __construct(
         string $nom,
-        int|string $typeId,
+        int $typeId,
         int $display_order,
         ?string $code,
         ?string $urn,
