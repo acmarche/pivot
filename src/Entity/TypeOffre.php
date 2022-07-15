@@ -26,6 +26,8 @@ class TypeOffre
     public ?string $code = null;
     #[ORM\Column(type: 'integer', nullable: true)]
     public int $typeId;
+    #[ORM\Column(type: 'integer', nullable: false)]
+    public int $countOffres = 0;
     #[ORM\ManyToOne(targetEntity: TypeOffre::class)]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     public ?TypeOffre $parent = null;

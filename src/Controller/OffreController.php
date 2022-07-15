@@ -3,6 +3,7 @@
 namespace AcMarche\Pivot\Controller;
 
 use AcMarche\Pivot\Entity\TypeOffre;
+use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Utils\SortUtils;
@@ -18,11 +19,12 @@ class OffreController extends AbstractController
 {
     public function __construct(
         private PivotRepository $pivotRepository,
+        private PivotRemoteRepository $pivotRemoteRepository,
         private TypeOffreRepository $typeOffreRepository,
     ) {
     }
 
-    #[Route(path: '/{id}/{urn}', name: 'pivot_offres')]
+    #[Route(path: '/index/{id}/{urn}', name: 'pivot_offres')]
     public function index(TypeOffre $typeOffre, string $urn): Response
     {
         try {
@@ -42,5 +44,13 @@ class OffreController extends AbstractController
                 'offres' => $offres,
             ]
         );
+    }
+
+    #[Route(path: '/json/{codeCgt}', name: 'pivot_offre_json')]
+    public function jsonAction(string $codeCgt): Response
+    {
+        $json = $this->pivotRemoteRepository->offreByCgt($codeCgt);
+
+        return new Response($json);
     }
 }
