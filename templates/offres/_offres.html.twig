@@ -5,6 +5,8 @@
         <th>Localité</th>
         <th>Code CGT</th>
         <th>Catégories</th>
+        <th>Pivot Gest</th>
+        <th>Json</th>
     </tr>
     </thead>
     <tbody>
@@ -16,11 +18,24 @@
                     {{ offre.adresse.localiteByLanguage }}
                 {% endif %}
             </td>
-            <td>{{ offre.codeCgt }}</td>
+            <td>
+                {{ offre.codeCgt }}
+            </td>
             <td class="text-muted">
                 {% for categorie in offre.categories %}
                     {{ categorie.labelByLanguage }},
                 {% endfor %}
+            </td>
+            <td>
+                <a href="https://pivotgest.tourismewallonie.be/PivotGest-4.0.0/detail.xhtml?codeCgt={{ offre.codeCgt }}"
+                   target="_blank">
+                    Fiche Pivot
+                </a>
+            </td>
+            <td>
+                <a href="{{ path('pivot_offre_json', {'codeCgt': offre.codeCgt}) }}" target="_blank">
+                    Json
+                </a>
             </td>
         </tr>
     {% endfor %}

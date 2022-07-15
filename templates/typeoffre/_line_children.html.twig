@@ -29,6 +29,7 @@
             {{ typeOffre.nom }}
         {% endif %}
     </td>
+    <td>{{ typeOffre.countOffres }}</td>
     <td>
         <a href="{{ path('pivot_offres', {'id': typeOffre.id, 'urn': typeOffre.urn}) }}">
             {{ typeOffre.urn }}
