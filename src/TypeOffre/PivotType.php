@@ -44,8 +44,10 @@ class PivotType
         $typeIds = array_column($typesOffre, 'typeId');
         $urns = array_column($typesOffre, 'urn');
         foreach ($data as $offre) {
-            $specs = array_column($offre->spec, 'urn');
-            if (in_array($offre->typeOffre->idTypeOffre, $typeIds) || count(array_intersect($urns, $specs)) > 0
+            $offreUrns = array_column($offre->spec, 'urn');
+            $offreUrnValues = array_filter(array_column($offre->spec, 'value'), fn ($value) => str_contains($value, 'urn'));
+            $offreUrns = array_merge($offreUrns, $offreUrnValues);
+            if (in_array($offre->typeOffre->idTypeOffre, $typeIds) || count(array_intersect($urns, $offreUrns)) > 0
             ) {
                 $offres[] = $offre;
             }
