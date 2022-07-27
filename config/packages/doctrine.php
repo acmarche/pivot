@@ -1,6 +1,5 @@
 <?php
 
-
 use Symfony\Config\DoctrineConfig;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\Env;
 
@@ -11,7 +10,10 @@ return static function (DoctrineConfig $doctrine) {
         ->url(env('DATABASE_PIVOT_URL')->resolve())
         ->charset('utf8mb4');
 
-    $emMda = $doctrine->orm()->entityManager('pivot');
+    $orm = $doctrine->orm();
+    $orm->autoGenerateProxyClasses(true);
+
+    $emMda = $orm->entityManager('pivot');
     $emMda->connection('pivot');
     $emMda->mapping('AcMarchePivot')
         ->isBundle(false)
