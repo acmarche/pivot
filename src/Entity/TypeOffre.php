@@ -83,13 +83,4 @@ class TypeOffre
             return $this->nom;
         }
     }
-
-    public function getIdentifiant(): string|int
-    {
-        if (!$this->parent) {
-            return $this->code;
-        } else {
-            return $this->urn;
-        }
-    }
 }
