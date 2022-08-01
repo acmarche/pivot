@@ -4,5 +4,5 @@ use Symfony\Config\TwigConfig;
 
 return static function (TwigConfig $twig) {
     $twig
-        ->path('%kernel.project_dir%/src/AcMarche/Rescam/templates', 'AcMarcheRescam');
+        ->path('%kernel.project_dir%/src/AcMarche/Pivot/templates', 'AcMarchePivot');
 };
