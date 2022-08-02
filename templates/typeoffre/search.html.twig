@@ -18,12 +18,12 @@
                 {% for typeOffre in typesOffre %}
                     <tr>
                         <td>{{ typeOffre }}</td>
-                        <td>{{ typeOffre.identifiant }}</td>
+                        <td>{{ typeOffre.urn }}</td>
                         <td>
                             {% include '@AcMarchePivot/typeoffre/_flags.html.twig' %}
                         </td>
                         <td>
-                            {% if  typeOffre.identifiant %}
+                            {% if  typeOffre.urn %}
                                 <a href="{{ path('pivot_typeoffre_edit', {'id': typeOffre.id}) }}" title="Traduire">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>

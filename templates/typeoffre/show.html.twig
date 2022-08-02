@@ -3,7 +3,10 @@
 {% block body %}
 
     <div class="card">
-        <h3 class="card-header">{{ typeOffre.nom }}</h3>
+        <div class="card-header">
+            <h3>{{ typeOffre.nom }}</h3>
+            <span class="text-muted">{{ typeOffre.urn }}</span>
+        </div>
         <div class="card-body">
             {% include '@AcMarchePivot/typeoffre/_actions.html.twig' %}
             <table class="table table-bordered">
