@@ -126,6 +126,20 @@ class TypeOffreRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param string $urn
+     * @return TypeOffre[]
+     */
+    public function findsByUrn(string $urn): array
+    {
+        return $this->createQBL()
+            ->andWhere('typeOffre.urn = :urn')
+            ->setParameter('urn', $urn)
+            ->orderBy('typeOffre.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function createQBL(): QueryBuilder
     {
         return $this->createQueryBuilder('typeOffre')
