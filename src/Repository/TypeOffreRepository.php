@@ -65,13 +65,14 @@ class TypeOffreRepository extends ServiceEntityRepository
      * @param string $name
      * @return TypeOffre[]
      */
-    public function findByName(string $name): array
+    public function findByName(string $name, int $max = 20): array
     {
         return $this->createQBL()
             ->andWhere('typeOffre.nom LIKE :nom')
             ->setParameter('nom', '%'.$name.'%')
             ->orderBy('typeOffre.nom', 'ASC')
             ->getQuery()
+            ->setMaxResults($max)
             ->getResult();
     }
 
