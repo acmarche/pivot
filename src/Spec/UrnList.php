@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Spec;
 
 /**
  * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/urn;fmt=json
+ * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:specculi;fmt=json
  */
 enum UrnList: string
 {
@@ -34,4 +35,6 @@ enum UrnList: string
     case PATRIMOINE_NATUREL = "urn:fld:catdec:patrnat";
     case CLASSIFICATION_LABEL = "urn:cat:classlab";
     case CLASSIFICATION = "urn:cat:classlab:classif";
+    case HERGEMENT = "urn:fam:1";
+    case CULINAIRE = "urn:fld:specculi";
 }
