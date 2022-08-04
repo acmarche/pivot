@@ -116,7 +116,7 @@ class TypeOffreRepository extends ServiceEntityRepository
     /**
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByUrn(?string $urn): ?TypeOffre
+    public function findByUrn(string $urn): ?TypeOffre
     {
         return $this->createQBL()
             ->andWhere('typeOffre.urn = :urn')
