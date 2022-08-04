@@ -340,6 +340,25 @@ class PivotRepository
     }
 
     /**
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/9/urn:fld:catevt;fmt=json
+     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=json
+     * @return Family[]
+     * @throws \Exception
+     */
+    public function thesaurusChildren(int $typeOffre, string $urn): array
+    {
+        $familiesObject = json_decode($this->pivotRemoteRepository->thesaurus('typeofr/'.$typeOffre.'/'.$urn));
+        if (!isset($familiesObject->spec[0]->spec)) {
+            return [];
+        }
+
+        return $this->pivotSerializer->deserializeToClass(
+            json_encode($familiesObject->spec[0]->spec),
+            'AcMarche\Pivot\Entities\Family\Family[]',
+        );
+    }
+
+    /**
      * https://organismes.tourismewallonie.be/doc-pivot-gest/liste-des-types-durn/
      * @return TypeOffre[]
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
