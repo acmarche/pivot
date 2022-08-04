@@ -13,9 +13,9 @@
         {% include '@AcMarchePivot/typeoffre/_flags.html.twig' %}
     </td>
     <td>
-        {% if typeOffre.identifiant %}
+        {% if typeOffre.urn %}
             <a href="{{ path('pivot_typeoffre_show', {'id': typeOffre.id}) }}" title="Détails">
-                {{ typeOffre.identifiant }}
+                {{ typeOffre.urn }}
             </a>
         {% endif %}
     </td>
