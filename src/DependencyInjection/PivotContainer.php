@@ -21,15 +21,27 @@ class PivotContainer
             Debug::enable();
         }
         $env = WP_DEBUG ? 'dev' : 'prod';
+
+        /**
+         * todo dir
+         * mode hors sf
+         */
+        if (!isset($_SERVER['APP_CACHE_DIR'])) {
+            $_SERVER['APP_CACHE_DIR'] = '/var/www/visit/var/cache';
+        }
+        if (!isset($_SERVER['APP_LOG_DIR'])) {
+            $_SERVER['APP_LOG_DIR'] = '/var/www/visit/var/log';
+        }
+
         $kernel = new Kernel($env, WP_DEBUG);
         $kernel->boot();
         $container = $kernel->getContainer();
 
         $loader = $container->get('dotenv');
-        // AcMarche/Pivot
         $projectDir = $kernel->getProjectDir();
+
         // loads .env, .env.local, and .env.$APP_ENV.local or .env.$APP_ENV
-        $loader->loadEnv($projectDir.'/../../.env');
+        $loader->loadEnv($projectDir.'/.env');
 
         return $container;
     }
