@@ -23,6 +23,8 @@ enum UrnList: string
     case CATEGORIE_PDT = "urn:fld:catpdt";
     case CATEGORIE_PRD = "urn:fld:catprd";
     case CATEGORIE_ATS = "urn:fld:catats";
+    case CATEGORIE_DECOUVERTE = "urn:fld:catdec";
+    case CATEGORIE_PATRIMOINE_BATI = "urn:fld:catdec:patrbati";
     case CATEGORIE = "urn:fld:cat";
     case WEB = "urn:fld:urlweb";
     case HADES_ID = "urn:fld:idhades";
