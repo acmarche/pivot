@@ -2,9 +2,9 @@
 
 namespace AcMarche\Pivot\DependencyInjection;
 
-use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
+use AcMarche\Pivot\Repository\TypeOffreRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ErrorHandler\Debug;
 
@@ -23,21 +23,21 @@ class PivotContainer
         $env = WP_DEBUG ? 'dev' : 'prod';
 
         /**
-         * todo dir
          * mode hors sf
          */
-        if (!isset($_SERVER['APP_CACHE_DIR'])) {
-            $_SERVER['APP_CACHE_DIR'] = '/var/www/visit/var/cache';
+        $dir = dirname(__DIR__).'/../../../../';
+        if ( ! isset($_SERVER['APP_CACHE_DIR'])) {
+            $_SERVER['APP_CACHE_DIR'] = $dir.'var/cache';
         }
-        if (!isset($_SERVER['APP_LOG_DIR'])) {
-            $_SERVER['APP_LOG_DIR'] = '/var/www/visit/var/log';
+        if ( ! isset($_SERVER['APP_LOG_DIR'])) {
+            $_SERVER['APP_LOG_DIR'] = $dir.'var/log';
         }
 
         $kernel = new Kernel($env, WP_DEBUG);
         $kernel->boot();
         $container = $kernel->getContainer();
 
-        $loader = $container->get('dotenv');
+        $loader     = $container->get('dotenv');
         $projectDir = $kernel->getProjectDir();
 
         // loads .env, .env.local, and .env.$APP_ENV.local or .env.$APP_ENV
