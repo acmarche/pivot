@@ -15,14 +15,12 @@ class PivotType
      */
     public static function filterByTypes(ResponseQuery $data, array $typesOffre): array
     {
+        if (count($typesOffre) === 0) {
+            return $data->offre;
+        }
         $offres = [];
-        $count = count($typesOffre);
         foreach ($data->offre as $row) {
-            if ($count > 0) {
-                if (in_array($row->typeOffre->idTypeOffre, $typesOffre)) {
-                    $offres[] = $row;
-                }
-            } else {
+            if (in_array($row->typeOffre->idTypeOffre, $typesOffre)) {
                 $offres[] = $row;
             }
         }
@@ -44,10 +42,24 @@ class PivotType
         $typeIds = array_column($typesOffre, 'typeId');
         $urns = array_column($typesOffre, 'urn');
         foreach ($data as $offre) {
+            if (in_array($offre->typeOffre->idTypeOffre, $typeIds)) {
+                $offres[] = $offre;
+                continue;
+            }
+            foreach ($urns as $urn) {
+                var_dump($urn);
+                if (str_contains($offre->dataRaw, $urn)) {
+                    $offres[] = $offre;
+                    break;
+                }
+            }
             $offreUrns = array_column($offre->spec, 'urn');
-            $offreUrnValues = array_filter(array_column($offre->spec, 'value'), fn ($value) => str_contains($value, 'urn'));
+            $offreUrnValues = array_filter(
+                array_column($offre->spec, 'value'),
+                fn($value) => str_contains($value, 'urn')
+            );
             $offreUrns = array_merge($offreUrns, $offreUrnValues);
-            if (in_array($offre->typeOffre->idTypeOffre, $typeIds) || count(array_intersect($urns, $offreUrns)) > 0
+            if (count(array_intersect($urns, $offreUrns)) > 0
             ) {
                 $offres[] = $offre;
             }
