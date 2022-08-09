@@ -46,8 +46,6 @@ class PivotContainer
         // loads .env, .env.local, and .env.$APP_ENV.local or .env.$APP_ENV
         $loader->loadEnv($projectDir.'/.env');
 
-        $container->setParameter('projectDir2', $projectDir);
-
         return $container;
     }
 
