@@ -44,6 +44,7 @@ class TypeOffre
      * @var TypeOffre[] $children
      */
     public array $children = [];
+    public ?string $url = null;
 
     public function __construct(
         string $nom,
