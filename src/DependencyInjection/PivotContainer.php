@@ -19,10 +19,10 @@ class PivotContainer
     {
         if (defined('WP_DEBUG') && WP_DEBUG) {
             Debug::enable();
-            $env =  'dev';
-        }
-        else {
-            $env =  'prod';
+            $env = 'dev';
+        } else {
+            define('WP_DEBUG', false);
+            $env = 'prod';
         }
 
         /**
