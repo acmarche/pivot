@@ -41,19 +41,19 @@ class PivotType
         }
         $typeIds = array_column($typesOffre, 'typeId');
         $urns = array_column($typesOffre, 'urn');
+
         foreach ($data as $offre) {
             if (in_array($offre->typeOffre->idTypeOffre, $typeIds)) {
                 $offres[] = $offre;
                 continue;
             }
             foreach ($urns as $urn) {
-                var_dump($urn);
                 if (str_contains($offre->dataRaw, $urn)) {
                     $offres[] = $offre;
                     break;
                 }
             }
-            $offreUrns = array_column($offre->spec, 'urn');
+          /*  $offreUrns = array_column($offre->spec, 'urn');
             $offreUrnValues = array_filter(
                 array_column($offre->spec, 'value'),
                 fn($value) => str_contains($value, 'urn')
@@ -62,7 +62,7 @@ class PivotType
             if (count(array_intersect($urns, $offreUrns)) > 0
             ) {
                 $offres[] = $offre;
-            }
+            }*/
         }
 
         return $offres;
