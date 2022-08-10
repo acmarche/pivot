@@ -21,7 +21,9 @@ class PivotContainer
             Debug::enable();
             $env = 'dev';
         } else {
-            define('WP_DEBUG', false);
+            if ( ! defined('WP_DEBUG')) {
+                define('WP_DEBUG', false);
+            }
             $env = 'prod';
         }
 
