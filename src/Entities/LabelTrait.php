@@ -25,6 +25,6 @@ trait LabelTrait
             }
         }
 
-        return 'Title found';
+        return 'Title not found';
     }
 }
