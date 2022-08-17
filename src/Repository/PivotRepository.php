@@ -15,8 +15,9 @@ use AcMarche\Pivot\Parser\PivotSerializer;
 use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
-use AcMarche\Pivot\TypeOffre\PivotType;
+use AcMarche\Pivot\TypeOffre\FilterUtils;
 use AcMarche\Pivot\Utils\SortUtils;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -39,7 +40,7 @@ class PivotRepository
      * @return Offre[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function getOffres(array $typesOffre): array
+    public function getOffres(array $typesOffre, bool $parse = true): array
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
@@ -58,14 +59,19 @@ class PivotRepository
             }
         }
 
-        $offres = PivotType::filterByTypeIdsOrUrns($offres, $typesOffre);
+        if (count($typesOffre) > 0) {
+            $typeIds = array_column($typesOffre, 'typeId');
+            $urns = array_column($typesOffre, 'urn');
+            $offres = FilterUtils::filterByTypeIdsOrUrns($offres, $typeIds, $urns);
+        }
 
-        array_map(function ($offre) {
-            $this->pivotParser->parseOffre($offre);
-        }, $offres);
-
-        $this->parseRelOffres($offres);
-        $this->parseRelOffresTgt($offres);
+        if ($parse) {
+            array_map(function ($offre) {
+                $this->pivotParser->parseOffre($offre);
+            }, $offres);
+            $this->parseRelOffres($offres);
+            $this->parseRelOffresTgt($offres);
+        }
 
         return $offres;
     }
@@ -78,7 +84,7 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = PivotType::filterByTypes($responseQuery, [UrnTypeList::evenement()->typeId]);
+        $offresShort = FilterUtils::filterByTypeIdsOrUrns($responseQuery->offre, [UrnTypeList::evenement()->typeId], []);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->getOffreByCgt(
                 $offreShort->codeCgt,
@@ -209,13 +215,15 @@ class PivotRepository
                 $images = $this->findByUrn(UrnList::URL);
                 if (count($images) > 0) {
                     foreach ($images as $image) {
-                        $offre->images[] = $image->value;
+                        $value = str_replace("http:", "https:", $image->value);
+                        $offre->images[] = $value;
                     }
                 }
                 $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL, true);
                 if (count($images) > 0) {
                     foreach ($images as $image) {
-                        $offre->images[] = $image->value;
+                        $value = str_replace("http:", "https:", $image->value);
+                        $offre->images[] = $value;
                     }
                 }
                 if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
@@ -279,17 +287,22 @@ class PivotRepository
     }
 
     /**
-     * @param Offre $eventReffer
-     *
+     * @param Offre $referringOffer
      * @return Offre[]
+     * @throws InvalidArgumentException
      */
-    public function getSameOffres(Offre $offreReffer): array
+    public function getSameOffres(Offre $referringOffer): array
     {
-        $typesOffre = [$offreReffer->typeOffre->idTypeOffre];
+        $ids = [$referringOffer->typeOffre->idTypeOffre];
+        $urns = [];
+        foreach ($referringOffer->categories as $category) {
+            $urns[] = $category->urn;
+        }
         $data = [];
-        $offres = $this->getOffres($typesOffre);
+        $offres = FilterUtils::filterByTypeIdsOrUrns($this->getOffres([]), $ids, $urns);
+
         foreach ($offres as $offre) {
-            if ($offreReffer->codeCgt != $offre->codeCgt) {
+            if ($referringOffer->codeCgt != $offre->codeCgt) {
                 $data[] = $offre;
             }
         }
