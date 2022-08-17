@@ -132,7 +132,7 @@ class TypeOffreCommand extends Command
 
     private function treatmentChild(TypeOffre $typeOffre): TypeOffre
     {
-        if (!$this->typeOffreRepository->findByUrn($typeOffre->urn)) {
+        if (!$this->typeOffreRepository->findOneByUrn($typeOffre->urn)) {
             $this->typeOffreRepository->persist($typeOffre);
         }
 
