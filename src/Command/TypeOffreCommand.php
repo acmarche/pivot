@@ -12,7 +12,6 @@ use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Spec\SpecTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnUtils;
-use AcMarche\Pivot\Utils\GenerateClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,7 +31,6 @@ class TypeOffreCommand extends Command
     private OutputInterface $output;
 
     public function __construct(
-        private GenerateClass $generateClass,
         private PivotRepository $pivotRepository,
         private PivotRemoteRepository $pivotRemoteRepository,
         private TypeOffreRepository $typeOffreRepository,
