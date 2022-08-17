@@ -28,7 +28,7 @@ class OffreController extends AbstractController
     public function index(TypeOffre $typeOffre, string $urn): Response
     {
         try {
-            $typeOffreUrn = $this->typeOffreRepository->findByUrn($urn);
+            $typeOffreUrn = $this->typeOffreRepository->findOneByUrn($urn);
         } catch (NonUniqueResultException $e) {
             $typeOffreUrn = $typeOffre;
         }

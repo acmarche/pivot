@@ -89,7 +89,7 @@ class TypeOffreRepository extends ServiceEntityRepository
                     $typesOffre[] = $typeOffre;
                 }
             } else {
-                if ($typeOffre = $this->findByUrn($typeOffreId)) {
+                if ($typeOffre = $this->findOneByUrn($typeOffreId)) {
                     $typesOffre[] = $typeOffre;
                 }
             }
@@ -116,7 +116,7 @@ class TypeOffreRepository extends ServiceEntityRepository
     /**
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByUrn(string $urn): ?TypeOffre
+    public function findOneByUrn(string $urn): ?TypeOffre
     {
         return $this->createQBL()
             ->andWhere('typeOffre.urn = :urn')
@@ -130,7 +130,7 @@ class TypeOffreRepository extends ServiceEntityRepository
      * @param string $urn
      * @return TypeOffre[]
      */
-    public function findsByUrn(string $urn): array
+    public function findByUrn(string $urn): array
     {
         return $this->createQBL()
             ->andWhere('typeOffre.urn = :urn')
