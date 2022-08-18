@@ -17,10 +17,15 @@ class PivotContainer
 
     static function init(): ContainerInterface
     {
-        if (WP_DEBUG) {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
             Debug::enable();
+            $env = 'dev';
+        } else {
+            if ( ! defined('WP_DEBUG')) {
+                define('WP_DEBUG', false);
+            }
+            $env = 'prod';
         }
-        $env = WP_DEBUG ? 'dev' : 'prod';
 
         /**
          * mode hors sf
