@@ -11,6 +11,7 @@ class FilterUtils
      * @param Offre[]|OffreShort[] $data
      * @param string[] $typeIds
      * @param string[] $urns
+     *
      * @return array
      */
     public static function filterByTypeIdsOrUrns(array $data, array $typeIds, array $urns): array
@@ -26,6 +27,24 @@ class FilterUtils
                 if (str_contains($offre->dataRaw, $urn)) {
                     $offres[] = $offre;
                 }
+            }
+        }
+
+        return $offres;
+    }
+
+    /**
+     * @param OffreShort[] $data
+     * @param string[] $typeIds
+     *
+     * @return array
+     */
+    public static function filterByTypeIds(array $data, array $typeIds): array
+    {
+        $offres = [];
+        foreach ($data as $row) {
+            if (in_array($row->typeOffre->idTypeOffre, $typeIds)) {
+                $offres[] = $row;
             }
         }
 

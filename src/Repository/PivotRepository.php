@@ -84,7 +84,7 @@ class PivotRepository
     {
         $events = [];
         $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = FilterUtils::filterByTypeIdsOrUrns($responseQuery->offre, [UrnTypeList::evenement()->typeId], []);
+        $offresShort = FilterUtils::filterByTypeIds($responseQuery->offre, [UrnTypeList::evenement()->typeId], []);
         foreach ($offresShort as $offreShort) {
             $resultOfferDetail = $this->getOffreByCgt(
                 $offreShort->codeCgt,
