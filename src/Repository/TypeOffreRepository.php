@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Entity\TypeOffre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -77,15 +78,31 @@ class TypeOffreRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array $params
+     * @param string $name
      * @return TypeOffre[]
+     */
+    public function findByNameOrUrn(string $name, int $max = 20): array
+    {
+        return $this->createQBL()
+            ->andWhere('typeOffre.nom LIKE :nom OR typeOffre.urn LIKE :nom')
+            ->setParameter('nom', '%'.$name.'%')
+            ->orderBy('typeOffre.nom', 'ASC')
+            ->getQuery()
+            ->setMaxResults($max)
+            ->getResult();
+    }
+
+    /**
+     * @param array|string[] $typesOffreData
+     * @return TypeOffre[]
+     * @throws NonUniqueResultException
      */
     public function findByIdsOrUrns(array $typesOffreData): array
     {
         $typesOffre = [];
         foreach ($typesOffreData as $typeOffreId) {
             if ((int)$typeOffreId) {
-                if ($typeOffre = $this->findByTypeId($typeOffreId)) {
+                if ($typeOffre = $this->findOneByTypeId($typeOffreId)) {
                     $typesOffre[] = $typeOffre;
                 }
             } else {
@@ -103,7 +120,7 @@ class TypeOffreRepository extends ServiceEntityRepository
      * @return TypeOffre|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findByTypeId(int $id): ?TypeOffre
+    public function findOneByTypeId(int $id): ?TypeOffre
     {
         return $this->createQBL()
             ->andWhere('typeOffre.typeId = :id')
