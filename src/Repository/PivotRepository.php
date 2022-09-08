@@ -60,7 +60,7 @@ class PivotRepository
         }
 
         if (count($typesOffre) > 0) {
-            $typeIds = array_column($typesOffre, 'typeId');
+            $typeIds = FilterUtils::extractIds($typesOffre);
             $urns = array_column($typesOffre, 'urn');
             $offres = FilterUtils::filterByTypeIdsOrUrns($offres, $typeIds, $urns);
         }
