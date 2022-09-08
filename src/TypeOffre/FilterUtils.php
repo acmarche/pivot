@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\TypeOffre;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Offre\OffreShort;
+use AcMarche\Pivot\Entity\TypeOffre;
 
 class FilterUtils
 {
@@ -25,14 +26,14 @@ class FilterUtils
                 }
             }
             foreach ($urns as $urn) {
-                if (str_contains($offre->dataRaw, $urn.',')) {
+                if (str_contains($offre->dataRaw, $urn)) {
                     $offres[$offre->codeCgt] = $offre;
                     break;
                 }
             }
         }
 
-        return array_values($offres);//pour js
+        return array_values($offres);//reset keys for js
     }
 
     /**
@@ -51,5 +52,21 @@ class FilterUtils
         }
 
         return $offres;
+    }
+
+    /**
+     * @param array|TypeOffre[] $typesOffre
+     * @return array|int[]
+     */
+    public static function extractIds(array $typesOffre): array
+    {
+        $ids = [];
+        foreach ($typesOffre as $typeOffre) {
+            if ($typeOffre->typeId > 0) {
+                $ids[] = $typeOffre->typeId;
+            }
+        }
+
+        return $ids;
     }
 }
