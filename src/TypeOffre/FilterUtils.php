@@ -20,13 +20,13 @@ class FilterUtils
         foreach ($offresToFilter as $offre) {
             foreach ($typeIds as $typeId) {
                 if (preg_match( '#"idTypeOffre":'.$typeId.',#', $offre->dataRaw)) {
-                    $offres[$offre->codeCgt] = $offre;
+                    $offres[] = $offre;
                     break;
                 }
             }
             foreach ($urns as $urn) {
                 if (str_contains($offre->dataRaw, $urn.',')) {
-                    $offres[$offre->codeCgt] = $offre;
+                    $offres[] = $offre;
                     break;
                 }
             }
