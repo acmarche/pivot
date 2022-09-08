@@ -8,18 +8,18 @@ use AcMarche\Pivot\Entities\Offre\OffreShort;
 class FilterUtils
 {
     /**
-     * @param Offre[]|OffreShort[] $data
+     * @param Offre[]|OffreShort[] $offresToFilter
      * @param string[] $typeIds
      * @param string[] $urns
      *
      * @return array
      */
-    public static function filterByTypeIdsOrUrns(array $data, array $typeIds, array $urns): array
+    public static function filterByTypeIdsOrUrns(array $offresToFilter, array $typeIds, array $urns): array
     {
         $offres = [];
-        foreach ($data as $offre) {
+        foreach ($offresToFilter as $offre) {
             foreach ($typeIds as $typeId) {
-                if (str_contains($offre->dataRaw, '"idTypeOffre": '.$typeId)) {
+                if (str_contains($offre->dataRaw, '"idTypeOffre":'.$typeId)) {
                     $offres[] = $offre;
                 }
             }
