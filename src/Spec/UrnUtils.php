@@ -10,7 +10,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class UrnUtils
 {
-    use SpecTrait;
+    use SpecSearchTrait;
 
     /**
      * @var UrnDefinition[]
@@ -22,23 +22,6 @@ class UrnUtils
         private SerializerInterface $serializer,
         private CacheInterface $cache
     ) {
-    }
-
-    /**
-     * @return array|UrnDefinition[]
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface|\Psr\Cache\InvalidArgumentException
-     */
-    public function loadAll(): array
-    {
-        return $this->cache->get('54alkllUrnsdsd789', function () {
-            if ($data = $this->pivotRemoteRepository->thesaurus('urn')) {
-                $urnResponse = $this->serializer->deserialize($data, UrnResponse::class, 'json');
-
-                return $urnResponse->spec;
-            }
-
-            return [];
-        });
     }
 
     public function getInfosUrn(string $urnKey, bool $value = false): ?UrnDefinition
@@ -58,7 +41,23 @@ class UrnUtils
         }
 
         return null;
+    }
 
+    /**
+     * @return array|UrnDefinition[]
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface|\Psr\Cache\InvalidArgumentException
+     */
+    private function loadAll(): array
+    {
+        return $this->cache->get('54alkllUrnsdsd789', function () {
+            if ($data = $this->pivotRemoteRepository->thesaurus('urn')) {
+                $urnResponse = $this->serializer->deserialize($data, UrnResponse::class, 'json');
+
+                return $urnResponse->spec;
+            }
+
+            return [];
+        });
     }
 
 }
