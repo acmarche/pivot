@@ -8,7 +8,7 @@ use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Event\EventUtils;
-use AcMarche\Pivot\Spec\SpecTrait;
+use AcMarche\Pivot\Spec\SpecSearchTrait;
 use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnList;
@@ -17,7 +17,7 @@ use AcMarche\Pivot\Spec\UrnUtils;
 
 class OffreParser
 {
-    use SpecTrait;
+    use SpecSearchTrait;
     use ParserEventTrait;
 
     public function __construct(private UrnUtils $urnUtils)
@@ -30,29 +30,31 @@ class OffreParser
         foreach ($this->specs as $spec) {
             $offre->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
         }
-        $offre->homepage = $this->findByUrnReturnValue(UrnList::HOMEPAGE);
-        $offre->active   = $this->findByUrnReturnValue(UrnList::ACTIVE);
+        $offre->homepage = $this->findByUrnReturnValue(UrnList::HOMEPAGE->value);
+        $offre->active = $this->findByUrnReturnValue(UrnList::ACTIVE->value);
 
-        foreach ($this->findByType(SpecTypeEnum::EMAIL) as $spec) {
+        foreach ($this->findByUrn(SpecTypeEnum::EMAIL->value,"type") as $spec) {
             $offre->emails[] = $spec->value;
         }
-        foreach ($this->findByType(SpecTypeEnum::TEL) as $spec) {
+        foreach ($this->findByUrn(SpecTypeEnum::TEL->value,"type") as $spec) {
             $offre->tels[] = $spec->value;
         }
 
-        $offre->descriptions = $this->findByUrnCat(UrnCatList::DESCRIPTION);
+        $offre->descriptions = $this->findByUrn(UrnCatList::DESCRIPTION->value, "urnCat");
+        $t = $this->findByUrn(UrnCatList::DESCRIPTION_MARKETING->value);
+        dump($t);
 
-        $offre->tarifs = $this->findByUrn(UrnList::TARIF);
-        $offre->webs   = $this->findByUrn(UrnList::WEB);
-        $classements   = $this->findByUrnSubCat(UrnSubCatList::CLASSIF);
+        $offre->tarifs = $this->findByUrn(UrnList::TARIF->value);
+        $offre->webs = $this->findByUrn(UrnList::WEB->value);
+        $classements = $this->findByUrn(UrnSubCatList::CLASSIF->value, "urnSubCat");
         foreach ($classements as $classement) {
             $offre->classements[] = new SpecInfo($this->urnUtils->getInfosUrn($classement->urn), $classement);
         }
-        $offre->hades_ids      = $this->findByUrn(UrnList::HADES_ID);
-        $offre->communications = $this->findByUrnCat(UrnCatList::COMMUNICATION);
-        $offre->adresse_rue    = $this->findByUrn(UrnList::ADRESSE_RUE);
-        $offre->equipements    = $this->findByUrnCat(UrnCatList::EQUIPEMENTS);
-        $offre->accueils       = $this->findByUrnCat(UrnCatList::ACCUEIL);
+        $offre->hades_ids = $this->findByUrn(UrnList::HADES_ID->value);
+        $offre->communications = $this->findByUrn(UrnCatList::COMMUNICATION->value, "urnCat");
+        $offre->adresse_rue = $this->findByUrn(UrnList::ADRESSE_RUE->value);
+        $offre->equipements = $this->findByUrn(UrnCatList::EQUIPEMENTS->value, "urnCat");
+        $offre->accueils = $this->findByUrn(UrnCatList::ACCUEIL->value, "urnCat");
 
         $this->setCategories($offre);
         $this->setNameByLanguages($offre);
@@ -76,10 +78,10 @@ class OffreParser
         $this->parseOffre($event);
 
         $event->dates = $this->getDates();
-        $fistDate     = $event->firstDate();
+        $fistDate = $event->firstDate();
         if ($fistDate) {
             $event->dateBegin = $fistDate->date_begin;
-            $event->dateEnd   = $fistDate->date_end;
+            $event->dateEnd = $fistDate->date_end;
         }
 
         if ($removeObsolete) {
@@ -89,10 +91,10 @@ class OffreParser
                 }
             }
             $event->dates = array_values($event->dates);//reset index
-            $fistDate     = $event->firstDate();
+            $fistDate = $event->firstDate();
             if ($fistDate) {
                 $event->dateBegin = $fistDate->date_begin;
-                $event->dateEnd   = $fistDate->date_end;
+                $event->dateEnd = $fistDate->date_end;
             }
         }
         $this->setCategories($event);
@@ -101,18 +103,18 @@ class OffreParser
     private function setNameByLanguages(Offre $offre)
     {
         $labels = [];
-        $noms   = $this->findByUrnSubCat(UrnSubCatList::NOM_OFFRE);
+        $noms = $this->findByUrn(UrnSubCatList::NOM_OFFRE->value, "urnSubCat");
         foreach ($noms as $nom) {
-            $label        = new Label();
+            $label = new Label();
             $label->value = $nom->value;
-            $language     = substr($nom->urn, 0, 2);
-            $label->lang  = $language;
-            $labels[]     = $label;
+            $language = substr($nom->urn, 0, 2);
+            $label->lang = $language;
+            $labels[] = $label;
         }
-        $label        = new Label();
+        $label = new Label();
         $label->value = $offre->nom;
-        $label->lang  = "fr";
-        $labels[]     = $label;
+        $label->lang = "fr";
+        $labels[] = $label;
         $offre->label = $labels;
     }
 
@@ -126,12 +128,12 @@ class OffreParser
             default => UrnList::CATEGORIE
         };
 
-        $cats = $this->findByUrn($urn, true);
+        $cats = $this->findByUrn($urn->value, "urn", true);
         foreach ($cats as $cat) {
             $info = $this->urnUtils->getInfosUrn($cat->urn);
             if ($info) {
-                $order               = $cat->order;
-                $labels              = $info->label;
+                $order = $cat->order;
+                $labels = $info->label;
                 $offre->categories[$cat->order] = new Category($cat->urn, $order, $labels);
             }
         }

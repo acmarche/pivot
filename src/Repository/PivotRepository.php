@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use AcMarche\Pivot\Api\ThesaurusEnum;
 use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entities\Offre\Offre;
@@ -12,7 +11,7 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Parser\PivotSerializer;
-use AcMarche\Pivot\Spec\SpecTrait;
+use AcMarche\Pivot\Spec\SpecSearchTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use AcMarche\Pivot\TypeOffre\FilterUtils;
@@ -24,7 +23,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class PivotRepository
 {
-    use SpecTrait;
+    use SpecSearchTrait;
 
     public function __construct(
         private PivotRemoteRepository $pivotRemoteRepository,
@@ -119,7 +118,7 @@ class PivotRepository
     public function getOffreByCgt(
         string $codeCgt,
         string $class = ResultOfferDetail::class,
-        string $cacheKeyPlus = null
+        ?string $cacheKeyPlus = null
     ): ResultOfferDetail|Event|Offre|null {
 
         $cacheKey = $codeCgt.$class;
@@ -163,9 +162,9 @@ class PivotRepository
         return $event;
     }
 
-    public function getOffreByCgtAndParse(string $codeCgt, string $class): ?Offre
+    public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
     {
-        $offre = $this->getOffreByCgt($codeCgt, $class);
+        $offre = $this->getOffreByCgt($codeCgt, $class, $cacheKeyPlus);
         if ($offre) {
             $this->pivotParser->parseOffre($offre);
             $this->parseRelOffres([$offre]);
@@ -211,14 +210,14 @@ class PivotRepository
                 if ($relation->urn == UrnList::MEDIAS_AUTRE->value) {
                     //   $offre->images[] = $this->getOffreByCgt($code, Offre::class);
                 }
-                $images = $this->findByUrn(UrnList::URL);
+                $images = $this->findByUrn(UrnList::URL->value);
                 if (count($images) > 0) {
                     foreach ($images as $image) {
                         $value = str_replace("http:", "https:", $image->value);
                         $offre->images[] = $value;
                     }
                 }
-                $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL, true);
+                $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL->value, true);
                 if (count($images) > 0) {
                     foreach ($images as $image) {
                         $value = str_replace("http:", "https:", $image->value);
@@ -252,7 +251,7 @@ class PivotRepository
                     $offre->voir_aussis[] = $offreTgt;
                 }
                 $this->specs = $offre->relOffreTgt;
-                foreach ($this->findByUrn(UrnList::OFFRE_ENFANT) as $enfant) {
+                foreach ($this->findByUrn(UrnList::OFFRE_ENFANT->value) as $enfant) {
                     $offre->enfants[] = $offreTgt;
                 }
             }
@@ -368,77 +367,5 @@ class PivotRepository
             json_encode($familiesObject->spec[0]->spec),
             'AcMarche\Pivot\Entities\Family\Family[]',
         );
-    }
-
-    /**
-     * https://organismes.tourismewallonie.be/doc-pivot-gest/liste-des-types-durn/
-     * @return TypeOffre[]
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     * @throws \Exception
-     */
-    private function getTypesRootForCreateTypesOffre(): array
-    {
-        $typesOffre = [];
-        if ($data = $this->pivotRemoteRepository->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)) {
-            $thesaurus = json_decode($data);
-            foreach ($thesaurus->spec as $spec) {
-                $typeOffre = new TypeOffre($spec->label[0]->value, $spec->order, $spec->urn, null);
-                $typeOffre->root = $spec->root;
-                $typeOffre->code = $spec->code;
-                $typesOffre[] = $typeOffre;
-            }
-        }
-
-        return $typesOffre;
-    }
-
-    /**
-     * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=xml
-     * @param TypeOffre $parent
-     * @return TypeOffre[]
-     * @throws \Exception
-     */
-    private function getSousTypesForCreateTypesOffre(TypeOffre $parent): array
-    {
-        $typesOffre = [];
-        $urn = match ($parent->typeId) {
-            9, 267, 258, 259 => $parent->code,
-            default => ''
-        };
-
-        $dataString = $this->pivotRemoteRepository->thesaurusSousTypes($parent->typeId, $urn);
-
-        $data = json_decode($dataString);
-        foreach ($data->spec as $spec) {
-            if (!isset($spec->spec)) {
-                continue;
-            }
-            foreach ($spec->spec as $item) {
-                $labels = $item->label;
-                $typeOffre = new TypeOffre(
-                    $item->label[0]->value,
-                    $item->order,
-                    $item->urn,
-                    $parent,
-                    self::getLabel($labels, 'nl'),
-                    self::getLabel($labels, 'en'),
-                    self::getLabel($labels, 'de'),
-                );
-                $typesOffre[] = $typeOffre;
-            }
-        }
-
-        return $typesOffre;
-    }
-
-    private static function getLabel(array $labels, string $language): ?string
-    {
-        foreach ($labels as $label) {
-            if ($label->lang == $language) {
-                return $label->value;
-            }
-        }
-
-        return null;
     }
 }
