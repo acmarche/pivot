@@ -47,6 +47,7 @@ class Offre
     public TypeOffre $typeOffre2;
     public TypeOffreShort2 $typeOffre;
     public Adresse $adresse1;
+    public ?Offre $media_default = null;
     /**
      * @var SpecData[] $spec
      */
@@ -60,6 +61,18 @@ class Offre
      */
     public array $relOffreTgt = [];
     public array $images = [];
+    /**
+     * @var array|SpecData[] $documents
+     */
+    public array $documents = [];
+    /**
+     * @var array|Offre[] $pois
+     */
+    public array $pois = [];
+    /**
+     * @var array|Offre[] $pois
+     */
+    public array $autres = [];
     public array $voir_aussis = [];
     public array $hades_ids = [];
     /**
