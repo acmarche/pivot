@@ -32,7 +32,6 @@ class OffreCountCommand extends Command
     protected function configure(): void
     {
         $this->addOption('flush', "flush", InputOption::VALUE_NONE, 'Enregistrer dans la DB');
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -9,7 +9,7 @@ use AcMarche\Pivot\Parser\PivotSerializer;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
-use AcMarche\Pivot\Spec\SpecTrait;
+use AcMarche\Pivot\Spec\SpecSearchTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnUtils;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -25,7 +25,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class TypeOffreCommand extends Command
 {
-    use SpecTrait, ParserEventTrait;
+    use SpecSearchTrait, ParserEventTrait;
 
     private SymfonyStyle $io;
     private OutputInterface $output;
