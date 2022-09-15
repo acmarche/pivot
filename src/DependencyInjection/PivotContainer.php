@@ -5,14 +5,18 @@ namespace AcMarche\Pivot\DependencyInjection;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 
 class PivotContainer
 {
+    use ContainerAwareTrait;
+
     public function __construct()
     {
-
+        $this->setContainer(self::init());
     }
 
     static function init(): ContainerInterface
@@ -21,37 +25,22 @@ class PivotContainer
             Debug::enable();
             $env = 'dev';
         } else {
-            if ( ! defined('WP_DEBUG')) {
+            if (!defined('WP_DEBUG')) {
                 define('WP_DEBUG', false);
             }
             $env = 'prod';
         }
 
-        /**
-         * mode hors sf
-         */
-        $dir = dirname(__DIR__).'/../../../../';
-        if ( ! isset($_SERVER['APP_CACHE_DIR'])) {
-            $_SERVER['APP_CACHE_DIR'] = $dir.'var/cache';
-        }
-        if ( ! isset($_SERVER['APP_LOG_DIR'])) {
-            $_SERVER['APP_LOG_DIR'] = $dir.'var/log';
-        }
-
         $kernel = new Kernel($env, WP_DEBUG);
+        (new Dotenv())
+            ->bootEnv($kernel->getProjectDir().'/.env');
+
         $kernel->boot();
-        $container = $kernel->getContainer();
 
-        $loader     = $container->get('dotenv');
-        $projectDir = $kernel->getProjectDir();
-
-        // loads .env, .env.local, and .env.$APP_ENV.local or .env.$APP_ENV
-        $loader->loadEnv($projectDir.'/.env');
-
-        return $container;
+        return $kernel->getContainer();
     }
 
-    static function getRepository(): PivotRepository
+    static function getPivotRepository(): PivotRepository
     {
         $container = self::init();
         /**
@@ -82,6 +71,15 @@ class PivotContainer
         $pivotRemoteRepository = $container->get('pivotRemoteRepository');
 
         return $pivotRemoteRepository;
+    }
+
+    function getService(string $service): ?object
+    {
+        if ($this->container->has($service)) {
+            return $this->container->get($service);
+        }
+
+        return null;
     }
 
 }
