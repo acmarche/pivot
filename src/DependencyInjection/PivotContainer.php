@@ -19,7 +19,7 @@ class PivotContainer
         $this->setContainer(self::init());
     }
 
-    static function init(): ContainerInterface
+    private static function init(): ContainerInterface
     {
         if (defined('WP_DEBUG') && WP_DEBUG) {
             Debug::enable();
@@ -42,35 +42,33 @@ class PivotContainer
 
     static function getPivotRepository(): PivotRepository
     {
-        $container = self::init();
-        /**
-         * @var PivotRepository $pivotRepository
-         */
-        $pivotRepository = $container->get('pivotRepository');
+        $container = new self();
 
-        return $pivotRepository;
+        /**
+         * @var PivotRepository
+         */
+        return $container->getService('pivotRepository');
     }
 
     static function getTypeOffreRepository(): TypeOffreRepository
     {
-        $container = self::init();
-        /**
-         * @var TypeOffreRepository $typeOffreRepository
-         */
-        $typeOffreRepository = $container->get('typeOffreRepository');
+        $container = new self();
 
-        return $typeOffreRepository;
+        /**
+         * @var TypeOffreRepository
+         */
+        return $container->getService('typeOffreRepository');
     }
 
     static function getRemoteRepository(): PivotRemoteRepository
     {
-        $container = self::init();
-        /**
-         * @var PivotRemoteRepository $pivotRemoteRepository
-         */
-        $pivotRemoteRepository = $container->get('pivotRemoteRepository');
+        $container = new self();
 
-        return $pivotRemoteRepository;
+        /**
+         * @var PivotRemoteRepository
+         */
+        return $container->getService('pivotRemoteRepository');
+
     }
 
     function getService(string $service): ?object
