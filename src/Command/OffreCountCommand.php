@@ -14,7 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'pivot:offre-count',
-    description: 'Compte les offres pour chaque urn',
+    description: 'Compte les offres pour chaque types d\'offre. --flush pour enregister dans la DB',
 )]
 class OffreCountCommand extends Command
 {
@@ -53,6 +53,7 @@ class OffreCountCommand extends Command
 
     protected function askType()
     {
+        $this->pivotRepository->getOffres([]);
         $roots = $this->typeOffreRepository->findRoots();
         foreach ($roots as $root) {
             $this->io->section($root->nom);

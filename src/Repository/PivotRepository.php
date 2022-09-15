@@ -111,11 +111,10 @@ class PivotRepository
      * une instance de cette classe est retournée
      *
      * @param string $codeCgt
-     * @param string $dateModification
      * @param string $class
-     *
+     * @param string|null $cacheKeyPlus
      * @return ResultOfferDetail|Event|Offre|null
-     * @throws \Psr\Cache\InvalidArgumentException|\Exception
+     * @throws InvalidArgumentException
      */
     public function getOffreByCgt(
         string $codeCgt,

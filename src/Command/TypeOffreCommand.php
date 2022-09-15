@@ -20,8 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'pivot:types-offre',
-    description: 'Génère une table avec tous les types d\'offres',
+    name: 'pivot:generate-types-offre',
+    description: 'Génère une table sql avec tous les types d\'offres. --flush pour enregistrer dans la DB',
 )]
 class TypeOffreCommand extends Command
 {
@@ -42,7 +42,7 @@ class TypeOffreCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('flush', "flush", InputOption::VALUE_NONE, 'Enregistrer dans la DB');
+        $this->addOption('flush', "flush", InputOption::VALUE_NONE, 'Enregistrer les données dans la DB');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -78,18 +78,18 @@ class TypeOffreCommand extends Command
 
     private function treatmentClassification(TypeOffre $data)
     {
-        $families = json_decode(
+        $familiesStd = json_decode(
             $this->pivotRemoteRepository->thesaurusCategories($data->typeId)
         );
         $this->io->writeln($this->pivotRemoteRepository->url_executed);
         /**
-         * @var Family[] $t
+         * @var Family[] $families
          */
-        $t = $this->pivotSerializer->deserializeToClass(
-            json_encode($families->spec),
+        $families = $this->pivotSerializer->deserializeToClass(
+            json_encode($familiesStd->spec),
             'AcMarche\Pivot\Entities\Family\Family[]',
         );
-        foreach ($t as $family) {
+        foreach ($families as $family) {
             $familyOffreType = $this->treatmentX($family, $data, 2);
             if (isset($family->spec)) {
                 foreach ($family->spec as $family2) {

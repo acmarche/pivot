@@ -14,7 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 #[AsCommand(
     name: 'pivot:admin',
-    description: 'Genere la class UrnTypeList',
+    description: 'Génère la class UrnTypeList.',
 )]
 class AdminCommand extends Command
 {

@@ -62,7 +62,7 @@ class OffreListCommand extends Command
         $this->io->success($choix.": ");
 
         $this->io->info("Chargement des offres...");
-        $offres = $this->pivotRepository->getOffres($args);
+        $offres = $this->pivotRepository->getEvents(true);
         $count = count($offres);
         $this->io->info("$count offres trouvées");
         $rows = [];
