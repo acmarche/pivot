@@ -33,16 +33,24 @@ class OffreParser
         $offre->homepage = $this->findByUrnReturnValue(UrnList::HOMEPAGE->value);
         $offre->active = $this->findByUrnReturnValue(UrnList::ACTIVE->value);
 
-        foreach ($this->findByUrn(SpecTypeEnum::EMAIL->value,"type") as $spec) {
+        foreach ($this->findByUrn(SpecTypeEnum::EMAIL->value, "type") as $spec) {
             $offre->emails[] = $spec->value;
         }
-        foreach ($this->findByUrn(SpecTypeEnum::TEL->value,"type") as $spec) {
+        foreach ($this->findByUrn(SpecTypeEnum::TEL->value, "type") as $spec) {
             $offre->tels[] = $spec->value;
         }
 
         $offre->descriptions = $this->findByUrn(UrnCatList::DESCRIPTION->value, "urnCat");
-        $t = $this->findByUrn(UrnCatList::DESCRIPTION_MARKETING->value);
-        dump($t);
+        $descriptionsMarketing = $this->findByUrn(UrnCatList::DESCRIPTION_MARKETING->value);
+        if (count($descriptionsMarketing) > 0) {
+            $descriptions = [];
+            foreach ($descriptionsMarketing[0]->spec as $descriptionMarketing) {
+                if ($descriptionMarketing->type == 'TextML') {
+                    $descriptions[] = $descriptionMarketing;
+                }
+            }
+            $offre->descriptions = [$offre->descriptions, ...$descriptions];
+        }
 
         $offre->tarifs = $this->findByUrn(UrnList::TARIF->value);
         $offre->webs = $this->findByUrn(UrnList::WEB->value);
