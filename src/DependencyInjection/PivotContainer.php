@@ -14,24 +14,21 @@ class PivotContainer
 {
     use ContainerAwareTrait;
 
-    public function __construct()
+    public function __construct(bool $debug = false)
     {
-        $this->setContainer(self::init());
+        $this->setContainer(self::init($debug));
     }
 
-    private static function init(): ContainerInterface
+    private static function init(bool $debug = false): ContainerInterface
     {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
+        if ($debug) {
             Debug::enable();
             $env = 'dev';
         } else {
-            if (!defined('WP_DEBUG')) {
-                define('WP_DEBUG', false);
-            }
             $env = 'prod';
         }
 
-        $kernel = new Kernel($env, WP_DEBUG);
+        $kernel = new Kernel($env, $debug);
         (new Dotenv())
             ->bootEnv($kernel->getProjectDir().'/.env');
 
@@ -40,9 +37,9 @@ class PivotContainer
         return $kernel->getContainer();
     }
 
-    static function getPivotRepository(): PivotRepository
+    static function getPivotRepository(bool $debug = false): PivotRepository
     {
-        $container = new self();
+        $container = new self($debug);
 
         /**
          * @var PivotRepository
@@ -50,9 +47,9 @@ class PivotContainer
         return $container->getService('pivotRepository');
     }
 
-    static function getTypeOffreRepository(): TypeOffreRepository
+    static function getTypeOffreRepository(bool $debug = false): TypeOffreRepository
     {
-        $container = new self();
+        $container = new self($debug);
 
         /**
          * @var TypeOffreRepository
@@ -60,9 +57,9 @@ class PivotContainer
         return $container->getService('typeOffreRepository');
     }
 
-    static function getRemoteRepository(): PivotRemoteRepository
+    static function getRemoteRepository(bool $debug = false): PivotRemoteRepository
     {
-        $container = new self();
+        $container = new self($debug);
 
         /**
          * @var PivotRemoteRepository

@@ -7,7 +7,6 @@ use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,7 +20,6 @@ class OffreCountCommand extends Command
 {
     private SymfonyStyle $io;
     private OutputInterface $output;
-    private ProgressBar $progressBar;
 
     public function __construct(
         private PivotRepository $pivotRepository,
@@ -46,7 +44,6 @@ class OffreCountCommand extends Command
 
         $this->askType();
 
-        $this->progressBar->finish();
         if ($flush) {
             $this->typeOffreRepository->flush();
         }
@@ -57,10 +54,8 @@ class OffreCountCommand extends Command
     protected function askType()
     {
         $this->pivotRepository->getOffres([]);
-        $this->progressBar = new ProgressBar($this->output, count($this->typeOffreRepository->findAll()));
-        $this->progressBar->start();
-
         $roots = $this->typeOffreRepository->findRoots();
+
         foreach ($roots as $root) {
             $this->io->section($root->nom);
             $this->setCount($root, 1);
@@ -92,7 +87,7 @@ class OffreCountCommand extends Command
     {
         $count = count($this->pivotRepository->getOffres([$typeOffre]));
         $this->io->write(str_repeat('-', $lvl).' '.$typeOffre->nom.' => ');
-        $this->io->writeln($count.' '.$this->progressBar->advance());
+        $this->io->writeln($count.' ');
         $typeOffre->countOffres = $count;
     }
 
