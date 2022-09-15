@@ -207,14 +207,17 @@ class PivotRepository
                     continue;
                 }
                 $this->specs = $sOffre->getOffre()->spec;
-                if ($relation->urn == UrnList::MEDIAS_AUTRE->value) {
-                    //   $offre->images[] = $this->getOffreByCgt($code, Offre::class);
-                }
-                $images = $this->findByUrn(UrnList::URL->value);
-                if (count($images) > 0) {
-                    foreach ($images as $image) {
-                        $value = str_replace("http:", "https:", $image->value);
-                        $offre->images[] = $value;
+                $medias = $this->findByUrn(UrnList::URL->value);
+                if (count($medias) > 0) {
+                    foreach ($medias as $media) {
+                        $value = str_replace("http:", "https:", $media->value);
+                        $string = new UnicodeString($value);
+                        $extension = $string->slice(-3);
+                        if (in_array($extension, ['jpg', 'png'])) {
+                            $offre->images[] = $value;
+                        } else {
+                            $offre->documents[] = $value;
+                        }
                     }
                 }
                 $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL->value, true);
@@ -225,7 +228,24 @@ class PivotRepository
                     }
                 }
                 if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
-                    $offre->contact_direction = $this->getOffreByCgt($code, Offre::class);
+                    if (isset($sOffre->offre[0])) {
+                        $offre->contact_direction = $sOffre->offre[0];
+                    }
+                }
+                if ($relation->urn === UrnList::POIS->value) {
+                    if (isset($sOffre->offre[0])) {
+                        $offre->pois[] = $sOffre->offre[0];
+                    }
+                }
+                if ($relation->urn == UrnList::MEDIAS_AUTRE->value) {
+                    if (isset($sOffre->offre[0])) {
+                        $offre->autres[] = $sOffre->offre[0];
+                    }
+                }
+                if ($relation->urn == UrnList::MEDIA_DEFAULT->value) {
+                    if (isset($sOffre->offre[0])) {
+                        $offre->media_default = $sOffre->offre[0];
+                    }
                 }
             }
         }

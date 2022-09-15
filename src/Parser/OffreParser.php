@@ -49,7 +49,7 @@ class OffreParser
                     $descriptions[] = $descriptionMarketing;
                 }
             }
-            $offre->descriptions = [$offre->descriptions, ...$descriptions];
+            $offre->descriptions = array_merge($offre->descriptions, $descriptions);
         }
 
         $offre->tarifs = $this->findByUrn(UrnList::TARIF->value);
