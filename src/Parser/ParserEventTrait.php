@@ -13,12 +13,12 @@ trait ParserEventTrait
     {
         $dates = [];
         $format = "d/m/Y";
-        $dateDebut = $this->findByUrn(UrnList::DATE_DEB_VALID);
+        $dateDebut = $this->findByUrn(UrnList::DATE_DEB_VALID->value);
         if (count($dateDebut) > 0) {
             $dates[] = DateUtils::convertStringToDateTime($dateDebut[0]->value, $format);
         }
 
-        $dateFin = $this->findByUrn(UrnList::DATE_FIN_VALID);
+        $dateFin = $this->findByUrn(UrnList::DATE_FIN_VALID->value);
         if (count($dateFin) > 0) {
             $dates[] = DateUtils::convertStringToDateTime($dateFin[0]->value, $format);
         }
@@ -32,7 +32,7 @@ trait ParserEventTrait
     public function getDates(): array
     {
         $dates = [];
-        $specs = $this->findByUrn(UrnList::DATE_OBJECT);
+        $specs = $this->findByUrn(UrnList::DATE_OBJECT->value);
         foreach ($specs as $spec) {
             foreach ($spec->spec as $data) {
                 if ($data->urn == UrnList::DATE_DEB->value) {
