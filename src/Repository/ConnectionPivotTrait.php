@@ -14,9 +14,9 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 trait ConnectionPivotTrait
 {
     private HttpClientInterface $httpClient;
-    private ?string $code_query;
+    private ?string $code_query = null;
     private ?string $base_uri = null;
-    private ?string $ws_key;
+    private ?string $ws_key = null;
     public ?string $url_executed = null;
     public ?string $data_raw = null;
     public array $headersCurl = [];
