@@ -4,7 +4,6 @@ namespace AcMarche\Pivot\Repository;
 
 use Exception;
 use Symfony\Component\HttpClient\Exception\ClientException;
-use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -20,6 +19,7 @@ trait ConnectionPivotTrait
     private ?string $ws_key;
     public ?string $url_executed = null;
     public ?string $data_raw = null;
+    public array $headersCurl = [];
 
     public function connect(string $output): void
     {
@@ -34,14 +34,40 @@ trait ConnectionPivotTrait
             ],
         ];
 
-        $this->httpClient = HttpClient::create($headers);
-    }
+        $this->headersCurl = [
+            'Accept: '.$output,
+            'ws_key: '.$this->ws_key,
+        ];
 
+        // $this->httpClient = HttpClient::create($headers);
+    }
 
     /**
      * @throws Exception
      */
     private function executeRequest(string $url, array $options = [], string $method = 'GET'): string
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headersCurl);
+
+        $output = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            throw  new Exception(curl_error($ch));
+        }
+
+        curl_close($ch);
+        $this->data_raw = $output;
+
+        return $output;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function executeRequestSf(string $url, array $options = [], string $method = 'GET'): string
     {
         $this->url_executed = $url;
         try {
