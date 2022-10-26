@@ -131,6 +131,11 @@ class PivotRemoteRepository
         return $this->thesaurus(ThesaurusEnum::THESAURUS_LISTE_PICTOS->value, $codeCgt);
     }
 
+    public function gpxRead(string $url): ?string
+    {
+        return $this->executeRequest($url);
+    }
+
     /**
      * Ces requêtes sont créées et stockées par les opérateurs de PIVOT afin de fournir des flux
      * de données. Les requêtes sont accessibles au moyen d’un code identifiant unique (codeCgt).
