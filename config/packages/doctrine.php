@@ -2,7 +2,6 @@
 
 use Symfony\Config\DoctrineConfig;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\Env;
-
 return static function (DoctrineConfig $doctrine) {
 
     $doctrine->dbal()
@@ -11,7 +10,7 @@ return static function (DoctrineConfig $doctrine) {
         ->charset('utf8mb4');
 
     $orm = $doctrine->orm();
-    $orm->autoGenerateProxyClasses(true);
+    $orm->autoGenerateProxyClasses(Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_NEVER);
 
     $emMda = $orm->entityManager('pivot');
     $emMda->connection('pivot');
