@@ -132,7 +132,7 @@ class PivotRepository
         $key = $this->slugger->slug($keyUnicode->ascii()->toString());
 
         return $this->cache->get(
-            'offre-'.$key.time(),
+            'offre-'.$key,
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
