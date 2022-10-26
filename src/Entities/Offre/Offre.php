@@ -4,6 +4,8 @@ namespace AcMarche\Pivot\Entities\Offre;
 
 use AcMarche\Pivot\Entities\Communication\Adresse;
 use AcMarche\Pivot\Entities\LabelTrait;
+use AcMarche\Pivot\Entities\Specification\Document;
+use AcMarche\Pivot\Entities\Specification\Gpx;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Entities\Specification\SpectFieldsTrait;
@@ -62,9 +64,13 @@ class Offre
     public array $relOffreTgt = [];
     public array $images = [];
     /**
-     * @var array|SpecData[] $documents
+     * @var Document[]|SpecData[] $documents
      */
     public array $documents = [];
+    /**
+     * @var array|Gpx[] $gpxs
+     */
+    public array $gpxs = [];
     /**
      * @var array|Offre[] $pois
      */
@@ -97,6 +103,10 @@ class Offre
      * @var SpecInfo[]
      */
     public array $classements = [];
+    public string $gpx_distance='';
+    public ?string $gpx_id='';
+    public ?string $gpx_duree='';
+    public ?string $gpx_difficulte='';
 
     /**
      * Alias
