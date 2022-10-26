@@ -7,6 +7,8 @@ use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
+use AcMarche\Pivot\Entities\Specification\Document;
+use AcMarche\Pivot\Entities\Specification\Gpx;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Parser\OffreParser;
@@ -130,7 +132,7 @@ class PivotRepository
         $key = $this->slugger->slug($keyUnicode->ascii()->toString());
 
         return $this->cache->get(
-            'offre-'.$key,
+            'offre-'.$key.time(),
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
@@ -213,14 +215,34 @@ class PivotRepository
                         $value = str_replace("http:", "https:", $media->value);
                         $string = new UnicodeString($value);
                         $extension = $string->slice(-3);
+                        $document = new Document();
+                        $document->extension = $extension;
+                        $document->url = $value;
+
                         if (in_array($extension, ['jpg', 'png'])) {
                             $offre->images[] = $value;
                         } else {
-                            $offre->documents[] = $value;
+                            $offre->documents[] = $document;
                         }
                     }
                 }
-                $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL->value, true);
+                foreach ($offre->documents as $document) {
+                    if ($document->extension == 'gpx') {
+                        $gpx = new Gpx();
+                        $gpx->data_raw = $this->pivotRemoteRepository->gpxRead($document->url);
+                        $gpxXml = simplexml_load_string($gpx->data_raw);
+                        foreach ($gpxXml->metadata as $pt) {
+                            $gpx->name = (string)$pt->name;
+                            $gpx->desc = (string)$pt->desc;
+                            $gpx->url = $document->url;
+                            foreach ($pt->link as $link) {
+                                $gpx->links[] = (string)$link->attributes();
+                            }
+                        }
+                        $offre->gpxs[] = $gpx;
+                    }
+                }
+                $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL->value, "urn", true);
                 if (count($images) > 0) {
                     foreach ($images as $image) {
                         $value = str_replace("http:", "https:", $image->value);
