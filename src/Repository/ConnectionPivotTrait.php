@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Repository;
 
 use Exception;
 use Symfony\Component\HttpClient\Exception\ClientException;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -38,36 +39,46 @@ trait ConnectionPivotTrait
             'Accept: '.$output,
             'ws_key: '.$this->ws_key,
         ];
+        //$this->initCurl();
+        $this->httpClient = HttpClient::create($headers);
+    }
 
-        // $this->httpClient = HttpClient::create($headers);
+    private function initCurl()
+    {
+        $this->ch = curl_init();
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headersCurl);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function executeRequestCurl(string $url, array $options = [], string $method = 'GET'): string
+    {
+        if (!$this->ch) {
+            $this->initCurl();
+        }
+        curl_setopt($this->ch, CURLOPT_URL, $url);
+        $output = curl_exec($this->ch);
+
+        if (curl_errno($this->ch)) {
+            throw  new Exception(curl_error($this->ch));
+        }
+
+        $this->data_raw = $output;
+
+        return $output;
+    }
+
+    public function __destruct()
+    {
+        curl_close($this->ch);
     }
 
     /**
      * @throws Exception
      */
     private function executeRequest(string $url, array $options = [], string $method = 'GET'): string
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headersCurl);
-
-        $output = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            throw  new Exception(curl_error($ch));
-        }
-
-        curl_close($ch);
-        $this->data_raw = $output;
-
-        return $output;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function executeRequestSf(string $url, array $options = [], string $method = 'GET'): string
     {
         $this->url_executed = $url;
         try {
