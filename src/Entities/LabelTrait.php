@@ -25,6 +25,10 @@ trait LabelTrait
             }
         }
 
+        if (isset($this->nom) && $this->nom != '') {
+            return $this->nom;
+        }
+
         return 'Title not found';
     }
 }
