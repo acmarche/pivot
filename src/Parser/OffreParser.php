@@ -30,6 +30,20 @@ class OffreParser
         foreach ($this->specs as $spec) {
             $offre->specsDetailed[] = new SpecInfo($this->urnUtils->getInfosUrn($spec->urn), $spec);
         }
+
+        if ($km = $this->findByUrn('urn:fld:dist')) {
+            $offre->gpx_distance = $km[0]->value;
+        }
+        if ($km = $this->findByUrn('urn:fld:idcirkwi')) {
+            $offre->gpx_id = $km[0]->value;
+        }
+        if ($km = $this->findByUrn('urn:fld:infusgvttdur')) {
+            $offre->gpx_duree = $km[0]->value;
+        }
+        if ($km = $this->findByUrn('urn:fld:infusgvttdiff')) {
+            $offre->gpx_difficulte = $km[0]->value;
+        }
+
         $offre->homepage = $this->findByUrnReturnValue(UrnList::HOMEPAGE->value);
         $offre->active = $this->findByUrnReturnValue(UrnList::ACTIVE->value);
 
