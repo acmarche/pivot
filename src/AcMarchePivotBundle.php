@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class AcMarchePivotBundle  extends AbstractBundle
+class AcMarchePivotBundle extends AbstractBundle
 {
     public function getPath(): string
     {
@@ -23,7 +23,9 @@ class AcMarchePivotBundle  extends AbstractBundle
         $container->import('../config/packages/twig.php');
         $container->import('../config/packages/framework.php');
         $container->import('../config/packages/cache.php');
-        $container->import('../config/packages/monolog.php');
+        if ($builder->hasExtension('monolog')) {
+            $container->import('../config/packages/monolog.php');
+        }
         $container->import('../config/packages/doctrine.php');
     }
 }
