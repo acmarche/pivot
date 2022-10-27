@@ -73,7 +73,11 @@ class OffreCountCommand extends Command
                             $lvl5->children = $this->typeOffreRepository->findByParent($lvl5->id);
                             foreach ($this->typeOffreRepository->findByParent($lvl5->id) as $lvl6) {
                                 $this->setCount($lvl6, 10);
-                                //$lvl6->children = $this->typeOffreRepository->findByParent($lvl6->id);
+                                $lvl6->children = $this->typeOffreRepository->findByParent($lvl6->id);
+                                foreach ($this->typeOffreRepository->findByParent($lvl6->id) as $lvl7) {
+                                    $this->setCount($lvl7, 10);
+                                    $lvl7->children = $this->typeOffreRepository->findByParent($lvl7->id);
+                                }
                             }
                         }
                     }
