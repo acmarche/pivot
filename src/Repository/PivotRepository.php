@@ -229,6 +229,7 @@ class PivotRepository
                 foreach ($offre->documents as $document) {
                     if ($document->extension == 'gpx') {
                         $gpx = new Gpx();
+                        $gpx->code=$code;
                         $gpx->data_raw = $this->pivotRemoteRepository->gpxRead($document->url);
                         $gpxXml = simplexml_load_string($gpx->data_raw);
                         foreach ($gpxXml->metadata as $pt) {
