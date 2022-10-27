@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Repository;
 
+use CurlHandle;
 use Exception;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
@@ -15,6 +16,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 trait ConnectionPivotTrait
 {
     private HttpClientInterface $httpClient;
+    private ?CurlHandle $ch = null;
     private ?string $code_query = null;
     private ?string $base_uri = null;
     private ?string $ws_key = null;
@@ -72,7 +74,9 @@ trait ConnectionPivotTrait
 
     public function __destruct()
     {
-        curl_close($this->ch);
+        if ($this->ch) {
+            curl_close($this->ch);
+        }
     }
 
     /**

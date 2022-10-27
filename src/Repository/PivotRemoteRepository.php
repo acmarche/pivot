@@ -5,14 +5,11 @@ namespace AcMarche\Pivot\Repository;
 use AcMarche\Pivot\Api\ContentEnum;
 use AcMarche\Pivot\Api\ThesaurusEnum;
 use AcMarche\Pivot\Spec\UrnList;
-use CurlHandle;
 use Exception;
 
 class PivotRemoteRepository
 {
     use ConnectionPivotTrait;
-
-    private false|CurlHandle $ch;
 
     public function __construct()
     {
