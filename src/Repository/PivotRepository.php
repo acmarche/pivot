@@ -226,10 +226,13 @@ class PivotRepository
                         }
                     }
                 }
+                if (count($offre->images[]) > 0) {
+                    $offre->image = $offre->images[0];
+                }
                 foreach ($offre->documents as $document) {
                     if ($document->extension == 'gpx') {
                         $gpx = new Gpx();
-                        $gpx->code=$code;
+                        $gpx->code = $code;
                         $gpx->data_raw = $this->pivotRemoteRepository->gpxRead($document->url);
                         $gpxXml = simplexml_load_string($gpx->data_raw);
                         foreach ($gpxXml->metadata as $pt) {
@@ -249,6 +252,7 @@ class PivotRepository
                         $value = str_replace("http:", "https:", $image->value);
                         $offre->images[] = $value;
                     }
+                    $offre->image = $offre->images[0];
                 }
                 if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
                     if (isset($sOffre->offre[0])) {
