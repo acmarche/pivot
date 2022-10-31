@@ -226,7 +226,7 @@ class PivotRepository
                         }
                     }
                 }
-                if (count($offre->images[]) > 0) {
+                if (count($offre->images) > 0) {
                     $offre->image = $offre->images[0];
                 }
                 foreach ($offre->documents as $document) {
