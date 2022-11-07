@@ -3,7 +3,6 @@
 namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Category;
-use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
@@ -13,6 +12,7 @@ use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnSubCatList;
+use AcMarche\Pivot\Spec\UrnTypeList;
 use AcMarche\Pivot\Spec\UrnUtils;
 
 class OffreParser
@@ -88,38 +88,39 @@ class OffreParser
      *
      * @param array $events
      */
-    public function parseEvents(array $events, bool $removeObsolete = false): void
+    public function parseDatesEvents(array $events, bool $removeObsolete = false): void
     {
         array_map(function ($event) use ($removeObsolete) {
-            $this->parseEvent($event, $removeObsolete);
+            $this->parseDatesEvent($event, $removeObsolete);
         }, $events);
     }
 
-    public function parseEvent(Event $event, bool $removeObsolete = false): void
+    public function parseDatesEvent(Offre $offre, bool $removeObsolete = false): void
     {
-        $this->parseOffre($event);
+        if ($offre->typeOffre->idTypeOffre !== UrnTypeList::evenement()->typeId) {
+            return;
+        }
 
-        $event->dates = $this->getDates();
-        $fistDate = $event->firstDate();
+        $offre->dates = $this->getDates();
+        $fistDate = $offre->firstDate();
         if ($fistDate) {
-            $event->dateBegin = $fistDate->date_begin;
-            $event->dateEnd = $fistDate->date_end;
+            $offre->dateBegin = $fistDate->date_begin;
+            $offre->dateEnd = $fistDate->date_end;
         }
 
         if ($removeObsolete) {
-            foreach ($event->dates as $key => $dateBeginEnd) {
+            foreach ($offre->dates as $key => $dateBeginEnd) {
                 if (EventUtils::isDateBeginEndObsolete($dateBeginEnd)) {
-                    unset($event->dates[$key]);
+                    unset($offre->dates[$key]);
                 }
             }
-            $event->dates = array_values($event->dates);//reset index
-            $fistDate = $event->firstDate();
+            $offre->dates = array_values($offre->dates);//reset index
+            $fistDate = $offre->firstDate();
             if ($fistDate) {
-                $event->dateBegin = $fistDate->date_begin;
-                $event->dateEnd = $fistDate->date_end;
+                $offre->dateBegin = $fistDate->date_begin;
+                $offre->dateEnd = $fistDate->date_end;
             }
         }
-        $this->setCategories($event);
     }
 
     private function setNameByLanguages(Offre $offre)

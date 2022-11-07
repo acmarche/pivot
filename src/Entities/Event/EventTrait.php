@@ -2,10 +2,9 @@
 
 namespace AcMarche\Pivot\Entities\Event;
 
-use AcMarche\Pivot\Entities\Offre\Offre;
 use DateTimeInterface;
 
-class Event extends Offre
+trait EventTrait
 {
     public DateTimeInterface $dateBegin;
     public DateTimeInterface $dateEnd;

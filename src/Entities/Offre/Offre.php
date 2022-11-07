@@ -3,6 +3,7 @@
 namespace AcMarche\Pivot\Entities\Offre;
 
 use AcMarche\Pivot\Entities\Communication\Adresse;
+use AcMarche\Pivot\Entities\Event\EventTrait;
 use AcMarche\Pivot\Entities\LabelTrait;
 use AcMarche\Pivot\Entities\Specification\Document;
 use AcMarche\Pivot\Entities\Specification\Gpx;
@@ -17,6 +18,7 @@ use AcMarche\Pivot\Entities\User\UserGlobalModification;
 class Offre
 {
     use SpectFieldsTrait;
+    use EventTrait;
     use LabelTrait;
 
     public string $codeCgt;

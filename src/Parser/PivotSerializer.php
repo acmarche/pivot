@@ -2,8 +2,6 @@
 
 namespace AcMarche\Pivot\Parser;
 
-use AcMarche\Pivot\Entities\Event\Event;
-use AcMarche\Pivot\Entities\Hebergement\Hotel;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
@@ -25,7 +23,7 @@ class PivotSerializer
         string $data,
         string $class,
         string $format = 'json'
-    ): Offre|Event|Hotel|ResultOfferDetail|ResponseQuery|array|null {
+    ): Offre|ResultOfferDetail|ResponseQuery|array|null {
         try {
             return $this->serializer->deserialize($data, $class, $format, [
                 DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,

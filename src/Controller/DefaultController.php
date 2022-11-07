@@ -34,7 +34,7 @@ class DefaultController extends AbstractController
     public function events(): Response
     {
         $events = $this->pivotRepository->getEvents();
-        $this->pivotParser->parseEvents($events);
+        $this->pivotParser->parseDatesEvents($events);
 
         return $this->render(
             '@AcMarchePivot/event/index.html.twig',

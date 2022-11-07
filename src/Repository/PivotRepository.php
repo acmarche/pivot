@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
@@ -79,25 +78,11 @@ class PivotRepository
 
     /**
      * Retourne la liste des events
-     * @return Event[]
+     * @return Offre[]
      */
     public function getEvents(bool $removeObsolete = false): array
     {
-        $events = [];
-        $responseQuery = $this->getAllDataFromRemote();
-        $offresShort = FilterUtils::filterByTypeIds($responseQuery->offre, [UrnTypeList::evenement()->typeId], []);
-        foreach ($offresShort as $offreShort) {
-            $resultOfferDetail = $this->getOffreByCgt(
-                $offreShort->codeCgt,
-                Event::class,
-                $offreShort->dateModification
-            );
-            $offre = $resultOfferDetail;
-            $events[] = $offre;
-        }
-        $this->pivotParser->parseEvents($events, $removeObsolete);
-        $this->parseRelOffres($events);
-
+        $events = FilterUtils::filterByTypeIdsOrUrns($this->getOffres([]), [UrnTypeList::evenement()->typeId], []);
         $events = SortUtils::sortEvents($events);
         if ($removeObsolete) {
             $events = EventUtils::removeObsolete($events);
@@ -114,14 +99,14 @@ class PivotRepository
      * @param string $codeCgt
      * @param string $class
      * @param string|null $cacheKeyPlus
-     * @return ResultOfferDetail|Event|Offre|null
+     * @return ResultOfferDetail|Offre|null
      * @throws InvalidArgumentException
      */
     public function getOffreByCgt(
         string $codeCgt,
         string $class = ResultOfferDetail::class,
         ?string $cacheKeyPlus = null
-    ): ResultOfferDetail|Event|Offre|null {
+    ): ResultOfferDetail|Offre|null {
 
         $cacheKey = $codeCgt.$class;
         if ($cacheKeyPlus) {
@@ -155,20 +140,12 @@ class PivotRepository
         );
     }
 
-    public function getEvent(string $codeCgt): ?Event
-    {
-        $event = $this->getOffreByCgt($codeCgt, Event::class);
-        $this->pivotParser->parseEvent($event);
-        $this->parseRelOffres([$event]);
-
-        return $event;
-    }
-
     public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
     {
         $offre = $this->getOffreByCgt($codeCgt, $class, $cacheKeyPlus);
         if ($offre) {
             $this->pivotParser->parseOffre($offre);
+            $this->pivotParser->parseDatesEvent($offre);
             $this->parseRelOffres([$offre]);
             $this->parseRelOffresTgt([$offre]);
         }
@@ -306,11 +283,11 @@ class PivotRepository
     }
 
     /**
-     * @param Event $eventReffer
+     * @param Offre $eventReffer
      *
-     * @return Event[]
+     * @return Offre[]
      */
-    public function getSameEvents(Event $eventReffer): array
+    public function getSameEvents(Offre $eventReffer): array
     {
         $data = [];
         $events = $this->getEvents(true);
@@ -328,7 +305,6 @@ class PivotRepository
         }
 
         return $data;
-
     }
 
     /**
@@ -353,34 +329,6 @@ class PivotRepository
         }
 
         return $data;
-    }
-
-    public function getEventByIdHades(int $idHades): ?Event
-    {
-        $events = $this->getEvents(true);
-        foreach ($events as $event) {
-            if (count($event->hades_ids) > 0) {
-                if ($idHades == $event->hades_ids[0]->value) {
-                    return $event;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public function getOffreByIdHades(int $idHades): ?Offre
-    {
-        $offres = $this->getOffres([]);
-        foreach ($offres as $offre) {
-            if (count($offre->hades_ids) > 0) {
-                if ($idHades == $offre->hades_ids[0]->value) {
-                    return $offre;
-                }
-            }
-        }
-
-        return null;
     }
 
     /**

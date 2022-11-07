@@ -4,7 +4,6 @@ namespace AcMarche\Pivot\Utils;
 
 
 use AcMarche\Pivot\Entities\Event\DateBeginEnd;
-use AcMarche\Pivot\Entities\Event\Event;
 use AcMarche\Pivot\Entities\Offre\Offre;
 
 class SortUtils
@@ -34,9 +33,9 @@ class SortUtils
     }
 
     /**
-     * @param Event[] $events
+     * @param Offre[] $events
      *
-     * @return Event[]
+     * @return Offre[]
      */
     public static function sortEvents(array $events, string $order = 'ASC'): array
     {
