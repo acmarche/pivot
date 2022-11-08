@@ -13,7 +13,7 @@ class FilterUtils
      * @param string[] $typeIds
      * @param string[] $urns
      *
-     * @return array
+     * @return array|Offre[]
      */
     public static function filterByTypeIdsOrUrns(array $offresToFilter, array $typeIds, array $urns): array
     {

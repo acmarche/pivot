@@ -6,8 +6,8 @@ use DateTimeInterface;
 
 trait EventTrait
 {
-    public DateTimeInterface $dateBegin;
-    public DateTimeInterface $dateEnd;
+    public ?DateTimeInterface $dateBegin = null;
+    public ?DateTimeInterface $dateEnd = null;
 
     /**
      * @var DateBeginEnd[]

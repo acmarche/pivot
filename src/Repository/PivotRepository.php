@@ -68,6 +68,7 @@ class PivotRepository
         if ($parse) {
             array_map(function ($offre) {
                 $this->pivotParser->parseOffre($offre);
+                $this->pivotParser->parseDatesEvent($offre);
             }, $offres);
             $this->parseRelOffres($offres);
             $this->parseRelOffresTgt($offres);
@@ -80,9 +81,18 @@ class PivotRepository
      * Retourne la liste des events
      * @return Offre[]
      */
-    public function getEvents(bool $removeObsolete = false): array
+    public function getEvents(bool $removeObsolete = false, array $urnsSelected = []): array
     {
-        $events = FilterUtils::filterByTypeIdsOrUrns($this->getOffres([]), [UrnTypeList::evenement()->typeId], []);
+        $events = FilterUtils::filterByTypeIdsOrUrns(
+            $this->getOffres([]),
+            [UrnTypeList::evenement()->typeId],
+            $urnsSelected
+        );
+        foreach ($events as $key => $event) {
+            if (!$event->dateBegin) {
+                unset($events[$key]);
+            }
+        }
         $events = SortUtils::sortEvents($events);
         if ($removeObsolete) {
             $events = EventUtils::removeObsolete($events);
