@@ -283,31 +283,6 @@ class PivotRepository
     }
 
     /**
-     * @param Offre $eventReffer
-     *
-     * @return Offre[]
-     */
-    public function getSameEvents(Offre $eventReffer): array
-    {
-        $data = [];
-        $events = $this->getEvents(true);
-        foreach ($events as $event) {
-            foreach ($event->categories as $category) {
-                if (in_array(
-                    $category->id,
-                    array_map(function ($category) {
-                        return $category->id;
-                    }, $eventReffer->categories)
-                )) {
-                    $data[] = $event;
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
      * @param Offre $referringOffer
      * @return Offre[]
      * @throws InvalidArgumentException
