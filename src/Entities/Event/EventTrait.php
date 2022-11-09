@@ -8,6 +8,11 @@ trait EventTrait
 {
     public ?DateTimeInterface $dateBegin = null;
     public ?DateTimeInterface $dateEnd = null;
+    /**
+     * ShortCut dateEndEvent ['year','month','day']
+     * @var array
+     */
+    public array $dateEvent = [];
 
     /**
      * @var DateBeginEnd[]

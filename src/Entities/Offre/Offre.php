@@ -101,14 +101,15 @@ class Offre
     public array $tags = [];
     public array $enfants = [];
     public array $parents = [];
+    public string $locality = '';
     /**
      * @var SpecInfo[]
      */
     public array $classements = [];
-    public string $gpx_distance='';
-    public ?string $gpx_id='';
-    public ?string $gpx_duree='';
-    public ?string $gpx_difficulte='';
+    public string $gpx_distance = '';
+    public ?string $gpx_id = '';
+    public ?string $gpx_duree = '';
+    public ?string $gpx_difficulte = '';
 
     /**
      * Alias
