@@ -150,6 +150,13 @@ class PivotRepository
         );
     }
 
+    /**
+     * @param string $codeCgt
+     * @param string $class
+     * @param string|null $cacheKeyPlus
+     * @return Offre|null
+     * @throws InvalidArgumentException
+     */
     public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
     {
         $offre = $this->getOffreByCgt($codeCgt, $class, $cacheKeyPlus);
