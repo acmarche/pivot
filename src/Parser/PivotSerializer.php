@@ -5,6 +5,8 @@ namespace AcMarche\Pivot\Parser;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
+use AcMarche\Pivot\Entities\Urn\Urn;
+use AcMarche\Pivot\Entities\Urn\UrnDefinition;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -23,7 +25,7 @@ class PivotSerializer
         string $data,
         string $class,
         string $format = 'json'
-    ): Offre|ResultOfferDetail|ResponseQuery|array|null {
+    ): Offre|ResultOfferDetail|ResponseQuery|Urn|UrnDefinition|array|null {
         try {
             return $this->serializer->deserialize($data, $class, $format, [
                 DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
