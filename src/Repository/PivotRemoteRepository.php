@@ -116,6 +116,11 @@ class PivotRemoteRepository
         return $this->thesaurus(ThesaurusEnum::THESAURUS_FAMILY->value);
     }
 
+    public function thesaurusUrn(string $urnName): ?string
+    {
+        return $this->thesaurus('urn/'.$urnName);
+    }
+
     public function thesaurusLocalite(?int $idLocalite = null): ?string
     {
         $params = null;
