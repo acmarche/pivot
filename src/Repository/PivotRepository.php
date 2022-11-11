@@ -8,6 +8,7 @@ use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
 use AcMarche\Pivot\Entities\Specification\Document;
 use AcMarche\Pivot\Entities\Specification\Gpx;
+use AcMarche\Pivot\Entities\Urn\UrnDefinition;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Parser\OffreParser;
@@ -337,6 +338,23 @@ class PivotRepository
         );
     }
 
+
+    /**
+     * @return UrnDefinition
+     * @throws \Exception
+     */
+    public function thesaurusUrn(string $urnName): UrnDefinition
+    {
+        return $this->cache->get("curn-".$urnName, function () use ($urnName) {
+            $urn = json_decode($this->pivotRemoteRepository->thesaurusUrn($urnName));
+
+            return $this->pivotSerializer->deserializeToClass(
+                json_encode($urn->spec[0]),
+                UrnDefinition::class
+            );
+        });
+    }
+
     /**
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/9/urn:fld:catevt;fmt=json
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=json
@@ -354,5 +372,21 @@ class PivotRepository
             json_encode($familiesObject->spec[0]->spec),
             'AcMarche\Pivot\Entities\Family\Family[]',
         );
+    }
+
+    public function specitificationsByOffre(Offre $offre): array
+    {
+        $categories = [];
+        foreach ($offre->spec as $spec) {
+            $categoryDefinition = $this->thesaurusUrn($spec->urnCat);
+            $categoryDefinition->name = $categoryDefinition->labelByLanguage('fr');
+            $categories[$spec->urnCat]['category'] = $categoryDefinition;
+            $urnDefinition = $this->thesaurusUrn($spec->urn);
+            $urnDefinition->name = $urnDefinition->labelByLanguage('fr');
+            $urnDefinition->value = $spec->value;
+            $categories[$spec->urnCat]['items'][] = $urnDefinition;
+        }
+
+        return $categories;
     }
 }
