@@ -10,7 +10,6 @@ use AcMarche\Pivot\Entities\Specification\Gpx;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Entities\Specification\SpectFieldsTrait;
-use AcMarche\Pivot\Entities\UrnLabel;
 use AcMarche\Pivot\Entities\User\User;
 use AcMarche\Pivot\Entities\User\UserGlobalCreation;
 use AcMarche\Pivot\Entities\User\UserGlobalModification;

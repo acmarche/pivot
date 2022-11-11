@@ -3,7 +3,7 @@
 namespace AcMarche\Pivot\Entities\Communication;
 
 use AcMarche\Pivot\Entities\Label;
-use AcMarche\Pivot\Entities\UrnLabel;
+use AcMarche\Pivot\Entities\Urn\UrnLabel;
 
 class Adresse
 {

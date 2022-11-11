@@ -2,7 +2,8 @@
 
 namespace AcMarche\Pivot\Entities\Specification;
 
-use AcMarche\Pivot\Entities\UrnDefinition;
+
+use AcMarche\Pivot\Entities\Urn\UrnDefinition;
 
 /**
  * Class contenant la définition de la spécification

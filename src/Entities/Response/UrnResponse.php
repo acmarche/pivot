@@ -2,7 +2,8 @@
 
 namespace AcMarche\Pivot\Entities\Response;
 
-use AcMarche\Pivot\Entities\UrnDefinition;
+
+use AcMarche\Pivot\Entities\Urn\UrnDefinition;
 
 /**
  * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/urn;fmt=json
