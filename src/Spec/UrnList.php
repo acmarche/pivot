@@ -8,6 +8,7 @@ namespace AcMarche\Pivot\Spec;
  */
 enum UrnList: string
 {
+    case EQUIPEMENTS = "urn:cat:eqpsrv";
     case DESCRIPTION = "urn:fld:descmarket";
     case DESCRIPTION_SHORT = "descmarket";
     case TARIF = "urn:fld:tarifcplt";
