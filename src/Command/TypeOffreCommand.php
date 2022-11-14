@@ -11,7 +11,6 @@ use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Spec\SpecSearchTrait;
 use AcMarche\Pivot\Spec\UrnList;
-use AcMarche\Pivot\Spec\UrnUtils;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +33,6 @@ class TypeOffreCommand extends Command
         private PivotRepository $pivotRepository,
         private PivotRemoteRepository $pivotRemoteRepository,
         private TypeOffreRepository $typeOffreRepository,
-        private UrnUtils $urnUtils,
         private PivotSerializer $pivotSerializer
     ) {
         parent::__construct();
