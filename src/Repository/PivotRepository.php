@@ -53,7 +53,9 @@ class PivotRepository
                     Offre::class,
                     $offreShort->dateModification
                 );
-                $offres[] = $offre;
+                if ($offre) {
+                    $offres[] = $offre;
+                }
             } catch (\Exception $exception) {
                 //todo add logger
                 var_dump($exception);
@@ -136,8 +138,9 @@ class PivotRepository
                     $dataStringOffre = json_encode($tmp->offre[0]);
 
                     $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, $class);
-
-                    $object->dataRaw = $dataString;
+                    if ($object) {
+                        $object->dataRaw = $dataString;
+                    }
 
                     return $object;
                 }
@@ -201,6 +204,9 @@ class PivotRepository
                 try {
                     $sOffre = $this->getOffreByCgt($code);
                 } catch (\Exception $exception) {
+                    continue;
+                }
+                if (!$sOffre) {
                     continue;
                 }
                 $this->specs = $sOffre->getOffre()->spec;
@@ -287,6 +293,9 @@ class PivotRepository
                 try {
                     $offreTgt = $this->getOffreByCgt($code, Offre::class);
                 } catch (\Exception $exception) {
+                    continue;
+                }
+                if (!$offreTgt) {
                     continue;
                 }
                 if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
