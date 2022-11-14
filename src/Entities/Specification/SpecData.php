@@ -15,14 +15,18 @@ namespace AcMarche\Pivot\Entities\Specification;
  */
 class SpecData
 {
+    const KEY_CAT = 'urnCat';
+    const KEY_SUB_CAT = 'urnSubCat';
+    const KEY_TYPE = 'type';
+
     public string $urn;
-    public string $urnCat;
-    public string $urnSubCat;
+    public ?string $urnCat = null;
+    public ?string $urnSubCat = null;
     public int $order;
     public string $type;
     public ?string $value = null;
     /**
-     * Type == Object
+     * Type == Object ex: date event: "urn": "urn:obj:date"
      * @var SpecData[]|array
      */
     public array $spec;

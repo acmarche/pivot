@@ -8,6 +8,7 @@ use AcMarche\Pivot\Entities\LabelTrait;
 use AcMarche\Pivot\Entities\Specification\Document;
 use AcMarche\Pivot\Entities\Specification\Gpx;
 use AcMarche\Pivot\Entities\Specification\SpecData;
+use AcMarche\Pivot\Entities\Specification\Specification;
 use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Entities\Specification\SpectFieldsTrait;
 use AcMarche\Pivot\Entities\Urn\UrnLabel;
@@ -110,6 +111,10 @@ class Offre
     public ?string $gpx_id = '';
     public ?string $gpx_duree = '';
     public ?string $gpx_difficulte = '';
+    /**
+     * @var Specification[]|array
+     */
+    public array $specifications;
 
     /**
      * Alias
