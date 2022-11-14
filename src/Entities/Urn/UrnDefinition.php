@@ -9,15 +9,19 @@ class UrnDefinition
 {
     use LabelTrait;
 
-    public string $urn;
-    public string $code;
+    public ?string $urn = null;
+    public ?string $code = null;
     public bool $deprecated = false;
-    public string $type;
-    public string $dateModification;
-    public string $dateCreation;
-    public string $xpathPivotWebWs;
-    public bool $dynamic;
-    public int $visibilite;
+    public ?string $type = null;
+    public ?string $dateModification = null;
+    public ?string $dateCreation = null;
+    public ?string $xpathPivotWebWs = null;
+    public ?bool $dynamic = null;
+    public ?int $visibilite = null;
+    public ?string $userLocalName = null;
+    public ?string $userLocalSurname = null;
+    public ?string $userGlobalName = null;
+    public bool|null $collapsed = null;
     /**
      * @var array|Label
      */
