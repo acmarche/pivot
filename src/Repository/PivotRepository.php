@@ -181,7 +181,7 @@ class PivotRepository
      */
     public function getAllDataFromRemote(): ?ResponseQuery
     {
-        return $this->cache->get('pivotAllData55', function () {
+        return $this->cache->get('pivotAllData', function () {
             if ($dataString = $this->pivotRemoteRepository->query()) {
                 return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
             }
