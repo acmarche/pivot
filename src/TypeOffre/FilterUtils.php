@@ -33,7 +33,8 @@ class FilterUtils
             }
         }
 
-        return array_values($offres);//reset keys for js
+        //reset keys for js
+        return array_values($offres);
     }
 
     /**
