@@ -4,7 +4,6 @@ namespace AcMarche\Pivot\Entities\Offre;
 
 class RelOffreTgt
 {
-
     public string $urn;
     /**
      * var OffreItem[] $offre
