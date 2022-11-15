@@ -6,17 +6,16 @@ use AcMarche\Pivot\Entities\Category;
 
 trait SpectFieldsTrait
 {
-    public ?string $homepage;
+    public ?string $homepage = null;
     public array $emails = [];
     public array $tels = [];
-    /**
-     * @var SpecInfo[] $specsDetailed
-     */
-    public array $specsDetailed;
     /**
      * @var Category[] $categories
      */
     public array $categories = [];
+    /**
+     * @var string[] $images
+     */
     public array $images = [];
     /**
      * @var SpecData[] $descriptions
