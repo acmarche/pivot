@@ -2,44 +2,54 @@
 
 namespace AcMarche\Pivot\Spec;
 
+use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
+use AcMarche\Pivot\Entities\Specification\Specification;
 
 trait SpecSearchTrait
 {
     /**
-     * @param SpecData[] $specs
+     * @return Specification[]|SpecData[]
      */
-    public array $specs = [];
-
-    /**
-     * @return SpecData[]
-     */
-    public function findByUrn(string $keywordSearch, string $property = "urn", bool $contains = false): array
-    {
+    public function findByUrn(
+        Offre $offre,
+        string $keywordSearch,
+        string $property = "urn",
+        bool $contains = false,
+        bool $returnData = false
+    ): array {
         $specs = [];
-        foreach ($this->specs as $spec) {
-            if (!isset($spec->$property)) {
+        foreach ($offre->specifications as $specification) {
+            $data = $specification->data;
+            if (!isset($data->$property)) {
                 continue;
             }
             if ($contains) {
-                if (\str_contains($spec->$property, $keywordSearch)) {
-                    $specs[] = $spec;
+                if (\str_contains($data->$property, $keywordSearch)) {
+                    $specs[] = $specification;
                 }
                 continue;
             }
-            if ($spec->$property === $keywordSearch) {
-                $specs[] = $spec;
+            if ($data->$property === $keywordSearch) {
+                $specs[] = $specification;
             }
+        }
+
+        if ($returnData) {
+            return array_map(function ($specification) {
+                return $specification->data;
+            }, $specs);
         }
 
         return $specs;
     }
 
-    public function findByUrnReturnValue(string $urnName): ?string
+    public function findByUrnReturnValue(Offre $offre, string $urnName): ?string
     {
-        $specs = $this->findByUrn($urnName);
-        if (count($specs) > 0) {
-            return $specs[0]->value;
+        foreach ($offre->specifications as $specification) {
+            if ($specification->data->urn === $urnName) {
+                return $specification->data->value;
+            }
         }
 
         return null;

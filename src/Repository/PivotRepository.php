@@ -8,6 +8,8 @@ use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
 use AcMarche\Pivot\Entities\Specification\Document;
 use AcMarche\Pivot\Entities\Specification\Gpx;
+use AcMarche\Pivot\Entities\Specification\Specification;
+use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Entities\Urn\UrnDefinition;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventUtils;
@@ -53,7 +55,7 @@ class PivotRepository
                     Offre::class,
                     $offreShort->dateModification
                 );
-                if ($offre) {
+                if ($offre instanceof Offre) {
                     $offres[] = $offre;
                 }
             } catch (\Exception $exception) {
@@ -70,11 +72,8 @@ class PivotRepository
 
         if ($parse) {
             array_map(function ($offre) {
-                $this->pivotParser->parseOffre($offre);
-                $this->pivotParser->parseDatesEvent($offre);
+                $this->launchParse($offre);
             }, $offres);
-            $this->parseRelOffres($offres);
-            $this->parseRelOffresTgt($offres);
         }
 
         return $offres;
@@ -92,6 +91,7 @@ class PivotRepository
             $urnsSelected
         );
         foreach ($events as $key => $event) {
+            $this->launchParse($event);
             if (!$event->dateBegin) {
                 unset($events[$key]);
             }
@@ -165,10 +165,7 @@ class PivotRepository
     {
         $offre = $this->getOffreByCgt($codeCgt, $class, $cacheKeyPlus);
         if ($offre) {
-            $this->pivotParser->parseOffre($offre);
-            $this->pivotParser->parseDatesEvent($offre);
-            $this->parseRelOffres([$offre]);
-            $this->parseRelOffresTgt([$offre]);
+            $this->launchParse($offre);
         }
 
         return $offre;
@@ -195,85 +192,78 @@ class PivotRepository
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    private function parseRelOffres(array $offres): void
+    private function parseRelatedOffers(Offre $offre): void
     {
-        foreach ($offres as $offre) {
-            foreach ($offre->relOffre as $relation) {
-                $item = $relation->offre;
-                $code = $item['codeCgt'];
-                try {
-                    $sOffre = $this->getOffreByCgt($code);
-                } catch (\Exception $exception) {
-                    continue;
-                }
-                if (!$sOffre) {
-                    continue;
-                }
-                $this->specs = $sOffre->getOffre()->spec;
-                $medias = $this->findByUrn(UrnList::URL->value);
-                if (count($medias) > 0) {
-                    foreach ($medias as $media) {
-                        $value = str_replace("http:", "https:", $media->value);
-                        $string = new UnicodeString($value);
-                        $extension = $string->slice(-3);
-                        $document = new Document();
-                        $document->extension = $extension;
-                        $document->url = $value;
+        foreach ($offre->relOffre as $relation) {
+            $item = $relation->offre;
+            $code = $item['codeCgt'];
+            try {
+                $relatedOffer = $this->getOffreByCgt($code, class: Offre::class);
+            } catch (\Exception $exception) {
+                continue;
+            }
+            if (!$relatedOffer) {
+                continue;
+            }
+            $this->specitificationsByOffre($relatedOffer);
+            $specificationMedias = $this->findByUrn($relatedOffer, UrnList::URL->value);
+            foreach ($specificationMedias as $specificationMedia) {
+                $value = str_replace("http:", "https:", $specificationMedia->data->value);
+                $string = new UnicodeString($value);
+                $extension = $string->slice(-3);
+                $document = new Document();
+                $document->extension = $extension;
+                $document->url = $value;
 
-                        if (in_array($extension, ['jpg', 'png'])) {
-                            $offre->images[] = $value;
-                        } else {
-                            $offre->documents[] = $document;
+                if (in_array($extension, ['jpg', 'png'])) {
+                    $offre->images[] = $value;
+                } else {
+                    $offre->documents[] = $document;
+                }
+            }
+            foreach ($offre->documents as $document) {
+                if ($document->extension == 'gpx') {
+                    $gpx = new Gpx();
+                    $gpx->code = $code;
+                    $gpx->data_raw = $this->pivotRemoteRepository->gpxRead($document->url);
+                    $gpxXml = simplexml_load_string($gpx->data_raw);
+                    foreach ($gpxXml->metadata as $pt) {
+                        $gpx->name = (string)$pt->name;
+                        $gpx->desc = (string)$pt->desc;
+                        $gpx->url = $document->url;
+                        foreach ($pt->link as $link) {
+                            $gpx->links[] = (string)$link->attributes();
                         }
                     }
+                    $offre->gpxs[] = $gpx;
                 }
-                if (count($offre->images) > 0) {
-                    $offre->image = $offre->images[0];
+            }
+            $specificationImages = $this->findByUrn($relatedOffer, UrnList::MEDIAS_PARTIAL->value, contains: true);
+            foreach ($specificationImages as $specificationImage) {
+                $value = str_replace("http:", "https:", $specificationImage->data->value);
+                $offre->images[] = $value;
+            }
+            if (count($offre->images) > 0) {
+                $offre->image = $offre->images[0];
+            }
+            if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
+                if (isset($relatedOffer->offre[0])) {
+                    $offre->contact_direction = $relatedOffer->offre[0];
                 }
-                foreach ($offre->documents as $document) {
-                    if ($document->extension == 'gpx') {
-                        $gpx = new Gpx();
-                        $gpx->code = $code;
-                        $gpx->data_raw = $this->pivotRemoteRepository->gpxRead($document->url);
-                        $gpxXml = simplexml_load_string($gpx->data_raw);
-                        foreach ($gpxXml->metadata as $pt) {
-                            $gpx->name = (string)$pt->name;
-                            $gpx->desc = (string)$pt->desc;
-                            $gpx->url = $document->url;
-                            foreach ($pt->link as $link) {
-                                $gpx->links[] = (string)$link->attributes();
-                            }
-                        }
-                        $offre->gpxs[] = $gpx;
-                    }
+            }
+            if ($relation->urn === UrnList::POIS->value) {
+                if (isset($relatedOffer->offre[0])) {
+                    $offre->pois[] = $relatedOffer->offre[0];
                 }
-                $images = $this->findByUrn(UrnList::MEDIAS_PARTIAL->value, "urn", true);
-                if (count($images) > 0) {
-                    foreach ($images as $image) {
-                        $value = str_replace("http:", "https:", $image->value);
-                        $offre->images[] = $value;
-                    }
-                    $offre->image = $offre->images[0];
+            }
+            if ($relation->urn == UrnList::MEDIAS_AUTRE->value) {
+                if (isset($relatedOffer->offre[0])) {
+                    $offre->autres[] = $relatedOffer->offre[0];
                 }
-                if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
-                    if (isset($sOffre->offre[0])) {
-                        $offre->contact_direction = $sOffre->offre[0];
-                    }
-                }
-                if ($relation->urn === UrnList::POIS->value) {
-                    if (isset($sOffre->offre[0])) {
-                        $offre->pois[] = $sOffre->offre[0];
-                    }
-                }
-                if ($relation->urn == UrnList::MEDIAS_AUTRE->value) {
-                    if (isset($sOffre->offre[0])) {
-                        $offre->autres[] = $sOffre->offre[0];
-                    }
-                }
-                if ($relation->urn == UrnList::MEDIA_DEFAULT->value) {
-                    if (isset($sOffre->offre[0])) {
-                        $offre->media_default = $sOffre->offre[0];
-                    }
+            }
+            if ($relation->urn == UrnList::MEDIA_DEFAULT->value) {
+                if (isset($relatedOffer->offre[0])) {
+                    $offre->media_default = $relatedOffer->offre[0];
                 }
             }
         }
@@ -284,27 +274,26 @@ class PivotRepository
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    private function parseRelOffresTgt(array $offres): void
+    private function parseRelOffresTgt(Offre $offre): void
     {
-        foreach ($offres as $offre) {
-            foreach ($offre->relOffreTgt as $relOffreTgt) {
-                $item = $relOffreTgt->offre;
-                $code = $item['codeCgt'];
-                try {
-                    $offreTgt = $this->getOffreByCgt($code, Offre::class);
-                } catch (\Exception $exception) {
-                    continue;
-                }
-                if (!$offreTgt) {
-                    continue;
-                }
-                if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
-                    $offre->voir_aussis[] = $offreTgt;
-                }
-                $this->specs = $offre->relOffreTgt;
-                foreach ($this->findByUrn(UrnList::OFFRE_ENFANT->value) as $enfant) {
-                    $offre->enfants[] = $offreTgt;
-                }
+        foreach ($offre->relOffreTgt as $relOffreTgt) {
+            $item = $relOffreTgt->offre;
+            $code = $item['codeCgt'];
+            try {
+                $offreTgt = $this->getOffreByCgt($code, Offre::class);
+            } catch (\Exception $exception) {
+                continue;
+            }
+            if (!$offreTgt) {
+                continue;
+            }
+
+            $this->launchParse($offreTgt);
+            if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
+                $offre->see_also[] = $offreTgt;
+            }
+            foreach ($this->findByUrn($offreTgt, UrnList::OFFRE_ENFANT->value) as $enfant) {
+                $offre->enfants[] = $enfant;
             }
         }
     }
@@ -326,6 +315,7 @@ class PivotRepository
 
         foreach ($offres as $offre) {
             if ($referringOffer->codeCgt != $offre->codeCgt) {
+                $this->launchParse($offre);
                 $data[] = $offre;
             }
         }
@@ -383,19 +373,48 @@ class PivotRepository
         );
     }
 
+    /**
+     * @param Offre $offre
+     * @return array|Specification[]
+     * @throws \Exception
+     */
     public function specitificationsByOffre(Offre $offre): array
     {
-        $categories = [];
+        /**
+         * @var array|SpecInfo[] $specifications
+         */
+        $specifications = [];
         foreach ($offre->spec as $spec) {
-            $categoryDefinition = $this->thesaurusUrn($spec->urnCat);
-            $categoryDefinition->name = $categoryDefinition->labelByLanguage('fr');
-            $categories[$spec->urnCat]['category'] = $categoryDefinition;
             $urnDefinition = $this->thesaurusUrn($spec->urn);
-            $urnDefinition->name = $urnDefinition->labelByLanguage('fr');
-            $urnDefinition->value = $spec->value;
-            $categories[$spec->urnCat]['items'][] = $urnDefinition;
+            $urnCatDefinition = null;
+            if ($spec->urnCat) {
+                $urnCatDefinition = $this->thesaurusUrn($spec->urnCat);
+            }
+            $specifications[] = new Specification($spec, $urnDefinition, $urnCatDefinition);
         }
 
-        return $categories;
+        $offre->specifications = $specifications;
+
+        return $specifications;
+    }
+
+    public function urnDefinition(string $urnName): ?UrnDefinition
+    {
+        return $this->cache->get('urnDefinition-'.$urnName, function () use ($urnName) {
+            if ($data = $this->pivotRemoteRepository->thesaurusUrn($urnName)) {
+                return $this->pivotSerializer->deserializeToClass($data, UrnDefinition::class);
+            }
+
+            return null;
+        });
+    }
+
+    private function launchParse(Offre $offre)
+    {
+        $this->specitificationsByOffre($offre);
+        $this->pivotParser->parseOffre($offre);
+        $this->pivotParser->parseDatesEvent($offre);
+        $this->parseRelatedOffers($offre);
+        $this->parseRelOffresTgt($offre);
     }
 }
