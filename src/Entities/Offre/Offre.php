@@ -82,7 +82,10 @@ class Offre
      * @var array|Offre[] $pois
      */
     public array $autres = [];
-    public array $voir_aussis = [];
+    /**
+     * @var Offre[] $see_also
+     */
+    public array $see_also = [];
     public array $hades_ids = [];
     /**
      * @var SpecData[]
@@ -114,7 +117,7 @@ class Offre
     /**
      * @var Specification[]|array
      */
-    public array $specifications;
+    public array $specifications = [];
 
     /**
      * Alias
