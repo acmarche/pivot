@@ -1,6 +1,6 @@
 <?php
 
-namespace AcMarche\Pivot\Parser;
+namespace AcMarche\Pivot\Serializer;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;

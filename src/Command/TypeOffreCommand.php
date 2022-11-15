@@ -5,7 +5,7 @@ namespace AcMarche\Pivot\Command;
 use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Parser\ParserEventTrait;
-use AcMarche\Pivot\Parser\PivotSerializer;
+use AcMarche\Pivot\Serializer\PivotSerializer;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;

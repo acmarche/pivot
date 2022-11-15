@@ -6,18 +6,30 @@ use AcMarche\Pivot\Entities\Category;
 use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
-use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Spec\SpecSearchTrait;
 use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnSubCatList;
-use AcMarche\Pivot\Spec\UrnTypeList;
 
 class OffreParser
 {
     use SpecSearchTrait;
+    use ParseImagesTrait;
+    use ParseRelatedOffersTrait;
+    use ParseRelationOffresTgtTrait;
+    use ParseSpecificationsTrait;
     use ParserEventTrait;
+    use ParseImagesTrait;
+
+    public function launchParse(Offre $offre)
+    {
+        $this->specitificationsByOffre($offre);
+        $this->parseOffre($offre);
+        $this->parseDatesEvent($offre);
+        $this->parseRelatedOffers($offre);
+        $this->parseRelOffresTgt($offre);
+    }
 
     public function parseOffre(Offre $offre)
     {
@@ -82,41 +94,6 @@ class OffreParser
 
         $this->setCategories($offre);
         $this->setNameByLanguages($offre);
-    }
-
-    /**
-     * Complète la class Event
-     * Date de début, date de fin,...
-     * @param Offre $offre
-     * @param bool $removeObsolete
-     * @return void
-     */
-    public function parseDatesEvent(Offre $offre, bool $removeObsolete = false): void
-    {
-        if ($offre->typeOffre->idTypeOffre !== UrnTypeList::evenement()->typeId) {
-            return;
-        }
-
-        $offre->dates = $this->getDates($offre);
-        $fistDate = $offre->firstDate();
-        if ($fistDate) {
-            $offre->dateBegin = $fistDate->date_begin;
-            $offre->dateEnd = $fistDate->date_end;
-        }
-
-        if ($removeObsolete) {
-            foreach ($offre->dates as $key => $dateBeginEnd) {
-                if (EventUtils::isDateBeginEndObsolete($dateBeginEnd)) {
-                    unset($offre->dates[$key]);
-                }
-            }
-            $offre->dates = array_values($offre->dates);//reset index
-            $fistDate = $offre->firstDate();
-            if ($fistDate) {
-                $offre->dateBegin = $fistDate->date_begin;
-                $offre->dateEnd = $fistDate->date_end;
-            }
-        }
     }
 
     private function setNameByLanguages(Offre $offre)

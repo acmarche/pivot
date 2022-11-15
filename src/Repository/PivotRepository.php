@@ -6,17 +6,11 @@ use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
-use AcMarche\Pivot\Entities\Specification\Document;
-use AcMarche\Pivot\Entities\Specification\Gpx;
-use AcMarche\Pivot\Entities\Specification\Specification;
-use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Entities\Urn\UrnDefinition;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Parser\OffreParser;
-use AcMarche\Pivot\Parser\PivotSerializer;
-use AcMarche\Pivot\Spec\SpecSearchTrait;
-use AcMarche\Pivot\Spec\UrnList;
+use AcMarche\Pivot\Serializer\PivotSerializer;
 use AcMarche\Pivot\Spec\UrnTypeList;
 use AcMarche\Pivot\TypeOffre\FilterUtils;
 use AcMarche\Pivot\Utils\SortUtils;
@@ -27,11 +21,9 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class PivotRepository
 {
-    use SpecSearchTrait;
-
     public function __construct(
         private PivotRemoteRepository $pivotRemoteRepository,
-        private OffreParser $pivotParser,
+        private OffreParser $offreParser,
         private PivotSerializer $pivotSerializer,
         private CacheInterface $cache,
         private SluggerInterface $slugger
@@ -72,7 +64,7 @@ class PivotRepository
 
         if ($parse) {
             array_map(function ($offre) {
-                $this->launchParse($offre);
+                $this->offreParser->launchParse($offre);
             }, $offres);
         }
 
@@ -91,7 +83,7 @@ class PivotRepository
             $urnsSelected
         );
         foreach ($events as $key => $event) {
-            $this->launchParse($event);
+            $this->offreParser->launchParse($event);
             if (!$event->dateBegin) {
                 unset($events[$key]);
             }
@@ -165,7 +157,7 @@ class PivotRepository
     {
         $offre = $this->getOffreByCgt($codeCgt, $class, $cacheKeyPlus);
         if ($offre) {
-            $this->launchParse($offre);
+            $this->offreParser->launchParse($offre);
         }
 
         return $offre;
@@ -188,117 +180,6 @@ class PivotRepository
     }
 
     /**
-     * @param Offre[] $offres
-     *
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    private function parseRelatedOffers(Offre $offre): void
-    {
-        foreach ($offre->relOffre as $relation) {
-            $item = $relation->offre;
-            $code = $item['codeCgt'];
-            try {
-                $relatedOffer = $this->getOffreByCgt($code, class: Offre::class);
-            } catch (\Exception $exception) {
-                continue;
-            }
-            if (!$relatedOffer) {
-                continue;
-            }
-            $this->specitificationsByOffre($relatedOffer);
-            $specificationMedias = $this->findByUrn($relatedOffer, UrnList::URL->value);
-            foreach ($specificationMedias as $specificationMedia) {
-                $value = str_replace("http:", "https:", $specificationMedia->data->value);
-                $string = new UnicodeString($value);
-                $extension = $string->slice(-3);
-                $document = new Document();
-                $document->extension = $extension;
-                $document->url = $value;
-
-                if (in_array($extension, ['jpg', 'png'])) {
-                    $offre->images[] = $value;
-                } else {
-                    $offre->documents[] = $document;
-                }
-            }
-            foreach ($offre->documents as $document) {
-                if ($document->extension == 'gpx') {
-                    $gpx = new Gpx();
-                    $gpx->code = $code;
-                    $gpx->data_raw = $this->pivotRemoteRepository->gpxRead($document->url);
-                    $gpxXml = simplexml_load_string($gpx->data_raw);
-                    foreach ($gpxXml->metadata as $pt) {
-                        $gpx->name = (string)$pt->name;
-                        $gpx->desc = (string)$pt->desc;
-                        $gpx->url = $document->url;
-                        foreach ($pt->link as $link) {
-                            $gpx->links[] = (string)$link->attributes();
-                        }
-                    }
-                    $offre->gpxs[] = $gpx;
-                }
-            }
-            $specificationImages = $this->findByUrn($relatedOffer, UrnList::MEDIAS_PARTIAL->value, contains: true);
-            foreach ($specificationImages as $specificationImage) {
-                $value = str_replace("http:", "https:", $specificationImage->data->value);
-                $offre->images[] = $value;
-            }
-            if (count($offre->images) > 0) {
-                $offre->image = $offre->images[0];
-            }
-            if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
-                if (isset($relatedOffer->offre[0])) {
-                    $offre->contact_direction = $relatedOffer->offre[0];
-                }
-            }
-            if ($relation->urn === UrnList::POIS->value) {
-                if (isset($relatedOffer->offre[0])) {
-                    $offre->pois[] = $relatedOffer->offre[0];
-                }
-            }
-            if ($relation->urn == UrnList::MEDIAS_AUTRE->value) {
-                if (isset($relatedOffer->offre[0])) {
-                    $offre->autres[] = $relatedOffer->offre[0];
-                }
-            }
-            if ($relation->urn == UrnList::MEDIA_DEFAULT->value) {
-                if (isset($relatedOffer->offre[0])) {
-                    $offre->media_default = $relatedOffer->offre[0];
-                }
-            }
-        }
-    }
-
-    /**
-     * @param Offre[] $offres
-     *
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    private function parseRelOffresTgt(Offre $offre): void
-    {
-        foreach ($offre->relOffreTgt as $relOffreTgt) {
-            $item = $relOffreTgt->offre;
-            $code = $item['codeCgt'];
-            try {
-                $offreTgt = $this->getOffreByCgt($code, Offre::class);
-            } catch (\Exception $exception) {
-                continue;
-            }
-            if (!$offreTgt) {
-                continue;
-            }
-
-            $this->launchParse($offreTgt);
-            if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
-                $offre->see_also[] = $offreTgt;
-            }
-            foreach ($this->findByUrn($offreTgt, UrnList::OFFRE_ENFANT->value) as $enfant) {
-                $offre->enfants[] = $enfant;
-            }
-        }
-    }
-
-    /**
      * @param Offre $referringOffer
      * @return Offre[]
      * @throws InvalidArgumentException
@@ -315,7 +196,7 @@ class PivotRepository
 
         foreach ($offres as $offre) {
             if ($referringOffer->codeCgt != $offre->codeCgt) {
-                $this->launchParse($offre);
+                $this->offreParser->specitificationsByOffre($offre);
                 $data[] = $offre;
             }
         }
@@ -373,31 +254,6 @@ class PivotRepository
         );
     }
 
-    /**
-     * @param Offre $offre
-     * @return array|Specification[]
-     * @throws \Exception
-     */
-    public function specitificationsByOffre(Offre $offre): array
-    {
-        /**
-         * @var array|SpecInfo[] $specifications
-         */
-        $specifications = [];
-        foreach ($offre->spec as $spec) {
-            $urnDefinition = $this->thesaurusUrn($spec->urn);
-            $urnCatDefinition = null;
-            if ($spec->urnCat) {
-                $urnCatDefinition = $this->thesaurusUrn($spec->urnCat);
-            }
-            $specifications[] = new Specification($spec, $urnDefinition, $urnCatDefinition);
-        }
-
-        $offre->specifications = $specifications;
-
-        return $specifications;
-    }
-
     public function urnDefinition(string $urnName): ?UrnDefinition
     {
         return $this->cache->get('urnDefinition-'.$urnName, function () use ($urnName) {
@@ -407,14 +263,5 @@ class PivotRepository
 
             return null;
         });
-    }
-
-    private function launchParse(Offre $offre)
-    {
-        $this->specitificationsByOffre($offre);
-        $this->pivotParser->parseOffre($offre);
-        $this->pivotParser->parseDatesEvent($offre);
-        $this->parseRelatedOffers($offre);
-        $this->parseRelOffresTgt($offre);
     }
 }
