@@ -22,9 +22,9 @@ enum UrnList: string
     case URL = "urn:fld:url";
     case POIS = "urn:lnk:offre:poi";
     case CATEGORIE_EVENT = "urn:fld:catevt";
-    case CATEGORIE_PDT = "urn:fld:catpdt";
-    case CATEGORIE_PRD = "urn:fld:catprd";
-    case CATEGORIE_ATS = "urn:fld:catats";
+    case CATEGORIE_PDT = "urn:fld:catpdt";//produit du terroir
+    case CATEGORIE_PRD = "urn:fld:catprd";//producteur
+    case CATEGORIE_ATS = "urn:fld:catats";//artisan
     case CATEGORIE_DECOUVERTE = "urn:fld:catdec";
     case CATEGORIE_PATRIMOINE_BATI = "urn:fld:catdec:patrbati";
     case CATEGORIE = "urn:fld:cat";
