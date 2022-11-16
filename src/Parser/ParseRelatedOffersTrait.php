@@ -33,7 +33,7 @@ trait ParseRelatedOffersTrait
 
             $this->specitificationsByOffre($relatedOffer);
 
-            $docs = $this->parseImages($offre);
+            $docs = $this->parseImages($relatedOffer);
             $offre->images = $docs['images'];
             $offre->documents = $docs['documents'];
             $offre->image = $offre->images[0] ?? null;
