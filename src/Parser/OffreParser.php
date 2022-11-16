@@ -11,6 +11,7 @@ use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnSubCatList;
+use AcMarche\Pivot\Spec\UrnTypeList;
 
 class OffreParser
 {
@@ -52,7 +53,10 @@ class OffreParser
         foreach ($this->findByUrn($offre, SpecTypeEnum::EMAIL->value, SpecData::KEY_TYPE, returnData: true) as $spec) {
             $offre->emails[] = $spec->value;
         }
-        foreach ($this->findByUrn($offre, SpecTypeEnum::TEL->value, SpecData::KEY_TYPE, returnData: true) as $spec) {
+        foreach ($this->findByUrn($offre, SpecTypeEnum::PHONE->value, SpecData::KEY_TYPE, returnData: true) as $spec) {
+            $offre->tels[] = $spec->value;
+        }
+        foreach ($this->findByUrn($offre, SpecTypeEnum::GSM->value, SpecData::KEY_TYPE, returnData: true) as $spec) {
             $offre->tels[] = $spec->value;
         }
 
@@ -117,20 +121,27 @@ class OffreParser
     private function setCategories(Offre $offre)
     {
         $urn = match ($offre->typeOffre->idTypeOffre) {
-            9 => UrnList::CATEGORIE_EVENT,
-            267 => UrnList::CATEGORIE_PDT,
-            258 => UrnList::CATEGORIE_PRD,
-            259 => UrnList::CATEGORIE_ATS,
+            UrnTypeList::evenement()->typeId => UrnList::CATEGORIE_EVENT,
+            UrnTypeList::restauration()->typeId => UrnList::CLASSIFICATION_LABEL,
+            UrnTypeList::produitDeTerroir()->typeId => UrnList::CATEGORIE_PDT,
+            UrnTypeList::producteur()->typeId => UrnList::CATEGORIE_PRD,
+            UrnTypeList::artisan()->typeId => UrnList::CATEGORIE_ATS,
             default => UrnList::CATEGORIE
         };
 
-        $specifications = $this->findByUrn($offre, $urn->value, contains: true);
+        $specifications = $this->findByUrn($offre, $urn->value, SpecData::KEY_CAT, contains: true);
         foreach ($specifications as $specification) {
-            $order = $specification->data->order;
-            $labels = $specification->urnCatDefinition->label;
-            $offre->categories[$specification->data->order] = new Category($specification->data->urn, $order, $labels);
+            if ($specification->data->type == SpecTypeEnum::BOOLEAN->value) {//skip gaultmil,michstar...
+                $order = $specification->data->order;
+                $labels = $specification->urnDefinition->label;
+                $offre->categories[$specification->data->order] = new Category(
+                    $specification->data->urn,
+                    $order,
+                    $labels
+                );
+            } else {
+                $offre->classements[] = $specification;
+            }
         }
-
-        $offre->classements = $this->findByUrn($offre, UrnSubCatList::CLASSIF->value, SpecData::KEY_SUB_CAT);
     }
 }
