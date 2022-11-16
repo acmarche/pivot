@@ -21,7 +21,7 @@ class OffreParser
     use ParseRelationOffresTgtTrait;
     use ParseSpecificationsTrait;
     use ParserEventTrait;
-    use ParseImagesTrait;
+    use ParseGpxTrait;
 
     public function launchParse(Offre $offre)
     {
@@ -30,23 +30,11 @@ class OffreParser
         $this->parseDatesEvent($offre);
         $this->parseRelatedOffers($offre);
         $this->parseRelOffresTgt($offre);
+        $this->parseGpx($offre);
     }
 
     public function parseOffre(Offre $offre)
     {
-        if ($km = $this->findByUrn($offre, 'urn:fld:dist', returnData: true)) {
-            $offre->gpx_distance = $km[0]->value;
-        }
-        if ($km = $this->findByUrn($offre, 'urn:fld:idcirkwi', returnData: true)) {
-            $offre->gpx_id = $km[0]->value;
-        }
-        if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdur', returnData: true)) {
-            $offre->gpx_duree = $km[0]->value;
-        }
-        if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdiff', returnData: true)) {
-            $offre->gpx_difficulte = $km[0]->value;
-        }
-
         $offre->homepage = $this->findByUrnReturnValue($offre, UrnList::HOMEPAGE->value);
         $offre->active = $this->findByUrnReturnValue($offre, UrnList::ACTIVE->value);
 

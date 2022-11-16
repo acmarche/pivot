@@ -4,9 +4,34 @@ namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Gpx;
+use AcMarche\Pivot\Repository\PivotRemoteRepository;
 
 trait ParseGpxTrait
 {
+    /**
+     * @required
+     */
+    public PivotRemoteRepository $pivotRemoteRepository;
+
+    public function parseGpx(Offre $offre)
+    {
+        $gpxs = $this->parseDocs($offre);
+        if (count($gpxs) > 0) {
+            if ($km = $this->findByUrn($offre, 'urn:fld:dist', returnData: true)) {
+                $offre->gpx_distance = $km[0]->value;
+            }
+            if ($km = $this->findByUrn($offre, 'urn:fld:idcirkwi', returnData: true)) {
+                $offre->gpx_id = $km[0]->value;
+            }
+            if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdur', returnData: true)) {
+                $offre->gpx_duree = $km[0]->value;
+            }
+            if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdiff', returnData: true)) {
+                $offre->gpx_difficulte = $km[0]->value;
+            }
+        }
+    }
+
     /**
      * @param Offre $offre
      * @return array|Gpx[]
