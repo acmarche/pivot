@@ -79,6 +79,7 @@ class OffreParser
 
         $offre->tarifs = $this->findByUrn($offre, UrnList::TARIF->value, returnData: true);
         $offre->webs = $this->findByUrn($offre, UrnList::WEB->value, returnData: true);
+        $offre->webs = [...$offre->webs,...$this->findByUrn($offre, UrnList::FACEBOOK->value, returnData: true)];
 
         $offre->hades_ids = $this->findByUrn($offre, UrnList::HADES_ID->value, returnData: true);
         $offre->communications = $this->findByUrn(

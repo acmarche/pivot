@@ -5,7 +5,7 @@ namespace AcMarche\Pivot\Spec;
 enum SpecTypeEnum: string
 {
     case EMAIL = "EMail";
-    case URL = "Url";
+    case URL = "URL";
     case URL_FACEBOOK = "URLFacebook";
     case URL_TRIPADVISOR = "'URLTripadvisor'";
     case STRING = "String";
@@ -17,4 +17,5 @@ enum SpecTypeEnum: string
     case CURRENCY = "Currency";
     case PHONE = "Phone";
     case GSM = "GSM";
+    case CHOICE = "Choice";
 }

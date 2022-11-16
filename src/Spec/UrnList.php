@@ -29,6 +29,8 @@ enum UrnList: string
     case CATEGORIE_PATRIMOINE_BATI = "urn:fld:catdec:patrbati";
     case CATEGORIE = "urn:fld:cat";
     case WEB = "urn:fld:urlweb";
+    case FACEBOOK = "urn:fld:urlfacebook";
+    case TRIPADVISOR = "urn:fld:tripadvisor";
     case HADES_ID = "urn:fld:idhades";
     case ADRESSE_RUE = "urn:fld:adr";
     case VOIR_AUSSI = "urn:lnk:offre:voiraussi";
