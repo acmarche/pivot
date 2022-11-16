@@ -33,6 +33,11 @@ trait ParseRelationOffresTgtTrait
                 continue;
             }
             $this->specitificationsByOffre($offreTgt);
+            $this->parseOffre($offreTgt);
+            $docsTgt = $this->parseImages($offreTgt);
+            $offreTgt->images = $docsTgt['images'];
+            $offreTgt->documents = $docsTgt['documents'];
+            $offreTgt->image = $offre->images[0] ?? null;
 
             if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
                 $docs['see_also'][] = $offreTgt;
