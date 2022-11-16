@@ -94,19 +94,17 @@ class OffreParser
     {
         $labels = [];
         $noms = $this->findByUrn($offre, UrnSubCatList::NOM_OFFRE->value, SpecData::KEY_SUB_CAT, returnData: true);
-        $name = "empty";
         foreach ($noms as $nom) {
-            $label = new Label();
-            $label->value = $nom->value;
             $language = substr($nom->urn, 0, 2);
-            $label->lang = $language;
-            if ($language == 'fr') {
-                $name = $nom->value;
+            if (in_array($language, ['fr', 'nl', 'en', 'de', 'nl'])) {
+                $label = new Label();
+                $label->value = $nom->value;
+                $label->lang = $language;
+                $labels[] = $label;
             }
-            $labels[] = $label;
         }
         $label = new Label();
-        $label->value = $name;
+        $label->value = $offre->nom;
         $label->lang = "fr";
         $labels[] = $label;
         $offre->label = $labels;
