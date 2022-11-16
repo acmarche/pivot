@@ -18,8 +18,9 @@ trait ParseRelationOffresTgtTrait
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function parseRelOffresTgt(Offre $offre): void
+    public function parseRelOffresTgt(Offre $offre): array
     {
+        $docs = ['see_also' => [], 'enfants' => []];
         foreach ($offre->relOffreTgt as $relOffreTgt) {
             $item = $relOffreTgt->offre;
             $code = $item['codeCgt'];
@@ -32,16 +33,16 @@ trait ParseRelationOffresTgtTrait
                 continue;
             }
             $this->specitificationsByOffre($offreTgt);
-            $this->parseOffre($offreTgt);
-            $this->parseImages($offreTgt);
 
             if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
-                $offre->see_also[] = $offreTgt;
+                $docs['see_also'][] = $offreTgt;
             }
             foreach ($this->findByUrn($offreTgt, UrnList::OFFRE_ENFANT->value) as $enfant) {
-                $offre->enfants[] = $enfant;
+                $docs['enfants'][] = $enfant;
             }
         }
+
+        return $docs;
     }
 
 }

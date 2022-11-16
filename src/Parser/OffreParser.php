@@ -28,9 +28,15 @@ class OffreParser
         $this->specitificationsByOffre($offre);
         $this->parseOffre($offre);
         $this->parseDatesEvent($offre);
+
+        //images,docs
         $this->parseRelatedOffers($offre);
-        $this->parseRelOffresTgt($offre);
-        $this->parseGpx($offre);
+
+        $docs = $this->parseRelOffresTgt($offre);
+        $offre->see_also = $docs['see_also'];
+        $offre->enfants = $docs['enfants'];
+
+        //     $this->parseGpx($offre);
     }
 
     public function parseOffre(Offre $offre)

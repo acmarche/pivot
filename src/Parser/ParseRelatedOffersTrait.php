@@ -30,9 +30,13 @@ trait ParseRelatedOffersTrait
             if (!$relatedOffer instanceof Offre) {
                 continue;
             }
+
             $this->specitificationsByOffre($relatedOffer);
-            $this->parseOffre($relatedOffer);
-            $this->parseImages($relatedOffer);
+
+            $docs = $this->parseImages($offre);
+            $offre->images = $docs['images'];
+            $offre->documents = $docs['documents'];
+            $offre->image = $offre->images[0] ?? null;
 
             if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
                 $offre->contact_direction = $relatedOffer;

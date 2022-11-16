@@ -11,7 +11,9 @@ trait ParseImagesTrait
 {
     public function parseImages(Offre $offre)
     {
+        $docs = ['images' => [], 'documents' => []];
         $specificationMedias = $this->findByUrn($offre, UrnList::URL->value);
+
         foreach ($specificationMedias as $specificationMedia) {
             $value = str_replace("http:", "https:", $specificationMedia->data->value);
             $string = new UnicodeString($value);
@@ -19,22 +21,18 @@ trait ParseImagesTrait
             $document = new Document();
             $document->extension = $extension;
             $document->url = $value;
-
             if (in_array($extension, ['jpg', 'png'])) {
-                $offre->images[] = $value;
+                $docs['images'][] = $value;
             } else {
-                $offre->documents[] = $document;
+                $docs['documents'][] = $document;
             }
         }
-
         $specificationImages = $this->findByUrn($offre, UrnList::MEDIAS_PARTIAL->value, contains: true);
         foreach ($specificationImages as $specificationImage) {
             $value = str_replace("http:", "https:", $specificationImage->data->value);
-            $offre->images[] = $value;
+           $docs['images'][] = $value;
         }
-        if (count($offre->images) > 0) {
-            $offre->image = $offre->images[0];
-        }
+        return $docs;
     }
 
 }
