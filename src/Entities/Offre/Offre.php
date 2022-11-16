@@ -33,7 +33,7 @@ class Offre
     public UserGlobalCreation $userGlobalCreation;
     public UserGlobalModification $userModification;
     public UserGlobalModification $userGlobalModification;
-    public string $nom;
+    public ?string $nom = null;
     public string $email;
     public string $tel;
     public string|SpecData|null $tarif;

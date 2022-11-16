@@ -79,7 +79,7 @@ class OffreParser
 
         $offre->tarifs = $this->findByUrn($offre, UrnList::TARIF->value, returnData: true);
         $offre->webs = $this->findByUrn($offre, UrnList::WEB->value, returnData: true);
-        $offre->webs = [...$offre->webs,...$this->findByUrn($offre, UrnList::FACEBOOK->value, returnData: true)];
+        $offre->webs = [...$offre->webs, ...$this->findByUrn($offre, UrnList::FACEBOOK->value, returnData: true)];
 
         $offre->hades_ids = $this->findByUrn($offre, UrnList::HADES_ID->value, returnData: true);
         $offre->communications = $this->findByUrn(
@@ -105,15 +105,19 @@ class OffreParser
     {
         $labels = [];
         $noms = $this->findByUrn($offre, UrnSubCatList::NOM_OFFRE->value, SpecData::KEY_SUB_CAT, returnData: true);
+        $nom = "empty";
         foreach ($noms as $nom) {
             $label = new Label();
             $label->value = $nom->value;
             $language = substr($nom->urn, 0, 2);
             $label->lang = $language;
+            if ($language == 'fr') {
+                $nom = $nom->value;
+            }
             $labels[] = $label;
         }
         $label = new Label();
-        $label->value = $offre->nom;
+        $label->value = $nom;
         $label->lang = "fr";
         $labels[] = $label;
         $offre->label = $labels;
