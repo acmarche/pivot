@@ -22,12 +22,12 @@ class SpecData
     public string $urn;
     public ?string $urnCat = null;
     public ?string $urnSubCat = null;
-    public int $order;
-    public string $type;
+    public int $order = 0;
+    public ?string $type= null;
     public ?string $value = null;
     /**
      * Type == Object ex: date event: "urn": "urn:obj:date"
      * @var SpecData[]|array
      */
-    public array $spec;
+    public array $spec = [];
 }
