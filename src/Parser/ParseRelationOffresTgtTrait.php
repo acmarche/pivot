@@ -32,6 +32,7 @@ trait ParseRelationOffresTgtTrait
                 continue;
             }
             $this->specitificationsByOffre($offreTgt);
+            $this->parseOffre($offreTgt);
             if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
                 $offre->see_also[] = $offreTgt;
             }

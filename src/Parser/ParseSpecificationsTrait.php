@@ -4,15 +4,14 @@ namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Specification;
-use AcMarche\Pivot\Entities\Specification\SpecInfo;
-use AcMarche\Pivot\Repository\PivotRepository;
+use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 
 trait ParseSpecificationsTrait
 {
     /**
      * @required
      */
-    public PivotRepository $pivotRepository;
+    public UrnDefinitionRepository $urnDefinitionRepository;
 
     /**
      * @param Offre $offre
@@ -21,15 +20,12 @@ trait ParseSpecificationsTrait
      */
     public function specitificationsByOffre(Offre $offre): array
     {
-        /**
-         * @var array|SpecInfo[] $specifications
-         */
         $specifications = [];
         foreach ($offre->spec as $spec) {
-            $urnDefinition = $this->pivotRepository->thesaurusUrn($spec->urn);
+            $urnDefinition = $this->urnDefinitionRepository->findByUrn($spec->urn);
             $urnCatDefinition = null;
             if ($spec->urnCat) {
-                $urnCatDefinition = $this->pivotRepository->thesaurusUrn($spec->urnCat);
+                $urnCatDefinition = $this->urnDefinitionRepository->findByUrn($spec->urnCat);
             }
             $specifications[] = new Specification($spec, $urnDefinition, $urnCatDefinition);
         }

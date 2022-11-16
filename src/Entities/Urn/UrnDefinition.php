@@ -18,9 +18,11 @@ class UrnDefinition
     public ?string $xpathPivotWebWs = null;
     public ?bool $dynamic = null;
     public ?int $visibilite = null;
+    public ?int $userGlobalId = null;
+    public ?string $userGlobalName = null;
+    public ?string $userLocalLogin = null;
     public ?string $userLocalName = null;
     public ?string $userLocalSurname = null;
-    public ?string $userGlobalName = null;
     public bool|null $collapsed = null;
     /**
      * @var array|Label

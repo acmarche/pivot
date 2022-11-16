@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\DependencyInjection;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
+use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
@@ -55,6 +56,16 @@ class PivotContainer
          * @var TypeOffreRepository
          */
         return $container->getService('typeOffreRepository');
+    }
+
+    static function getUrnDefinitionRepository(bool $debug = false): UrnDefinitionRepository
+    {
+        $container = new self($debug);
+
+        /**
+         * @var UrnDefinitionRepository
+         */
+        return $container->getService('urnDefinitionRepository');
     }
 
     static function getRemoteRepository(bool $debug = false): PivotRemoteRepository

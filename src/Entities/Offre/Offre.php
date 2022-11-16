@@ -9,7 +9,6 @@ use AcMarche\Pivot\Entities\Specification\Document;
 use AcMarche\Pivot\Entities\Specification\Gpx;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Specification\Specification;
-use AcMarche\Pivot\Entities\Specification\SpecInfo;
 use AcMarche\Pivot\Entities\Specification\SpectFieldsTrait;
 use AcMarche\Pivot\Entities\Urn\UrnLabel;
 use AcMarche\Pivot\Entities\User\User;
@@ -107,7 +106,7 @@ class Offre
     public array $parents = [];
     public string $locality = '';
     /**
-     * @var SpecInfo[]
+     * @var Specification[]
      */
     public array $classements = [];
     public string $gpx_distance = '';

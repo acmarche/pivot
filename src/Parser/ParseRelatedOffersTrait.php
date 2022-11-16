@@ -33,6 +33,7 @@ trait ParseRelatedOffersTrait
                 continue;
             }
             $this->specitificationsByOffre($relatedOffer);
+            $this->parseOffre($relatedOffer);
             $specificationMedias = $this->findByUrn($relatedOffer, UrnList::URL->value);
             foreach ($specificationMedias as $specificationMedia) {
                 $value = str_replace("http:", "https:", $specificationMedia->data->value);

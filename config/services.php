@@ -3,6 +3,7 @@
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
+use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -33,6 +34,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->public();
 
     $services->set('typeOffreRepository', TypeOffreRepository::class)
+        ->public();
+
+    $services->set('urnDefinitionRepository', UrnDefinitionRepository::class)
         ->public();
 
 };

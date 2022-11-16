@@ -202,20 +202,14 @@ class PivotRepository
         );
     }
 
-
-    /**
-     * @return UrnDefinition
-     * @throws \Exception
-     */
-    public function thesaurusUrn(string $urnName): UrnDefinition
+    public function urnDefinition(string $urnName): ?UrnDefinition
     {
-        return $this->cache->get("curn-".$urnName, function () use ($urnName) {
-            $urn = json_decode($this->pivotRemoteRepository->thesaurusUrn($urnName));
+        return $this->cache->get('urnDefinition-'.$urnName, function () use ($urnName) {
+            if ($data = $this->pivotRemoteRepository->thesaurusUrn($urnName)) {
+                return $this->pivotSerializer->deserializeToClass($data, UrnDefinition::class);
+            }
 
-            return $this->pivotSerializer->deserializeToClass(
-                json_encode($urn->spec[0]),
-                UrnDefinition::class
-            );
+            return null;
         });
     }
 
@@ -236,17 +230,6 @@ class PivotRepository
             json_encode($familiesObject->spec[0]->spec),
             'AcMarche\Pivot\Entities\Family\Family[]',
         );
-    }
-
-    public function urnDefinition(string $urnName): ?UrnDefinition
-    {
-        return $this->cache->get('urnDefinition-'.$urnName, function () use ($urnName) {
-            if ($data = $this->pivotRemoteRepository->thesaurusUrn($urnName)) {
-                return $this->pivotSerializer->deserializeToClass($data, UrnDefinition::class);
-            }
-
-            return null;
-        });
     }
 
     /**
