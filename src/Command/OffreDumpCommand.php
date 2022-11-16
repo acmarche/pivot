@@ -29,14 +29,14 @@ class OffreDumpCommand extends Command
     {
         $this
             ->addArgument('codeCgt', InputArgument::REQUIRED, 'code cgt', null)
-            ->addOption('json', "json", InputOption::VALUE_NONE, 'Afficher le json');
+            ->addOption('raw', "raw", InputOption::VALUE_NONE, 'Afficher le json');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $codeCgt = $input->getArgument('codeCgt');
-        $raw = (bool)$input->getOption('json');
+        $raw = (bool)$input->getOption('raw');
 
         try {
             $resultString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
