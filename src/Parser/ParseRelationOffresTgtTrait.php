@@ -18,22 +18,20 @@ trait ParseRelationOffresTgtTrait
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    private function parseRelOffresTgt(Offre $offre): void
+    public function parseRelOffresTgt(Offre $offre): void
     {
         foreach ($offre->relOffreTgt as $relOffreTgt) {
             $item = $relOffreTgt->offre;
             $code = $item['codeCgt'];
             try {
-                $offreTgt = $this->pivotRepository->getOffreByCgt($code, Offre::class);
+                $offreTgt = $this->pivotRepository->fetchOffreByCgt($code, Offre::class);
             } catch (\Exception $exception) {
                 continue;
             }
-            if (!$offreTgt) {
+            if (!$offreTgt instanceof Offre) {
                 continue;
             }
-
-            //todo
-            //$this->launchParse($offreTgt);
+            $this->specitificationsByOffre($offreTgt);
             if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
                 $offre->see_also[] = $offreTgt;
             }

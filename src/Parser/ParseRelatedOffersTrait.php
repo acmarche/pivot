@@ -20,19 +20,18 @@ trait ParseRelatedOffersTrait
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    private function parseRelatedOffers(Offre $offre): void
+    public function parseRelatedOffers(Offre $offre): void
     {
         foreach ($offre->relOffre as $relation) {
             $codeCgt = $relation->offre['codeCgt'];
             try {
-                $relatedOffer = $this->pivotRepository->getOffreByCgt($codeCgt, class: Offre::class);
+                $relatedOffer = $this->pivotRepository->fetchOffreByCgt($codeCgt, class: Offre::class);
             } catch (\Exception $exception) {
                 continue;
             }
-            if (!$relatedOffer) {
+            if (!$relatedOffer instanceof Offre) {
                 continue;
             }
-            //todo
             $this->specitificationsByOffre($relatedOffer);
             $specificationMedias = $this->findByUrn($relatedOffer, UrnList::URL->value);
             foreach ($specificationMedias as $specificationMedia) {

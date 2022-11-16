@@ -35,14 +35,14 @@ class PivotRepository
      * @return Offre[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function getOffres(array $typesOffre, bool $parse = true): array
+    public function fetchOffres(array $typesOffre, bool $parse = true): array
     {
         $offres = [];
         $responseQuery = $this->getAllDataFromRemote();
 
         foreach ($responseQuery->offre as $offreShort) {
             try {
-                $offre = $this->getOffreByCgt(
+                $offre = $this->fetchOffreByCgt(
                     $offreShort->codeCgt,
                     Offre::class,
                     $offreShort->dateModification
@@ -75,10 +75,10 @@ class PivotRepository
      * Retourne la liste des events
      * @return Offre[]
      */
-    public function getEvents(bool $removeObsolete = false, array $urnsSelected = []): array
+    public function fetchEvents(bool $removeObsolete = false, array $urnsSelected = []): array
     {
         $events = FilterUtils::filterByTypeIdsOrUrns(
-            $this->getOffres([]),
+            $this->fetchOffres([]),
             [UrnTypeList::evenement()->typeId],
             $urnsSelected
         );
@@ -107,7 +107,7 @@ class PivotRepository
      * @return ResultOfferDetail|Offre|null
      * @throws InvalidArgumentException
      */
-    public function getOffreByCgt(
+    public function fetchOffreByCgt(
         string $codeCgt,
         string $class = ResultOfferDetail::class,
         ?string $cacheKeyPlus = null
@@ -153,9 +153,9 @@ class PivotRepository
      * @return Offre|null
      * @throws InvalidArgumentException
      */
-    public function getOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
+    public function fetchOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
     {
-        $offre = $this->getOffreByCgt($codeCgt, $class, $cacheKeyPlus);
+        $offre = $this->fetchOffreByCgt($codeCgt, $class, $cacheKeyPlus);
         if ($offre) {
             $this->offreParser->launchParse($offre);
         }
@@ -164,27 +164,11 @@ class PivotRepository
     }
 
     /**
-     * Retourne le json (string) complet du query
-     * @return ResponseQuery|null
-     * @throws \Psr\Cache\InvalidArgumentException|\Exception
-     */
-    public function getAllDataFromRemote(): ?ResponseQuery
-    {
-        return $this->cache->get('pivotAllData', function () {
-            if ($dataString = $this->pivotRemoteRepository->query()) {
-                return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
-            }
-
-            return null;
-        });
-    }
-
-    /**
      * @param Offre $referringOffer
      * @return Offre[]
      * @throws InvalidArgumentException
      */
-    public function getSameOffres(Offre $referringOffer): array
+    public function fetchSameOffres(Offre $referringOffer): array
     {
         $ids = [$referringOffer->typeOffre->idTypeOffre];
         $urns = [];
@@ -192,7 +176,7 @@ class PivotRepository
             $urns[] = $category->urn;
         }
         $data = [];
-        $offres = FilterUtils::filterByTypeIdsOrUrns($this->getOffres([]), $ids, $urns);
+        $offres = FilterUtils::filterByTypeIdsOrUrns($this->fetchOffres([]), $ids, $urns);
 
         foreach ($offres as $offre) {
             if ($referringOffer->codeCgt != $offre->codeCgt) {
@@ -259,6 +243,22 @@ class PivotRepository
         return $this->cache->get('urnDefinition-'.$urnName, function () use ($urnName) {
             if ($data = $this->pivotRemoteRepository->thesaurusUrn($urnName)) {
                 return $this->pivotSerializer->deserializeToClass($data, UrnDefinition::class);
+            }
+
+            return null;
+        });
+    }
+
+    /**
+     * Retourne le json (string) complet du query
+     * @return ResponseQuery|null
+     * @throws \Psr\Cache\InvalidArgumentException|\Exception
+     */
+    public function getAllDataFromRemote(): ?ResponseQuery
+    {
+        return $this->cache->get('pivotAllData', function () {
+            if ($dataString = $this->pivotRemoteRepository->query()) {
+                return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
             }
 
             return null;

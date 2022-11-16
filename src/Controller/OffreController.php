@@ -32,7 +32,7 @@ class OffreController extends AbstractController
         } catch (NonUniqueResultException $e) {
             $typeOffreUrn = $typeOffre;
         }
-        $offres = $this->pivotRepository->getOffres([$typeOffre]);
+        $offres = $this->pivotRepository->fetchOffres([$typeOffre]);
         $offres = SortUtils::sortOffres($offres);
 
         return $this->render(

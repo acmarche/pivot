@@ -53,7 +53,7 @@ class TypeOffreController extends AbstractController
     public function show(TypeOffre $typeOffre): Response
     {
         try {
-            $offres = $this->pivotRepository->getOffres([$typeOffre]);
+            $offres = $this->pivotRepository->fetchOffres([$typeOffre]);
         } catch (Exception $e) {
             $this->addFlash('danger', 'Erreur: '.$e->getMessage());
 

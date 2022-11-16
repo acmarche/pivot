@@ -33,7 +33,7 @@ class DefaultController extends AbstractController
     #[Route(path: '/events', name: 'pivot_events')]
     public function events(): Response
     {
-        $events = $this->pivotRepository->getEvents();
+        $events = $this->pivotRepository->fetchEvents();
         array_map(function ($event){
             $this->pivotParser->parseDatesEvent($event);
         },$events);
@@ -49,7 +49,7 @@ class DefaultController extends AbstractController
     #[Route(path: '/offres', name: 'pivot_all_offres')]
     public function offres(): Response
     {
-        $hotels = $this->pivotRepository->getOffres([]);
+        $hotels = $this->pivotRepository->fetchOffres([]);
 
         //$this->pivotParser->parseEvents($events);
 

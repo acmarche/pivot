@@ -38,5 +38,5 @@ require_once 'vendor/autoload.php';
 use AcMarche\Pivot\DependencyInjection\PivotContainer;
 
 $pivotRepository = PivotContainer::getPivotRepository();
-$events          = $pivotRepository->getEvents(true);
+$events          = $pivotRepository->fetchEvents(true);
 ```
