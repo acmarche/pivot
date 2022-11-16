@@ -32,10 +32,8 @@ class OffreParser
         //images,docs
         $this->parseRelatedOffers($offre);
 
-        $docs = $this->parseRelOffresTgt($offre);
-        $offre->see_also = $docs['see_also'];
-        $offre->enfants = $docs['enfants'];
-
+        //see_also,enfants
+        $this->parseRelOffresTgt($offre);
         //     $this->parseGpx($offre);
     }
 

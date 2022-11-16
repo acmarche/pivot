@@ -32,12 +32,9 @@ trait ParseRelationOffresTgtTrait
             if (!$offreTgt instanceof Offre) {
                 continue;
             }
-            $this->specitificationsByOffre($offreTgt);
             $this->parseOffre($offreTgt);
-            $docsTgt = $this->parseImages($offreTgt);
-            $offreTgt->images = $docsTgt['images'];
-            $offreTgt->documents = $docsTgt['documents'];
-            $offreTgt->image = $offreTgt->images[0] ?? null;
+            //images,docs
+            $this->parseRelatedOffers($offreTgt);
 
             if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
                 $docs['see_also'][] = $offreTgt;
@@ -46,6 +43,9 @@ trait ParseRelationOffresTgtTrait
                 $docs['enfants'][] = $enfant;
             }
         }
+
+        $offre->see_also = $docs['see_also'];
+        $offre->enfants = $docs['enfants'];
 
         return $docs;
     }

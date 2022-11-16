@@ -20,6 +20,7 @@ trait ParseRelatedOffersTrait
      */
     public function parseRelatedOffers(Offre $offre): void
     {
+        $docs2 = [];
         foreach ($offre->relOffre as $relation) {
             $codeCgt = $relation->offre['codeCgt'];
             try {
@@ -32,11 +33,7 @@ trait ParseRelatedOffersTrait
             }
 
             $this->specitificationsByOffre($relatedOffer);
-
-            $docs = $this->parseImages($relatedOffer);
-            $offre->images = $docs['images'];
-            $offre->documents = $docs['documents'];
-            $offre->image = $offre->images[0] ?? null;
+            $docs2[] = $this->parseImages($relatedOffer);
 
             if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
                 $offre->contact_direction = $relatedOffer;
@@ -49,6 +46,14 @@ trait ParseRelatedOffersTrait
             }
             if ($relation->urn == UrnList::MEDIA_DEFAULT->value) {
                 $offre->media_default = $relatedOffer;
+            }
+        }
+        foreach ($docs2 as $doc) {
+            foreach ($doc['images'] as $image) {
+                $offre->images[] = $image;
+            }
+            foreach ($doc['documents'] as $document) {
+                $offre->documents[] = $document;
             }
         }
     }
