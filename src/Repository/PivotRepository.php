@@ -83,7 +83,6 @@ class PivotRepository
             $urnsSelected
         );
         foreach ($events as $key => $event) {
-            $this->offreParser->launchParse($event);
             if (!$event->dateBegin) {
                 unset($events[$key]);
             }
@@ -180,7 +179,6 @@ class PivotRepository
 
         foreach ($offres as $offre) {
             if ($referringOffer->codeCgt != $offre->codeCgt) {
-                $this->offreParser->specitificationsByOffre($offre);
                 $data[] = $offre;
             }
         }

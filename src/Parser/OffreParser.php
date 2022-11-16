@@ -27,7 +27,6 @@ class OffreParser
     {
         $this->specitificationsByOffre($offre);
         $this->parseOffre($offre);
-        $this->parseImages($offre);
         $this->parseDatesEvent($offre);
         $this->parseRelatedOffers($offre);
         $this->parseRelOffresTgt($offre);
