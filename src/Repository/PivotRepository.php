@@ -18,6 +18,7 @@ use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Cache\CacheInterface;
+use VisitMarche\ThemeTail\Lib\Cache;
 
 class PivotRepository
 {
@@ -41,10 +42,16 @@ class PivotRepository
         if (count($typesOffre) === 0) {
             return [];
         }
+        $cacheKeyPlus = '';
+        foreach ($typesOffre as $typeOffre) {
+            $cacheKeyPlus .= $typeOffre->id.'-';
+        }
 
-        $responseQuery = $this->getAllDataFromRemote();
+        $cacheKey = Cache::generateKey(Cache::FETCH_OFFRES.'-'.$cacheKeyPlus.$parse);
 
-        $offres = $this->cache->get('allOffresFetched', function () use ($responseQuery) {
+        return $this->cache->get($cacheKey, function () use ($typesOffre, $parse) {
+
+            $responseQuery = $this->getAllDataFromRemote();
             $offres = [];
             foreach ($responseQuery->offre as $offreShort) {
                 try {
@@ -62,22 +69,20 @@ class PivotRepository
                 }
             }
 
+            if (count($typesOffre) > 0) {
+                $typeIds = FilterUtils::extractIds($typesOffre);
+                $urns = array_column($typesOffre, 'urn');
+                $offres = FilterUtils::filterByTypeIdsOrUrns($offres, $typeIds, $urns);
+            }
+
+            if ($parse) {
+                array_map(function ($offre) {
+                    $this->offreParser->launchParse($offre);
+                }, $offres);
+            }
+
             return $offres;
         });
-
-        if (count($typesOffre) > 0) {
-            $typeIds = FilterUtils::extractIds($typesOffre);
-            $urns = array_column($typesOffre, 'urn');
-            $offres = FilterUtils::filterByTypeIdsOrUrns($offres, $typeIds, $urns);
-        }
-
-        if ($parse) {
-            array_map(function ($offre) {
-                $this->offreParser->launchParse($offre);
-            }, $offres);
-        }
-
-        return $offres;
     }
 
     /**
