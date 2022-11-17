@@ -33,7 +33,7 @@ class EventUtils
         self::$today = new DateTime();
         $datesOk = 0;
         foreach ($event->dates as $dateBeginEnd) {
-            if ($dateBeginEnd->date_end > self::$today) {
+            if ($dateBeginEnd->date_end >= self::$today) {
                 $datesOk++;
             }
         }
