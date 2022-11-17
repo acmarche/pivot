@@ -97,18 +97,16 @@ class TypeOffreRepository extends ServiceEntityRepository
      * @return TypeOffre[]
      * @throws NonUniqueResultException
      */
-    public function findByIdsOrUrns(array $typesOffreData): array
+    public function findByUrns(array $typesOffreData): array
     {
         $typesOffre = [];
         foreach ($typesOffreData as $typeOffreId) {
-            if ((int)$typeOffreId) {
-                if ($typeOffre = $this->findOneByTypeId($typeOffreId)) {
-                    $typesOffre[] = $typeOffre;
-                }
-            } else {
+            try {
                 if ($typeOffre = $this->findOneByUrn($typeOffreId)) {
                     $typesOffre[] = $typeOffre;
                 }
+            } catch (\Exception $exception) {
+
             }
         }
 
@@ -184,5 +182,6 @@ class TypeOffreRepository extends ServiceEntityRepository
     {
         $this->_em->remove($object);
     }
+
 
 }
