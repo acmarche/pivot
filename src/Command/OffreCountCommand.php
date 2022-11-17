@@ -52,7 +52,6 @@ class OffreCountCommand extends Command
 
     protected function askType()
     {
-        $this->pivotRepository->fetchOffres([]);
         $roots = $this->typeOffreRepository->findRoots();
 
         foreach ($roots as $root) {

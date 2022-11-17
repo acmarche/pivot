@@ -49,7 +49,7 @@ class DefaultController extends AbstractController
     #[Route(path: '/offres', name: 'pivot_all_offres')]
     public function offres(): Response
     {
-        $hotels = $this->pivotRepository->fetchOffres([]);
+        $hotels = [];
 
         //$this->pivotParser->parseEvents($events);
 
