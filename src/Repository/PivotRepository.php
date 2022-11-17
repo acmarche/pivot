@@ -11,7 +11,7 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Serializer\PivotSerializer;
-use AcMarche\Pivot\Spec\UrnTypeList;
+use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\TypeOffre\FilterUtils;
 use AcMarche\Pivot\Utils\SortUtils;
 use Psr\Cache\InvalidArgumentException;
@@ -23,6 +23,7 @@ class PivotRepository
 {
     public function __construct(
         private PivotRemoteRepository $pivotRemoteRepository,
+        private TypeOffreRepository $typeOffreRepository,
         private OffreParser $offreParser,
         private PivotSerializer $pivotSerializer,
         private CacheInterface $cache,
@@ -37,24 +38,32 @@ class PivotRepository
      */
     public function fetchOffres(array $typesOffre, bool $parse = true): array
     {
-        $offres = [];
+        if (count($typesOffre) === 0) {
+            return [];
+        }
+
         $responseQuery = $this->getAllDataFromRemote();
 
-        foreach ($responseQuery->offre as $offreShort) {
-            try {
-                $offre = $this->fetchOffreByCgt(
-                    $offreShort->codeCgt,
-                    Offre::class,
-                    $offreShort->dateModification
-                );
-                if ($offre instanceof Offre) {
-                    $offres[] = $offre;
+        $offres = $this->cache->get('allOffresFetched', function () use ($responseQuery) {
+            $offres = [];
+            foreach ($responseQuery->offre as $offreShort) {
+                try {
+                    $offre = $this->fetchOffreByCgt(
+                        $offreShort->codeCgt,
+                        Offre::class,
+                        $offreShort->dateModification
+                    );
+                    if ($offre instanceof Offre) {
+                        $offres[] = $offre;
+                    }
+                } catch (\Exception $exception) {
+                    //todo add logger
+                    dd($exception);
                 }
-            } catch (\Exception $exception) {
-                //todo add logger
-                var_dump($exception);
             }
-        }
+
+            return $offres;
+        });
 
         if (count($typesOffre) > 0) {
             $typeIds = FilterUtils::extractIds($typesOffre);
@@ -75,13 +84,25 @@ class PivotRepository
      * Retourne la liste des events
      * @return Offre[]
      */
-    public function fetchEvents(bool $removeObsolete = false, array $urnsSelected = []): array
+    public function fetchEvents(bool $removeObsolete = false, $urnSelected = null): array
     {
-        $events = FilterUtils::filterByTypeIdsOrUrns(
-            $this->fetchOffres([]),
-            [UrnTypeList::evenement()->typeId],
-            $urnsSelected
-        );
+        $filtres = [];
+        if ($urnSelected) {
+            $typeOffre = $this->typeOffreRepository->findOneByUrn($urnSelected);
+            if ($typeOffre) {
+                $filtres = [$typeOffre];
+            }
+        } else {
+            $parent = $this->typeOffreRepository->findOneByUrn(UrnList::EVENTS->value);
+            $filtres = $this->typeOffreRepository->findByParent($parent->id);
+        }
+
+        if (count($filtres) === 0) {
+            return [];
+        }
+
+        $events = $this->fetchOffres($filtres);
+
         foreach ($events as $key => $event) {
             if (!$event->dateBegin) {
                 unset($events[$key]);
@@ -169,13 +190,23 @@ class PivotRepository
      */
     public function fetchSameOffres(Offre $referringOffer): array
     {
-        $ids = [$referringOffer->typeOffre->idTypeOffre];
+        $urn = 'urn:typ:'.$referringOffer->typeOffre->idTypeOffre;
+
+        $filtres = [$this->typeOffreRepository->findOneByUrn($urn)];
+
         $urns = [];
         foreach ($referringOffer->categories as $category) {
             $urns[] = $category->urn;
         }
+        foreach ($this->typeOffreRepository->findByUrns($urns) as $typeOffre) {
+            $filtres[] = $typeOffre;
+        }
+        if (count($filtres) === 0) {
+            return [];
+        }
+
+        $offres = $this->fetchOffres($filtres);
         $data = [];
-        $offres = FilterUtils::filterByTypeIdsOrUrns($this->fetchOffres([]), $ids, $urns);
 
         foreach ($offres as $offre) {
             if ($referringOffer->codeCgt != $offre->codeCgt) {
