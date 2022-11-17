@@ -52,12 +52,17 @@ class TypeOffreRepository extends ServiceEntityRepository
      * @param integer $id
      * @return TypeOffre[]
      */
-    public function findByParent(int $id): array
+    public function findByParent(int $id, bool $filtreCount = true): array
     {
-        return $this->createQBL()
+        $qb = $this->createQBL()
             ->andWhere('typeOffre.parent = :id')
-            ->setParameter('id', $id)
-            ->orderBy('typeOffre.nom', 'ASC')
+            ->setParameter('id', $id);
+
+        if ($filtreCount) {
+            $qb->andWhere('typeOffre.countOffres > 0');
+        }
+
+        return $qb->orderBy('typeOffre.nom', 'ASC')
             ->getQuery()
             ->getResult();
     }

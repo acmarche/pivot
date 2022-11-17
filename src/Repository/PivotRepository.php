@@ -11,9 +11,9 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Serializer\PivotSerializer;
-use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\TypeOffre\FilterUtils;
 use AcMarche\Pivot\Utils\SortUtils;
+use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
@@ -87,26 +87,19 @@ class PivotRepository
 
     /**
      * Retourne la liste des events
-     * @return Offre[]
+     * @param bool $removeObsolete
+     * @param array|TypeOffre[] $typeOffres
+     * @return Offre
+     * @throws InvalidArgumentException
+     * @throws NonUniqueResultException
      */
-    public function fetchEvents(bool $removeObsolete = false, $urnSelected = null): array
+    public function fetchEvents(bool $removeObsolete = false, array $typeOffres = []): array
     {
-        $filtres = [];
-        if ($urnSelected) {
-            $typeOffre = $this->typeOffreRepository->findOneByUrn($urnSelected);
-            if ($typeOffre) {
-                $filtres = [$typeOffre];
-            }
-        } else {
-            $parent = $this->typeOffreRepository->findOneByUrn(UrnList::EVENTS->value);
-            $filtres = $this->typeOffreRepository->findByParent($parent->id);
-        }
-
-        if (count($filtres) === 0) {
+        if (count($typeOffres) === 0) {
             return [];
         }
 
-        $events = $this->fetchOffres($filtres);
+        $events = $this->fetchOffres($typeOffres);
 
         foreach ($events as $key => $event) {
             if (!$event->dateBegin) {
