@@ -8,7 +8,7 @@ return static function (MonologConfig $monolog) {
         // log to var/logs/(environment).log
         ->path('%kernel.logs_dir%/%kernel.environment%.log')
         // log *all* messages (debug is lowest level)
-        ->level('debug');
+        ->level('info');
 
     $monolog->handler('syslog_handler')
         ->type('syslog')
