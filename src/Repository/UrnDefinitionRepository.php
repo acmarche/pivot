@@ -22,11 +22,15 @@ class UrnDefinitionRepository extends ServiceEntityRepository
 
     public function findByUrn(string $urn): ?UrnDefinitionEntity
     {
-        return $this->createQBL()
-            ->andWhere('urn_definition.urn = :urn')
-            ->setParameter('urn', $urn)
-            ->getQuery()
-            ->getOneOrNullResult();
+        try {
+            return $this->createQBL()
+                ->andWhere('urn_definition.urn = :urn')
+                ->setParameter('urn', $urn)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (\Exception $exception) {
+            return null;
+        }
     }
 
     public function createQBL(): QueryBuilder
