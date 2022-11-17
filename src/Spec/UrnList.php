@@ -44,4 +44,6 @@ enum UrnList: string
     case CLASSIFICATION = "urn:cat:classlab:classif";
     case HERGEMENT = "urn:fam:1";
     case CULINAIRE = "urn:fld:specculi";
+    case BAR_VIN = 'urn:fld:cat:bar:vin';
+    case EVENTS = "urn:typ:9";
 }
