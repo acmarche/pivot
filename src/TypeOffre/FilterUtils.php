@@ -59,7 +59,7 @@ class FilterUtils
      * @param array|TypeOffre[] $typesOffre
      * @return array|int[]
      */
-    public static function extractIds(array $typesOffre): array
+    public static function extractTypesId(array $typesOffre): array
     {
         $ids = [];
         foreach ($typesOffre as $typeOffre) {
