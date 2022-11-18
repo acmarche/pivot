@@ -6,7 +6,7 @@ use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
-use AcMarche\Pivot\Utils\LocalHelper;
+use AcMarche\Pivot\Utils\LocalSwitcherPivot;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
@@ -80,14 +80,14 @@ class PivotContainer
 
     }
 
-    static function getLocalSwitcherPivot(bool $debug = false): LocalHelper
+    static function getLocalSwitcherPivot(bool $debug = false): LocalSwitcherPivot
     {
         $container = new self($debug);
 
         /**
-         * @var LocalHelper
+         * @var LocalSwitcherPivot
          */
-        return $container->getService('localHelperPivot');
+        return $container->getService('localSwitcherPivot');
     }
 
     function getService(string $service): ?object

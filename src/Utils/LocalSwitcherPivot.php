@@ -4,7 +4,7 @@ namespace AcMarche\Pivot\Utils;
 
 use Symfony\Component\Translation\LocaleSwitcher;
 
-class LocalHelper
+class LocalSwitcherPivot
 {
     public function __construct(public LocaleSwitcher $localeSwitcher)
     {
@@ -13,5 +13,10 @@ class LocalHelper
     public function getLocale(): string
     {
         return $this->localeSwitcher->getLocale();
+    }
+
+    public function setLocale(string $locale): void
+    {
+        $this->localeSwitcher->setLocale($locale);
     }
 }
