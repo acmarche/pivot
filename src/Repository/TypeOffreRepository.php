@@ -16,6 +16,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TypeOffreRepository extends ServiceEntityRepository
 {
+    private TypeOffre $child;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TypeOffre::class);
@@ -186,6 +188,34 @@ class TypeOffreRepository extends ServiceEntityRepository
     public function remove(object $object): void
     {
         $this->_em->remove($object);
+    }
+
+    /**
+     * Pour les urns donnes $typesOffre remonte sest parents pour avoir son type root
+     * (type = Family)
+     * Pour un pre tri avant un fetchOffre
+     * @param array|TypeOffre[] $typesOffre
+     * @return int[]
+     */
+    public function findFamiliesByUrns(array $typesOffre): array
+    {
+        $families = [];
+        foreach ($typesOffre as $typeOffre) {
+            $family = $this->getFamily($typeOffre);;
+            $families[$family->typeId] = $family->typeId;
+        }
+
+        return $families;
+    }
+
+    private function getFamily(TypeOffre $typeOffre): TypeOffre
+    {
+        while ($typeOffre->type != 'Family') {
+            $this->child = $typeOffre;
+            return $this->getFamily($typeOffre->parent);
+        }
+
+        return $this->child;
     }
 
 
