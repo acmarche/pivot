@@ -34,7 +34,8 @@ class OffreParser
 
         //see_also,enfants
         $this->parseRelOffresTgt($offre);
-        //     $this->parseGpx($offre);
+
+        $this->parseGpx($offre);
     }
 
     public function parseOffre(Offre $offre)
