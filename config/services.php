@@ -4,8 +4,10 @@ use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
+use AcMarche\Pivot\Utils\LocalHelper;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
 
@@ -39,4 +41,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set('urnDefinitionRepository', UrnDefinitionRepository::class)
         ->public();
 
+    $services->set('localHelperPivot', LocalHelper::class)
+        ->public();
 };

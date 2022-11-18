@@ -4,9 +4,10 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
-        'secret'         => "%env(APP_SECRET)%",
-        'mailer'         => [
-            'dsn' => '%env(MAILER_DSN)%',
+        'default_locale' => 'fr',
+        'translator' => [
+            'default_path' => '%kernel.project_dir%/translations',
+            'fallbacks' => ['fr']
         ],
     ]);
 };
