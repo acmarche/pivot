@@ -1,12 +1,11 @@
 <?php
 
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Config\FrameworkConfig;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->extension('framework', [
-        'secret'         => "%env(APP_SECRET)%",
-        'mailer'         => [
-            'dsn' => '%env(MAILER_DSN)%',
-        ],
+return static function (FrameworkConfig $framework) {
+    $framework->secret("%env(APP_SECRET)%");
+    $framework->mailer([
+        'dsn' => '%env(MAILER_DSN)%',
     ]);
+    $framework->errorController('App\Controller\ErrorController::show');
 };
