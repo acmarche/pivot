@@ -22,26 +22,25 @@ trait ParseRelationOffresTgtTrait
     {
         $docs = ['see_also' => [], 'enfants' => []];
         foreach ($offre->relOffreTgt as $relOffreTgt) {
+            if (!in_array($relOffreTgt->urn, [UrnList::VOIR_AUSSI->value])) {
+                continue;
+            }
+
             $item = $relOffreTgt->offre;
             $code = $item['codeCgt'];
+
             try {
                 $offreTgt = $this->pivotRepository->fetchOffreByCgt($code, Offre::class);
             } catch (\Exception $exception) {
                 continue;
             }
+
             if (!$offreTgt instanceof Offre) {
                 continue;
             }
-            $this->parseOffre($offreTgt);
-            //images,docs
-            $this->parseRelatedOffers($offreTgt);
 
-            if ($relOffreTgt->urn == UrnList::VOIR_AUSSI->value) {
-                $docs['see_also'][] = $offreTgt;
-            }
-            foreach ($this->findByUrn($offreTgt, UrnList::OFFRE_ENFANT->value) as $enfant) {
-                $docs['enfants'][] = $enfant;
-            }
+            $this->parseImages($offreTgt);
+            $docs['see_also'][] = $offreTgt;
         }
 
         $offre->see_also = $docs['see_also'];
@@ -50,4 +49,11 @@ trait ParseRelationOffresTgtTrait
         return $docs;
     }
 
+    private function parseExtraTgt(Offre $offreTgt)
+    {
+        //mettre in array ajouter : , UrnList::OFFRE_ENFANT->value
+        foreach ($this->findByUrn($offreTgt, UrnList::OFFRE_ENFANT->value) as $enfant) {
+            $docs['enfants'][] = $enfant;
+        }
+    }
 }

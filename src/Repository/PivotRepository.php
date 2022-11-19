@@ -37,7 +37,7 @@ class PivotRepository
      * @return Offre[]
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function fetchOffres(array $typesOffre, bool $parse = true): array
+    public function fetchOffres(array $typesOffre, bool $parse = true, int $max = 500, bool $dd = false): array
     {
         if (count($typesOffre) === 0) {
             return [];
@@ -49,11 +49,23 @@ class PivotRepository
 
         $cacheKey = Cache::generateKey(Cache::FETCH_OFFRES.'-'.$cacheKeyPlus.$parse);
 
-        return $this->cache->get($cacheKey, function () use ($typesOffre, $parse) {
+        //pour un pretri
+        $families = $this->typeOffreRepository->findFamiliesByUrns($typesOffre);
 
+        return $this->cache->get($cacheKey, function () use ($typesOffre, $parse, $max, $families, $dd) {
             $responseQuery = $this->getAllDataFromRemote();
             $offres = [];
+            $i = 0;
             foreach ($responseQuery->offre as $offreShort) {
+                if ($offreShort->codeCgt == 'HBG-01-0B3B-N7CV') {
+                    //   dd($offreShort);
+                }
+                if (!in_array($offreShort->typeOffre->idTypeOffre, $families)) {
+                    continue;
+                }
+                if ($dd) {
+                //    dump($offreShort);
+                }
                 try {
                     $offre = $this->fetchOffreByCgt(
                         $offreShort->codeCgt,
@@ -62,6 +74,10 @@ class PivotRepository
                     );
                     if ($offre instanceof Offre) {
                         $offres[] = $offre;
+                        $i++;
+                        if ($i > $max) {
+                            break;
+                        }
                     }
                 } catch (\Exception $exception) {
                     //todo add logger
@@ -69,8 +85,8 @@ class PivotRepository
                 }
             }
 
-            if (count($typesOffre) > 0) {
-                $typeIds = FilterUtils::extractIds($typesOffre);
+            if (count($typesOffre) > 1) {
+                $typeIds = FilterUtils::extractTypesId($typesOffre);
                 $urns = array_column($typesOffre, 'urn');
                 $offres = FilterUtils::filterByTypeIdsOrUrns($offres, $typeIds, $urns);
             }
@@ -81,7 +97,7 @@ class PivotRepository
                 }, $offres);
             }
 
-            return $offres;
+            return SortUtils::sortOffres($offres);
         });
     }
 
@@ -183,10 +199,12 @@ class PivotRepository
 
     /**
      * @param Offre $referringOffer
-     * @return Offre[]
+     * @param int $max
+     * @return Offre
      * @throws InvalidArgumentException
+     * @throws NonUniqueResultException
      */
-    public function fetchSameOffres(Offre $referringOffer): array
+    public function fetchSameOffres(Offre $referringOffer, int $max = 20): array
     {
         $urn = 'urn:typ:'.$referringOffer->typeOffre->idTypeOffre;
 
@@ -202,14 +220,17 @@ class PivotRepository
         if (count($filtres) === 0) {
             return [];
         }
-
-        $offres = $this->fetchOffres($filtres);
+        $offres = $this->fetchOffres($filtres, parse: false, max: $max, dd: true);
         $data = [];
-
         foreach ($offres as $offre) {
             if ($referringOffer->codeCgt != $offre->codeCgt) {
                 $data[] = $offre;
             }
+        }
+        foreach ($data as $offre) {
+            $this->offreParser->parseImages($offre);
+            $this->offreParser->specitificationsByOffre($offre);
+            $this->offreParser->setCategories($offre);
         }
 
         return $data;

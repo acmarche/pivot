@@ -17,7 +17,6 @@ class OffreParser
 {
     use SpecSearchTrait;
     use ParseImagesTrait;
-    use ParseRelatedOffersTrait;
     use ParseRelationOffresTgtTrait;
     use ParseSpecificationsTrait;
     use ParserEventTrait;
@@ -29,8 +28,8 @@ class OffreParser
         $this->parseOffre($offre);
         $this->parseDatesEvent($offre);
 
-        //images,docs
-        $this->parseRelatedOffers($offre);
+        //parcours les $offre->relOffre
+        $this->parseImages($offre);
 
         //see_also,enfants
         $this->parseRelOffresTgt($offre);
@@ -114,7 +113,7 @@ class OffreParser
         $offre->label = $labels;
     }
 
-    private function setCategories(Offre $offre)
+    public function setCategories(Offre $offre)
     {
         $urn = match ($offre->typeOffre->idTypeOffre) {
             UrnTypeList::evenement()->typeId => UrnList::CATEGORIE_EVENT,

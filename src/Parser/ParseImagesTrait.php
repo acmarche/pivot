@@ -9,30 +9,59 @@ use Symfony\Component\String\UnicodeString;
 
 trait ParseImagesTrait
 {
-    public function parseImages(Offre $offre)
+    public function parseImages(Offre $offre): array
     {
         $docs = ['images' => [], 'documents' => []];
-        $specificationMedias = $this->findByUrn($offre, UrnList::URL->value);
-
-        foreach ($specificationMedias as $specificationMedia) {
-            $value = str_replace("http:", "https:", $specificationMedia->data->value);
-            $string = new UnicodeString($value);
-            $extension = $string->slice(-3);
-            $document = new Document();
-            $document->extension = $extension;
-            $document->url = $value;
-            if (in_array($extension, ['jpg', 'png'])) {
-                $docs['images'][] = $value;
-            } else {
-                $docs['documents'][] = $document;
+        foreach ($offre->relOffre as $relOffre) {
+            if (!in_array(
+                $relOffre->urn,
+                [UrnList::MEDIAS_PARTIAL->value, UrnList::MEDIA_DEFAULT->value, UrnList::MEDIAS_AUTRE->value]
+            )) {
+                continue;
+            }
+            $codeCgt = $relOffre->offre['codeCgt'];
+            try {
+                $relatedOffer = $this->pivotRepository->fetchOffreByCgt($codeCgt, class: Offre::class);
+            } catch (\Exception $exception) {
+                continue;
+            }
+            if (!$relatedOffer instanceof Offre) {
+                continue;
+            }
+            foreach ($relatedOffer->spec as $specData) {
+                if ($specData->urn == UrnList::URL->value) {
+                    $value = str_replace("http:", "https:", $specData->value);
+                    $string = new UnicodeString($value);
+                    $extension = $string->slice(-3);
+                    $document = new Document();
+                    $document->extension = $extension;
+                    $document->url = $value;
+                    if (in_array($extension, ['jpg', 'png'])) {
+                        $docs['images'][] = $value;
+                    } else {
+                        $docs['documents'][] = $document;
+                    }
+                }
             }
         }
-        $specificationImages = $this->findByUrn($offre, UrnList::MEDIAS_PARTIAL->value, contains: true);
-        foreach ($specificationImages as $specificationImage) {
-            $value = str_replace("http:", "https:", $specificationImage->data->value);
-           $docs['images'][] = $value;
-        }
+
+        $offre->images = $docs['images'];
+        $offre->documents = $docs['documents'];
+
         return $docs;
+    }
+
+    private function parseExtraFromImage($offre, $relation, Offre $relatedOffer)
+    {
+        if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
+            $offre->contact_direction = $relatedOffer;
+        }
+        if ($relation->urn === UrnList::POIS->value) {
+            $offre->pois[] = $relatedOffer;
+        }
+        if ($relation->urn == UrnList::MEDIA_DEFAULT->value) {
+            $offre->media_default = $relatedOffer;
+        }
     }
 
 }
