@@ -130,6 +130,20 @@ class PivotRepository
         return $events;
     }
 
+  public function getEventByIdHades(int $idHades): ?Offre
+    {
+        $events = $this->fetchEvents(true);
+        foreach ($events as $event) {
+            if (count($event->hades_ids) > 0) {
+                if ($idHades == $event->hades_ids[0]->value) {
+                    return $event;
+                }
+            }
+        }
+
+        return null;
+    }
+
     /***
      * Retourne une offre
      * Si une classe est donnée au paramètre $class,
