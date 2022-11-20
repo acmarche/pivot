@@ -212,6 +212,10 @@ class TypeOffreRepository extends ServiceEntityRepository
     {
         while ($typeOffre->type != 'Family') {
             $this->child = $typeOffre;
+            if (!isset($typeOffre->parent)) {
+                return $this->child;
+            }
+
             return $this->getFamily($typeOffre->parent);
         }
 
