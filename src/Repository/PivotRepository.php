@@ -105,7 +105,7 @@ class PivotRepository
      * Retourne la liste des events
      * @param bool $removeObsolete
      * @param array|TypeOffre[] $typeOffres
-     * @return Offre
+     * @return Offre[]
      * @throws InvalidArgumentException
      * @throws NonUniqueResultException
      */
