@@ -162,6 +162,6 @@ class OffreParser
 
     private function rootTag(Offre $offre): Tag
     {
-        return new Tag('fam'.$offre->typeOffre->idTypeOffre, $offre->typeOffre->label);
+        return new Tag('urn:fam:'.$offre->typeOffre->idTypeOffre, $offre->typeOffre->label);
     }
 }
