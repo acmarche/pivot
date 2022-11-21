@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\Parser;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\UrnList;
+use Psr\Cache\InvalidArgumentException;
 
 trait ParseRelationOffresTgtTrait
 {
@@ -14,9 +15,9 @@ trait ParseRelationOffresTgtTrait
     public PivotRepository $pivotRepository;
 
     /**
-     * @param Offre[] $offres
-     *
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @param Offre $offre
+     * @return array
+     * @throws InvalidArgumentException
      */
     public function parseRelOffresTgt(Offre $offre): array
     {
