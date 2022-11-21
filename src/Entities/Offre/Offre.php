@@ -22,6 +22,8 @@ class Offre
     use LabelTrait;
 
     public string $codeCgt;
+    public ?string $nom = null;
+
     /**
      * L'offre au format original
      */
@@ -33,7 +35,6 @@ class Offre
     public UserGlobalCreation $userGlobalCreation;
     public UserGlobalModification $userModification;
     public UserGlobalModification $userGlobalModification;
-    public ?string $nom = null;
     public string $email;
     public string $tel;
     public string|SpecData|null $tarif;
@@ -124,6 +125,11 @@ class Offre
     public function getAdresse(): ?Adresse
     {
         return $this->adresse1;
+    }
+
+    public function name(): ?string
+    {
+        return $this->nom;
     }
 
     public function nomByLanguage(string $language = 'fr'): ?string

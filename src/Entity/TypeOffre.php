@@ -15,7 +15,7 @@ class TypeOffre
     #[ORM\Column(type: 'integer')]
     public int $id;
     #[ORM\Column(type: 'string', length: 180)]
-    public string $nom;
+    public string $name;
     #[ORM\Column(type: 'integer', nullable: false)]
     public int $display_order = 0;
     #[ORM\Column(type: 'string', length: 50, nullable: false)]
@@ -59,7 +59,7 @@ class TypeOffre
         ?string $name_en = null,
         ?string $name_de = null
     ) {
-        $this->nom = $nom;
+        $this->name = $nom;
         $this->typeId = $typeId;
         $this->display_order = $display_order;
         $this->code = $code;
@@ -73,7 +73,7 @@ class TypeOffre
 
     public function __toString(): string
     {
-        return $this->nom;
+        return $this->name;
     }
 
     public function labelByLanguage(string $language = Label::FR): string
@@ -82,7 +82,7 @@ class TypeOffre
         if (isset($this->$property) && $this->$property != null) {
             return $this->$property;
         } else {
-            return $this->nom;
+            return $this->name;
         }
     }
 }

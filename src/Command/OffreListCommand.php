@@ -52,7 +52,7 @@ class OffreListCommand extends Command
 
                 return Command::FAILURE;
             }
-            $choix = $response->nom;
+            $choix = $response->name;
             $args = [$response];
         } else {
             $args = [];
@@ -67,7 +67,7 @@ class OffreListCommand extends Command
         $this->io->info("$count offres trouvées");
         $rows = [];
         foreach ($offres as $offre) {
-            $rows[] = [$offre->nom, $offre->codeCgt, $offre->dateModification];
+            $rows[] = [$offre->name, $offre->codeCgt, $offre->dateModification];
         }
 
         $table = new Table($output);

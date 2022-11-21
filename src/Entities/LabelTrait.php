@@ -57,6 +57,10 @@ trait LabelTrait
             }
         }
 
+        if (isset($this->name) && $this->name != '') {
+            return $this->name;
+        }
+
         if (isset($this->nom) && $this->nom != '') {
             return $this->nom;
         }

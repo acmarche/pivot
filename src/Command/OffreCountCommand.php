@@ -55,7 +55,7 @@ class OffreCountCommand extends Command
         $roots = $this->typeOffreRepository->findRoots();
 
         foreach ($roots as $root) {
-            $this->io->section($root->nom);
+            $this->io->section($root->name);
             $this->setCount($root, 1);
             $lvl1 = $this->typeOffreRepository->findByParent($root->id);
             foreach ($lvl1 as $lvl2) {
@@ -88,7 +88,7 @@ class OffreCountCommand extends Command
     private function setCount(TypeOffre $typeOffre, int $lvl)
     {
         $count = count($this->pivotRepository->fetchOffres([$typeOffre]));
-        $this->io->write(str_repeat('-', $lvl).' '.$typeOffre->nom.' => ');
+        $this->io->write(str_repeat('-', $lvl).' '.$typeOffre->name.' => ');
         $this->io->writeln($count.' ');
         $typeOffre->countOffres = $count;
     }
