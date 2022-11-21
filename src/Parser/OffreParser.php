@@ -5,6 +5,8 @@ namespace AcMarche\Pivot\Parser;
 use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
+use AcMarche\Pivot\Entities\Specification\Specification;
+use AcMarche\Pivot\Entities\Tag;
 use AcMarche\Pivot\Spec\SpecSearchTrait;
 use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnCatList;
@@ -142,12 +144,24 @@ class OffreParser
 
         $specifications = $this->findByUrn($offre, $args['keyword'], $args['property'], contains: true);
 
+        $offre->tags[] = $this->rootTag($offre);
+
         foreach ($specifications as $specification) {
             if ($specification->data->type == SpecTypeEnum::BOOLEAN->value) {//skip gaultmil,michstar...
-                $offre->tags[$specification->data->urn] = $specification;
+                $offre->tags[$specification->data->urn] = $this->createTag($specification);
             } else {
                 $offre->classements[] = $specification;
             }
         }
+    }
+
+    private function createTag(Specification $specification): Tag
+    {
+        return new Tag($specification->data->urn, $specification->urnDefinition->label);
+    }
+
+    private function rootTag(Offre $offre): Tag
+    {
+        return new Tag('fam'.$offre->typeOffre->idTypeOffre, $offre->typeOffre->label);
     }
 }

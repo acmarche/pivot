@@ -2,13 +2,15 @@
 
 namespace AcMarche\Pivot\Entities\Specification;
 
+use AcMarche\Pivot\Entities\Tag;
+
 trait SpectFieldsTrait
 {
     public ?string $homepage = null;
     public array $emails = [];
     public array $tels = [];
     /**
-     * @var Specification[] $tags
+     * @var Tag[] $tags
      */
     public array $tags = [];
     /**
