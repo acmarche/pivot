@@ -15,6 +15,7 @@ namespace AcMarche\Pivot\Entities\Specification;
  */
 class SpecData
 {
+    const KEY_URN = 'urn';
     const KEY_CAT = 'urnCat';
     const KEY_SUB_CAT = 'urnSubCat';
     const KEY_TYPE = 'type';
