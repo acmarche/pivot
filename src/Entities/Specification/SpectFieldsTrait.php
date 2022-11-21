@@ -68,4 +68,14 @@ trait SpectFieldsTrait
 
         return $descriptions;
     }
+
+    public function descriptionByLanguage(string $language = 'fr', ?string $skip = "descmarket30"): ?string
+    {
+        $descriptions = $this->descriptionsByLanguage($language, $skip);
+        if (count($descriptions) > 0) {
+            return $descriptions[0]->value;
+        }
+
+        return null;
+    }
 }
