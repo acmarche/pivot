@@ -30,7 +30,7 @@ class TypeOffreRepository extends ServiceEntityRepository
     {
         return $this->createQBL()
             ->andWhere('typeOffre.parent IS NULL')
-            ->orderBy('typeOffre.nom', 'ASC')
+            ->orderBy('typeOffre.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
@@ -64,7 +64,7 @@ class TypeOffreRepository extends ServiceEntityRepository
             $qb->andWhere('typeOffre.countOffres > 0');
         }
 
-        return $qb->orderBy('typeOffre.nom', 'ASC')
+        return $qb->orderBy('typeOffre.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
@@ -76,9 +76,9 @@ class TypeOffreRepository extends ServiceEntityRepository
     public function findByName(string $name, int $max = 20): array
     {
         return $this->createQBL()
-            ->andWhere('typeOffre.nom LIKE :nom')
-            ->setParameter('nom', '%'.$name.'%')
-            ->orderBy('typeOffre.nom', 'ASC')
+            ->andWhere('typeOffre.name LIKE :name')
+            ->setParameter('name', '%'.$name.'%')
+            ->orderBy('typeOffre.name', 'ASC')
             ->getQuery()
             ->setMaxResults($max)
             ->getResult();
@@ -91,9 +91,9 @@ class TypeOffreRepository extends ServiceEntityRepository
     public function findByNameOrUrn(string $name, int $max = 20): array
     {
         return $this->createQBL()
-            ->andWhere('typeOffre.nom LIKE :nom OR typeOffre.urn LIKE :nom')
-            ->setParameter('nom', '%'.$name.'%')
-            ->orderBy('typeOffre.nom', 'ASC')
+            ->andWhere('typeOffre.name LIKE :name OR typeOffre.urn LIKE :name')
+            ->setParameter('name', '%'.$name.'%')
+            ->orderBy('typeOffre.name', 'ASC')
             ->getQuery()
             ->setMaxResults($max)
             ->getResult();
@@ -130,7 +130,7 @@ class TypeOffreRepository extends ServiceEntityRepository
         return $this->createQBL()
             ->andWhere('typeOffre.typeId = :id')
             ->setParameter('id', $id)
-            ->orderBy('typeOffre.nom', 'ASC')
+            ->orderBy('typeOffre.name', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -143,7 +143,7 @@ class TypeOffreRepository extends ServiceEntityRepository
         return $this->createQBL()
             ->andWhere('typeOffre.urn = :urn')
             ->setParameter('urn', $urn)
-            ->orderBy('typeOffre.nom', 'ASC')
+            ->orderBy('typeOffre.name', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -157,7 +157,7 @@ class TypeOffreRepository extends ServiceEntityRepository
         return $this->createQBL()
             ->andWhere('typeOffre.urn = :urn')
             ->setParameter('urn', $urn)
-            ->orderBy('typeOffre.nom', 'ASC')
+            ->orderBy('typeOffre.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
