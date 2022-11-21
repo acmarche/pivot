@@ -116,16 +116,32 @@ class OffreParser
 
     public function setCategories(Offre $offre)
     {
-        $urn = match ($offre->typeOffre->idTypeOffre) {
-            UrnTypeList::evenement()->typeId => UrnList::CATEGORIE_EVENT,
-            UrnTypeList::restauration()->typeId => UrnList::CLASSIFICATION_LABEL,
-            UrnTypeList::produitDeTerroir()->typeId => UrnList::CATEGORIE_PDT,
-            UrnTypeList::producteur()->typeId => UrnList::CATEGORIE_PRD,
-            UrnTypeList::artisan()->typeId => UrnList::CATEGORIE_ATS,
-            default => UrnList::CATEGORIE
+        $args = match ($offre->typeOffre->idTypeOffre) {
+            UrnTypeList::evenement()->typeId => [
+                'keyword' => UrnList::CATEGORIE_EVENT->value,
+                'property' => SpecData::KEY_URN,
+            ],
+            UrnTypeList::restauration()->typeId => [
+                'keyword' => UrnList::CLASSIFICATION_LABEL->value,
+                'property' => SpecData::KEY_CAT,
+            ],
+            UrnTypeList::produitDeTerroir()->typeId => [
+                'keyword' => UrnList::CATEGORIE_PDT->value,
+                'property' => SpecData::KEY_CAT,
+            ],
+            UrnTypeList::producteur()->typeId => [
+                'keyword' => UrnList::CATEGORIE_PRD->value,
+                'property' => SpecData::KEY_CAT,
+            ],
+            UrnTypeList::artisan()->typeId => [
+                'keyword' => UrnList::CATEGORIE_ATS->value,
+                'property' => SpecData::KEY_CAT,
+            ],
+            default => ['keyword' => UrnList::CATEGORIE->value, 'property' => SpecData::KEY_CAT]
         };
 
-        $specifications = $this->findByUrn($offre, $urn->value, SpecData::KEY_CAT, contains: true);
+        $specifications = $this->findByUrn($offre, $args['keyword'], $args['property'], contains: true);
+
         foreach ($specifications as $specification) {
             if ($specification->data->type == SpecTypeEnum::BOOLEAN->value) {//skip gaultmil,michstar...
                 $offre->tags[$specification->data->urn] = $specification;
