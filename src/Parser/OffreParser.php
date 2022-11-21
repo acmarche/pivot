@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Parser;
 
-use AcMarche\Pivot\Entities\Category;
 use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
@@ -129,13 +128,7 @@ class OffreParser
         $specifications = $this->findByUrn($offre, $urn->value, SpecData::KEY_CAT, contains: true);
         foreach ($specifications as $specification) {
             if ($specification->data->type == SpecTypeEnum::BOOLEAN->value) {//skip gaultmil,michstar...
-                $order = $specification->data->order;
-                $labels = $specification->urnDefinition->label;
-                $offre->categories[$specification->data->order] = new Category(
-                    $specification->data->urn,
-                    $order,
-                    $labels
-                );
+                $offre->tags[$specification->data->urn] = $specification;
             } else {
                 $offre->classements[] = $specification;
             }

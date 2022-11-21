@@ -102,7 +102,6 @@ class Offre
      * utilise pour wp
      */
     public ?string $url = null;
-    public array $tags = [];
     public array $enfants = [];
     public array $parents = [];
     public string $locality = '';

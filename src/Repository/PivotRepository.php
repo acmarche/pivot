@@ -225,8 +225,8 @@ class PivotRepository
         $filtres = [$this->typeOffreRepository->findOneByUrn($urn)];
 
         $urns = [];
-        foreach ($referringOffer->categories as $category) {
-            $urns[] = $category->urn;
+        foreach ($referringOffer->tags as $category) {
+            $urns[] = $category->data->urn;
         }
         foreach ($this->typeOffreRepository->findByUrns($urns) as $typeOffre) {
             $filtres[] = $typeOffre;
