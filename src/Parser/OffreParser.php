@@ -17,6 +17,7 @@ class OffreParser
 {
     use SpecSearchTrait;
     use ParseImagesTrait;
+    use ParseRelationTrait;
     use ParseRelationOffresTgtTrait;
     use ParseSpecificationsTrait;
     use ParserEventTrait;
@@ -30,6 +31,7 @@ class OffreParser
 
         //parcours les $offre->relOffre
         $this->parseImages($offre);
+        $this->parsePois($offre);
 
         //see_also,enfants
         $this->parseRelOffresTgt($offre);

@@ -41,6 +41,7 @@ trait ParseRelationOffresTgtTrait
             }
 
             $this->parseImages($offreTgt);
+            $this->parsePois($offreTgt);
             $docs['see_also'][] = $offreTgt;
         }
 
