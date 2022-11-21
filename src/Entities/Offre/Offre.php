@@ -104,6 +104,7 @@ class Offre
     public ?string $url = null;
     public array $enfants = [];
     public array $parents = [];
+    public array $tagsFormatted = [];
     public string $locality = '';
     /**
      * @var Specification[]
