@@ -28,6 +28,9 @@ trait ParseImagesTrait
             if (!$relatedOffer instanceof Offre) {
                 continue;
             }
+            if ($relOffre->urn == UrnList::MEDIA_DEFAULT->value) {
+                $offre->media_default = $relatedOffer;
+            }
             foreach ($relatedOffer->spec as $specData) {
                 if ($specData->urn == UrnList::URL->value) {
                     $value = str_replace("http:", "https:", $specData->value);
@@ -53,18 +56,4 @@ trait ParseImagesTrait
 
         return $docs;
     }
-
-    private function parseExtraFromImage($offre, $relation, Offre $relatedOffer)
-    {
-        if ($relation->urn == UrnList::CONTACT_DIRECTION->value) {
-            $offre->contact_direction = $relatedOffer;
-        }
-        if ($relation->urn === UrnList::POIS->value) {
-            $offre->pois[] = $relatedOffer;
-        }
-        if ($relation->urn == UrnList::MEDIA_DEFAULT->value) {
-            $offre->media_default = $relatedOffer;
-        }
-    }
-
 }
