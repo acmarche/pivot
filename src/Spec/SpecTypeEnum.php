@@ -18,4 +18,5 @@ enum SpecTypeEnum: string
     case PHONE = "Phone";
     case GSM = "GSM";
     case CHOICE = "Choice";
+    case HCHOICE = "HChoice";
 }

@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\Parser;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Gpx;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
+use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 
 trait ParseGpxTrait
 {
@@ -12,6 +13,10 @@ trait ParseGpxTrait
      * @required
      */
     public PivotRemoteRepository $pivotRemoteRepository;
+    /**
+     * @required
+     */
+    public UrnDefinitionRepository $urnDefinitionRepository;
 
     public function parseGpx(Offre $offre)
     {
@@ -27,12 +32,12 @@ trait ParseGpxTrait
                 $offre->gpx_duree = $km[0]->value;
             }
             if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdiff', returnData: true)) {
-                $offre->gpx_difficulte = match ($km[0]->value) {
-                    'urn:val:diff:facile' => 'Facile',
-                    'urn:val:diff:moyen' => 'Moyen',
-                    'urn:val:diff:difficile' => 'Difficile',
-                    default => ''
-                };
+                $urnDefinition = $this->urnDefinitionRepository->findByUrn($km[0]->value);
+                if ($urnDefinition) {
+                    $offre->gpx_difficulte = $urnDefinition->labelByLanguage('fr');
+                } else {
+                    $offre->gpx_difficulte = $km[0]->value;
+                }
             }
         }
     }
