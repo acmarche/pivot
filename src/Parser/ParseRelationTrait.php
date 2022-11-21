@@ -32,6 +32,9 @@ trait ParseRelationTrait
                 continue;
             }
             if ($relOffre->urn == UrnList::POIS->value) {
+                $this->specitificationsByOffre($relatedOffer);
+                $this->parseOffre($relatedOffer);
+                $this->parseImages($relatedOffer);
                 $offre->pois[] = $relatedOffer;
             }
             if ($relOffre->urn == UrnList::CONTACT_DIRECTION->value) {
