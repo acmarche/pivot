@@ -37,7 +37,10 @@ trait ParseImagesTrait
                     $document->extension = $extension;
                     $document->url = $value;
                     if (in_array($extension, ['jpg', 'png'])) {
-                        $docs['images'][] = $value;
+                        if (!array_search($value, $docs['images'])) {
+                            dump($value);
+                            $docs['images'][] = $value;
+                        }
                     } else {
                         $docs['documents'][] = $document;
                     }
