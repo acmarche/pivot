@@ -27,7 +27,12 @@ trait ParseGpxTrait
                 $offre->gpx_duree = $km[0]->value;
             }
             if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdiff', returnData: true)) {
-                $offre->gpx_difficulte = $km[0]->value;
+                $offre->gpx_difficulte = match ($km[0]->value) {
+                    'urn:val:diff:facile' => 'Facile',
+                    'urn:val:diff:moyen' => 'Moyen',
+                    'urn:val:diff:difficile' => 'Difficile',
+                    default => ''
+                };
             }
         }
     }
