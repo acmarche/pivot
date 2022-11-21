@@ -132,7 +132,7 @@ class Offre
         return $this->nom;
     }
 
-    public function nomByLanguage(string $language = 'fr'): ?string
+    public function nameByLanguage(string $language = 'fr'): ?string
     {
         return $this->labelByLanguage($language);
     }
