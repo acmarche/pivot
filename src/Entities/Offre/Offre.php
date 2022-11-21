@@ -91,7 +91,7 @@ class Offre
      */
     public array $adresse_rue;
 
-    public string|SpecData|null $description;
+    public string|SpecData|null $description = '';
 
     public Offre|null $contact_direction = null;
 
