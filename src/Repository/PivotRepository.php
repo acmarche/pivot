@@ -57,14 +57,8 @@ class PivotRepository
             $offres = [];
             $i = 0;
             foreach ($responseQuery->offre as $offreShort) {
-                if ($offreShort->codeCgt == 'HBG-01-0B3B-N7CV') {
-                    //   dd($offreShort);
-                }
                 if (!in_array($offreShort->typeOffre->idTypeOffre, $families)) {
                     continue;
-                }
-                if ($dd) {
-                //    dump($offreShort);
                 }
                 try {
                     $offre = $this->fetchOffreByCgt(
