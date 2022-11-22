@@ -36,6 +36,7 @@ class OffreListCommand extends Command
     protected function configure(): void
     {
         $this->addOption('all', "all", InputOption::VALUE_NONE, 'Toutes les offres');
+        $this->addOption('urn', "urn", InputOption::VALUE_OPTIONAL, 'Urn');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -44,6 +45,24 @@ class OffreListCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         $all = (bool)$input->getOption('all');
+        $urn = $input->getOption('urn');
+
+        if ($urn) {
+            $typeOffre = $this->typeOffreRepository->findOneByUrn($urn);
+            $offres = $this->pivotRepository->fetchOffres([$typeOffre]);
+            $this->io->info($typeOffre->name);
+            $rows = [];
+            foreach ($offres as $offre) {
+                $rows[] = [$offre->name(), $offre->codeCgt, $offre->dateModification];
+            }
+            $table = new Table($output);
+            $table
+                ->setHeaders(['Nom', 'CodeCgt', 'Modifié le'])
+                ->setRows($rows);
+            $table->render();
+
+            return Command::SUCCESS;
+        }
 
         if (!$all) {
             $response = $this->askType();
@@ -67,7 +86,7 @@ class OffreListCommand extends Command
         $this->io->info("$count offres trouvées");
         $rows = [];
         foreach ($offres as $offre) {
-            $rows[] = [$offre->name, $offre->codeCgt, $offre->dateModification];
+            $rows[] = [$offre->name(), $offre->codeCgt, $offre->dateModification];
         }
 
         $table = new Table($output);
