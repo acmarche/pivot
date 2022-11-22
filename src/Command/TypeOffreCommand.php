@@ -68,7 +68,7 @@ class TypeOffreCommand extends Command
             foreach ($family->spec as $child) {
                 $this->io->writeln($child->labelByLanguage('fr'));
                 $childObject = $this->createTypeOffre($child, $root);
-                $this->treatmentChild($childObject);
+                $this->typeOffreRepository->persist($childObject);
                 $this->treatmentClassification($childObject);
             }
         }
@@ -126,15 +126,6 @@ class TypeOffreCommand extends Command
         $this->typeOffreRepository->persist($object);
 
         return $object;
-    }
-
-    private function treatmentChild(TypeOffre $typeOffre): TypeOffre
-    {
-        if (!$this->typeOffreRepository->findOneByUrn($typeOffre->urn)) {
-            $this->typeOffreRepository->persist($typeOffre);
-        }
-
-        return $typeOffre;
     }
 
     private function createTypeOffre(Family $data, ?TypeOffre $root): TypeOffre
