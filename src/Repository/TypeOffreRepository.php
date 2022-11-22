@@ -38,12 +38,12 @@ class TypeOffreRepository extends ServiceEntityRepository
     /**
      * @return TypeOffre[]
      */
-    public function findWithChildren(): array
+    public function findWithChildren(bool $filterCount): array
     {
         $roots = $this->findRoots();
         $typesOffre = [];
         foreach ($roots as $root) {
-            $root->children = $this->findByParent($root->id);
+            $root->children = $this->findByParent($root->id, $filterCount);
             $typesOffre[] = $root;
         }
 
@@ -113,7 +113,6 @@ class TypeOffreRepository extends ServiceEntityRepository
                     $typesOffre[] = $typeOffre;
                 }
             } catch (\Exception $exception) {
-
             }
         }
 
