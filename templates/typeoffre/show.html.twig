@@ -4,7 +4,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3>{{ typeOffre.nom }}</h3>
+            <h3>{{ typeOffre.name }}</h3>
             <span class="text-muted">{{ typeOffre.urn }}</span>
         </div>
         <div class="card-body">
@@ -23,9 +23,6 @@
                     <td>{{ typeOffre.name_nl }}</td>
                 </tr>
             </table>
-
-            <h4 class="text-success">{{ offres|length }} offre(s)</h4>
-            {% include '@AcMarchePivot/offres/_offres.html.twig' %}
 
             <h4 class="text-success">Catégories</h4>
             {% include '@AcMarchePivot/typeoffre/_children.html.twig' %}

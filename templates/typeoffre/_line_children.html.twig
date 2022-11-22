@@ -1,37 +1,37 @@
 <tr>
     <td>
         {% if level == 1 %}
-            {{ typeOffre.nom }}
+            {{ typeOffre.name }}
         {% endif %}
     </td>
     <td>
         {% if level == 2 %}
-            {{ typeOffre.nom }}
+            {{ typeOffre.name }}
         {% endif %}
     </td>
     <td>
         {% if level == 3 %}
-            {{ typeOffre.nom }}
+            {{ typeOffre.name }}
         {% endif %}
     </td>
     <td>
         {% if level == 4 %}
-            {{ typeOffre.nom }}
+            {{ typeOffre.name }}
         {% endif %}
     </td>
     <td>
         {% if level == 5 %}
-            {{ typeOffre.nom }}
+            {{ typeOffre.name }}
         {% endif %}
     </td>
     <td>
         {% if level == 6 %}
-            {{ typeOffre.nom }}
+            {{ typeOffre.name }}
         {% endif %}
     </td>
     <td>{{ typeOffre.countOffres }}</td>
     <td>
-        <a href="{{ path('pivot_offres', {'id': typeOffre.id, 'urn': typeOffre.urn}) }}">
+        <a href="{{ path('pivot_offres', {'id': typeOffre.id}) }}">
             {{ typeOffre.urn }}
         </a>
     </td>

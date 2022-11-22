@@ -51,14 +51,6 @@ class TypeOffreController extends AbstractController
     #[Route(path: '/{id}/show', name: 'pivot_typeoffre_show', methods: ['GET', 'POST'])]
     public function show(TypeOffre $typeOffre): Response
     {
-        try {
-            $offres = $this->pivotRepository->fetchOffres([$typeOffre]);
-        } catch (Exception $e) {
-            $this->addFlash('danger', 'Erreur: '.$e->getMessage());
-
-            return $this->redirectToRoute('pivot_typeoffre_index');
-        }
-
         $lvl1 = $this->typeOffreRepository->findByParent($typeOffre->id);
         foreach ($lvl1 as $lvl2) {
             $lvl2->children = $this->typeOffreRepository->findByParent($lvl2->id);
@@ -82,13 +74,11 @@ class TypeOffreController extends AbstractController
             }
         }
         $typeOffre->children = $lvl1;
-        $offres = SortUtils::sortOffres($offres);
 
         return $this->render(
             '@AcMarchePivot/typeoffre/show.html.twig',
             [
                 'typeOffre' => $typeOffre,
-                'offres' => $offres,
             ]
         );
     }

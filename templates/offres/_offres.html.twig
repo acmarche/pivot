@@ -2,8 +2,8 @@
     <thead>
     <tr>
         <th>Nom</th>
-        <th>Localité</th>
         <th>Code CGT</th>
+        <th>Localité</th>
         <th>Catégories</th>
         <th>Pivot Gest</th>
         <th>Json</th>
@@ -14,16 +14,16 @@
         <tr>
             <td>{{ offre.nom }}</td>
             <td>
+                {{ offre.codeCgt }}
+            </td>
+            <td>
                 {% if offre.adresse %}
                     {{ offre.adresse.localiteByLanguage }}
                 {% endif %}
             </td>
-            <td>
-                {{ offre.codeCgt }}
-            </td>
             <td class="text-muted">
-                {% for categorie in offre.categories %}
-                    {{ categorie.labelByLanguage }},
+                {% for tag in offre.tags %}
+                    {{ tag.labelByLanguage }},
                 {% endfor %}
             </td>
             <td>
