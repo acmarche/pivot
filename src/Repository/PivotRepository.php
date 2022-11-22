@@ -73,11 +73,9 @@ class PivotRepository
                 }
             }
 
-            if (count($typesOffre) > 1) {
-                $typeIds = FilterUtils::extractTypesId($typesOffre);
-                $urns = array_column($typesOffre, 'urn');
-                $offres = FilterUtils::filterByTypeIdsOrUrns($offres, $typeIds, $urns);
-            }
+            $typeIds = FilterUtils::extractTypesId($typesOffre);
+            $urns = array_column($typesOffre, 'urn');
+            $offres = FilterUtils::filterByTypeIdsOrUrns($offres, $typeIds, $urns);
 
             if ($parse) {
                 array_map(function ($offre) {
