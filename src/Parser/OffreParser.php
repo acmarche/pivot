@@ -139,6 +139,14 @@ class OffreParser
                 'keyword' => UrnList::CATEGORIE_ATS->value,
                 'property' => SpecData::KEY_CAT,
             ],
+            UrnTypeList::decouverteEtDivertissement()->typeId => [
+                'keyword' => UrnList::CLASSIFICATION_LABEL->value,
+                'property' => SpecData::KEY_CAT,
+            ],
+            UrnTypeList::hebergements()->typeId => [
+                'keyword' => UrnList::CLASSIFICATION_LABEL->value,
+                'property' => SpecData::KEY_CAT,
+            ],
             default => ['keyword' => UrnList::CATEGORIE->value, 'property' => SpecData::KEY_CAT]
         };
 
