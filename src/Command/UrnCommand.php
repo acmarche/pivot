@@ -5,8 +5,8 @@ namespace AcMarche\Pivot\Command;
 use AcMarche\Pivot\Entities\Response\UrnResponse;
 use AcMarche\Pivot\Entities\Urn\UrnDefinition;
 use AcMarche\Pivot\Entity\UrnDefinitionEntity;
-use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
+use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use AcMarche\Pivot\Serializer\PivotSerializer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -37,11 +37,24 @@ class UrnCommand extends Command
     protected function configure(): void
     {
         $this->addOption('flush', "flush", InputOption::VALUE_NONE, 'Enregistrer les données dans la DB');
+        $this->addOption('urn', "urn", InputOption::VALUE_OPTIONAL, 'Urn');
+        $this->addOption('lang', "lang", InputOption::VALUE_OPTIONAL, 'Urn', 'fr');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
+
+        $urn = $input->getOption('urn');
+        $lang = $input->getOption('lang');
+
+        if ($urn) {
+            $urnDefinition = $this->urnDefinitionRepository->findOneByUrn($urn);
+            dump($urnDefinition);
+            $this->io->writeln($urnDefinition->labelByLanguage($lang));
+
+            return Command::SUCCESS;
+        }
 
         $this->createListing();
         $flush = (bool)$input->getOption('flush');
