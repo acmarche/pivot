@@ -25,6 +25,7 @@ class OffreController extends AbstractController
     public function index(TypeOffre $typeOffre): Response
     {
         try {
+            $json = $this->pivotRemoteRepository->offreByCgt($typeOffre->urn);
             $offres = $this->pivotRepository->fetchOffres([$typeOffre]);
         } catch (\Exception $e) {
             $this->addFlash('danger', 'Erreur: '.$e->getMessage());
