@@ -12,13 +12,11 @@ use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Serializer\PivotSerializer;
 use AcMarche\Pivot\TypeOffre\FilterUtils;
+use AcMarche\Pivot\Utils\CacheUtils;
 use AcMarche\Pivot\Utils\SortUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Cache\CacheInterface;
-use VisitMarche\ThemeTail\Lib\Cache;
 
 class PivotRepository
 {
@@ -28,7 +26,7 @@ class PivotRepository
         private OffreParser $offreParser,
         private PivotSerializer $pivotSerializer,
         private CacheInterface $cache,
-        private SluggerInterface $slugger
+        private CacheUtils $cacheUtils
     ) {
     }
 
@@ -47,7 +45,7 @@ class PivotRepository
             $cacheKeyPlus .= $typeOffre->id.'-';
         }
 
-        $cacheKey = Cache::generateKey(Cache::FETCH_OFFRES.'-'.$cacheKeyPlus.$parse);
+        $cacheKey = $this->cacheUtils->generateKey(CacheUtils::FETCH_OFFRES.'-'.$cacheKeyPlus.$parse);
 
         //pour un pretri
         $families = $this->typeOffreRepository->findFamiliesByUrns($typesOffre);
@@ -150,9 +148,7 @@ class PivotRepository
     ): ResultOfferDetail|Offre|null {
 
         $cacheKey = $codeCgt.$class;
-
-        $keyUnicode = new UnicodeString($cacheKey);
-        $key = $this->slugger->slug($keyUnicode->ascii()->toString());
+        $key = $this->cacheUtils->generateKey($cacheKey);
 
         return $this->cache->get(
             'offre-'.$key,
