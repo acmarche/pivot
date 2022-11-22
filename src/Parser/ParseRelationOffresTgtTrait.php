@@ -31,7 +31,7 @@ trait ParseRelationOffresTgtTrait
             $code = $item['codeCgt'];
 
             try {
-                $offreTgt = $this->pivotRepository->fetchOffreByCgt($code, Offre::class);
+                $offreTgt = $this->pivotRepository->fetchOffreByCgt($code);
             } catch (\Exception $exception) {
                 continue;
             }

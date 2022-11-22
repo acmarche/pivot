@@ -61,11 +61,7 @@ class PivotRepository
                     continue;
                 }
                 try {
-                    $offre = $this->fetchOffreByCgt(
-                        $offreShort->codeCgt,
-                        Offre::class,
-                        $offreShort->dateModification
-                    );
+                    $offre = $this->fetchOffreByCgt($offreShort->codeCgt);
                     if ($offre instanceof Offre) {
                         $offres[] = $offre;
                         $i++;
@@ -124,7 +120,7 @@ class PivotRepository
         return $events;
     }
 
-  public function getEventByIdHades(int $idHades): ?Offre
+    public function getEventByIdHades(int $idHades): ?Offre
     {
         $events = $this->fetchEvents(true);
         foreach ($events as $event) {
@@ -145,20 +141,15 @@ class PivotRepository
      *
      * @param string $codeCgt
      * @param string $class
-     * @param string|null $cacheKeyPlus
      * @return ResultOfferDetail|Offre|null
      * @throws InvalidArgumentException
      */
     public function fetchOffreByCgt(
         string $codeCgt,
-        string $class = ResultOfferDetail::class,
-        ?string $cacheKeyPlus = null
+        string $class = Offre::class
     ): ResultOfferDetail|Offre|null {
 
         $cacheKey = $codeCgt.$class;
-        if ($cacheKeyPlus) {
-            $cacheKey .= $cacheKeyPlus;
-        }
 
         $keyUnicode = new UnicodeString($cacheKey);
         $key = $this->slugger->slug($keyUnicode->ascii()->toString());
@@ -190,15 +181,13 @@ class PivotRepository
 
     /**
      * @param string $codeCgt
-     * @param string $class
-     * @param string|null $cacheKeyPlus
      * @return Offre|null
      * @throws InvalidArgumentException
      */
-    public function fetchOffreByCgtAndParse(string $codeCgt, string $class, ?string $cacheKeyPlus = null): ?Offre
+    public function fetchOffreByCgtAndParse(string $codeCgt): ?Offre
     {
-        $offre = $this->fetchOffreByCgt($codeCgt, $class, $cacheKeyPlus);
-        if ($offre) {
+        $offre = $this->fetchOffreByCgt($codeCgt);
+        if ($offre instanceof Offre) {
             $this->offreParser->launchParse($offre);
         }
 
