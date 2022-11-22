@@ -2,9 +2,13 @@
 
 namespace AcMarche\Pivot\Command;
 
+use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
+use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
+use AcMarche\Pivot\Serializer\PivotSerializer;
+use AcMarche\Pivot\TypeOffre\FilterUtils;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,10 +24,13 @@ class OffreCountCommand extends Command
 {
     private SymfonyStyle $io;
     private OutputInterface $output;
+    private array $offres = [];
 
     public function __construct(
         private PivotRepository $pivotRepository,
         private TypeOffreRepository $typeOffreRepository,
+        private PivotRemoteRepository $pivotRemoteRepository,
+        private PivotSerializer $pivotSerializer,
         string $name = null
     ) {
         parent::__construct($name);
@@ -42,9 +49,11 @@ class OffreCountCommand extends Command
         $flush = (bool)$input->getOption('flush');
 
         $typesOffre = $this->typeOffreRepository->findAll();
+
         foreach ($typesOffre as $typeOffre) {
             $this->io->section($typeOffre->name);
-            $this->setCount($typeOffre, 1);
+            $this->io->writeln($typeOffre->urn);
+            $this->setCount($typeOffre);
         }
 
         if ($flush) {
@@ -56,9 +65,36 @@ class OffreCountCommand extends Command
 
     private function setCount(TypeOffre $typeOffre)
     {
-        $count = count($this->pivotRepository->fetchOffres([$typeOffre]));
+        $offres = $this->pivotRepository->fetchOffres([$typeOffre],false);
+        $count = count($offres);
         $this->io->writeln($count.' ');
         $typeOffre->countOffres = $count;
+    }
+
+    private function draft()
+    {
+        $responseQuery = $this->pivotRepository->getAllDataFromRemote();
+        foreach ($responseQuery->offre as $offreShort) {
+            try {
+                $dataString = $this->pivotRemoteRepository->offreByCgt($offreShort->codeCgt);
+                $tmp = json_decode($dataString);
+                $dataStringOffre = json_encode($tmp->offre[0]);
+
+                $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, Offre::class);
+                if ($object) {
+                    $object->dataRaw = $dataString;
+                }
+                $this->offres[] = $object;
+
+            } catch (\Exception $exception) {
+                dump($exception);
+
+                return Command::FAILURE;
+            }
+        }
+
+        // $offres = FilterUtils::filterByTypeIdsOrUrns($this->offres, [], [$typeOffre->urn]);
+        return Command::FAILURE;
     }
 
 }
