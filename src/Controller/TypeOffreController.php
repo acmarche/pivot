@@ -5,10 +5,7 @@ namespace AcMarche\Pivot\Controller;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Form\TypeOffreEditType;
 use AcMarche\Pivot\Form\TypeOffreSearchType;
-use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
-use AcMarche\Pivot\Utils\SortUtils;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,14 +18,13 @@ class TypeOffreController extends AbstractController
 {
     public function __construct(
         private TypeOffreRepository $typeOffreRepository,
-        private PivotRepository $pivotRepository,
     ) {
     }
 
     #[Route(path: '/', name: 'pivot_typeoffre_index')]
     public function index(Request $request): Response
     {
-        $typesoffre = $this->typeOffreRepository->findWithChildren();
+        $typesoffre = $this->typeOffreRepository->findWithChildren(false);
         $data = [];
         $form = $this->createForm(TypeOffreSearchType::class, $data);
         $form->handleRequest($request);
@@ -51,21 +47,21 @@ class TypeOffreController extends AbstractController
     #[Route(path: '/{id}/show', name: 'pivot_typeoffre_show', methods: ['GET', 'POST'])]
     public function show(TypeOffre $typeOffre): Response
     {
-        $lvl1 = $this->typeOffreRepository->findByParent($typeOffre->id);
+        $lvl1 = $this->typeOffreRepository->findByParent($typeOffre->id, false);
         foreach ($lvl1 as $lvl2) {
-            $lvl2->children = $this->typeOffreRepository->findByParent($lvl2->id);
+            $lvl2->children = $this->typeOffreRepository->findByParent($lvl2->id, false);
             foreach ($lvl2->children as $lvl3) {
-                $lvl3->children = $this->typeOffreRepository->findByParent($lvl3->id);
-                foreach ($this->typeOffreRepository->findByParent($lvl3->id) as $lvl4) {
-                    $lvl4->children = $this->typeOffreRepository->findByParent($lvl4->id);
-                    foreach ($this->typeOffreRepository->findByParent($lvl4->id) as $lvl5) {
-                        $lvl5->children = $this->typeOffreRepository->findByParent($lvl5->id);
-                        foreach ($this->typeOffreRepository->findByParent($lvl5->id) as $lvl6) {
-                            $lvl6->children = $this->typeOffreRepository->findByParent($lvl6->id);
-                            foreach ($this->typeOffreRepository->findByParent($lvl6->id) as $lvl7) {
-                                $lvl7->children = $this->typeOffreRepository->findByParent($lvl7->id);
-                                foreach ($this->typeOffreRepository->findByParent($lvl7->id) as $lvl8) {
-                                    $lvl8->children = $this->typeOffreRepository->findByParent($lvl8->id);
+                $lvl3->children = $this->typeOffreRepository->findByParent($lvl3->id, false);
+                foreach ($this->typeOffreRepository->findByParent($lvl3->id, false) as $lvl4) {
+                    $lvl4->children = $this->typeOffreRepository->findByParent($lvl4->id, false);
+                    foreach ($this->typeOffreRepository->findByParent($lvl4->id, false) as $lvl5) {
+                        $lvl5->children = $this->typeOffreRepository->findByParent($lvl5->id, false);
+                        foreach ($this->typeOffreRepository->findByParent($lvl5->id, false) as $lvl6) {
+                            $lvl6->children = $this->typeOffreRepository->findByParent($lvl6->id, false);
+                            foreach ($this->typeOffreRepository->findByParent($lvl6->id, false) as $lvl7) {
+                                $lvl7->children = $this->typeOffreRepository->findByParent($lvl7->id, false);
+                                foreach ($this->typeOffreRepository->findByParent($lvl7->id, false) as $lvl8) {
+                                    $lvl8->children = $this->typeOffreRepository->findByParent($lvl8->id, false);
                                 }
                             }
                         }
