@@ -20,7 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 #[AsCommand(
     name: 'pivot:generate-urn',
-    description: 'Génère une table sql avec tous les types d\'offres. --flush pour enregistrer dans la DB',
+    description: 'Génère une table sql avec tous les types d\'urns. --flush pour enregistrer dans la DB',
 )]
 class UrnCommand extends Command
 {

@@ -41,7 +41,11 @@ class OffreCountCommand extends Command
 
         $flush = (bool)$input->getOption('flush');
 
-        $this->askType();
+        $typesOffre = $this->typeOffreRepository->findAll();
+        foreach ($typesOffre as $typeOffre) {
+            $this->io->section($typeOffre->name);
+            $this->setCount($typeOffre, 1);
+        }
 
         if ($flush) {
             $this->typeOffreRepository->flush();
@@ -50,45 +54,9 @@ class OffreCountCommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function askType()
-    {
-        $roots = $this->typeOffreRepository->findRoots();
-
-        foreach ($roots as $root) {
-            $this->io->section($root->name);
-            $this->setCount($root, 1);
-            $lvl1 = $this->typeOffreRepository->findByParent($root->id);
-            foreach ($lvl1 as $lvl2) {
-                $this->setCount($lvl2, 2);
-                $lvl2->children = $this->typeOffreRepository->findByParent($lvl2->id);
-                foreach ($lvl2->children as $lvl3) {
-                    $this->setCount($lvl3, 4);
-                    $lvl3->children = $this->typeOffreRepository->findByParent($lvl3->id);
-                    foreach ($this->typeOffreRepository->findByParent($lvl3->id) as $lvl4) {
-                        $this->setCount($lvl4, 6);
-                        $lvl4->children = $this->typeOffreRepository->findByParent($lvl4->id);
-                        foreach ($this->typeOffreRepository->findByParent($lvl4->id) as $lvl5) {
-                            $this->setCount($lvl5, 8);
-                            $lvl5->children = $this->typeOffreRepository->findByParent($lvl5->id);
-                            foreach ($this->typeOffreRepository->findByParent($lvl5->id) as $lvl6) {
-                                $this->setCount($lvl6, 10);
-                                $lvl6->children = $this->typeOffreRepository->findByParent($lvl6->id);
-                                foreach ($this->typeOffreRepository->findByParent($lvl6->id) as $lvl7) {
-                                    $this->setCount($lvl7, 10);
-                                    $lvl7->children = $this->typeOffreRepository->findByParent($lvl7->id);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private function setCount(TypeOffre $typeOffre, int $lvl)
+    private function setCount(TypeOffre $typeOffre)
     {
         $count = count($this->pivotRepository->fetchOffres([$typeOffre]));
-        $this->io->write(str_repeat('-', $lvl).' '.$typeOffre->name.' => ');
         $this->io->writeln($count.' ');
         $typeOffre->countOffres = $count;
     }
