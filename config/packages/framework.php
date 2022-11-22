@@ -7,5 +7,4 @@ return static function (FrameworkConfig $framework) {
     $framework->mailer([
         'dsn' => '%env(MAILER_DSN)%',
     ]);
-    $framework->errorController('App\Controller\ErrorController::show');
 };
