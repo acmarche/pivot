@@ -147,6 +147,10 @@ class OffreParser
                 'keyword' => UrnList::CLASSIFICATION_LABEL->value,
                 'property' => SpecData::KEY_CAT,
             ],
+            UrnTypeList::itineraire()->typeId => [
+                'keyword' => UrnList::CAT_DESC->value,
+                'property' => SpecData::KEY_CAT,
+            ],
             default => ['keyword' => UrnList::CATEGORIE->value, 'property' => SpecData::KEY_CAT]
         };
 
@@ -155,7 +159,7 @@ class OffreParser
         $offre->tags[] = $this->rootTag($offre);
 
         foreach ($specifications as $specification) {
-            if ($specification->data->type == SpecTypeEnum::BOOLEAN->value) {//skip gaultmil,michstar...
+            if ($specification->data->type == SpecTypeEnum::BOOLEAN->value) {
                 $offre->tags[$specification->data->urn] = $this->createTag($specification);
             } else {
                 $offre->classements[] = $specification;

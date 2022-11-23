@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\Parser;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Specification;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
+use AcMarche\Pivot\Utils\UrnToSkip;
 
 trait ParseSpecificationsTrait
 {
@@ -22,6 +23,9 @@ trait ParseSpecificationsTrait
     {
         $specifications = [];
         foreach ($offre->spec as $spec) {
+            if (in_array($spec->value, UrnToSkip::urns)) {
+                continue;
+            }
             $urnDefinition = $this->urnDefinitionRepository->findByUrn($spec->urn);
             $urnCatDefinition = null;
             if ($spec->urnCat) {
