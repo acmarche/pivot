@@ -111,13 +111,15 @@ class Offre
      */
     public array $classements = [];
     public string $gpx_distance = '';
-    public ?string $gpx_id = '';
+    public ?string $idcirkwi = null;
     public ?string $gpx_duree = '';
     public ?string $gpx_difficulte = '';
     /**
      * @var Specification[]|array
      */
     public array $specifications = [];
+    public ?Specification $gpx_type_circuit = null;
+    public ?Specification $gpx_cat_circuit = null;
 
     /**
      * Alias

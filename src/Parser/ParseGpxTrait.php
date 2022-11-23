@@ -26,11 +26,18 @@ trait ParseGpxTrait
                 $offre->gpx_distance = $km[0]->value;
             }
             if ($km = $this->findByUrn($offre, 'urn:fld:idcirkwi', returnData: true)) {
-                $offre->gpx_id = $km[0]->value;
+                $offre->idcirkwi = $km[0]->value;
             }
             if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdur', returnData: true)) {
                 $offre->gpx_duree = $km[0]->value;
             }
+            if ($km = $this->findByUrn($offre, 'urn:fld:typecirc')) {
+                $offre->gpx_type_circuit = $km[0];
+            }
+            if ($km = $this->findByUrn($offre, 'urn:fld:catcirc')) {
+                $offre->gpx_cat_circuit = $km[0];
+            }
+
             if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdiff', returnData: true)) {
                 $urnDefinition = $this->urnDefinitionRepository->findByUrn($km[0]->value);
                 if ($urnDefinition) {

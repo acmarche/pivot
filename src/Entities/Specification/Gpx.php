@@ -10,4 +10,5 @@ class Gpx
     public ?string $url = null;
     public ?string $data_raw= null;
     public ?string $code=null;
+    public ?string $idcirkwi=null;
 }
