@@ -58,13 +58,15 @@ trait ParseGpxTrait
         foreach ($offre->documents as $document) {
             if ($document->extension == 'gpx') {
                 $gpx = new Gpx();
-                $gpx->code = $offre->codeCgt;
+                $gpx->code = $document->codeCgt;
                 $gpx->data_raw = $this->pivotRemoteRepository->gpxRead($document->url);
                 $gpxXml = simplexml_load_string($gpx->data_raw);
                 foreach ($gpxXml->metadata as $pt) {
                     $gpx->name = (string)$pt->name;
                     $gpx->desc = (string)$pt->desc;
                     $gpx->url = $document->url;
+                    $gpx->codeCgt = $document->codeCgt;
+                    $gpx->urn = $document->urn;
                     foreach ($pt->link as $link) {
                         $gpx->links[] = (string)$link->attributes();
                     }

@@ -39,6 +39,8 @@ trait ParseImagesTrait
                     $document = new Document();
                     $document->extension = $extension;
                     $document->url = $value;
+                    $document->codeCgt = $relatedOffer->codeCgt;
+                    $document->urn = $relatedOffer->url;
                     if (in_array($extension, ['jpg', 'png'])) {
                         if (!array_search($value, $docs['images'])) {
                             $docs['images'][] = $value;

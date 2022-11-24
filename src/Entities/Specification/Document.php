@@ -9,4 +9,6 @@ class Document
     public ?string $url = null;
     public ?string $extension = null;
     public array|null $link = [];
+    public ?string $codeCgt = null;
+    public ?string $urn = null;
 }
