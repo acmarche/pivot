@@ -12,22 +12,23 @@
                 <tr>
                     <th>Nom</th>
                     <th>Mot clef</th>
-                    <th>Traductions</th>
                     <th></th>
                 </tr>
                 {% for typeOffre in typesOffre %}
                     <tr>
                         <td>{{ typeOffre }}</td>
-                        <td>{{ typeOffre.urn }}</td>
+                        <td>
+                            <a href="{{ path('pivot_typeoffre_show', {'id': typeOffre.id}) }}" title="Traduire">
+                                {{ typeOffre.urn }}
+                            </a>
+                        </td>
                         <td>
                             {% include '@AcMarchePivot/typeoffre/_flags.html.twig' %}
                         </td>
                         <td>
-                            {% if  typeOffre.urn %}
-                                <a href="{{ path('pivot_typeoffre_edit', {'id': typeOffre.id}) }}" title="Traduire">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                            {% endif %}
+                            <a href="{{ path('pivot_typeoffre_edit', {'id': typeOffre.id}) }}" title="Traduire">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}
