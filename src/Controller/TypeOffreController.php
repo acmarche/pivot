@@ -30,7 +30,7 @@ class TypeOffreController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $typesoffre = $this->typeOffreRepository->findByName($data['name']);
+            $typesoffre = $this->typeOffreRepository->findByNameOrUrn($data['name']);
 
             return $this->render('@AcMarchePivot/typeoffre/search.html.twig', [
                 'typesOffre' => $typesoffre,
