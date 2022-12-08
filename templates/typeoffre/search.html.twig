@@ -12,6 +12,7 @@
                 <tr>
                     <th>Nom</th>
                     <th>Offres</th>
+                    <th>Nbre d'offres</th>
                 </tr>
                 {% for typeOffre in typesOffre %}
                     <tr>
@@ -21,6 +22,7 @@
                                 {{ typeOffre.urn }}
                             </a>
                         </td>
+                        <td>{{ typeOffre.countOffres }}</td>
                     </tr>
                 {% endfor %}
             </table>
