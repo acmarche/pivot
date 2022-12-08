@@ -11,17 +11,11 @@
             <table class="table table-bordered table-striped">
                 <tr>
                     <th>Nom</th>
-                    <th>Urn</th>
                     <th>Offres</th>
                 </tr>
                 {% for typeOffre in typesOffre %}
                     <tr>
                         <td>{{ typeOffre }}</td>
-                        <td>
-                            <a href="{{ path('pivot_typeoffre_show', {'id': typeOffre.id}) }}" title="Traduire">
-                                {{ typeOffre.urn }}
-                            </a>
-                        </td>
                         <td>
                             <a href="{{ path('pivot_offres', {'id': typeOffre.id}) }}">
                                 {{ typeOffre.urn }}
