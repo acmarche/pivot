@@ -11,8 +11,8 @@
             <table class="table table-bordered table-striped">
                 <tr>
                     <th>Nom</th>
-                    <th>Mot clef</th>
-                    <th></th>
+                    <th>Urn</th>
+                    <th>Offres</th>
                 </tr>
                 {% for typeOffre in typesOffre %}
                     <tr>
@@ -23,11 +23,8 @@
                             </a>
                         </td>
                         <td>
-                            {% include '@AcMarchePivot/typeoffre/_flags.html.twig' %}
-                        </td>
-                        <td>
-                            <a href="{{ path('pivot_typeoffre_edit', {'id': typeOffre.id}) }}" title="Traduire">
-                                <i class="fas fa-pencil-alt"></i>
+                            <a href="{{ path('pivot_offres', {'id': typeOffre.id}) }}">
+                                {{ typeOffre.urn }}
                             </a>
                         </td>
                     </tr>
