@@ -58,7 +58,7 @@ class OffreDumpCommand extends Command
         $type = $offre->typeOffre;
         $idType = $type->idTypeOffre;
         $labelType = $type->label[0]->value;
-        $io->write($offre->name);
+        $io->write($offre->nom);
         $io->write(" -- ".$idType);
         $io->writeln(" -- ".$labelType);
 
