@@ -8,6 +8,7 @@ class DateBeginEnd
 {
     public \DateTimeInterface|null $date_begin = null;
     public \DateTimeInterface|null $date_end = null;
+    public string $format = 'Y-m-d';
 
     public function __construct(string $date_begin, string $date_end)
     {
@@ -23,5 +24,14 @@ class DateBeginEnd
         }
 
         return "";
+    }
+
+    public function isPeriod(): bool
+    {
+        if ($this->date_begin->format($this->format) == $this->date_end->format($this->format)) {
+            return false;
+        }
+
+        return true;
     }
 }
