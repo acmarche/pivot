@@ -7,7 +7,6 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
-use AcMarche\Pivot\Utils\DateUtils;
 use AcMarche\Pivot\Utils\SortUtils;
 
 trait ParserEventTrait
@@ -26,6 +25,7 @@ trait ParserEventTrait
         }
 
         $offre->dates = $this->getDates($offre);
+
         $firstDate = $offre->firstDate();
         if ($firstDate) {
             $offre->dateBegin = $firstDate->date_begin;
@@ -47,21 +47,25 @@ trait ParserEventTrait
         }
     }
 
-    public function dateBeginAndEnd(Offre $offre): array
+    public function dateBeginAndEnd(Offre $offre): ?DateBeginEnd
     {
-        $dates = [];
-        $format = "d/m/Y";
+        $dateBegin = $dateEnd = null;
         $dateDebut = $this->findByUrn($offre, UrnList::DATE_DEB_VALID->value, returnData: true);
+
         if (count($dateDebut) > 0) {
-            $dates[] = DateUtils::convertStringToDateTime($dateDebut[0]->value, $format);
+            $dateBegin = $dateDebut[0]->value;
         }
 
         $dateFin = $this->findByUrn($offre, UrnList::DATE_FIN_VALID->value, returnData: true);
         if (count($dateFin) > 0) {
-            $dates[] = DateUtils::convertStringToDateTime($dateFin[0]->value, $format);
+            $dateEnd = $dateFin[0]->value;
         }
 
-        return $dates;
+        if ($dateBegin && $dateEnd) {
+            return new DateBeginEnd($dateBegin, $dateEnd);
+        }
+
+        return null;
     }
 
     /**
@@ -70,20 +74,22 @@ trait ParserEventTrait
     public function getDates(Offre $offre): array
     {
         $dates = [];
+        if ($date = $this->dateBeginAndEnd($offre)) {
+            $dates[] = $date;
+        }
         $specs = $this->findByUrn($offre, UrnList::DATE_OBJECT->value, returnData: true);
         foreach ($specs as $spec) {
             foreach ($spec->spec as $data) {
                 if ($data->urn == UrnList::DATE_DEB->value) {
                     $dateBegin = $data->value;
                 }
-                if ($data->urn == UrnList::DATE_DEB->value) {
+                if ($data->urn == UrnList::DATE_END->value) {
                     $dateEnd = $data->value;
                 }
             }
             $dates[] = new DateBeginEnd($dateBegin, $dateEnd);
         }
-        $dates = SortUtils::sortDatesEvent($dates);
 
-        return $dates;
+        return SortUtils::sortDatesEvent($dates);
     }
 }

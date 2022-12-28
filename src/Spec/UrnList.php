@@ -15,6 +15,7 @@ enum UrnList: string
     case NOMO = "urn:fld:nomofr";
     case DATE_DEB_VALID = 'urn:fld:datedebvalid';
     case DATE_DEB = 'urn:fld:date:datedeb';
+    case DATE_END = "urn:fld:date:datefin";
     case DATE_FIN_VALID = "urn:fld:datefinvalid";
     case HOMEPAGE = "urn:fld:homepage";
     case ACTIVE = "urn:fld:typeevt:activrecur";
