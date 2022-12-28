@@ -75,7 +75,7 @@ trait ParserEventTrait
     {
         $dates = [];
         if ($date = $this->dateBeginAndEnd($offre)) {
-            $dates[] = $date;
+          //  $dates[] = $date;
         }
         $specs = $this->findByUrn($offre, UrnList::DATE_OBJECT->value, returnData: true);
         foreach ($specs as $spec) {
