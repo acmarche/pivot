@@ -162,6 +162,12 @@ class OffreParser
             if ($specification->data->type == SpecTypeEnum::BOOLEAN->value) {
                 $offre->tags[$specification->data->urn] = $this->createTag($specification);
             } else {
+                if ($specification->urnDefinition->urn == UrnList::DESCRIPTION->value) {
+                    continue;
+                }
+                if ($specification->urnDefinition->urn == UrnList::DESCRIPTION10->value) {
+                    continue;
+                }
                 $offre->classements[] = $specification;
             }
         }

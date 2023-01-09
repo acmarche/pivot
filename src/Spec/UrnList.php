@@ -10,6 +10,7 @@ enum UrnList: string
 {
     case EQUIPEMENTS = "urn:cat:eqpsrv";
     case DESCRIPTION = "urn:fld:descmarket";
+    case DESCRIPTION10 = "urn:fld:descmarket10";
     case DESCRIPTION_SHORT = "descmarket";
     case TARIF = "urn:fld:tarifcplt";
     case NOMO = "urn:fld:nomofr";
