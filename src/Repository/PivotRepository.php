@@ -97,23 +97,26 @@ class PivotRepository
      */
     public function fetchEvents(bool $removeObsolete = false, array $typeOffres = []): array
     {
-        if (count($typeOffres) === 0) {
-            return [];
-        }
+        return $this->cache->get("events-pivot", function () use ($removeObsolete, $typeOffres) {
 
-        $events = $this->fetchOffres($typeOffres);
-
-        foreach ($events as $key => $event) {
-            if (!$event->dateBegin) {
-                unset($events[$key]);
+            if (count($typeOffres) === 0) {
+                return [];
             }
-        }
-        $events = SortUtils::sortEvents($events);
-        if ($removeObsolete) {
-            $events = EventUtils::removeObsolete($events);
-        }
 
-        return $events;
+            $events = $this->fetchOffres($typeOffres);
+
+            foreach ($events as $key => $event) {
+                if (!$event->dateBegin) {
+                    unset($events[$key]);
+                }
+            }
+            $events = SortUtils::sortEvents($events);
+            if ($removeObsolete) {
+                $events = EventUtils::removeObsolete($events);
+            }
+
+            return $events;
+        });
     }
 
     public function getEventByIdHades(int $idHades): ?Offre
@@ -144,6 +147,10 @@ class PivotRepository
         string $codeCgt,
         string $class = Offre::class
     ): ResultOfferDetail|Offre|null {
+
+        if (is_numeric(substr($codeCgt, 0, 1))) {
+            return null;
+        }
 
         $cacheKey = $codeCgt.$class;
         $key = $this->cacheUtils->generateKey($cacheKey);
