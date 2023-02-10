@@ -36,7 +36,7 @@ trait ParseSpecificationsTrait
             if ($spec instanceof SpecData && $urnDefinition instanceof UrnDefinitionEntity) {
                 $specifications[] = new Specification($spec, $urnDefinition, $urnCatDefinition);
             } else {
-                dump($offre);
+                $this->logger->error("Error parse specifications offre ".$offre->codeCgt);
             }
         }
 

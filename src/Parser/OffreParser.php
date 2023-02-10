@@ -12,6 +12,7 @@ use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnSubCatList;
+use Psr\Log\LoggerInterface;
 use AcMarche\Pivot\Spec\UrnTypeList;
 
 class OffreParser
@@ -23,6 +24,11 @@ class OffreParser
     use ParseSpecificationsTrait;
     use ParserEventTrait;
     use ParseGpxTrait;
+
+    /**
+     * @required
+     */
+    public LoggerInterface $logger;
 
     public function launchParse(Offre $offre)
     {
