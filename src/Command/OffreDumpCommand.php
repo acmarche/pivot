@@ -2,7 +2,9 @@
 
 namespace AcMarche\Pivot\Command;
 
+use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
+use AcMarche\Pivot\Repository\PivotRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,6 +22,8 @@ class OffreDumpCommand extends Command
 {
     public function __construct(
         private PivotRemoteRepository $pivotRemoteRepository,
+        private PivotRepository $pivotRepository,
+        private OffreParser $pivotParser,
         string $name = null
     ) {
         parent::__construct($name);
@@ -29,7 +33,8 @@ class OffreDumpCommand extends Command
     {
         $this
             ->addArgument('codeCgt', InputArgument::REQUIRED, 'code cgt', null)
-            ->addOption('raw', "raw", InputOption::VALUE_NONE, 'Afficher le json');
+            ->addOption('raw', "raw", InputOption::VALUE_NONE, 'Afficher le json')
+            ->addOption('parse', "parse", InputOption::VALUE_NONE, 'Parser');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -37,6 +42,7 @@ class OffreDumpCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $codeCgt = $input->getArgument('codeCgt');
         $raw = (bool)$input->getOption('raw');
+        $parse = (bool)$input->getOption('parse');
 
         try {
             $resultString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
@@ -63,6 +69,11 @@ class OffreDumpCommand extends Command
         $io->writeln(" -- ".$labelType);
 
         $io->writeln("");
+
+        if ($parse) {
+            $offre = $this->pivotRepository->fetchOffreByCgt($codeCgt);
+            $this->pivotParser->launchParse($offre);
+        }
 
         return Command::SUCCESS;
     }

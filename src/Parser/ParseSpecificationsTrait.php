@@ -3,9 +3,7 @@
 namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
-use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Specification\Specification;
-use AcMarche\Pivot\Entity\UrnDefinitionEntity;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use AcMarche\Pivot\Utils\UrnToSkip;
 
@@ -29,15 +27,15 @@ trait ParseSpecificationsTrait
                 continue;
             }
             $urnDefinition = $this->urnDefinitionRepository->findByUrn($spec->urn);
+            if (!$urnDefinition) {
+                $this->logger->error("Error parse urn definition not found ".$spec->urn);
+                continue;
+            }
             $urnCatDefinition = null;
             if ($spec->urnCat) {
                 $urnCatDefinition = $this->urnDefinitionRepository->findByUrn($spec->urnCat);
             }
-            if ($spec instanceof SpecData && $urnDefinition instanceof UrnDefinitionEntity) {
-                $specifications[] = new Specification($spec, $urnDefinition, $urnCatDefinition);
-            } else {
-                $this->logger->error("Error parse specifications offre ".$offre->codeCgt);
-            }
+            $specifications[] = new Specification($spec, $urnDefinition, $urnCatDefinition);
         }
 
         $offre->specifications = $specifications;
