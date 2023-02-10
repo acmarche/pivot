@@ -3,6 +3,7 @@
 namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Entities\Specification\Specification;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use AcMarche\Pivot\Utils\UrnToSkip;
@@ -31,7 +32,12 @@ trait ParseSpecificationsTrait
             if ($spec->urnCat) {
                 $urnCatDefinition = $this->urnDefinitionRepository->findByUrn($spec->urnCat);
             }
-            $specifications[] = new Specification($spec, $urnDefinition, $urnCatDefinition);
+            if ($spec instanceof SpecData) {
+                $specifications[] = new Specification($spec, $urnDefinition, $urnCatDefinition);
+            }
+            else {
+                dump($offre);
+            }
         }
 
         $offre->specifications = $specifications;
