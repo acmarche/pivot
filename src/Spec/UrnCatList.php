@@ -11,6 +11,7 @@ enum UrnCatList: string
     case DESCRIPTION = "urn:cat:descmarket";
     case DESCRIPTION_30 = "urn:cat:descmarket30";
     case DESCRIPTION_MARKETING = "urn:obj:descmarkettgt";
+    case DESCRIPTION_CIRCUIT = "urn:fld:desccirc";
     case EQUIPEMENTS = "urn:cat:eqpsrv";
     case ACCUEIL = "urn:cat:accueil";
     case CLASS_LAB = "urn:cat:classlab";

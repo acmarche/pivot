@@ -77,6 +77,16 @@ class OffreParser
             }
             $offre->descriptions = array_merge($offre->descriptions, $descriptions);
         }
+        $descriptionsCircuit = $this->findByUrn($offre, UrnCatList::DESCRIPTION_CIRCUIT->value, returnData: true);
+        if (count($descriptionsCircuit) > 0) {
+            $descriptions = [];
+            foreach ($descriptionsCircuit as $descriptionCircuit) {
+                if ($descriptionCircuit->type == 'TextML') {
+                    $descriptions[] = $descriptionCircuit;
+                }
+            }
+            $offre->descriptions = array_merge($offre->descriptions, $descriptions);
+        }
 
         $offre->tarifs = $this->findByUrn($offre, UrnList::TARIF->value, returnData: true);
         $offre->webs = $this->findByUrn($offre, UrnList::WEB->value, returnData: true);
@@ -172,6 +182,9 @@ class OffreParser
                     continue;
                 }
                 if ($specification->urnDefinition->urn == UrnList::DESCRIPTION10->value) {
+                    continue;
+                }
+                if ($specification->urnDefinition->urn == UrnList::DESCRIPTION_CIRCUIT->value) {
                     continue;
                 }
                 $offre->classements[] = $specification;
