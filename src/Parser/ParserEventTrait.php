@@ -18,36 +18,30 @@ trait ParserEventTrait
      * @param bool $removeObsolete
      * @return void
      */
-    public function parseDatesEvent(Offre $offre, bool $removeObsolete = false): void
+    public function parseDatesEvent(Offre $offre): void
     {
         if ($offre->typeOffre->idTypeOffre !== UrnTypeList::evenement()->typeId) {
             return;
         }
 
-        $offre->dates = $this->getDates($offre);
-
-        $firstDate = $offre->firstDate();
-        if ($firstDate) {
-            $offre->dateBegin = $firstDate->date_begin;
-            $offre->dateEnd = $firstDate->date_end;
-        }
-
-        if ($removeObsolete) {
-            foreach ($offre->dates as $key => $dateBeginEnd) {
-                if (EventUtils::isDateBeginEndObsolete($dateBeginEnd)) {
-                    unset($offre->dates[$key]);
+        $dates = [];
+        $specs = $this->findByUrn($offre, UrnList::DATE_OBJECT->value, returnData: true);
+        foreach ($specs as $spec) {
+            foreach ($spec->spec as $data) {
+                if ($data->urn == UrnList::DATE_DEB->value) {
+                    $dateBegin = $data->value;
+                }
+                if ($data->urn == UrnList::DATE_END->value) {
+                    $dateEnd = $data->value;
                 }
             }
-            $offre->dates = array_values($offre->dates);//reset index
-            $firstDate = $offre->firstDate();
-            if ($firstDate) {
-                $offre->dateBegin = $firstDate->date_begin;
-                $offre->dateEnd = $firstDate->date_end;
-            }
+            $dates[] = new DateBeginEnd($dateBegin, $dateEnd);
         }
+
+        $offre->dates = $dates;
     }
 
-    public function dateBeginAndEnd(Offre $offre): ?DateBeginEnd
+    public function dateBeginAndEnd2222(Offre $offre): ?DateBeginEnd
     {
         $dateBegin = $dateEnd = null;
         $dateDebut = $this->findByUrn($offre, UrnList::DATE_DEB_VALID->value, returnData: true);
@@ -66,30 +60,5 @@ trait ParserEventTrait
         }
 
         return null;
-    }
-
-    /**
-     * @return DateBeginEnd[]
-     */
-    public function getDates(Offre $offre): array
-    {
-        $dates = [];
-        if ($date = $this->dateBeginAndEnd($offre)) {
-          //  $dates[] = $date;
-        }
-        $specs = $this->findByUrn($offre, UrnList::DATE_OBJECT->value, returnData: true);
-        foreach ($specs as $spec) {
-            foreach ($spec->spec as $data) {
-                if ($data->urn == UrnList::DATE_DEB->value) {
-                    $dateBegin = $data->value;
-                }
-                if ($data->urn == UrnList::DATE_END->value) {
-                    $dateEnd = $data->value;
-                }
-            }
-            $dates[] = new DateBeginEnd($dateBegin, $dateEnd);
-        }
-
-        return SortUtils::sortDatesEvent($dates);
     }
 }

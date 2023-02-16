@@ -42,8 +42,8 @@ class SortUtils
         usort(
             $events,
             function ($eventA, $eventB) use ($order) {
-                $dateA = $eventA->dateBegin;
-                $dateB = $eventB->dateBegin;
+                $dateA = $eventA->dateEnd;
+                $dateB = $eventB->dateEnd;
                 if ($order == 'ASC') {
                     return $dateA <=> $dateB;
                 } else {

@@ -95,7 +95,7 @@ class PivotRepository
      * @throws InvalidArgumentException
      * @throws NonUniqueResultException
      */
-    public function fetchEvents(bool $removeObsolete = false, array $typeOffres = []): array
+    public function fetchEvents(bool $removeObsolete = true, array $typeOffres = []): array
     {
         $today = date('Y-m-d');
 
@@ -105,19 +105,10 @@ class PivotRepository
                 return [];
             }
 
-            $events = $this->fetchOffres($typeOffres);
+            $data = $this->fetchOffres($typeOffres);
+            $events = EventUtils::removeObsolete($data);
 
-            foreach ($events as $key => $event) {
-                if (!$event->dateBegin) {
-                    unset($events[$key]);
-                }
-            }
-            if ($removeObsolete) {
-                $events = EventUtils::removeObsolete($events);
-            }
-            $events = SortUtils::sortEvents($events);
-
-            return $events;
+            return SortUtils::sortEvents($events);
         });
     }
 

@@ -42,14 +42,17 @@ class EventUtils
         }
 
         $event->dates = $dates;
+        self::setDateBeginAndDateEnd($event);
 
         return $event;
     }
 
-    public static function isDateBeginEndObsolete(DateBeginEnd $dateBeginEnd): bool
+    private static function setDateBeginAndDateEnd(Offre $offre): void
     {
-        self::$today = new DateTime();
-
-        return $dateBeginEnd->date_end < self::$today;
+        $firstDate = $offre->firstDate();
+        if ($firstDate) {
+            $offre->dateBegin = $firstDate->date_begin;
+            $offre->dateEnd = $firstDate->date_end;
+        }
     }
 }
