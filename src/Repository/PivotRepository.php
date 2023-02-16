@@ -97,7 +97,9 @@ class PivotRepository
      */
     public function fetchEvents(bool $removeObsolete = false, array $typeOffres = []): array
     {
-        return $this->cache->get("events-pivot", function () use ($removeObsolete, $typeOffres) {
+        $today = date('Y-m-d');
+
+        return $this->cache->get("events-pivot-".$today, function () use ($removeObsolete, $typeOffres) {
 
             if (count($typeOffres) === 0) {
                 return [];
