@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Event;
 
 use AcMarche\Pivot\Entities\Event\DateBeginEnd;
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Utils\SortUtils;
 use DateTime;
 use DateTimeInterface;
 
@@ -43,6 +44,7 @@ class EventUtils
 
         $event->dates = $dates;
         self::setDateBeginAndDateEnd($event);
+        self::sortDatesEvent($event);
 
         return $event;
     }
@@ -54,5 +56,10 @@ class EventUtils
             $offre->dateBegin = $firstDate->date_begin;
             $offre->dateEnd = $firstDate->date_end;
         }
+    }
+
+    private static function sortDatesEvent(Offre $offre)
+    {
+        $offre->dates = SortUtils::sortDatesEvent($offre->dates);
     }
 }

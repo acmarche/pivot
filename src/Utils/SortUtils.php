@@ -9,7 +9,7 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 class SortUtils
 {
     /**
-     * @param DateBeginEnd[] $dateBeginEnds
+     * @param DateBeginEnd[]|array $dateBeginEnds
      *
      * @return DateBeginEnd[]
      */
