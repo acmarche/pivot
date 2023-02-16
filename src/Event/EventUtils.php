@@ -20,25 +20,30 @@ class EventUtils
     {
         $data = [];
         foreach ($events as $event) {
-            if (!self::isEventObsolete($event)) {
-                $data[] = $event;
+            if ($eventOk = self::isEventObsolete($event)) {
+                $data[] = $eventOk;
             }
         }
 
         return $data;
     }
 
-    public static function isEventObsolete(Offre $event): bool
+    public static function isEventObsolete(Offre $event): ?Offre
     {
         self::$today = new DateTime();
-        $datesOk = 0;
+        $dates = [];
         foreach ($event->dates as $dateBeginEnd) {
             if ($dateBeginEnd->date_end->format('Y-m-d') >= self::$today->format('Y-m-d')) {
-                $datesOk++;
+                $dates[] = $dateBeginEnd;
             }
         }
+        if (count($dates) === 0) {
+            return null;
+        }
 
-        return 0 === $datesOk;
+        $event->dates = $dates;
+
+        return $event;
     }
 
     public static function isDateBeginEndObsolete(DateBeginEnd $dateBeginEnd): bool
