@@ -112,27 +112,13 @@ class PivotRepository
                     unset($events[$key]);
                 }
             }
-            $events = SortUtils::sortEvents($events);
             if ($removeObsolete) {
                 $events = EventUtils::removeObsolete($events);
             }
+            $events = SortUtils::sortEvents($events);
 
             return $events;
         });
-    }
-
-    public function getEventByIdHades(int $idHades): ?Offre
-    {
-        $events = $this->fetchEvents(true);
-        foreach ($events as $event) {
-            if (count($event->hades_ids) > 0) {
-                if ($idHades == $event->hades_ids[0]->value) {
-                    return $event;
-                }
-            }
-        }
-
-        return null;
     }
 
     /***
