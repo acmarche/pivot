@@ -61,6 +61,7 @@ class PivotSerializer
         /** @var NotNormalizableValueException */
         foreach ($exception->getErrors() as $exception) {
             dump($exception);
+            //todo log it !
             $message = sprintf(
                 'The type must be one of "%s" ("%s" given).',
                 implode(', ', $exception->getExpectedTypes()),
