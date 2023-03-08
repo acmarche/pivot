@@ -44,11 +44,11 @@ class Offre
      */
     public int $estActive;
     public UrnLabel $estActiveUrn;
+    public UrnLabel $visibiliteUrn;
     /**
      * @deprecated $visibilite
      */
     public int $visibilite;
-    public UrnLabel $visibiliteUrn;
     public TypeOffre $typeOffre2;
     public TypeOffreShort2 $typeOffre;
     public Adresse $adresse1;
