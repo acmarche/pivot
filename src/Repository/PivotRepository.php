@@ -93,7 +93,6 @@ class PivotRepository
      * @param array|TypeOffre[] $typeOffres
      * @return Offre[]
      * @throws InvalidArgumentException
-     * @throws NonUniqueResultException
      */
     public function fetchEvents(bool $removeObsolete = true, array $typeOffres = []): array
     {
