@@ -2,10 +2,12 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use CurlHandle;
 use Exception;
+use Symfony\Component\HttpClient\CachingHttpClient;
+use Symfony\Component\HttpClient\DecoratorTrait;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpKernel\HttpCache\Store;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -16,13 +18,12 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 trait ConnectionPivotTrait
 {
     private HttpClientInterface $httpClient;
-    private ?CurlHandle $ch = null;
     private ?string $code_query = null;
     private ?string $base_uri = null;
     private ?string $ws_key = null;
     public ?string $url_executed = null;
     public ?string $data_raw = null;
-    public array $headersCurl = [];
+    use DecoratorTrait;
 
     public function connect(string $output): void
     {
@@ -37,46 +38,12 @@ trait ConnectionPivotTrait
             ],
         ];
 
-        $this->headersCurl = [
-            'Accept: '.$output,
-            'ws_key: '.$this->ws_key,
-        ];
-        //$this->initCurl();
+        //https://jolicode.com/blog/aggressive-caching-with-symfony-http-client
+        $httpClient = new CachingHttpClient(
+            HttpClient::create($headers),
+            new Store('/tmp/cache')
+        );
         $this->httpClient = HttpClient::create($headers);
-    }
-
-    private function initCurl()
-    {
-        $this->ch = curl_init();
-        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headersCurl);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function executeRequestCurl(string $url, array $options = [], string $method = 'GET'): string
-    {
-        if (!$this->ch) {
-            $this->initCurl();
-        }
-        curl_setopt($this->ch, CURLOPT_URL, $url);
-        $output = curl_exec($this->ch);
-
-        if (curl_errno($this->ch)) {
-            throw  new Exception(curl_error($this->ch));
-        }
-
-        $this->data_raw = $output;
-
-        return $output;
-    }
-
-    public function __destruct()
-    {
-        if ($this->ch) {
-            curl_close($this->ch);
-        }
     }
 
     /**
