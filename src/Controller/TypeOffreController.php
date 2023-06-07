@@ -6,14 +6,14 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Form\TypeOffreEditType;
 use AcMarche\Pivot\Form\TypeOffreSearchType;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/typeoffre')]
-#[IsGranted(data: 'ROLE_PIVOT')]
+#[IsGranted('ROLE_PIVOT')]
 class TypeOffreController extends AbstractController
 {
     public function __construct(
