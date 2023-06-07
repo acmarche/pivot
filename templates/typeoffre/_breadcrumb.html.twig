@@ -1,0 +1,12 @@
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('pivot_typeoffre_index') }}">Index</a></li>
+        {% for typeOffre in path %}
+            <li class="breadcrumb-item {% if loop.last %}active{% endif %}" aria-current="page">
+                <a href="{{ path('pivot_typeoffre_show', {'id': typeOffre.id}) }}">
+                    {{ typeOffre.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ol>
+</nav>

@@ -70,4 +70,22 @@ class FilterUtils
 
         return $ids;
     }
+
+    /**
+     * @param TypeOffre $typeOffre
+     * @return TypeOffre[]
+     */
+    public static function getTypeOffrePath(TypeOffre $typeOffre): array
+    {
+        $path = array();
+        while ($typeOffre) {
+            if (!$typeOffre) {
+                break;
+            }
+            $path[] = $typeOffre;
+            $typeOffre = $typeOffre->parent;
+        }
+
+        return array_reverse($path);
+    }
 }

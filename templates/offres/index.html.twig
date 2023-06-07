@@ -4,10 +4,12 @@
 
     <div class="card">
         <h3 class="card-header">
-            {{ offres|length }} offre(s) dans
-            <strong>{{ typeOffre.name }}</strong> <span class="text-muted">{{typeOffre.urn }}</span>
+            {{ offres|length }} offre(s) dans <strong>{{ typeOffre.name }}</strong>
+            <span class="text-muted">{{ typeOffre.urn }}</span>
         </h3>
         <div class="card-body">
+            {% include '@AcMarchePivot/typeoffre/_breadcrumb.html.twig' %}
+
             {% include '@AcMarchePivot/offres/_offres.html.twig' %}
         </div>
     </div>

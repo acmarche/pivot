@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\Controller;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
+use AcMarche\Pivot\TypeOffre\FilterUtils;
 use AcMarche\Pivot\Utils\SortUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +33,7 @@ class OffreController extends AbstractController
             return $this->redirectToRoute('pivot_typeoffre_index');
         }
 
+        $path = FilterUtils::getTypeOffrePath($typeOffre);
         $offres = SortUtils::sortOffres($offres);
 
         return $this->render(
@@ -39,6 +41,7 @@ class OffreController extends AbstractController
             [
                 'typeOffre' => $typeOffre,
                 'offres' => $offres,
+                'path' => $path,
             ]
         );
     }
