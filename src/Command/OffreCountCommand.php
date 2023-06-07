@@ -65,7 +65,7 @@ class OffreCountCommand extends Command
 
     private function setCount(TypeOffre $typeOffre)
     {
-        $offres = $this->pivotRepository->fetchOffres([$typeOffre],false);
+        $offres = $this->pivotRepository->fetchOffres([$typeOffre], false);
         $count = count($offres);
         $this->io->writeln($count.' ');
         $typeOffre->countOffres = $count;
@@ -85,7 +85,6 @@ class OffreCountCommand extends Command
                     $object->dataRaw = $dataString;
                 }
                 $this->offres[] = $object;
-
             } catch (\Exception $exception) {
                 dump($exception);
 
@@ -96,5 +95,4 @@ class OffreCountCommand extends Command
         // $offres = FilterUtils::filterByTypeIdsOrUrns($this->offres, [], [$typeOffre->urn]);
         return Command::FAILURE;
     }
-
 }
