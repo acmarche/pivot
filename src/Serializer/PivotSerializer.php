@@ -33,7 +33,7 @@ class PivotSerializer
                 AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
             ]);
         } catch (PartialDenormalizationException $exception) {
-            $this->getErrors($exception);
+            $this->getErrors($exception, $data);
         }
 
         return null;
@@ -49,21 +49,22 @@ class PivotSerializer
 
             return $t;
         } catch (PartialDenormalizationException $exception) {
-            $this->getErrors($exception);
+            $this->getErrors($exception, $data);
         }
 
         return null;
     }
 
-    private function getErrors(\Exception|PartialDenormalizationException $exception)
+    private function getErrors(\Exception|PartialDenormalizationException $exception, string $data)
     {
         $violations = new ConstraintViolationList();
         /** @var NotNormalizableValueException */
         foreach ($exception->getErrors() as $exception) {
             dump($exception);
+            dump($data);
             //todo log it !
             $message = sprintf(
-                'The type must be one of "%s" ("%s" given).',
+                'The type must be one2 of "%s" ("%s" given).',
                 implode(', ', $exception->getExpectedTypes()),
                 $exception->getCurrentType()
             );
