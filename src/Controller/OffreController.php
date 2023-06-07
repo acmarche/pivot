@@ -7,6 +7,7 @@ use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\TypeOffre\FilterUtils;
 use AcMarche\Pivot\Utils\SortUtils;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -27,7 +28,7 @@ class OffreController extends AbstractController
     {
         try {
             $offres = $this->pivotRepository->fetchOffres([$typeOffre]);
-        } catch (\Exception $e) {
+        } catch (\Exception|InvalidArgumentException $e) {
             $this->addFlash('danger', 'Erreur: '.$e->getMessage());
 
             return $this->redirectToRoute('pivot_typeoffre_index');
