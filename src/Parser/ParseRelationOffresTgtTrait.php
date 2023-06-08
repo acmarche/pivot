@@ -6,12 +6,11 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\UrnList;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Contracts\Service\Attribute\Required;
 
 trait ParseRelationOffresTgtTrait
 {
-    /**
-     * @required
-     */
+    #[Required]
     public PivotRepository $pivotRepository;
 
     /**

@@ -6,12 +6,11 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Specification;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use AcMarche\Pivot\Utils\UrnToSkip;
+use Symfony\Contracts\Service\Attribute\Required;
 
 trait ParseSpecificationsTrait
 {
-    /**
-     * @required
-     */
+    #[Required]
     public UrnDefinitionRepository $urnDefinitionRepository;
 
     /**

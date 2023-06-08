@@ -5,12 +5,11 @@ namespace AcMarche\Pivot\Parser;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\UrnList;
+use Symfony\Contracts\Service\Attribute\Required;
 
 trait ParseRelationTrait
 {
-    /**
-     * @required
-     */
+    #[Required]
     public PivotRepository $pivotRepository;
 
     public function parsePois(Offre $offre)

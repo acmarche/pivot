@@ -14,6 +14,7 @@ use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnSubCatList;
 use Psr\Log\LoggerInterface;
 use AcMarche\Pivot\Spec\UrnTypeList;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class OffreParser
 {
@@ -25,9 +26,7 @@ class OffreParser
     use ParserEventTrait;
     use ParseGpxTrait;
 
-    /**
-     * @required
-     */
+    #[Required]
     public LoggerInterface $logger;
 
     public function launchParse(Offre $offre)

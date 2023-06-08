@@ -6,16 +6,13 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Gpx;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
+use Symfony\Contracts\Service\Attribute\Required;
 
 trait ParseGpxTrait
 {
-    /**
-     * @required
-     */
+    #[Required]
     public PivotRemoteRepository $pivotRemoteRepository;
-    /**
-     * @required
-     */
+    #[Required]
     public UrnDefinitionRepository $urnDefinitionRepository;
 
     public function parseGpx(Offre $offre)
