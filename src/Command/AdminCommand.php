@@ -27,7 +27,6 @@ class AdminCommand extends Command
 
     protected function configure(): void
     {
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -37,5 +36,4 @@ class AdminCommand extends Command
 
         return Command::SUCCESS;
     }
-
 }

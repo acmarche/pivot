@@ -36,7 +36,7 @@ trait SpecSearchTrait
         }
 
         if ($returnData) {
-            return array_map(fn($specification) => $specification->data, $specs);
+            return array_map(fn ($specification) => $specification->data, $specs);
         }
 
         return $specs;
@@ -52,5 +52,4 @@ trait SpecSearchTrait
 
         return null;
     }
-
 }

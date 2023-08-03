@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Parser;
 
+use Exception;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Specification;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
@@ -15,7 +16,7 @@ trait ParseSpecificationsTrait
 
     /**
      * @return array|Specification[]
-     * @throws \Exception
+     * @throws Exception
      */
     public function specitificationsByOffre(Offre $offre): array
     {
@@ -26,7 +27,7 @@ trait ParseSpecificationsTrait
             }
             $urnDefinition = $this->urnDefinitionRepository->findByUrn($spec->urn);
             if (!$urnDefinition) {
-                $this->logger->error("Error parse urn definition not found ".$spec->urn);
+                $this->logger->error("Error parse urn definition not found " . $spec->urn);
                 continue;
             }
             $urnCatDefinition = null;

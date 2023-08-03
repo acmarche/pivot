@@ -24,7 +24,7 @@ class SpecData
     public ?string $urnCat = null;
     public ?string $urnSubCat = null;
     public int $order = 0;
-    public ?string $type= null;
+    public ?string $type = null;
     public ?string $value = null;
     /**
      * Type == Object ex: date event: "urn": "urn:obj:date"

@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Command;
 
+use Exception;
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
@@ -46,7 +47,7 @@ class OffreDumpCommand extends Command
 
         try {
             $resultString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
-        } catch (\Exception|TransportExceptionInterface $e) {
+        } catch (Exception|TransportExceptionInterface $e) {
             $io->error($e->getMessage());
 
             return Command::FAILURE;
@@ -65,8 +66,8 @@ class OffreDumpCommand extends Command
         $idType = $type->idTypeOffre;
         $labelType = $type->label[0]->value;
         $io->write($offre->nom);
-        $io->write(" -- ".$idType);
-        $io->writeln(" -- ".$labelType);
+        $io->write(" -- " . $idType);
+        $io->writeln(" -- " . $labelType);
 
         $io->writeln("");
 

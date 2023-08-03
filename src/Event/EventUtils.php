@@ -21,7 +21,7 @@ class EventUtils
     {
         $data = [];
         foreach ($events as $event) {
-            if (($eventOk = self::isEventObsolete($event)) instanceof \AcMarche\Pivot\Entities\Offre\Offre) {
+            if (($eventOk = self::isEventObsolete($event)) instanceof Offre) {
                 $data[] = $eventOk;
             }
         }
@@ -52,7 +52,7 @@ class EventUtils
     private static function setDateBeginAndDateEnd(Offre $offre): void
     {
         $firstDate = $offre->firstDate();
-        if ($firstDate instanceof \AcMarche\Pivot\Entities\Event\DateBeginEnd) {
+        if ($firstDate instanceof DateBeginEnd) {
             $offre->dateBegin = $firstDate->date_begin;
             $offre->dateEnd = $firstDate->date_end;
         }

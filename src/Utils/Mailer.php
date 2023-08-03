@@ -14,7 +14,7 @@ class Mailer
 
     public function sendError(string $subject, string $message): void
     {
-        if (($message = $this->createMessage($subject, $message)) instanceof \Symfony\Component\Mime\Email) {
+        if (($message = $this->createMessage($subject, $message)) instanceof Email) {
             try {
                 $this->mailer->send($message);
             } catch (TransportExceptionInterface) {

@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Parser;
 
+use Exception;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Spec\UrnList;
@@ -24,7 +25,7 @@ trait ParseRelationTrait
             $codeCgt = $relOffre->offre['codeCgt'];
             try {
                 $relatedOffer = $this->pivotRepository->fetchOffreByCgt($codeCgt);
-            } catch (\Exception) {
+            } catch (Exception) {
                 continue;
             }
             if (!$relatedOffer instanceof Offre) {

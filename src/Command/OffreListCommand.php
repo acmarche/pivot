@@ -3,8 +3,8 @@
 namespace AcMarche\Pivot\Command;
 
 use AcMarche\Pivot\Entity\TypeOffre;
-use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
+use AcMarche\Pivot\Repository\TypeOffreRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Completion\CompletionInput;
@@ -78,7 +78,7 @@ class OffreListCommand extends Command
             $choix = "Tout";
         }
 
-        $this->io->success($choix.": ");
+        $this->io->success($choix . ": ");
 
         $this->io->info("Chargement des offres...");
         $offres = $this->pivotRepository->fetchEvents(true);

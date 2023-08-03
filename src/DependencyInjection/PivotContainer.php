@@ -32,14 +32,14 @@ class PivotContainer
 
         $kernel = new Kernel($env, $debug);
         (new Dotenv())
-            ->bootEnv($kernel->getProjectDir().'/.env');
+            ->bootEnv($kernel->getProjectDir() . '/.env');
 
         $kernel->boot();
 
         return $kernel->getContainer();
     }
 
-    static function getPivotRepository(bool $debug = false): PivotRepository
+    public static function getPivotRepository(bool $debug = false): PivotRepository
     {
         $container = new self($debug);
 
@@ -49,7 +49,7 @@ class PivotContainer
         return $container->getService('pivotRepository');
     }
 
-    static function getTypeOffreRepository(bool $debug = false): TypeOffreRepository
+    public static function getTypeOffreRepository(bool $debug = false): TypeOffreRepository
     {
         $container = new self($debug);
 
@@ -59,7 +59,7 @@ class PivotContainer
         return $container->getService('typeOffreRepository');
     }
 
-    static function getUrnDefinitionRepository(bool $debug = false): UrnDefinitionRepository
+    public static function getUrnDefinitionRepository(bool $debug = false): UrnDefinitionRepository
     {
         $container = new self($debug);
 
@@ -69,7 +69,7 @@ class PivotContainer
         return $container->getService('urnDefinitionRepository');
     }
 
-    static function getRemoteRepository(bool $debug = false): PivotRemoteRepository
+    public static function getRemoteRepository(bool $debug = false): PivotRemoteRepository
     {
         $container = new self($debug);
 
@@ -77,10 +77,9 @@ class PivotContainer
          * @var PivotRemoteRepository
          */
         return $container->getService('pivotRemoteRepository');
-
     }
 
-    static function getLocalSwitcherPivot(bool $debug = false): LocalSwitcherPivot
+    public static function getLocalSwitcherPivot(bool $debug = false): LocalSwitcherPivot
     {
         $container = new self($debug);
 
@@ -90,7 +89,7 @@ class PivotContainer
         return $container->getService('localSwitcherPivot');
     }
 
-    function getService(string $service): ?object
+    public function getService(string $service): ?object
     {
         if ($this->container->has($service)) {
             return $this->container->get($service);
@@ -98,5 +97,4 @@ class PivotContainer
 
         return null;
     }
-
 }

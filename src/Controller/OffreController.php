@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Controller;
 
+use Exception;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
@@ -28,8 +29,8 @@ class OffreController extends AbstractController
     {
         try {
             $offres = $this->pivotRepository->fetchOffres([$typeOffre]);
-        } catch (\Exception|InvalidArgumentException $e) {
-            $this->addFlash('danger', 'Erreur: '.$e->getMessage());
+        } catch (Exception|InvalidArgumentException $e) {
+            $this->addFlash('danger', 'Erreur: ' . $e->getMessage());
 
             return $this->redirectToRoute('pivot_typeoffre_index');
         }

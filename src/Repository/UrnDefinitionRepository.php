@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Repository;
 
+use Exception;
 use AcMarche\Pivot\Entity\UrnDefinitionEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -28,7 +29,7 @@ class UrnDefinitionRepository extends ServiceEntityRepository
                 ->setParameter('urn', $urn)
                 ->getQuery()
                 ->getOneOrNullResult();
-        } catch (\Exception) {
+        } catch (Exception) {
             return null;
         }
     }
@@ -58,5 +59,4 @@ class UrnDefinitionRepository extends ServiceEntityRepository
     {
         $this->_em->remove($object);
     }
-
 }

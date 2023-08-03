@@ -1,16 +1,14 @@
 <?php
 
-use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
+use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use AcMarche\Pivot\Utils\LocalSwitcherPivot;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\Translation\LocaleSwitcher;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
-
     $services = $containerConfigurator
         ->services()
         ->defaults()
@@ -24,8 +22,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     #Makes classes in src/ available to be used as services;
     #this creates a service per class whose id is the fully-qualified class name
-    $services->load('AcMarche\Pivot\\', __DIR__.'/../src/*')
-        ->exclude([__DIR__.'/../src/{Entities,Tests}']);
+    $services->load('AcMarche\Pivot\\', __DIR__ . '/../src/*')
+        ->exclude([__DIR__ . '/../src/{Entities,Tests}']);
 
     $services->set('dotenv', Dotenv::class)->public();
 

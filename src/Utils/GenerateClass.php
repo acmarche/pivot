@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Utils;
 
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use AcMarche\Pivot\Api\ThesaurusEnum;
 use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
@@ -17,12 +18,15 @@ class GenerateClass
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeurn;fmt=json
      * bin/console pivot:admin > AcMarche/Pivot/src/Spec/UrnTypeList.php
      * @return void
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function generateTypeUrn()
     {
         $thesaurus = json_decode(
-            $this->pivotRemoteRepository->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value), null, 512, JSON_THROW_ON_ERROR
+            $this->pivotRemoteRepository->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value),
+            null,
+            512,
+            JSON_THROW_ON_ERROR
         );
 
         echo "<?php \n ";
@@ -58,6 +62,4 @@ use AcMarche\Pivot\Entities\Urn\Urn;
         echo "}";
         echo "}";
     }
-
-
 }

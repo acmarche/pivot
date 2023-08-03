@@ -19,5 +19,4 @@ class UrnLabel
      */
     public array $label = [];
     public ?string $urn = null;
-
 }

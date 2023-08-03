@@ -5,10 +5,10 @@ namespace AcMarche\Pivot\Command;
 use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Parser\ParserEventTrait;
-use AcMarche\Pivot\Serializer\PivotSerializer;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
+use AcMarche\Pivot\Serializer\PivotSerializer;
 use AcMarche\Pivot\Spec\SpecSearchTrait;
 use AcMarche\Pivot\Spec\UrnList;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -77,7 +77,10 @@ class TypeOffreCommand extends Command
     private function treatmentClassification(TypeOffre $data)
     {
         $familiesStd = json_decode(
-            $this->pivotRemoteRepository->thesaurusCategories($data->typeId), null, 512, JSON_THROW_ON_ERROR
+            $this->pivotRemoteRepository->thesaurusCategories($data->typeId),
+            null,
+            512,
+            JSON_THROW_ON_ERROR
         );
         $this->io->writeln($this->pivotRemoteRepository->url_executed);
         /**
@@ -121,8 +124,8 @@ class TypeOffreCommand extends Command
     private function treatmentX(Family $family, ?TypeOffre $typeOffre, int $niv): ?TypeOffre
     {
         $object = $this->createTypeOffre($family, $typeOffre);
-        $this->io->write(str_repeat('-', $niv).' '.$family->labelByLanguage('fr'));
-        $this->io->writeln(' '.$family->urn);
+        $this->io->write(str_repeat('-', $niv) . ' ' . $family->labelByLanguage('fr'));
+        $this->io->writeln(' ' . $family->urn);
         $this->typeOffreRepository->persist($object);
 
         return $object;

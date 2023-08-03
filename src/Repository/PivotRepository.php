@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Repository;
 
+use Exception;
 use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
@@ -33,7 +34,7 @@ class PivotRepository
     /**
      * @param TypeOffre[] $typesOffre
      * @return Offre[]
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function fetchOffres(array $typesOffre, bool $parse = true, int $max = 500, bool $dd = false): array
     {
@@ -42,10 +43,10 @@ class PivotRepository
         }
         $cacheKeyPlus = '';
         foreach ($typesOffre as $typeOffre) {
-            $cacheKeyPlus .= $typeOffre->id.'-';
+            $cacheKeyPlus .= $typeOffre->id . '-';
         }
 
-        $cacheKey = $this->cacheUtils->generateKey(CacheUtils::FETCH_OFFRES.'-'.$cacheKeyPlus.$parse);
+        $cacheKey = $this->cacheUtils->generateKey(CacheUtils::FETCH_OFFRES . '-' . $cacheKeyPlus . $parse);
 
         //pour un pretri
         $families = $this->typeOffreRepository->findFamiliesByUrns($typesOffre);
@@ -67,7 +68,7 @@ class PivotRepository
                             break;
                         }
                     }
-                } catch (\Exception $exception) {
+                } catch (Exception $exception) {
                     //todo add logger
                     dd($exception);
                 }
@@ -119,16 +120,15 @@ class PivotRepository
         string $codeCgt,
         string $class = Offre::class
     ): ResultOfferDetail|Offre|null {
-
         if (is_numeric(substr($codeCgt, 0, 1))) {
             return null;
         }
 
-        $cacheKey = $codeCgt.$class;
+        $cacheKey = $codeCgt . $class;
         $key = $this->cacheUtils->generateKey($cacheKey);
 
         return $this->cache->get(
-            'offre-'.$key,
+            'offre-' . $key,
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
@@ -173,7 +173,7 @@ class PivotRepository
      */
     public function fetchSameOffres(Offre $referringOffer, int $max = 20): array
     {
-        $urn = 'urn:typ:'.$referringOffer->typeOffre->idTypeOffre;
+        $urn = 'urn:typ:' . $referringOffer->typeOffre->idTypeOffre;
 
         $filtres = [$this->typeOffreRepository->findOneByUrn($urn)];
 
@@ -205,7 +205,7 @@ class PivotRepository
 
     /**
      * @return Family[]
-     * @throws \Exception
+     * @throws Exception
      */
     public function thesaurusFamilies(): array
     {
@@ -219,7 +219,7 @@ class PivotRepository
 
     public function urnDefinition(string $urnName): ?UrnDefinition
     {
-        return $this->cache->get('urnDefinition-'.$urnName, function () use ($urnName) {
+        return $this->cache->get('urnDefinition-' . $urnName, function () use ($urnName) {
             if ($data = $this->pivotRemoteRepository->thesaurusUrn($urnName)) {
                 return $this->pivotSerializer->deserializeToClass($data, UrnDefinition::class);
             }
@@ -232,11 +232,11 @@ class PivotRepository
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/9/urn:fld:catevt;fmt=json
      * https://pivotweb.tourismewallonie.be/PivotWeb-3.1/thesaurus/typeofr/261/urn:fld:cat;fmt=json
      * @return Family[]
-     * @throws \Exception
+     * @throws Exception
      */
     public function thesaurusChildren(int $typeOffre, string $urn): array
     {
-        $familiesObject = json_decode($this->pivotRemoteRepository->thesaurus('typeofr/'.$typeOffre.'/'.$urn), null, 512, JSON_THROW_ON_ERROR);
+        $familiesObject = json_decode($this->pivotRemoteRepository->thesaurus('typeofr/' . $typeOffre . '/' . $urn), null, 512, JSON_THROW_ON_ERROR);
         if (!isset($familiesObject->spec[0]->spec)) {
             return [];
         }
@@ -250,7 +250,7 @@ class PivotRepository
     /**
      * Retourne le json (string) complet du query
      * @return ResponseQuery|null
-     * @throws \Psr\Cache\InvalidArgumentException|\Exception
+     * @throws InvalidArgumentException|Exception
      */
     public function getAllDataFromRemote(): ?ResponseQuery
     {

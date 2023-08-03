@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Entities\Response;
 
-
 use AcMarche\Pivot\Entities\Urn\UrnDefinition;
 
 /**

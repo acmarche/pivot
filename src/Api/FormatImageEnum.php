@@ -2,7 +2,7 @@
 
 namespace AcMarche\Pivot\Api;
 
-enum FormatImageEnum:string
+enum FormatImageEnum: string
 {
     case IMG_THB_XSF = '75x75';
     case IMG_THB_XSW = '75x-1';

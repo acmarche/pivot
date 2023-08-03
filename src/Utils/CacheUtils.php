@@ -25,5 +25,4 @@ class CacheUtils
 
         return $this->slugger->slug($keyUnicode->ascii()->toString());
     }
-
 }

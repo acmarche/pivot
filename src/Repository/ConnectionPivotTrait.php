@@ -63,7 +63,7 @@ trait ConnectionPivotTrait
 
             return $this->data_raw;
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            throw  new Exception($exception->getMessage(), $exception->getCode(), $exception);
+            throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
@@ -71,5 +71,4 @@ trait ConnectionPivotTrait
     {
         var_dump($response->getInfo('debug'));
     }
-
 }

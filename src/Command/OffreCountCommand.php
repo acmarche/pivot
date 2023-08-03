@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Command;
 
+use Exception;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
@@ -67,7 +68,7 @@ class OffreCountCommand extends Command
     {
         $offres = $this->pivotRepository->fetchOffres([$typeOffre], false);
         $count = count($offres);
-        $this->io->writeln($count.' ');
+        $this->io->writeln($count . ' ');
         $typeOffre->countOffres = $count;
     }
 
@@ -85,7 +86,7 @@ class OffreCountCommand extends Command
                     $object->dataRaw = $dataString;
                 }
                 $this->offres[] = $object;
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 dump($exception);
 
                 return Command::FAILURE;

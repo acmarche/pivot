@@ -12,8 +12,8 @@ use AcMarche\Pivot\Spec\SpecTypeEnum;
 use AcMarche\Pivot\Spec\UrnCatList;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnSubCatList;
-use Psr\Log\LoggerInterface;
 use AcMarche\Pivot\Spec\UrnTypeList;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
 class OffreParser
@@ -198,6 +198,6 @@ class OffreParser
 
     private function rootTag(Offre $offre): Tag
     {
-        return new Tag('urn:fam:'.$offre->typeOffre->idTypeOffre, $offre->typeOffre->label);
+        return new Tag('urn:fam:' . $offre->typeOffre->idTypeOffre, $offre->typeOffre->label);
     }
 }

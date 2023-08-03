@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Serializer;
 
+use Exception;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
 use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
@@ -53,7 +54,7 @@ class PivotSerializer
         return null;
     }
 
-    private function getErrors(\Exception|PartialDenormalizationException $exception, string $data)
+    private function getErrors(Exception|PartialDenormalizationException $exception, string $data)
     {
         $violations = new ConstraintViolationList();
         /** @var NotNormalizableValueException */

@@ -4,10 +4,8 @@ namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Event\DateBeginEnd;
 use AcMarche\Pivot\Entities\Offre\Offre;
-use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
-use AcMarche\Pivot\Utils\SortUtils;
 
 trait ParserEventTrait
 {

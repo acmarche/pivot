@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Utils;
 
-
 use AcMarche\Pivot\Entities\Event\DateBeginEnd;
 use AcMarche\Pivot\Entities\Offre\Offre;
 
@@ -49,7 +48,6 @@ class SortUtils
                 } else {
                     return $dateB <=> $dateA;
                 }
-
             }
         );
 
@@ -71,7 +69,6 @@ class SortUtils
                 } else {
                     return $offreB->labelByLanguage($language) <=> $offreA->labelByLanguage($language);
                 }
-
             }
         );
 

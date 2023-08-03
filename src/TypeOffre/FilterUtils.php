@@ -20,7 +20,7 @@ class FilterUtils
         $offres = [];
         foreach ($offresToFilter as $offre) {
             foreach ($typeIds as $typeId) {
-                if (preg_match('#"idTypeOffre":'.$typeId.',#', $offre->dataRaw)) {
+                if (preg_match('#"idTypeOffre":' . $typeId . ',#', $offre->dataRaw)) {
                     $offres[$offre->codeCgt] = $offre;
                     break;
                 }
