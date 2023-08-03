@@ -48,7 +48,7 @@ class OffreController extends AbstractController
     }
 
     #[Route(path: '/json/{codeCgt}', name: 'pivot_offre_json')]
-    public function jsonAction(string $codeCgt): Response
+    public function offreByCgt(string $codeCgt): Response
     {
         $json = $this->pivotRemoteRepository->offreByCgt($codeCgt);
 
