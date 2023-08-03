@@ -67,7 +67,7 @@ class OffreParser
             returnData: true
         );
         $descriptionsMarketing = $this->findByUrn($offre, UrnCatList::DESCRIPTION_MARKETING->value, returnData: true);
-        if (count($descriptionsMarketing) > 0) {
+        if ($descriptionsMarketing !== []) {
             $descriptions = [];
             foreach ($descriptionsMarketing[0]->spec as $descriptionMarketing) {
                 if ($descriptionMarketing->type == 'TextML') {
@@ -77,7 +77,7 @@ class OffreParser
             $offre->descriptions = array_merge($offre->descriptions, $descriptions);
         }
         $descriptionsCircuit = $this->findByUrn($offre, UrnCatList::DESCRIPTION_CIRCUIT->value, returnData: true);
-        if (count($descriptionsCircuit) > 0) {
+        if ($descriptionsCircuit !== []) {
             $descriptions = [];
             foreach ($descriptionsCircuit as $descriptionCircuit) {
                 if ($descriptionCircuit->type == 'TextML') {

@@ -72,12 +72,11 @@ class FilterUtils
     }
 
     /**
-     * @param TypeOffre $typeOffre
      * @return TypeOffre[]
      */
     public static function getTypeOffrePath(TypeOffre $typeOffre): array
     {
-        $path = array();
+        $path = [];
         while ($typeOffre) {
             if (!$typeOffre) {
                 break;

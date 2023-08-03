@@ -24,7 +24,7 @@ trait ParseRelationTrait
             $codeCgt = $relOffre->offre['codeCgt'];
             try {
                 $relatedOffer = $this->pivotRepository->fetchOffreByCgt($codeCgt);
-            } catch (\Exception $exception) {
+            } catch (\Exception) {
                 continue;
             }
             if (!$relatedOffer instanceof Offre) {

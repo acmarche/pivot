@@ -4,7 +4,7 @@ namespace AcMarche\Pivot\Entities\Event;
 
 use AcMarche\Pivot\Utils\DateUtils;
 
-class DateBeginEnd
+class DateBeginEnd implements \Stringable
 {
     public \DateTimeInterface|null $date_begin = null;
     public \DateTimeInterface|null $date_end = null;
@@ -19,7 +19,7 @@ class DateBeginEnd
 
     public function __toString(): string
     {
-        if ($this->date_begin) {
+        if ($this->date_begin instanceof \DateTimeInterface) {
             return $this->date_begin->format('d--m-Y');
         }
 
@@ -28,10 +28,6 @@ class DateBeginEnd
 
     public function isPeriod(): bool
     {
-        if ($this->date_begin->format($this->format) == $this->date_end->format($this->format)) {
-            return false;
-        }
-
-        return true;
+        return $this->date_begin instanceof \DateTimeInterface;
     }
 }

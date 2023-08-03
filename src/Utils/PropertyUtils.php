@@ -12,8 +12,8 @@ use Symfony\Component\PropertyInfo\Type;
 
 class PropertyUtils
 {
-    private PropertyAccessor $propertyAccessor;
-    private PropertyInfoExtractor $propertyInfo;
+    private readonly PropertyAccessor $propertyAccessor;
+    private readonly PropertyInfoExtractor $propertyInfo;
 
     public function __construct()
     {
@@ -43,8 +43,6 @@ class PropertyUtils
 
     /**
      * Pour eviter erreur php not initialized
-     * @param string $class
-     * @param object $object
      * @return void
      */
     public function initAttributesObject(string $class, object $object): void

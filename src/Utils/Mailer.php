@@ -8,16 +8,16 @@ use Symfony\Component\Mime\Email;
 
 class Mailer
 {
-    public function __construct(private MailerInterface $mailer)
+    public function __construct(private readonly MailerInterface $mailer)
     {
     }
 
     public function sendError(string $subject, string $message): void
     {
-        if ($message = $this->createMessage($subject, $message)) {
+        if (($message = $this->createMessage($subject, $message)) instanceof \Symfony\Component\Mime\Email) {
             try {
                 $this->mailer->send($message);
-            } catch (TransportExceptionInterface $e) {
+            } catch (TransportExceptionInterface) {
                 //dump($this->mailer,$e->getMessage());
             }
         }

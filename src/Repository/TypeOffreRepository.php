@@ -51,7 +51,6 @@ class TypeOffreRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param integer $id
      * @return TypeOffre[]
      */
     public function findByParent(int $id, bool $filtreCount = true): array
@@ -70,7 +69,6 @@ class TypeOffreRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $name
      * @return TypeOffre[]
      */
     public function findByName(string $name, int $max = 20): array
@@ -85,7 +83,6 @@ class TypeOffreRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $name
      * @return TypeOffre[]
      */
     public function findByNameOrUrn(string $name, int $max = 20): array
@@ -109,10 +106,10 @@ class TypeOffreRepository extends ServiceEntityRepository
         $typesOffre = [];
         foreach ($typesOffreData as $typeOffreId) {
             try {
-                if ($typeOffre = $this->findOneByUrn($typeOffreId)) {
+                if (($typeOffre = $this->findOneByUrn($typeOffreId)) instanceof \AcMarche\Pivot\Entity\TypeOffre) {
                     $typesOffre[] = $typeOffre;
                 }
-            } catch (\Exception $exception) {
+            } catch (\Exception) {
             }
         }
 
@@ -120,7 +117,6 @@ class TypeOffreRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $id
      * @return TypeOffre|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
@@ -148,7 +144,6 @@ class TypeOffreRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $urn
      * @return TypeOffre[]
      */
     public function findByUrn(string $urn): array
@@ -172,11 +167,7 @@ class TypeOffreRepository extends ServiceEntityRepository
     {
         $families = [];
         foreach ($typesOffre as $typeOffre) {
-            if ($typeOffre->type == 'Family') {
-                $family = $typeOffre;
-            } else {
-                $family = $this->getFamily($typeOffre);
-            };
+            $family = $typeOffre->type == 'Family' ? $typeOffre : $this->getFamily($typeOffre);;
             $families[$family->typeId] = $family->typeId;
         }
 

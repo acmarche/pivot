@@ -27,10 +27,10 @@ class OffreCountCommand extends Command
     private array $offres = [];
 
     public function __construct(
-        private PivotRepository $pivotRepository,
-        private TypeOffreRepository $typeOffreRepository,
-        private PivotRemoteRepository $pivotRemoteRepository,
-        private PivotSerializer $pivotSerializer,
+        private readonly PivotRepository $pivotRepository,
+        private readonly TypeOffreRepository $typeOffreRepository,
+        private readonly PivotRemoteRepository $pivotRemoteRepository,
+        private readonly PivotSerializer $pivotSerializer,
         string $name = null
     ) {
         parent::__construct($name);
@@ -77,8 +77,8 @@ class OffreCountCommand extends Command
         foreach ($responseQuery->offre as $offreShort) {
             try {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($offreShort->codeCgt);
-                $tmp = json_decode($dataString);
-                $dataStringOffre = json_encode($tmp->offre[0]);
+                $tmp = json_decode($dataString, null, 512, JSON_THROW_ON_ERROR);
+                $dataStringOffre = json_encode($tmp->offre[0], JSON_THROW_ON_ERROR);
 
                 $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, Offre::class);
                 if ($object) {

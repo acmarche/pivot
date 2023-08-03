@@ -14,7 +14,6 @@ trait ParserEventTrait
     /**
      * Complète la class Event
      * Date de début, date de fin,...
-     * @param Offre $offre
      * @param bool $removeObsolete
      * @return void
      */

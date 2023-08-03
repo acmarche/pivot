@@ -21,7 +21,7 @@ class PivotContainer
         $this->setContainer(self::init($debug));
     }
 
-    private static function init(bool $debug = false): ContainerInterface
+    private function init(bool $debug = false): ContainerInterface
     {
         if ($debug) {
             Debug::enable();

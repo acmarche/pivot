@@ -14,8 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     public function __construct(
-        private PivotRepository $pivotRepository,
-        private OffreParser $pivotParser
+        private readonly PivotRepository $pivotRepository,
+        private readonly OffreParser $pivotParser
     ) {
     }
 

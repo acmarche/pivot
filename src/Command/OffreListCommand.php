@@ -26,8 +26,8 @@ class OffreListCommand extends Command
     private OutputInterface $output;
 
     public function __construct(
-        private PivotRepository $pivotRepository,
-        private TypeOffreRepository $typeOffreRepository,
+        private readonly PivotRepository $pivotRepository,
+        private readonly TypeOffreRepository $typeOffreRepository,
         string $name = null
     ) {
         parent::__construct($name);

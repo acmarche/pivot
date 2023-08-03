@@ -8,37 +8,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TypeOffreRepository::class)]
 #[ORM\Table(name: 'pivot_type_offre')]
-class TypeOffre
+class TypeOffre implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     public int $id;
-    #[ORM\Column(type: 'string', length: 180)]
-    public string $name;
-    #[ORM\Column(type: 'integer', nullable: false)]
-    public int $display_order = 0;
-    #[ORM\Column(type: 'string', length: 50, nullable: false)]
-    public string $type;
-    #[ORM\Column(type: 'string', length: 250, nullable: false)]
-    public string $urn;
-    #[ORM\Column(type: 'string', unique: false, nullable: true)]
-    public ?string $code = null;
-    #[ORM\Column(type: 'integer', nullable: true)]
-    public int $typeId;
     #[ORM\Column(type: 'integer', nullable: false)]
     public int $countOffres = 0;
-    #[ORM\ManyToOne(targetEntity: TypeOffre::class)]
-    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
-    public ?TypeOffre $parent = null;
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
-    public ?string $name_fr;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
-    public ?string $name_nl;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
-    public ?string $name_en;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
-    public ?string $name_de;
+    public ?string $name_fr = null;
 
     /**
      * @var TypeOffre[] $children
@@ -47,28 +26,19 @@ class TypeOffre
     public bool $withChildren = false;
     public ?string $url = null;
 
-    public function __construct(
-        string $nom,
-        int $typeId,
-        int $display_order,
-        ?string $code,
-        ?string $urn,
-        ?string $type,
-        ?TypeOffre $parent,
-        ?string $name_nl = null,
-        ?string $name_en = null,
-        ?string $name_de = null
-    ) {
-        $this->name = $nom;
-        $this->typeId = $typeId;
-        $this->display_order = $display_order;
-        $this->code = $code;
-        $this->urn = $urn;
-        $this->type = $type;
-        $this->parent = $parent;
-        $this->name_nl = $name_nl;
-        $this->name_en = $name_en;
-        $this->name_de = $name_de;
+    public function __construct(#[ORM\Column(type: 'string', length: 180)]
+    public string $name, #[ORM\Column(type: 'integer', nullable: true)]
+    public int $typeId, #[ORM\Column(type: 'integer', nullable: false)]
+    public int $display_order, #[ORM\Column(type: 'string', unique: false, nullable: true)]
+    public ?string $code, #[ORM\Column(type: 'string', length: 250, nullable: false)]
+    public string $urn, #[ORM\Column(type: 'string', length: 50, nullable: false)]
+    public string $type, #[ORM\ManyToOne(targetEntity: TypeOffre::class)]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    public ?TypeOffre $parent, #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    public ?string $name_nl = null, #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    public ?string $name_en = null, #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    public ?string $name_de = null)
+    {
     }
 
     public function __toString(): string
@@ -79,7 +49,7 @@ class TypeOffre
     public function labelByLanguage(string $language = Label::FR): string
     {
         $property = 'name_'.$language;
-        if (isset($this->$property) && $this->$property != null) {
+        if (property_exists($this, 'property') && $this->$property !== null && $this->$property != null) {
             return $this->$property;
         } else {
             return $this->name;

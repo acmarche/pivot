@@ -14,7 +14,6 @@ trait ParseRelationOffresTgtTrait
     public PivotRepository $pivotRepository;
 
     /**
-     * @param Offre $offre
      * @return array
      * @throws InvalidArgumentException
      */
@@ -22,7 +21,7 @@ trait ParseRelationOffresTgtTrait
     {
         $docs = ['see_also' => [], 'enfants' => []];
         foreach ($offre->relOffreTgt as $relOffreTgt) {
-            if (!in_array($relOffreTgt->urn, [UrnList::VOIR_AUSSI->value])) {
+            if ($relOffreTgt->urn != UrnList::VOIR_AUSSI->value) {
                 continue;
             }
 
@@ -31,7 +30,7 @@ trait ParseRelationOffresTgtTrait
 
             try {
                 $offreTgt = $this->pivotRepository->fetchOffreByCgt($code);
-            } catch (\Exception $exception) {
+            } catch (\Exception) {
                 continue;
             }
 

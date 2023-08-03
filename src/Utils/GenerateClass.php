@@ -9,7 +9,7 @@ use Symfony\Component\String\UnicodeString;
 
 class GenerateClass
 {
-    public function __construct(private PivotRemoteRepository $pivotRemoteRepository)
+    public function __construct(private readonly PivotRemoteRepository $pivotRemoteRepository)
     {
     }
 
@@ -22,7 +22,7 @@ class GenerateClass
     public function generateTypeUrn()
     {
         $thesaurus = json_decode(
-            $this->pivotRemoteRepository->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value)
+            $this->pivotRemoteRepository->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value), null, 512, JSON_THROW_ON_ERROR
         );
 
         echo "<?php \n ";
@@ -53,7 +53,7 @@ use AcMarche\Pivot\Entities\Urn\Urn;
 
         echo "public static function getAllCode():array {";
         echo "return ['";
-        echo join("','", $codes);
+        echo implode("','", $codes);
         echo "'];";
         echo "}";
         echo "}";

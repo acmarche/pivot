@@ -10,17 +10,7 @@ use AcMarche\Pivot\Entity\UrnDefinitionEntity;
  */
 class Specification
 {
-    public ?SpecData $data = null;
-    public ?UrnDefinitionEntity $urnDefinition = null;
-    public ?UrnDefinitionEntity $urnCatDefinition = null;
-
-    public function __construct(
-        SpecData $specData,
-        UrnDefinitionEntity $urnDefinition,
-        ?UrnDefinitionEntity $urnCatDefinition
-    ) {
-        $this->data = $specData;
-        $this->urnDefinition = $urnDefinition;
-        $this->urnCatDefinition = $urnCatDefinition;
+    public function __construct(public ?SpecData $data, public ?UrnDefinitionEntity $urnDefinition, public ?UrnDefinitionEntity $urnCatDefinition)
+    {
     }
 }

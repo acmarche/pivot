@@ -18,8 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class OffreController extends AbstractController
 {
     public function __construct(
-        private PivotRepository $pivotRepository,
-        private PivotRemoteRepository $pivotRemoteRepository,
+        private readonly PivotRepository $pivotRepository,
+        private readonly PivotRemoteRepository $pivotRemoteRepository,
     ) {
     }
 

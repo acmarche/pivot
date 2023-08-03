@@ -28,7 +28,7 @@ class Offre
      * L'offre au format original
      */
     public string $dataRaw;
-    public ?bool $active;
+    public ?bool $active = null;
     public string $dateCreation;
     public string $dateModification;
     public User $userCreation;
@@ -37,7 +37,7 @@ class Offre
     public UserGlobalModification $userGlobalModification;
     public string $email;
     public string $tel;
-    public string|SpecData|null $tarif;
+    public string|SpecData|null $tarif = null;
 
     /**
      * @deprecated $estActive
@@ -141,7 +141,7 @@ class Offre
 
     public function firstImage(): ?string
     {
-        if (count($this->images) > 0) {
+        if ($this->images !== []) {
             return $this->images[0];
         }
 

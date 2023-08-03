@@ -30,10 +30,10 @@ class TypeOffreCommand extends Command
     private OutputInterface $output;
 
     public function __construct(
-        private PivotRepository $pivotRepository,
-        private PivotRemoteRepository $pivotRemoteRepository,
-        private TypeOffreRepository $typeOffreRepository,
-        private PivotSerializer $pivotSerializer
+        private readonly PivotRepository $pivotRepository,
+        private readonly PivotRemoteRepository $pivotRemoteRepository,
+        private readonly TypeOffreRepository $typeOffreRepository,
+        private readonly PivotSerializer $pivotSerializer
     ) {
         parent::__construct();
     }
@@ -77,14 +77,14 @@ class TypeOffreCommand extends Command
     private function treatmentClassification(TypeOffre $data)
     {
         $familiesStd = json_decode(
-            $this->pivotRemoteRepository->thesaurusCategories($data->typeId)
+            $this->pivotRemoteRepository->thesaurusCategories($data->typeId), null, 512, JSON_THROW_ON_ERROR
         );
         $this->io->writeln($this->pivotRemoteRepository->url_executed);
         /**
          * @var Family[] $families
          */
         $families = $this->pivotSerializer->deserializeToClass(
-            json_encode($familiesStd->spec),
+            json_encode($familiesStd->spec, JSON_THROW_ON_ERROR),
             'AcMarche\Pivot\Entities\Family\Family[]',
         );
         foreach ($families as $family) {

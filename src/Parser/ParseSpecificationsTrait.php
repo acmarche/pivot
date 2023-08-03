@@ -14,7 +14,6 @@ trait ParseSpecificationsTrait
     public UrnDefinitionRepository $urnDefinitionRepository;
 
     /**
-     * @param Offre $offre
      * @return array|Specification[]
      * @throws \Exception
      */

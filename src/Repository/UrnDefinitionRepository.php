@@ -28,7 +28,7 @@ class UrnDefinitionRepository extends ServiceEntityRepository
                 ->setParameter('urn', $urn)
                 ->getQuery()
                 ->getOneOrNullResult();
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             return null;
         }
     }

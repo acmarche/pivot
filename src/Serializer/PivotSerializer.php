@@ -18,7 +18,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
 
 class PivotSerializer
 {
-    public function __construct(private SerializerInterface $serializer)
+    public function __construct(private readonly SerializerInterface $serializer)
     {
     }
 
@@ -42,12 +42,10 @@ class PivotSerializer
     public function deserializeOffer(string $data, string $class): ?ResultOfferDetail
     {
         try {
-            $t = $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
+            return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
                 DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
                 AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
             ]);
-
-            return $t;
         } catch (PartialDenormalizationException $exception) {
             $this->getErrors($exception, $data);
         }

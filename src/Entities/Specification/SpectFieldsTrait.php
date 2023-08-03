@@ -43,7 +43,6 @@ trait SpectFieldsTrait
     public array $webs = [];
 
     /**
-     * @param string $language
      * @param string|null $skip
      * @return SpecData[]
      */
@@ -55,9 +54,9 @@ trait SpectFieldsTrait
             $startString = 'urn:';
         }
         foreach ($this->descriptions as $description) {
-            if (str_starts_with($description->urn, $startString)) {
+            if (str_starts_with((string) $description->urn, $startString)) {
                 if ($skip !== null) {
-                    if (!str_contains($description->urn, $skip)) {
+                    if (!str_contains((string) $description->urn, $skip)) {
                         $descriptions[] = $description;
                     }
                 } else {

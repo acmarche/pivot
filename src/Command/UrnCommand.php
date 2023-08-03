@@ -27,9 +27,9 @@ class UrnCommand extends Command
     private SymfonyStyle $io;
 
     public function __construct(
-        private PivotRemoteRepository $pivotRemoteRepository,
-        private UrnDefinitionRepository $urnDefinitionRepository,
-        private PivotSerializer $pivotSerializer
+        private readonly PivotRemoteRepository $pivotRemoteRepository,
+        private readonly UrnDefinitionRepository $urnDefinitionRepository,
+        private readonly PivotSerializer $pivotSerializer
     ) {
         parent::__construct();
     }
@@ -67,10 +67,10 @@ class UrnCommand extends Command
 
     private function createListing()
     {
-        $urnsString = json_decode($this->pivotRemoteRepository->thesaurus('urn'));
+        $urnsString = json_decode($this->pivotRemoteRepository->thesaurus('urn'), null, 512, JSON_THROW_ON_ERROR);
 
         $response = $this->pivotSerializer->deserializeToClass(
-            json_encode($urnsString),
+            json_encode($urnsString, JSON_THROW_ON_ERROR),
             UrnResponse::class
         );
 

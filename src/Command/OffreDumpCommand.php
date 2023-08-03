@@ -21,9 +21,9 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class OffreDumpCommand extends Command
 {
     public function __construct(
-        private PivotRemoteRepository $pivotRemoteRepository,
-        private PivotRepository $pivotRepository,
-        private OffreParser $pivotParser,
+        private readonly PivotRemoteRepository $pivotRemoteRepository,
+        private readonly PivotRepository $pivotRepository,
+        private readonly OffreParser $pivotParser,
         string $name = null
     ) {
         parent::__construct($name);
@@ -59,7 +59,7 @@ class OffreDumpCommand extends Command
             return Command::SUCCESS;
         }
 
-        $offreObject = json_decode($resultString);
+        $offreObject = json_decode($resultString, null, 512, JSON_THROW_ON_ERROR);
         $offre = $offreObject->offre[0];
         $type = $offre->typeOffre;
         $idType = $type->idTypeOffre;

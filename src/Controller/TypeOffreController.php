@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class TypeOffreController extends AbstractController
 {
     public function __construct(
-        private TypeOffreRepository $typeOffreRepository,
+        private readonly TypeOffreRepository $typeOffreRepository,
     ) {
     }
 

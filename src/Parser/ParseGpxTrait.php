@@ -37,17 +37,12 @@ trait ParseGpxTrait
 
             if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdiff', returnData: true)) {
                 $urnDefinition = $this->urnDefinitionRepository->findByUrn($km[0]->value);
-                if ($urnDefinition) {
-                    $offre->gpx_difficulte = $urnDefinition->labelByLanguage('fr');
-                } else {
-                    $offre->gpx_difficulte = $km[0]->value;
-                }
+                $offre->gpx_difficulte = $urnDefinition ? $urnDefinition->labelByLanguage('fr') : $km[0]->value;
             }
         }
     }
 
     /**
-     * @param Offre $offre
      * @return array|Gpx[]
      */
     public function parseDocs(Offre $offre): array

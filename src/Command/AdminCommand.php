@@ -19,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class AdminCommand extends Command
 {
     public function __construct(
-        private GenerateClass $generateClass,
+        private readonly GenerateClass $generateClass,
         string $name = null
     ) {
         parent::__construct($name);

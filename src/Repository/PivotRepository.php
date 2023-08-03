@@ -21,12 +21,12 @@ use Symfony\Contracts\Cache\CacheInterface;
 class PivotRepository
 {
     public function __construct(
-        private PivotRemoteRepository $pivotRemoteRepository,
-        private TypeOffreRepository $typeOffreRepository,
-        private OffreParser $offreParser,
-        private PivotSerializer $pivotSerializer,
-        private CacheInterface $cache,
-        private CacheUtils $cacheUtils
+        private readonly PivotRemoteRepository $pivotRemoteRepository,
+        private readonly TypeOffreRepository $typeOffreRepository,
+        private readonly OffreParser $offreParser,
+        private readonly PivotSerializer $pivotSerializer,
+        private readonly CacheInterface $cache,
+        private readonly CacheUtils $cacheUtils
     ) {
     }
 
@@ -37,7 +37,7 @@ class PivotRepository
      */
     public function fetchOffres(array $typesOffre, bool $parse = true, int $max = 500, bool $dd = false): array
     {
-        if (count($typesOffre) === 0) {
+        if ($typesOffre === []) {
             return [];
         }
         $cacheKeyPlus = '';
@@ -89,14 +89,13 @@ class PivotRepository
 
     /**
      * Retourne la liste des events
-     * @param bool $removeObsolete
      * @param array|TypeOffre[] $typeOffres
      * @return Offre[]
      * @throws InvalidArgumentException
      */
     public function fetchEvents(bool $removeObsolete = true, array $typeOffres = []): array
     {
-        if (count($typeOffres) === 0) {
+        if ($typeOffres === []) {
             return [];
         }
 
@@ -133,8 +132,8 @@ class PivotRepository
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
-                    $tmp = json_decode($dataString);
-                    $dataStringOffre = json_encode($tmp->offre[0]);
+                    $tmp = json_decode($dataString, null, 512, JSON_THROW_ON_ERROR);
+                    $dataStringOffre = json_encode($tmp->offre[0], JSON_THROW_ON_ERROR);
 
                     $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, $class);
                     if ($object) {
@@ -154,7 +153,6 @@ class PivotRepository
     }
 
     /**
-     * @param string $codeCgt
      * @return Offre|null
      * @throws InvalidArgumentException
      */
@@ -169,8 +167,6 @@ class PivotRepository
     }
 
     /**
-     * @param Offre $referringOffer
-     * @param int $max
      * @return Offre
      * @throws InvalidArgumentException
      * @throws NonUniqueResultException
@@ -188,13 +184,13 @@ class PivotRepository
         foreach ($this->typeOffreRepository->findByUrns($urns) as $typeOffre) {
             $filtres[] = $typeOffre;
         }
-        if (count($filtres) === 0) {
+        if ($filtres === []) {
             return [];
         }
         $offres = $this->fetchOffres($filtres, parse: false, max: $max, dd: true);
         $data = [];
         foreach ($offres as $offre) {
-            if ($referringOffer->codeCgt != $offre->codeCgt) {
+            if ($referringOffer->codeCgt !== $offre->codeCgt) {
                 $data[] = $offre;
             }
         }
@@ -213,10 +209,10 @@ class PivotRepository
      */
     public function thesaurusFamilies(): array
     {
-        $familiesObject = json_decode($this->pivotRemoteRepository->thesaurusFamily());
+        $familiesObject = json_decode($this->pivotRemoteRepository->thesaurusFamily(), null, 512, JSON_THROW_ON_ERROR);
 
         return $this->pivotSerializer->deserializeToClass(
-            json_encode($familiesObject->spec),
+            json_encode($familiesObject->spec, JSON_THROW_ON_ERROR),
             'AcMarche\Pivot\Entities\Family\Family[]',
         );
     }
@@ -240,13 +236,13 @@ class PivotRepository
      */
     public function thesaurusChildren(int $typeOffre, string $urn): array
     {
-        $familiesObject = json_decode($this->pivotRemoteRepository->thesaurus('typeofr/'.$typeOffre.'/'.$urn));
+        $familiesObject = json_decode($this->pivotRemoteRepository->thesaurus('typeofr/'.$typeOffre.'/'.$urn), null, 512, JSON_THROW_ON_ERROR);
         if (!isset($familiesObject->spec[0]->spec)) {
             return [];
         }
 
         return $this->pivotSerializer->deserializeToClass(
-            json_encode($familiesObject->spec[0]->spec),
+            json_encode($familiesObject->spec[0]->spec, JSON_THROW_ON_ERROR),
             'AcMarche\Pivot\Entities\Family\Family[]',
         );
     }

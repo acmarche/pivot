@@ -4,17 +4,17 @@ namespace AcMarche\Pivot\Entities;
 
 class Label
 {
-    public const FR = 'fr';
-    public const NL = 'nl';
-    public const EN = 'en';
-    public const DE = 'de';
+    final public const FR = 'fr';
+    final public const NL = 'nl';
+    final public const EN = 'en';
+    final public const DE = 'de';
 
     public string $lang;
     public ?string $value = null;
 
     public function get(string $language): ?string
     {
-        if ($this->lang == $language) {
+        if ($this->lang === $language) {
             return $this->value;
         }
 

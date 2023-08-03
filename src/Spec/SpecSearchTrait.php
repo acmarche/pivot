@@ -21,11 +21,11 @@ trait SpecSearchTrait
         $specs = [];
         foreach ($offre->specifications as $specification) {
             $data = $specification->data;
-            if (!isset($data->$property)) {
+            if (property_exists($data, 'property') && $data->$property !== null) {
                 continue;
             }
             if ($contains) {
-                if (\str_contains($data->$property, $keywordSearch)) {
+                if (\str_contains((string) $data->$property, $keywordSearch)) {
                     $specs[] = $specification;
                 }
                 continue;
@@ -36,9 +36,7 @@ trait SpecSearchTrait
         }
 
         if ($returnData) {
-            return array_map(function ($specification) {
-                return $specification->data;
-            }, $specs);
+            return array_map(fn($specification) => $specification->data, $specs);
         }
 
         return $specs;
