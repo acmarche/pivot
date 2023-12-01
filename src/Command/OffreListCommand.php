@@ -2,9 +2,14 @@
 
 namespace AcMarche\Pivot\Command;
 
+use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
+use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
+use AcMarche\Pivot\Serializer\PivotSerializer;
+use Doctrine\ORM\NonUniqueResultException;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Completion\CompletionInput;
@@ -24,10 +29,13 @@ class OffreListCommand extends Command
 {
     private SymfonyStyle $io;
     private OutputInterface $output;
+    private array $offres = [];
 
     public function __construct(
         private readonly PivotRepository $pivotRepository,
+        private readonly PivotRemoteRepository $pivotRemoteRepository,
         private readonly TypeOffreRepository $typeOffreRepository,
+        private readonly PivotSerializer $pivotSerializer,
         string $name = null
     ) {
         parent::__construct($name);
@@ -36,6 +44,7 @@ class OffreListCommand extends Command
     protected function configure(): void
     {
         $this->addOption('all', "all", InputOption::VALUE_NONE, 'Toutes les offres');
+        $this->addOption('events', "events", InputOption::VALUE_NONE, 'Toutes les events');
         $this->addOption('urn', "urn", InputOption::VALUE_OPTIONAL, 'Urn');
     }
 
@@ -45,7 +54,19 @@ class OffreListCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         $all = (bool)$input->getOption('all');
+        $events = (bool)$input->getOption('events');
         $urn = $input->getOption('urn');
+
+        if ($all) {
+            $choix = "Tout";
+            try {
+                $this->all();
+            } catch (\JsonException|InvalidArgumentException $e) {
+                $this->io->error($e->getMessage());
+            }
+
+            return Command::SUCCESS;
+        }
 
         if ($urn) {
             $typeOffre = $this->typeOffreRepository->findOneByUrn($urn);
@@ -64,21 +85,15 @@ class OffreListCommand extends Command
             return Command::SUCCESS;
         }
 
-        if (!$all) {
-            $response = $this->askType();
-            if (!$response instanceof TypeOffre) {
-                $this->io->error('Ce type n\'exite pas dans la liste');
+        $response = $this->askType();
+        if (!$response instanceof TypeOffre) {
+            $this->io->error('Ce type n\'exite pas dans la liste');
 
-                return Command::FAILURE;
-            }
-            $choix = $response->name;
-            $args = [$response];
-        } else {
-            $args = [];
-            $choix = "Tout";
+            return Command::FAILURE;
         }
+        $choix = $response->name;
 
-        $this->io->success($choix . ": ");
+        $this->io->success($choix.": ");
 
         $this->io->info("Chargement des offres...");
         $offres = $this->pivotRepository->fetchEvents(true);
@@ -133,5 +148,26 @@ class OffreListCommand extends Command
         if ($input->mustSuggestArgumentValuesFor(argumentName: 'type')) {
             $suggestions->suggestValues($this->typeOffreRepository->findRoots());
         }
+    }
+
+    /**
+     * @return int|void
+     * @throws \Psr\Cache\InvalidArgumentException|\JsonException
+     */
+    private function all()
+    {
+        $responseQuery = $this->pivotRepository->getAllDataFromRemote();
+        foreach ($responseQuery->offre as $offreShort) {
+            $dataString = $this->pivotRemoteRepository->offreByCgt($offreShort->codeCgt);
+            $tmp = json_decode($dataString, null, 512, JSON_THROW_ON_ERROR);
+            $dataStringOffre = json_encode($tmp->offre[0], JSON_THROW_ON_ERROR);
+
+            $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, Offre::class);
+            if ($object) {
+                $object->dataRaw = $dataString;
+            }
+            $this->offres[] = $object;
+        }
+        // $offres = FilterUtils::filterByTypeIdsOrUrns($this->offres, [], [$typeOffre->urn]);
     }
 }

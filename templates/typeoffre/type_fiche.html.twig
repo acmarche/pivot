@@ -1,0 +1,24 @@
+{% extends '@AcMarchePivot/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="card">
+        <h3 class="card-header">Types de fiche</h3>
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Code</th>
+                </tr>
+                {% for type in types %}
+                    <tr>
+                        <td>{{ type.id }}</td>
+                        <td>{{ type.name }}</td>
+                        <td>{{ type.code }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

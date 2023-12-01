@@ -18,35 +18,35 @@ class UrnDefinitionEntity
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     public int $id;
-    #[ORM\Column(type: 'string', length: 180, nullable: false, unique: true)]
+    #[ORM\Column(length: 180, nullable: false, unique: true)]
     public ?string $urn = null;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?string $code = null;
-    #[ORM\Column(type: 'boolean', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public bool $deprecated = false;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?string $type = null;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?string $dateModification = null;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?string $dateCreation = null;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?string $xpathPivotWebWs = null;
-    #[ORM\Column(type: 'boolean', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?bool $dynamic = null;
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(nullable: true)]
     public ?int $visibilite = null;
-    #[ORM\Column(type: 'integer', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?int $userGlobalId = null;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?string $userGlobalName = null;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?string $userLocalLogin = null;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?string $userLocalName = null;
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public ?string $userLocalSurname = null;
-    #[ORM\Column(type: 'boolean', length: 180, nullable: true)]
+    #[ORM\Column(length: 180, nullable: true)]
     public bool|null $collapsed = null;
 
     /**

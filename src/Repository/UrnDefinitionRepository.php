@@ -2,11 +2,11 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use Exception;
 use AcMarche\Pivot\Entity\UrnDefinitionEntity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @method UrnDefinitionEntity|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,6 +16,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UrnDefinitionRepository extends ServiceEntityRepository
 {
+    use OrmCrudTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, UrnDefinitionEntity::class);
@@ -37,26 +39,5 @@ class UrnDefinitionRepository extends ServiceEntityRepository
     public function createQBL(): QueryBuilder
     {
         return $this->createQueryBuilder('urn_definition');
-    }
-
-    public function insert(object $object): void
-    {
-        $this->persist($object);
-        $this->flush();
-    }
-
-    public function persist(object $object): void
-    {
-        $this->_em->persist($object);
-    }
-
-    public function flush(): void
-    {
-        $this->_em->flush();
-    }
-
-    public function remove(object $object): void
-    {
-        $this->_em->remove($object);
     }
 }

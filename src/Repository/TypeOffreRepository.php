@@ -2,12 +2,12 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use Exception;
 use AcMarche\Pivot\Entity\TypeOffre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @method TypeOffre|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TypeOffreRepository extends ServiceEntityRepository
 {
+    use OrmCrudTrait;
+
     private TypeOffre $child;
 
     public function __construct(ManagerRegistry $registry)
@@ -76,7 +78,7 @@ class TypeOffreRepository extends ServiceEntityRepository
     {
         return $this->createQBL()
             ->andWhere('typeOffre.name LIKE :name')
-            ->setParameter('name', '%' . $name . '%')
+            ->setParameter('name', '%'.$name.'%')
             ->orderBy('typeOffre.name', 'ASC')
             ->getQuery()
             ->setMaxResults($max)
@@ -90,7 +92,7 @@ class TypeOffreRepository extends ServiceEntityRepository
     {
         return $this->createQBL()
             ->andWhere('typeOffre.name LIKE :name OR typeOffre.urn LIKE :name')
-            ->setParameter('name', '%' . $name . '%')
+            ->setParameter('name', '%'.$name.'%')
             ->orderBy('typeOffre.name', 'ASC')
             ->getQuery()
             ->setMaxResults($max)
@@ -168,8 +170,7 @@ class TypeOffreRepository extends ServiceEntityRepository
     {
         $families = [];
         foreach ($typesOffre as $typeOffre) {
-            $family = $typeOffre->type == 'Family' ? $typeOffre : $this->getFamily($typeOffre);
-            ;
+            $family = $typeOffre->type == 'Family' ? $typeOffre : $this->getFamily($typeOffre);;
             $families[$family->typeId] = $family->typeId;
         }
 
@@ -192,26 +193,5 @@ class TypeOffreRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('typeOffre')
             ->leftJoin('typeOffre.parent', 'parent', 'WITH')
             ->addSelect('parent');
-    }
-
-    public function insert(object $object): void
-    {
-        $this->persist($object);
-        $this->flush();
-    }
-
-    public function persist(object $object): void
-    {
-        $this->_em->persist($object);
-    }
-
-    public function flush(): void
-    {
-        $this->_em->flush();
-    }
-
-    public function remove(object $object): void
-    {
-        $this->_em->remove($object);
     }
 }

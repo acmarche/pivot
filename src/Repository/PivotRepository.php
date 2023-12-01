@@ -2,7 +2,6 @@
 
 namespace AcMarche\Pivot\Repository;
 
-use Exception;
 use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
@@ -16,6 +15,7 @@ use AcMarche\Pivot\TypeOffre\FilterUtils;
 use AcMarche\Pivot\Utils\CacheUtils;
 use AcMarche\Pivot\Utils\SortUtils;
 use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -43,10 +43,10 @@ class PivotRepository
         }
         $cacheKeyPlus = '';
         foreach ($typesOffre as $typeOffre) {
-            $cacheKeyPlus .= $typeOffre->id . '-';
+            $cacheKeyPlus .= $typeOffre->id.'-';
         }
 
-        $cacheKey = $this->cacheUtils->generateKey(CacheUtils::FETCH_OFFRES . '-' . $cacheKeyPlus . $parse);
+        $cacheKey = $this->cacheUtils->generateKey(CacheUtils::FETCH_OFFRES.'-'.$cacheKeyPlus.$parse);
 
         //pour un pretri
         $families = $this->typeOffreRepository->findFamiliesByUrns($typesOffre);
@@ -124,11 +124,11 @@ class PivotRepository
             return null;
         }
 
-        $cacheKey = $codeCgt . $class;
+        $cacheKey = $codeCgt.$class;
         $key = $this->cacheUtils->generateKey($cacheKey);
 
         return $this->cache->get(
-            'offre-' . $key,
+            'offre-'.$key,
             function () use ($codeCgt, $class) {
                 $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 if ($class != ResultOfferDetail::class) {
@@ -173,7 +173,7 @@ class PivotRepository
      */
     public function fetchSameOffres(Offre $referringOffer, int $max = 20): array
     {
-        $urn = 'urn:typ:' . $referringOffer->typeOffre->idTypeOffre;
+        $urn = 'urn:typ:'.$referringOffer->typeOffre->idTypeOffre;
 
         $filtres = [$this->typeOffreRepository->findOneByUrn($urn)];
 
@@ -219,7 +219,7 @@ class PivotRepository
 
     public function urnDefinition(string $urnName): ?UrnDefinition
     {
-        return $this->cache->get('urnDefinition-' . $urnName, function () use ($urnName) {
+        return $this->cache->get('urnDefinition-'.$urnName, function () use ($urnName) {
             if ($data = $this->pivotRemoteRepository->thesaurusUrn($urnName)) {
                 return $this->pivotSerializer->deserializeToClass($data, UrnDefinition::class);
             }
@@ -236,7 +236,12 @@ class PivotRepository
      */
     public function thesaurusChildren(int $typeOffre, string $urn): array
     {
-        $familiesObject = json_decode($this->pivotRemoteRepository->thesaurus('typeofr/' . $typeOffre . '/' . $urn), null, 512, JSON_THROW_ON_ERROR);
+        $familiesObject = json_decode(
+            $this->pivotRemoteRepository->thesaurus('typeofr/'.$typeOffre.'/'.$urn),
+            null,
+            512,
+            JSON_THROW_ON_ERROR
+        );
         if (!isset($familiesObject->spec[0]->spec)) {
             return [];
         }

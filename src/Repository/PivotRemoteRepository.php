@@ -40,16 +40,16 @@ class PivotRemoteRepository
 
         $params = "";
         foreach ($options as $key => $value) {
-            $params .= $key . '=' . $value . ';';
+            $params .= $key.'='.$value.';';
         }
         $params = substr($params, 0, -1);
 
-        return $this->executeRequest($this->base_uri . '/offer/' . $codeCgt);
+        return $this->executeRequest($this->base_uri.'/offer/'.$codeCgt);
     }
 
     public function offreExist(string $codeCgt): ?string
     {
-        return $this->executeRequest($this->base_uri . '/offer/' . $codeCgt . '/exists');
+        return $this->executeRequest($this->base_uri.'/offer/'.$codeCgt.'/exists');
     }
 
     /**
@@ -59,9 +59,9 @@ class PivotRemoteRepository
      */
     public function thesaurus(string $type, ?string $params = null): ?string
     {
-        $url = $this->base_uri . '/thesaurus/' . $type;
+        $url = $this->base_uri.'/thesaurus/'.$type;
         if ($params) {
-            $url .= '/' . $params;
+            $url .= '/'.$params;
         }
 
         return $this->executeRequest($url);
@@ -74,7 +74,7 @@ class PivotRemoteRepository
      */
     public function thesaurusCategories(int $typeId): string
     {
-        $params = $typeId . '/' . UrnList::CLASSIFICATION_LABEL->value;
+        $params = $typeId.'/'.UrnList::CLASSIFICATION_LABEL->value;
 
         return $this->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value, $params);
     }
@@ -88,7 +88,7 @@ class PivotRemoteRepository
      */
     public function thesaurusSousTypes(int $typeId, string $urn): ?string
     {
-        $params = '/' . $typeId . '/urn:fld:cat' . $urn;
+        $params = '/'.$typeId.'/urn:fld:cat'.$urn;
 
         return $this->thesaurus(ThesaurusEnum::THESAURUS_TYPE_OFFRE->value, $params);
     }
@@ -113,14 +113,14 @@ class PivotRemoteRepository
 
     public function thesaurusUrn(string $urnName): ?string
     {
-        return $this->thesaurus('urn/' . $urnName);
+        return $this->thesaurus('urn/'.$urnName);
     }
 
     public function thesaurusLocalite(?int $idLocalite = null): ?string
     {
         $params = null;
         if ($idLocalite) {
-            $params = '/' . $idLocalite;
+            $params = '/'.$idLocalite;
         }
 
         return $this->thesaurus(ThesaurusEnum::THESAURUS_TYPE_TINS->value, $params);
@@ -147,6 +147,6 @@ class PivotRemoteRepository
             $query = $this->code_query;
         }
 
-        return $this->executeRequest($this->base_uri . '/query/' . $query);
+        return $this->executeRequest($this->base_uri.'/query/'.$query);
     }
 }
