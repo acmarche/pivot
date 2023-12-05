@@ -5,7 +5,6 @@ namespace AcMarche\Pivot\Serializer;
 use Exception;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
-use AcMarche\Pivot\Entities\Response\ResultOfferDetail;
 use AcMarche\Pivot\Entities\Response\UrnResponse;
 use AcMarche\Pivot\Entities\Urn\Urn;
 use AcMarche\Pivot\Entities\Urn\UrnDefinition;
@@ -27,23 +26,9 @@ class PivotSerializer
         string $data,
         string $class,
         string $format = 'json'
-    ): Offre|ResultOfferDetail|ResponseQuery|Urn|UrnDefinition|UrnResponse|array|null {
+    ): Offre|ResponseQuery|Urn|UrnDefinition|UrnResponse|array|null {
         try {
             return $this->serializer->deserialize($data, $class, $format, [
-                DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
-                AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
-            ]);
-        } catch (PartialDenormalizationException $exception) {
-            $this->getErrors($exception, $data);
-        }
-
-        return null;
-    }
-
-    public function deserializeOffer(string $data, string $class): ?ResultOfferDetail
-    {
-        try {
-            return $this->serializer->deserialize($data, ResultOfferDetail::class, 'json', [
                 DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
                 AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => true,
             ]);

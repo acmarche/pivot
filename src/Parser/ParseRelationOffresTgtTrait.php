@@ -30,7 +30,7 @@ trait ParseRelationOffresTgtTrait
             $code = $item['codeCgt'];
 
             try {
-                $offreTgt = $this->pivotRepository->fetchOffreByCgt($code);
+                $offreTgt = $this->pivotRepository->fetchOffreByCgt($code,$item['dateModification']);
             } catch (Exception) {
                 continue;
             }

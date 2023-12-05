@@ -7,21 +7,22 @@ use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use AcMarche\Pivot\Utils\LocalSwitcherPivot;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 
 class PivotContainer
 {
-    use ContainerAwareTrait;
+    private ContainerBuilder $containerBuilder;
+    private ContainerInterface $container;
 
     public function __construct(bool $debug = false)
     {
-        $this->setContainer(self::init($debug));
+        $this->init($debug);
     }
 
-    private function init(bool $debug = false): ContainerInterface
+    private function init(bool $debug = false): void
     {
         if ($debug) {
             Debug::enable();
@@ -30,13 +31,15 @@ class PivotContainer
             $env = 'prod';
         }
 
+        $this->containerBuilder = new ContainerBuilder();
+
         $kernel = new Kernel($env, $debug);
         (new Dotenv())
-            ->bootEnv($kernel->getProjectDir() . '/.env');
+            ->bootEnv($kernel->getProjectDir().'/.env');
 
         $kernel->boot();
 
-        return $kernel->getContainer();
+        $this->container = $kernel->getContainer();
     }
 
     public static function getPivotRepository(bool $debug = false): PivotRepository

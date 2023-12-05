@@ -22,7 +22,7 @@ trait ParseImagesTrait
             }
             $codeCgt = $relOffre->offre['codeCgt'];
             try {
-                $relatedOffer = $this->pivotRepository->fetchOffreByCgt($codeCgt);
+                $relatedOffer = $this->pivotRepository->fetchOffreByCgt($codeCgt,$relOffre->offre['dateModification']);
             } catch (Exception) {
                 continue;
             }

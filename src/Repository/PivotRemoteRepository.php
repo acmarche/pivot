@@ -17,7 +17,6 @@ class PivotRemoteRepository
     }
 
     /**
-     * @return string|null
      * @throws Exception
      */
     public function offreByCgt(string $codeCgt, array $options = []): ?string
