@@ -70,7 +70,7 @@ class PivotRepository
                     }
                 } catch (Exception $exception) {
                     //todo add logger
-                    dd($exception);
+                    continue;
                 }
             }
 

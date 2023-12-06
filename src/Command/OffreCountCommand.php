@@ -5,6 +5,7 @@ namespace AcMarche\Pivot\Command;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,12 +15,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'pivot:offre-count',
-    description: 'Compte les offres pour chaque types d\'offre. --flush pour enregister dans la DB',
+    description: 'Compte les offres pour chaque types d\'offre. --flush save in DB',
 )]
 class OffreCountCommand extends Command
 {
     private SymfonyStyle $io;
-    private OutputInterface $output;
 
     public function __construct(
         private readonly PivotRepository $pivotRepository,
@@ -37,7 +37,6 @@ class OffreCountCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->output = $output;
 
         $flush = (bool)$input->getOption('flush');
 
@@ -46,7 +45,11 @@ class OffreCountCommand extends Command
         foreach ($typesOffre as $typeOffre) {
             $this->io->section($typeOffre->name);
             $this->io->writeln($typeOffre->urn);
-            $this->setCount($typeOffre);
+            try {
+                $this->setCount($typeOffre);
+            } catch (InvalidArgumentException $e) {
+                $this->io->error($e->getMessage());
+            }
         }
 
         if ($flush) {
@@ -56,6 +59,11 @@ class OffreCountCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @param TypeOffre $typeOffre
+     * @return void
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     private function setCount(TypeOffre $typeOffre)
     {
         $offres = $this->pivotRepository->fetchOffres([$typeOffre], false);
