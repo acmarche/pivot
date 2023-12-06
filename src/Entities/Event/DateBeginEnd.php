@@ -2,9 +2,9 @@
 
 namespace AcMarche\Pivot\Entities\Event;
 
-use Stringable;
-use DateTimeInterface;
 use AcMarche\Pivot\Utils\DateUtils;
+use DateTimeInterface;
+use Stringable;
 
 class DateBeginEnd implements Stringable
 {
@@ -22,7 +22,7 @@ class DateBeginEnd implements Stringable
     public function __toString(): string
     {
         if ($this->date_begin instanceof DateTimeInterface) {
-            return $this->date_begin->format('d--m-Y');
+            return $this->date_begin->format('d-m-Y');
         }
 
         return "";
@@ -30,6 +30,10 @@ class DateBeginEnd implements Stringable
 
     public function isPeriod(): bool
     {
-        return $this->date_begin instanceof DateTimeInterface;
+        if ($this->date_begin instanceof DateTimeInterface && $this->date_end instanceof DateTimeInterface) {
+            return $this->date_begin->format($this->format) !== $this->date_end->format($this->format);
+        }
+
+        return false;
     }
 }
