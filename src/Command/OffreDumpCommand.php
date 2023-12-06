@@ -2,10 +2,11 @@
 
 namespace AcMarche\Pivot\Command;
 
-use Exception;
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
+use Exception;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -60,20 +61,33 @@ class OffreDumpCommand extends Command
             return Command::SUCCESS;
         }
 
-        $offreObject = json_decode($resultString, null, 512, JSON_THROW_ON_ERROR);
+        try {
+            $offreObject = json_decode($resultString, null, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            $io->error($e->getMessage());
+
+            return Command::FAILURE;
+        }
+
         $offre = $offreObject->offre[0];
         $type = $offre->typeOffre;
         $idType = $type->idTypeOffre;
         $labelType = $type->label[0]->value;
         $io->write($offre->nom);
-        $io->write(" -- " . $idType);
-        $io->writeln(" -- " . $labelType);
+        $io->write(" -- ".$idType);
+        $io->writeln(" -- ".$labelType);
 
         $io->writeln("");
 
         if ($parse) {
-            $offre = $this->pivotRepository->fetchOffreByCgt($codeCgt);
-            $this->pivotParser->launchParse($offre);
+            try {
+                $offre = $this->pivotRepository->fetchOffreByCgt($codeCgt, $offreObject->dateModification);
+                $this->pivotParser->launchParse($offre);
+            } catch (InvalidArgumentException $e) {
+                $io->error($e->getMessage());
+
+                return Command::FAILURE;
+            }
         }
 
         return Command::SUCCESS;

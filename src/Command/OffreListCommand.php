@@ -4,11 +4,8 @@ namespace AcMarche\Pivot\Command;
 
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entity\TypeOffre;
-use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
-use AcMarche\Pivot\Serializer\PivotSerializer;
-use Doctrine\ORM\NonUniqueResultException;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -33,9 +30,7 @@ class OffreListCommand extends Command
 
     public function __construct(
         private readonly PivotRepository $pivotRepository,
-        private readonly PivotRemoteRepository $pivotRemoteRepository,
         private readonly TypeOffreRepository $typeOffreRepository,
-        private readonly PivotSerializer $pivotSerializer,
         string $name = null
     ) {
         parent::__construct($name);
@@ -58,12 +53,20 @@ class OffreListCommand extends Command
         $urn = $input->getOption('urn');
 
         if ($all) {
-            $choix = "Tout";
             try {
                 $this->all();
-            } catch (\JsonException|InvalidArgumentException $e) {
+                $this->displayOffres($this->offres, "Toutes les offres");
+
+            } catch (\JsonException|InvalidArgumentException|\Exception $e) {
                 $this->io->error($e->getMessage());
             }
+
+            return Command::SUCCESS;
+        }
+
+        if ($events) {
+            $offres = $this->pivotRepository->fetchEvents();
+            $this->displayOffres($offres, "Events");
 
             return Command::SUCCESS;
         }
@@ -71,16 +74,7 @@ class OffreListCommand extends Command
         if ($urn) {
             $typeOffre = $this->typeOffreRepository->findOneByUrn($urn);
             $offres = $this->pivotRepository->fetchOffres([$typeOffre]);
-            $this->io->info($typeOffre->name);
-            $rows = [];
-            foreach ($offres as $offre) {
-                $rows[] = [$offre->name(), $offre->codeCgt, $offre->dateModification];
-            }
-            $table = new Table($output);
-            $table
-                ->setHeaders(['Nom', 'CodeCgt', 'Modifié le'])
-                ->setRows($rows);
-            $table->render();
+            $this->displayOffres($offres, $typeOffre->name);
 
             return Command::SUCCESS;
         }
@@ -91,31 +85,14 @@ class OffreListCommand extends Command
 
             return Command::FAILURE;
         }
-        $choix = $response->name;
 
-        $this->io->success($choix.": ");
-
-        $this->io->info("Chargement des offres...");
-        $offres = $this->pivotRepository->fetchEvents(true);
-        $count = count($offres);
-        $this->io->info("$count offres trouvées");
-        $rows = [];
-        foreach ($offres as $offre) {
-            $rows[] = [$offre->name(), $offre->codeCgt, $offre->dateModification];
-        }
-
-        $table = new Table($output);
-        $table
-            ->setHeaders(['Nom', 'CodeCgt', 'Modifié le'])
-            ->setRows($rows);
-        $table->render();
-
-        $this->io->info("Pour le détail d'une offre: bin/console pivot:offre-dump codeCgt");
+        $offres = $this->pivotRepository->fetchOffres([$response]);
+        $this->displayOffres($offres, $response->name);
 
         return Command::SUCCESS;
     }
 
-    protected function askType()
+    protected function askType(): mixed
     {
         $typesOffre = $this->typeOffreRepository->findRoots();
 
@@ -127,22 +104,6 @@ class OffreListCommand extends Command
         return $this->io->askQuestion($choice);
     }
 
-    private function groupingOffres(array $offres)
-    {
-        $groupe = [];
-        foreach ($offres as $offre) {
-            $type = $offre->typeOffre;
-            $idType = $type->idTypeOffre;
-            $labelType = $type->label[0]->value;
-            $types[$idType] = $labelType;
-            if (!isset($groupe[$labelType])) {
-                $groupe[$labelType] = 1;
-            } else {
-                $groupe[$labelType]++;
-            }
-        }
-    }
-
     public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
     {
         if ($input->mustSuggestArgumentValuesFor(argumentName: 'type')) {
@@ -151,23 +112,39 @@ class OffreListCommand extends Command
     }
 
     /**
-     * @return int|void
      * @throws \Psr\Cache\InvalidArgumentException|\JsonException
+     * @throws \Exception
      */
-    private function all()
+    private function all(): void
     {
         $responseQuery = $this->pivotRepository->getAllDataFromRemote();
-        foreach ($responseQuery->offre as $offreShort) {
-            $dataString = $this->pivotRemoteRepository->offreByCgt($offreShort->codeCgt);
-            $tmp = json_decode($dataString, null, 512, JSON_THROW_ON_ERROR);
-            $dataStringOffre = json_encode($tmp->offre[0], JSON_THROW_ON_ERROR);
 
-            $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, Offre::class);
-            if ($object) {
-                $object->dataRaw = $dataString;
+        foreach ($responseQuery->offre as $offreShort) {
+            $offre = $this->pivotRepository->fetchOffreByCgt($offreShort->codeCgt, $offreShort->dateModification);
+            if (!$offre instanceof Offre) {
+                dd($offre);
             }
-            $this->offres[] = $object;
+            $this->offres[] = $offre;
         }
         // $offres = FilterUtils::filterByTypeIdsOrUrns($this->offres, [], [$typeOffre->urn]);
+    }
+
+    private function displayOffres(array $offres, string $title): void
+    {
+        $count = count($offres);
+        $this->io->section($title);
+        $this->io->info("$count offres trouvées");
+        $rows = [];
+        foreach ($offres as $offre) {
+            $rows[] = [$offre->name(), $offre->codeCgt, $offre->dateModification];
+        }
+
+        $table = new Table($this->output);
+        $table
+            ->setHeaders(['Nom', 'CodeCgt', 'Modifié le'])
+            ->setRows($rows);
+        $table->render();
+
+        $this->io->info("Pour le détail d'une offre: bin/console pivot:offre-dump codeCgt");
     }
 }

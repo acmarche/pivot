@@ -10,6 +10,7 @@ use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Event\EventUtils;
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Serializer\PivotSerializer;
+use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\TypeOffre\FilterUtils;
 use AcMarche\Pivot\Utils\CacheUtils;
 use AcMarche\Pivot\Utils\SortUtils;
@@ -93,10 +94,10 @@ class PivotRepository
      * @return Offre[]
      * @throws InvalidArgumentException
      */
-    public function fetchEvents(bool $removeObsolete = true, array $typeOffres = []): array
+    public function fetchEvents(array $typeOffres = []): array
     {
         if ($typeOffres === []) {
-            return [];
+            $typeOffres = $this->typeOffreRepository->findByUrn(UrnList::EVENTS->value);
         }
 
         $data = $this->fetchOffres($typeOffres);
