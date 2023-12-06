@@ -41,12 +41,12 @@ class TypeOffreRepository extends ServiceEntityRepository
     /**
      * @return TypeOffre[]
      */
-    public function findWithChildren(bool $filterCount): array
+    public function findWithChildren(bool $removeFilterEmpty): array
     {
         $roots = $this->findRoots();
         $typesOffre = [];
         foreach ($roots as $root) {
-            $root->children = $this->findByParent($root->id, $filterCount);
+            $root->children = $this->findByParent($root->id, $removeFilterEmpty);
             $typesOffre[] = $root;
         }
 
@@ -56,13 +56,13 @@ class TypeOffreRepository extends ServiceEntityRepository
     /**
      * @return TypeOffre[]
      */
-    public function findByParent(int $id, bool $filtreCount = true): array
+    public function findByParent(int $id, bool $removeFilterEmpty = true): array
     {
         $qb = $this->createQBL()
             ->andWhere('typeOffre.parent = :id')
             ->setParameter('id', $id);
 
-        if ($filtreCount) {
+        if ($removeFilterEmpty) {
             $qb->andWhere('typeOffre.countOffres > 0');
         }
 
