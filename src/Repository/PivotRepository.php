@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Repository;
 
+use AcMarche\Pivot\Api\QueryDetailEnum;
 use AcMarche\Pivot\Entities\Family\Family;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Response\ResponseQuery;
@@ -242,13 +243,20 @@ class PivotRepository
 
     /**
      * Retourne le json (string) complet du query
-     * @return ResponseQuery|null
-     * @throws InvalidArgumentException|Exception
+     * @param bool $returnDataString
+     * @param QueryDetailEnum $contentDetail
+     * @return ResponseQuery|string|null
+     * @throws InvalidArgumentException
      */
-    public function getAllDataFromRemote(bool $returnDataString = false): ResponseQuery|string|null
-    {
-        return $this->cache->get('pivotAllData-'.$returnDataString, function () use ($returnDataString) {
-            if ($dataString = $this->pivotRemoteRepository->query()) {
+    public function getAllDataFromRemote(
+        bool $returnDataString = false,
+        QueryDetailEnum $contentDetail = QueryDetailEnum::QUERY_DETAIL_LVL_SHORT
+    ): ResponseQuery|string|null {
+        return $this->cache->get('pivotAllData-'.$returnDataString.'-'.$contentDetail->value, function () use (
+            $contentDetail,
+            $returnDataString
+        ) {
+            if ($dataString = $this->pivotRemoteRepository->query(null, $contentDetail)) {
                 if ($returnDataString) {
                     return $dataString;
                 }

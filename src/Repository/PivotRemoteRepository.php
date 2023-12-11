@@ -3,6 +3,7 @@
 namespace AcMarche\Pivot\Repository;
 
 use AcMarche\Pivot\Api\ContentEnum;
+use AcMarche\Pivot\Api\QueryDetailEnum;
 use AcMarche\Pivot\Api\ThesaurusEnum;
 use AcMarche\Pivot\Spec\UrnList;
 use Exception;
@@ -140,12 +141,12 @@ class PivotRemoteRepository
      * de données. Les requêtes sont accessibles au moyen d’un code identifiant unique (codeCgt).
      * @throws Exception
      */
-    public function query(string $query = null): ?string
+    public function query(string $query = null, QueryDetailEnum $contentDetail = QueryDetailEnum::QUERY_DETAIL_LVL_SHORT): ?string
     {
         if (!$query) {
             $query = $this->code_query;
         }
 
-        return $this->executeRequest($this->base_uri.'/query/'.$query);
+        return $this->executeRequest($this->base_uri.'/query/'.$query.';content='.$contentDetail->value);
     }
 }

@@ -15,8 +15,8 @@ enum QueryDetailEnum: int
      * • 3 = produit les offres au contenu complet, avec également un contenu complet pour les
      * offres liées.
      */
-    case QUERY_DETAIL_LVL_DEFAULT = 0;
+    case QUERY_DETAIL_LVL_SHORT = 0;
     case QUERY_DETAIL_LVL_RESUME = 1;
-    case QUERY_DETAIL_LVL_COMPLET = 2;
-    case QUERY_DETAIL_LVL_LIES = 3;
+    case QUERY_DETAIL_LVL_FULL = 2;
+    case QUERY_DETAIL_LVL_LINKED_FULL = 3;
 }
