@@ -5,5 +5,5 @@ namespace AcMarche\Pivot\Entities\Offre;
 class TypeOffreShort
 {
     public int $idTypeOffre;
-    public ?string $label = null;
+    public null|string|array $label = null;
 }
