@@ -128,8 +128,11 @@ class PivotRepository
         return $this->cache->get(
             'offre-'.$key,
             function () use ($codeCgt) {
-                $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
-
+                try {
+                    $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
+                } catch (Exception $exception) {
+                    return null;
+                }
                 $tmp = json_decode($dataString, null, 512, JSON_THROW_ON_ERROR);
                 $dataStringOffre = json_encode($tmp->offre[0], JSON_THROW_ON_ERROR);
 
