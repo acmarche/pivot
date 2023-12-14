@@ -26,7 +26,7 @@ class OffreController extends AbstractController
     }
 
     #[Route(path: '/all/', name: 'pivot_offres_all')]
-    public function all(TypeOffre $typeOffre): Response
+    public function all(): Response
     {
         try {
             $responseJson = $this->pivotRepository->getAllDataFromRemote(true, QueryDetailEnum::QUERY_DETAIL_LVL_RESUME);
