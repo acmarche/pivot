@@ -24,9 +24,8 @@ class OffreCountCommand extends Command
     public function __construct(
         private readonly PivotRepository $pivotRepository,
         private readonly TypeOffreRepository $typeOffreRepository,
-        string $name = null
     ) {
-        parent::__construct($name);
+        parent::__construct();
     }
 
     protected function configure(): void
@@ -40,9 +39,7 @@ class OffreCountCommand extends Command
 
         $flush = (bool)$input->getOption('flush');
 
-        $typesOffre = $this->typeOffreRepository->findAll();
-
-        foreach ($typesOffre as $typeOffre) {
+        foreach ($this->typeOffreRepository->findAll() as $typeOffre) {
             $this->io->section($typeOffre->name);
             $this->io->writeln($typeOffre->urn);
             try {
@@ -64,7 +61,7 @@ class OffreCountCommand extends Command
      * @return void
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    private function setCount(TypeOffre $typeOffre)
+    private function setCount(TypeOffre $typeOffre): void
     {
         $offres = $this->pivotRepository->fetchOffres([$typeOffre], false);
         $count = count($offres);
