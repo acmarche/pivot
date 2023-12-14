@@ -3,7 +3,7 @@
 namespace AcMarche\Pivot\Entities\Family;
 
 //!!Laisser
-
+use AcMarche\Pivot\Entities\Label;
 use AcMarche\Pivot\Entities\LabelTrait;
 
 class Family
