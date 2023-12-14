@@ -37,7 +37,7 @@ class OffreController extends AbstractController
         }
 
         $offres = json_decode($responseJson)->offre;
-        $offres = SortUtils::sortOffres($offres);
+        $offres = SortUtils::sortOffresByName($offres);
 
         return $this->render(
             '@AcMarchePivot/offres/all.html.twig',

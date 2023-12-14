@@ -74,4 +74,25 @@ class SortUtils
 
         return $offres;
     }
+
+    /**
+     * @param Offre[] $offres
+     *
+     * @return Offre[]
+     */
+    public static function sortOffresByName(array $offres, string $order = 'ASC'): array
+    {
+        usort(
+            $offres,
+            function ($offreA, $offreB) use ($order) {
+                if ($order == 'ASC') {
+                    return $offreA->name <=> $offreB->name;
+                } else {
+                    return $offreB->name <=> $offreA->name;
+                }
+            }
+        );
+
+        return $offres;
+    }
 }
