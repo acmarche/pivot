@@ -29,14 +29,25 @@ class OffreController extends AbstractController
     public function all(): Response
     {
         try {
-            $responseJson = $this->pivotRepository->getAllDataFromRemote(true, QueryDetailEnum::QUERY_DETAIL_LVL_RESUME);
+            $responseJson = $this->pivotRepository->getAllDataFromRemote(
+                true,
+                QueryDetailEnum::QUERY_DETAIL_LVL_RESUME
+            );
         } catch (Exception|InvalidArgumentException $e) {
-            $this->addFlash('danger', 'Erreur: ' . $e->getMessage());
+            $this->addFlash('danger', 'Erreur: '.$e->getMessage());
 
             return $this->redirectToRoute('pivot_typeoffre_index');
         }
 
-        $offres = json_decode($responseJson)->offre;
+        $tmp = json_decode($responseJson)->offre;
+        $offres = [];
+        foreach ($tmp as $offre) {
+            $std = new \stdClass();
+            $std->codeCgt = $offre->codeCgt;
+            $std->name = $offre->nom;
+            $std->type = $offre->typeOffre->label[0]->value;
+            $offres[] = $std;
+        }
         $offres = SortUtils::sortOffresByName($offres);
 
         return $this->render(
@@ -53,7 +64,7 @@ class OffreController extends AbstractController
         try {
             $offres = $this->pivotRepository->fetchOffres([$typeOffre]);
         } catch (Exception|InvalidArgumentException $e) {
-            $this->addFlash('danger', 'Erreur: ' . $e->getMessage());
+            $this->addFlash('danger', 'Erreur: '.$e->getMessage());
 
             return $this->redirectToRoute('pivot_typeoffre_index');
         }
