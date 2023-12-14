@@ -11,6 +11,7 @@ use AcMarche\Pivot\TypeOffre\FilterUtils;
 use AcMarche\Pivot\Utils\SortUtils;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -83,10 +84,8 @@ class OffreController extends AbstractController
     }
 
     #[Route(path: '/json/{codeCgt}', name: 'pivot_offre_json')]
-    public function offreByCgt(string $codeCgt): Response
+    public function offreByCgt(string $codeCgt): JsonResponse
     {
-        $json = $this->pivotRemoteRepository->offreByCgt($codeCgt);
-
-        return new Response($json);
+        return $this->json($this->pivotRemoteRepository->offreByCgt($codeCgt));
     }
 }
