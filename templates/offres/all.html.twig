@@ -1,0 +1,44 @@
+{% extends '@AcMarchePivot/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="card">
+        <h3 class="card-header">
+            {{ offres|length }} offre(s)
+        </h3>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Code CGT</th>
+                    <th>Type</th>
+                    <th>Json</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for offer in offers %}
+                    <tr>
+                        <td>
+                            <a href="https://pivotgest.tourismewallonie.be/PivotGest-4.0.0/detail.xhtml?codeCgt={{ offer.codeCgt }}"
+                               target="_blank">
+                                {{ offer.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ offer.codeCgt }}
+                        </td>
+                        <td> {{ offer.type }}</td>
+                        <td>
+                            <a href="{{ path('pivot_offre_json', {'codeCgt': offre.codeCgt}) }}" target="_blank">
+                                Format Json
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+{% endblock %}

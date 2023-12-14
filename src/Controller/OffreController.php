@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Controller;
 
+use AcMarche\Pivot\Api\QueryDetailEnum;
 use Exception;
 use AcMarche\Pivot\Entity\TypeOffre;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
@@ -22,6 +23,28 @@ class OffreController extends AbstractController
         private readonly PivotRepository $pivotRepository,
         private readonly PivotRemoteRepository $pivotRemoteRepository,
     ) {
+    }
+
+    #[Route(path: '/all/', name: 'pivot_offres_all')]
+    public function all(TypeOffre $typeOffre): Response
+    {
+        try {
+            $responseJson = $this->pivotRepository->getAllDataFromRemote(true, QueryDetailEnum::QUERY_DETAIL_LVL_RESUME);
+        } catch (Exception|InvalidArgumentException $e) {
+            $this->addFlash('danger', 'Erreur: ' . $e->getMessage());
+
+            return $this->redirectToRoute('pivot_typeoffre_index');
+        }
+
+        $offres = json_decode($responseJson)->offre;
+        $offres = SortUtils::sortOffres($offres);
+
+        return $this->render(
+            '@AcMarchePivot/offres/all.html.twig',
+            [
+                'offres' => $offres,
+            ]
+        );
     }
 
     #[Route(path: '/index/{id}', name: 'pivot_offres')]
