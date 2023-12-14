@@ -53,7 +53,7 @@ class OffreController extends AbstractController
         return $this->render(
             '@AcMarchePivot/offres/all.html.twig',
             [
-                'offres' => $offres,
+                'offers' => $offres,
             ]
         );
     }
