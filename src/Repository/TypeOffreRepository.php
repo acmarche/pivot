@@ -160,6 +160,24 @@ class TypeOffreRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return TypeOffre[]
+     */
+    public function findByUrnLike(string $urn, bool $removeFilterEmpty = true): array
+    {
+        $qb = $this->createQBL()
+            ->andWhere('typeOffre.urn LIKE :urn')
+            ->setParameter('urn', $urn.'%');
+
+        if ($removeFilterEmpty) {
+            $qb->andWhere('typeOffre.countOffres > 0');
+        }
+
+        return $qb
+            ->orderBy('typeOffre.name', 'ASC')->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Pour les urns donnes $typesOffre remonte sest parents pour avoir son type root
      * (type = Family)
      * Pour un pre tri avant un fetchOffre
