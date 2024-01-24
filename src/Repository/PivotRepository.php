@@ -91,7 +91,7 @@ class PivotRepository
 
     /**
      * Retourne la liste des events
-     * @param array|TypeOffre[] $typeOffres
+     * @param TypeOffre[] $typeOffres
      * @return Offre[]
      * @throws InvalidArgumentException
      */
