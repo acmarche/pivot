@@ -76,9 +76,9 @@ class SortUtils
     }
 
     /**
-     * @param Offre[] $offres
+     * @param \stdClass[] $offres
      *
-     * @return Offre[]
+     * @return \stdClass[]
      */
     public static function sortOffresByName(array $offres, string $order = 'ASC'): array
     {
