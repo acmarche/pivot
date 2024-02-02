@@ -7,6 +7,7 @@ use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use AcMarche\Pivot\Utils\LocalSwitcherPivot;
+use AcMarche\PivotSearch\Search\SearchMeili;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
@@ -14,7 +15,6 @@ use Symfony\Component\ErrorHandler\Debug;
 
 class PivotContainer
 {
-    private ContainerBuilder $containerBuilder;
     private ContainerInterface $container;
 
     public function __construct(bool $debug = false)
@@ -31,7 +31,8 @@ class PivotContainer
             $env = 'prod';
         }
 
-        $this->containerBuilder = new ContainerBuilder();
+        //todo try
+        $containerBuilder = new ContainerBuilder();
 
         $kernel = new Kernel($env, $debug);
         (new Dotenv())
@@ -99,5 +100,15 @@ class PivotContainer
         }
 
         return null;
+    }
+
+    public static function getSearchMeili(bool $debug = false): SearchMeili
+    {
+        $container = new self($debug);
+
+        /**
+         * @var SearchMeili
+         */
+        return $container->getService('searchMeili');
     }
 }
