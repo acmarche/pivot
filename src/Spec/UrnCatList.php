@@ -15,4 +15,5 @@ enum UrnCatList: string
     case EQUIPEMENTS = "urn:cat:eqpsrv";
     case ACCUEIL = "urn:cat:accueil";
     case CLASS_LAB = "urn:cat:classlab";
+    case SIGNAL = "urn:fld:signal";
 }
