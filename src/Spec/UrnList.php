@@ -51,4 +51,6 @@ enum UrnList: string
     case EVENTS = "urn:typ:9";
     case EVENT_CINEMA = "urn:fld:catevt:cinema";
     case CAT_DESC = "urn:cat:desc";
+    case PEDESTRE_DIFF = "urn:fld:infusgpeddiff";
+    case VTT_DIFF = 'urn:fld:infusgvttdiff';
 }

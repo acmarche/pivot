@@ -6,6 +6,7 @@ use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Gpx;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
+use AcMarche\Pivot\Spec\UrnList;
 use Symfony\Contracts\Service\Attribute\Required;
 
 trait ParseGpxTrait
@@ -35,10 +36,15 @@ trait ParseGpxTrait
                 $offre->gpx_cat_circuit = $km[0];
             }
 
-            if ($km = $this->findByUrn($offre, 'urn:fld:infusgvttdiff', returnData: true)) {
+            if ($km = $this->findByUrn($offre, UrnList::VTT_DIFF->value, returnData: true)) {
                 $urnDefinition = $this->urnDefinitionRepository->findByUrn($km[0]->value);
                 $offre->gpx_difficulte = $urnDefinition ? $urnDefinition->labelByLanguage('fr') : $km[0]->value;
             }
+            if ($km = $this->findByUrn($offre, UrnList::PEDESTRE_DIFF->value, returnData: true)) {
+                $urnDefinition = $this->urnDefinitionRepository->findByUrn($km[0]->value);
+                $offre->gpx_difficulte = $urnDefinition ? $urnDefinition->labelByLanguage('fr') : $km[0]->value;
+            }
+
         }
     }
 
