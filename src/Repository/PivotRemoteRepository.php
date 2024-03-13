@@ -64,7 +64,12 @@ class PivotRemoteRepository
             $url .= '/'.$params;
         }
 
-        return $this->executeRequest($url);
+        try {
+            return $this->executeRequest($url);
+        } catch (Exception $e) {
+            //var_dump($e->getMessage());
+            return null;
+        }
     }
 
     /**

@@ -36,13 +36,15 @@ trait ConnectionPivotTrait
                 'Accept' => $output,
                 'ws_key' => $this->ws_key,
             ],
+            'verify_peer' => false,
+            'verify_host' => false,
         ];
 
         //https://jolicode.com/blog/aggressive-caching-with-symfony-http-client
-        $httpClient = new CachingHttpClient(
+       /* $httpClient = new CachingHttpClient(
             HttpClient::create($headers),
             new Store('/tmp/cache')
-        );
+        );*/
         $this->httpClient = HttpClient::create($headers);
     }
 
