@@ -116,7 +116,7 @@ class PivotRepository
      */
     public function fetchOffreByCgt(
         string $codeCgt,
-        string $updatedAt = '',
+        ?string $updatedAt = null,
     ): Offre|null {
         if (is_numeric(substr($codeCgt, 0, 1))) {
             return null;
