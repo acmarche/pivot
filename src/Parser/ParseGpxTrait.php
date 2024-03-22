@@ -44,6 +44,9 @@ trait ParseGpxTrait
                 $urnDefinition = $this->urnDefinitionRepository->findByUrn($km[0]->value);
                 $offre->gpx_difficulte = $urnDefinition ? $urnDefinition->labelByLanguage('fr') : $km[0]->value;
             }
+            if ($link = $this->findByUrn($offre, 'urn:fld:cirkwi:link', returnData: true)) {
+                $offre->cirkwi_link = $link[0]->value;
+            }
 
         }
     }
@@ -56,14 +59,13 @@ trait ParseGpxTrait
         foreach ($offre->documents as $document) {
             if ($document->extension == 'gpx') {
                 $gpx = new Gpx();
-                $gpx->code = $document->codeCgt;
+                $gpx->codeCgt = $document->codeCgt;
                 $gpx->data_raw = $this->pivotRemoteRepository->gpxRead($document->url);
                 $gpxXml = simplexml_load_string($gpx->data_raw);
                 foreach ($gpxXml->metadata as $pt) {
                     $gpx->name = (string)$pt->name;
                     $gpx->desc = (string)$pt->desc;
                     $gpx->url = $document->url;
-                    $gpx->codeCgt = $document->codeCgt;
                     $gpx->urn = $document->urn;
                     foreach ($pt->link as $link) {
                         $gpx->links[] = (string)$link->attributes();

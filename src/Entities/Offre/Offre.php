@@ -121,6 +121,7 @@ class Offre
     public ?Specification $gpx_type_circuit = null;
     public ?Specification $gpx_cat_circuit = null;
     public array $locations=[];
+    public ?string $cirkwi_link= null;
 
     /**
      * Alias

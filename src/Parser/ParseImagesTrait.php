@@ -2,10 +2,10 @@
 
 namespace AcMarche\Pivot\Parser;
 
-use Exception;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\Document;
 use AcMarche\Pivot\Spec\UrnList;
+use Exception;
 use Symfony\Component\String\UnicodeString;
 
 trait ParseImagesTrait
@@ -22,7 +22,7 @@ trait ParseImagesTrait
             }
             $codeCgt = $relOffre->offre['codeCgt'];
             try {
-                $relatedOffer = $this->pivotRepository->fetchOffreByCgt($codeCgt,$relOffre->offre['dateModification']);
+                $relatedOffer = $this->pivotRepository->fetchOffreByCgt($codeCgt, $relOffre->offre['dateModification']);
             } catch (Exception) {
                 continue;
             }
@@ -38,7 +38,7 @@ trait ParseImagesTrait
                     $string = new UnicodeString($value);
                     $extension = $string->slice(-3);
                     $document = new Document();
-                    $document->extension = $extension;
+                    $document->extension = $extension->toString();
                     $document->url = $value;
                     $document->codeCgt = $relatedOffer->codeCgt;
                     $document->urn = $relatedOffer->url;
