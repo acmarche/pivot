@@ -61,12 +61,12 @@ trait ParseGpxTrait
                 $gpx = new Gpx();
                 $gpx->codeCgt = $document->codeCgt;
                 $gpx->data_raw = $this->pivotRemoteRepository->gpxRead($document->url);
+                $gpx->url = $document->url;
+                $gpx->urn = $document->urn;
                 $gpxXml = simplexml_load_string($gpx->data_raw);
                 foreach ($gpxXml->metadata as $pt) {
                     $gpx->name = (string)$pt->name;
                     $gpx->desc = (string)$pt->desc;
-                    $gpx->url = $document->url;
-                    $gpx->urn = $document->urn;
                     foreach ($pt->link as $link) {
                         $gpx->links[] = (string)$link->attributes();
                     }
