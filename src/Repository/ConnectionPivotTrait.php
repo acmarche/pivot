@@ -39,7 +39,7 @@ trait ConnectionPivotTrait
             'verify_peer' => false,
             'verify_host' => false,
         ];
-
+dd($this->base_uri);
         //https://jolicode.com/blog/aggressive-caching-with-symfony-http-client
        /* $httpClient = new CachingHttpClient(
             HttpClient::create($headers),
