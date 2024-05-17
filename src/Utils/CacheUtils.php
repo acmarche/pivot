@@ -2,8 +2,12 @@
 
 namespace AcMarche\Pivot\Utils;
 
+use Symfony\Component\Cache\Adapter\RedisAdapter;
+use Symfony\Component\Cache\Adapter\RedisTagAwareAdapter;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class CacheUtils
 {
@@ -14,9 +18,25 @@ class CacheUtils
     final public const OFFRE = 'offre';
     final public const SEE_ALSO_OFFRES = 'see_also_offre';
     final public const FETCH_OFFRES = 'fetch_offres';
+    final public const DURATION = 64800;//18heures
+    final public const TAG = ['pivot'];
+    private ?CacheInterface $cache;
+    private SluggerInterface $slugger;
 
-    public function __construct(private readonly SluggerInterface $slugger)
+    public function __construct()
     {
+        $this->slugger = new AsciiSlugger();
+        $this->cache = null;
+    }
+
+    public function instance(): CacheInterface|RedisTagAwareAdapter
+    {
+        if (!$this->cache) {
+            $client = RedisAdapter::createConnection('redis://localhost');
+            $this->cache = new RedisTagAwareAdapter($client);
+        }
+
+        return $this->cache;
     }
 
     public function generateKey(string $cacheKey): string

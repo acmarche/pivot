@@ -19,6 +19,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class PivotRepository
 {
@@ -27,9 +28,10 @@ class PivotRepository
         private readonly TypeOffreRepository $typeOffreRepository,
         private readonly OffreParser $offreParser,
         private readonly PivotSerializer $pivotSerializer,
-        private readonly CacheInterface $cache,
+        private CacheInterface $cache,
         private readonly CacheUtils $cacheUtils
     ) {
+        $this->cache = $this->cacheUtils->instance();
     }
 
     /**
@@ -52,41 +54,46 @@ class PivotRepository
         //pour un pretri
         $families = $this->typeOffreRepository->findFamiliesByUrns($typesOffre);
 
-        return $this->cache->get($cacheKey, function () use ($typesOffre, $parse, $max, $families, $dd) {
-            $responseQuery = $this->getAllDataFromRemote();
-            $offres = [];
-            $i = 0;
-            foreach ($responseQuery->offre as $offreShort) {
-                if (!in_array($offreShort->typeOffre->idTypeOffre, $families)) {
-                    continue;
-                }
-                try {
-                    $offre = $this->fetchOffreByCgt($offreShort->codeCgt, $offreShort->dateModification);
-                    if ($offre instanceof Offre) {
-                        $offres[] = $offre;
-                        $i++;
-                        if ($i > $max) {
-                            break;
-                        }
+        return $this->cache->get(
+            $cacheKey,
+            function (ItemInterface $item) use ($typesOffre, $parse, $max, $families, $dd) {
+                $item->expiresAfter(CacheUtils::DURATION);
+                $item->tag(CacheUtils::TAG);
+                $responseQuery = $this->getAllDataFromRemote();
+                $offres = [];
+                $i = 0;
+                foreach ($responseQuery->offre as $offreShort) {
+                    if (!in_array($offreShort->typeOffre->idTypeOffre, $families)) {
+                        continue;
                     }
-                } catch (Exception $exception) {
-                    //todo add logger
-                    continue;
+                    try {
+                        $offre = $this->fetchOffreByCgt($offreShort->codeCgt, $offreShort->dateModification);
+                        if ($offre instanceof Offre) {
+                            $offres[] = $offre;
+                            $i++;
+                            if ($i > $max) {
+                                break;
+                            }
+                        }
+                    } catch (Exception $exception) {
+                        //todo add logger
+                        continue;
+                    }
                 }
+
+                $typeIds = FilterUtils::extractTypesId($typesOffre);
+                $urns = array_column($typesOffre, 'urn');
+                $offres = FilterUtils::filterByTypeIdsOrUrns($offres, $typeIds, $urns);
+
+                if ($parse) {
+                    array_map(function ($offre) {
+                        $this->offreParser->launchParse($offre);
+                    }, $offres);
+                }
+
+                return SortUtils::sortOffres($offres);
             }
-
-            $typeIds = FilterUtils::extractTypesId($typesOffre);
-            $urns = array_column($typesOffre, 'urn');
-            $offres = FilterUtils::filterByTypeIdsOrUrns($offres, $typeIds, $urns);
-
-            if ($parse) {
-                array_map(function ($offre) {
-                    $this->offreParser->launchParse($offre);
-                }, $offres);
-            }
-
-            return SortUtils::sortOffres($offres);
-        });
+        );
     }
 
     /**
@@ -127,7 +134,9 @@ class PivotRepository
 
         return $this->cache->get(
             'offre-'.$key,
-            function () use ($codeCgt) {
+            function (ItemInterface $item) use ($codeCgt) {
+                $item->expiresAfter(CacheUtils::DURATION);
+                $item->tag(CacheUtils::TAG);
                 try {
                     $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
                 } catch (Exception $exception) {
@@ -211,7 +220,9 @@ class PivotRepository
 
     public function urnDefinition(string $urnName): ?UrnDefinition
     {
-        return $this->cache->get('urnDefinition-'.$urnName, function () use ($urnName) {
+        return $this->cache->get('urnDefinition-'.$urnName, function (ItemInterface $item) use ($urnName) {
+            $item->expiresAfter(CacheUtils::DURATION);
+            $item->tag(CacheUtils::TAG);
             if ($data = $this->pivotRemoteRepository->thesaurusUrn($urnName)) {
                 return $this->pivotSerializer->deserializeToClass($data, UrnDefinition::class);
             }
@@ -255,19 +266,24 @@ class PivotRepository
         bool $returnDataString = false,
         QueryDetailEnum $contentDetail = QueryDetailEnum::QUERY_DETAIL_LVL_SHORT
     ): ResponseQuery|string|null {
-        return $this->cache->get('pivotAllData-'.$returnDataString.'-'.$contentDetail->value, function () use (
-            $contentDetail,
-            $returnDataString
-        ) {
-            if ($dataString = $this->pivotRemoteRepository->query(null, $contentDetail)) {
-                if ($returnDataString) {
-                    return $dataString;
+        return $this->cache->get(
+            'pivotAllData-'.$returnDataString.'-'.$contentDetail->value,
+            function (ItemInterface $item) use (
+                $contentDetail,
+                $returnDataString
+            ) {
+                $item->expiresAfter(CacheUtils::DURATION);
+                $item->tag(CacheUtils::TAG);
+                if ($dataString = $this->pivotRemoteRepository->query(null, $contentDetail)) {
+                    if ($returnDataString) {
+                        return $dataString;
+                    }
+
+                    return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
                 }
 
-                return $this->pivotSerializer->deserializeToClass($dataString, ResponseQuery::class);
+                return null;
             }
-
-            return null;
-        });
+        );
     }
 }
