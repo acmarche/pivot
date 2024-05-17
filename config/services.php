@@ -5,6 +5,7 @@ use AcMarche\Pivot\Repository\PivotRepository;
 use AcMarche\Pivot\Repository\TypeOffreRepository;
 use AcMarche\Pivot\Repository\UrnDefinitionRepository;
 use AcMarche\Pivot\Utils\LocalSwitcherPivot;
+use AcMarche\PivotSearch\Search\SearchMeili;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -41,4 +42,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set('localSwitcherPivot', LocalSwitcherPivot::class)
         ->public();
+
+    if (class_exists(SearchMeili::class)) {
+        $services->set('searchMeili', SearchMeili::class)
+            ->public();
+    }
 };
