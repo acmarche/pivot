@@ -93,15 +93,6 @@ class PivotContainer
         return $container->getService('localSwitcherPivot');
     }
 
-    public function getService(string $service): ?object
-    {
-        if ($this->container->has($service)) {
-            return $this->container->get($service);
-        }
-
-        return null;
-    }
-
     public static function getSearchMeili(bool $debug = false): SearchMeili
     {
         $container = new self($debug);
@@ -111,4 +102,14 @@ class PivotContainer
          */
         return $container->getService('searchMeili');
     }
+
+    private function getService(string $service): ?object
+    {
+        if ($this->container->has($service)) {
+            return $this->container->get($service);
+        }
+
+        return null;
+    }
+
 }
