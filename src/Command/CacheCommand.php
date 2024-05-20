@@ -13,6 +13,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+//todo https://symfony.com/doc/current/cache.html#clearing-the-cache
+// https://symfony.com/doc/current/cache.html#encrypting-the-cache
 #[AsCommand(
     name: 'pivot:cache',
     description: 'Manage cache',
@@ -51,7 +53,7 @@ class CacheCommand extends Command
                         $io->error($e->getMessage());
                     }
                 }
-                $io->success('Cache generated');
+                //$io->success('Cache generated');
             } catch (\JsonException|InvalidArgumentException|\Exception $e) {
                 $io->error($e->getMessage());
             }
@@ -64,7 +66,7 @@ class CacheCommand extends Command
                 $cacheUtils = new CacheUtils();
                 $cache = $cacheUtils->instance();
                 $cache->invalidateTags(CacheUtils::TAG);
-                $io->success('Cache cleaned');
+                //$io->success('Cache cleaned');
             } catch (InvalidArgumentException $e) {
                 $io->error($e->getMessage());
             }
