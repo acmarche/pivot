@@ -46,7 +46,7 @@ class OffreParser
     }
 
     public function parseOffre(Offre $offre)
-    {
+    {dump($this->findByUrnReturnValue($offre, UrnList::HOMEPAGE->value));
         $offre->homepage = $this->findByUrnReturnValue($offre, UrnList::HOMEPAGE->value);
         $offre->active = $this->findByUrnReturnValue($offre, UrnList::ACTIVE->value);
 
