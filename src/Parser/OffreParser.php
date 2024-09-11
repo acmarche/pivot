@@ -46,8 +46,12 @@ class OffreParser
     }
 
     public function parseOffre(Offre $offre)
-    {dump($this->findByUrnReturnValue($offre, UrnList::HOMEPAGE->value));
-        $offre->homepage = $this->findByUrnReturnValue($offre, UrnList::HOMEPAGE->value);
+    {
+        $homepage = $this->findByUrnReturnValue($offre, UrnList::HOMEPAGE->value);
+        if ($homepage) {
+            $homepage = preg_replace('/\x{200B}/u', '', $homepage);
+        }
+        $offre->homepage = $homepage;
         $offre->active = $this->findByUrnReturnValue($offre, UrnList::ACTIVE->value);
 
         foreach ($this->findByUrn($offre, SpecTypeEnum::EMAIL->value, SpecData::KEY_TYPE, returnData: true) as $spec) {
@@ -64,7 +68,7 @@ class OffreParser
             $offre,
             UrnCatList::DESCRIPTION->value,
             SpecData::KEY_CAT,
-            returnData: true
+            returnData: true,
         );
         $descriptionsMarketing = $this->findByUrn($offre, UrnCatList::DESCRIPTION_MARKETING->value, returnData: true);
         if ($descriptionsMarketing !== []) {
@@ -96,14 +100,14 @@ class OffreParser
             $offre,
             UrnCatList::COMMUNICATION->value,
             SpecData::KEY_CAT,
-            returnData: true
+            returnData: true,
         );
         $offre->adresse_rue = $this->findByUrn($offre, UrnList::ADRESSE_RUE->value, returnData: true);
         $offre->equipements = $this->findByUrn(
             $offre,
             UrnCatList::EQUIPEMENTS->value,
             SpecData::KEY_CAT,
-            returnData: true
+            returnData: true,
         );
         $offre->accueils = $this->findByUrn($offre, UrnCatList::ACCUEIL->value, SpecData::KEY_CAT, returnData: true);
 
@@ -198,6 +202,6 @@ class OffreParser
 
     private function rootTag(Offre $offre): Tag
     {
-        return new Tag('urn:fam:' . $offre->typeOffre->idTypeOffre, $offre->typeOffre->label);
+        return new Tag('urn:fam:'.$offre->typeOffre->idTypeOffre, $offre->typeOffre->label);
     }
 }
