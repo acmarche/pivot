@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Controller;
 
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Repository\PivotRepository;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -15,9 +16,8 @@ class DefaultController extends AbstractController
 {
     public function __construct(
         private readonly PivotRepository $pivotRepository,
-        private readonly OffreParser $pivotParser
-    ) {
-    }
+        private readonly OffreParser $pivotParser,
+    ) {}
 
     #[Route(path: '/', name: 'pivot_home')]
     public function index(): Response
@@ -26,14 +26,19 @@ class DefaultController extends AbstractController
             '@AcMarchePivot/default/index.html.twig',
             [
 
-            ]
+            ],
         );
     }
 
     #[Route(path: '/events', name: 'pivot_events')]
     public function events(): Response
     {
-        $events = $this->pivotRepository->fetchEvents();
+        $events = [];
+        try {
+            $events = $this->pivotRepository->fetchEvents();
+        } catch (InvalidArgumentException $e) {
+            $this->addFlash('danger', $e->getMessage());
+        }
         array_map(function ($event) {
             $this->pivotParser->parseDatesEvent($event);
         }, $events);
@@ -42,7 +47,7 @@ class DefaultController extends AbstractController
             '@AcMarchePivot/event/index.html.twig',
             [
                 'events' => $events,
-            ]
+            ],
         );
     }
 
@@ -57,7 +62,7 @@ class DefaultController extends AbstractController
             '@AcMarchePivot/hebergement/hotels.html.twig',
             [
                 'hotels' => $hotels,
-            ]
+            ],
         );
     }
 }
