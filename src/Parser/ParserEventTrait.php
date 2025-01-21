@@ -12,7 +12,7 @@ trait ParserEventTrait
     /**
      * Complète la class Event
      * Date de début, date de fin,...
-     * @param bool $removeObsolete
+     * @param Offre $offre
      * @return void
      */
     public function parseDatesEvent(Offre $offre): void
@@ -22,7 +22,10 @@ trait ParserEventTrait
         }
 
         $dates = [];
+        $dateBegin = null;
+        $dateEnd = null;
         $specs = $this->findByUrn($offre, UrnList::DATE_OBJECT->value, returnData: true);
+
         foreach ($specs as $spec) {
             foreach ($spec->spec as $data) {
                 if ($data->urn == UrnList::DATE_DEB->value) {
@@ -32,7 +35,7 @@ trait ParserEventTrait
                     $dateEnd = $data->value;
                 }
             }
-            if($dateBegin && $dateEnd) {
+            if ($dateBegin && $dateEnd) {
                 $dates[] = new DateBeginEnd($dateBegin, $dateEnd);
             }
         }
