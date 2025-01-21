@@ -29,7 +29,12 @@ class OffreParser
     #[Required]
     public LoggerInterface $logger;
 
-    public function launchParse(Offre $offre)
+    /**
+     * @param Offre $offre
+     * @return void
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function launchParse(Offre $offre): void
     {
         $this->specitificationsByOffre($offre);
         $this->parseOffre($offre);
@@ -45,7 +50,7 @@ class OffreParser
         $this->parseGpx($offre);
     }
 
-    public function parseOffre(Offre $offre)
+    public function parseOffre(Offre $offre): void
     {
         $homepage = $this->findByUrnReturnValue($offre, UrnList::HOMEPAGE->value);
         if ($homepage) {
@@ -115,7 +120,7 @@ class OffreParser
         $this->setNameByLanguages($offre);
     }
 
-    private function setNameByLanguages(Offre $offre)
+    private function setNameByLanguages(Offre $offre): void
     {
         $labels = [];
         $noms = $this->findByUrn($offre, UrnSubCatList::NOM_OFFRE->value, SpecData::KEY_SUB_CAT, returnData: true);
@@ -135,7 +140,7 @@ class OffreParser
         $offre->label = $labels;
     }
 
-    public function setCategories(Offre $offre)
+    public function setCategories(Offre $offre): void
     {
         $args = match ($offre->typeOffre->idTypeOffre) {
             UrnTypeList::evenement()->typeId => [
