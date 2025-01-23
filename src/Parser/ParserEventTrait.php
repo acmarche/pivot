@@ -4,6 +4,7 @@ namespace AcMarche\Pivot\Parser;
 
 use AcMarche\Pivot\Entities\Event\DateBeginEnd;
 use AcMarche\Pivot\Entities\Offre\Offre;
+use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
 
@@ -22,17 +23,25 @@ trait ParserEventTrait
         }
 
         $dates = [];
-        $dateBegin = null;
-        $dateEnd = null;
         $specs = $this->findByUrn($offre, UrnList::DATE_OBJECT->value, returnData: true);
-
         foreach ($specs as $spec) {
+            $dateBegin = null;
+            $dateEnd = null;
             foreach ($spec->spec as $data) {
-                if ($data['urn'] == UrnList::DATE_DEB->value) {
-                    $dateBegin = $data['value'];
-                }
-                if ($data['urn'] == UrnList::DATE_END->value) {
-                    $dateEnd =$data['value'];
+                if (is_array($data)) {
+                    if ($data['urn'] == UrnList::DATE_DEB->value) {
+                        $dateBegin = $data['value'];
+                    }
+                    if ($data['urn'] == UrnList::DATE_END->value) {
+                        $dateEnd = $data['value'];
+                    }
+                } elseif ($data instanceof SpecData) {
+                    if ($data->urn == UrnList::DATE_DEB->value) {
+                        $dateBegin = $data->value;
+                    }
+                    if ($data->urn == UrnList::DATE_END->value) {
+                        $dateEnd = $data->value;
+                    }
                 }
             }
             if ($dateBegin && $dateEnd) {
