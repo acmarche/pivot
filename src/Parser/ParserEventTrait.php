@@ -28,11 +28,11 @@ trait ParserEventTrait
 
         foreach ($specs as $spec) {
             foreach ($spec->spec as $data) {
-                if ($data->urn == UrnList::DATE_DEB->value) {
-                    $dateBegin = $data->value;
+                if ($data['urn'] == UrnList::DATE_DEB->value) {
+                    $dateBegin = $data['value'];
                 }
-                if ($data->urn == UrnList::DATE_END->value) {
-                    $dateEnd = $data->value;
+                if ($data['urn'] == UrnList::DATE_END->value) {
+                    $dateEnd =$data['value'];
                 }
             }
             if ($dateBegin && $dateEnd) {
