@@ -79,7 +79,12 @@ class OffreParser
         if ($descriptionsMarketing !== []) {
             $descriptions = [];
             foreach ($descriptionsMarketing[0]->spec as $descriptionMarketing) {
-                if ($descriptionMarketing->type == 'TextML') {
+                if (is_array($descriptionMarketing)) {
+                    $type = $descriptionMarketing['type'];
+                } else {
+                    $type = $descriptionMarketing->type;
+                }
+                if ($type == 'TextML') {
                     $descriptions[] = $descriptionMarketing;
                 }
             }
