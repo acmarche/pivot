@@ -28,6 +28,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set('dotenv', Dotenv::class)->public();
 
+    //$services->set(PivotRepository::class, PivotRepository::class) //to do change name
     $services->set('pivotRepository', PivotRepository::class)
         ->public();
 
