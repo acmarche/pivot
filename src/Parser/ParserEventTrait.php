@@ -71,10 +71,13 @@ trait ParserEventTrait
     {
         $format = "d/m/Y";
         $specData = $this->findByUrn($offre, UrnList::DATE_DEB_VALID->value, returnData: true);
-        $offre->datedebvalid = DateUtils::convertStringToDateTime($specData[0]->value, $format);
-
+        if (count($specData) > 0) {
+            $offre->datedebvalid = DateUtils::convertStringToDateTime($specData[0]->value, $format);
+        }
         $specData = $this->findByUrn($offre, UrnList::DATE_FIN_VALID->value, returnData: true);
-        $offre->datefinvalid = DateUtils::convertStringToDateTime($specData[0]->value, $format);
+        if (count($specData) > 0) {
+            $offre->datefinvalid = DateUtils::convertStringToDateTime($specData[0]->value, $format);
+        }
     }
 
     /**
