@@ -32,7 +32,7 @@ class EventUtils
         self::$today = new DateTime();
         $dates = [];
         foreach ($event->datesEvent as $date) {
-            if ($date->format('Y-m-d') >= self::$today->format('Y-m-d')) {
+            if ($date->dateEnd->format('Y-m-d') > self::$today->format('Y-m-d')) {
                 $dates[] = $date;
             }
         }

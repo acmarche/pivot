@@ -13,21 +13,35 @@ trait EventTrait
     public array $shortCutDateEvent = [];
 
     /**
-     * @var array<int, DateTimeInterface>
-     */
-    public array $datesEvent = [];
-
-    /**
      * @var array<int, DateEvent>
      */
-    public array $datesDetails = [];
+    public array $datesEvent = [];
 
     public function firstDate(): ?DateTimeInterface
     {
         if (count($this->datesEvent) > 0) {
-            return $this->datesEvent[0];
+            return $this->datesEvent[0]->dateBegin;
         }
 
         return null;
+    }
+
+    public function isEventOnPeriod(): bool
+    {
+        foreach ($this->datesEvent as $date) {
+            if (!$date->isSameDate()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return  array<int, DateTimeInterface>
+     */
+    public function allDatesAsDateTime(): array
+    {
+        return array_map(fn(DateEvent $dateEvent) => $dateEvent->dateBegin, $this->datesEvent);
     }
 }

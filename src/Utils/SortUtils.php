@@ -2,19 +2,19 @@
 
 namespace AcMarche\Pivot\Utils;
 
+use AcMarche\Pivot\Entities\Event\DateEvent;
 use AcMarche\Pivot\Entities\Offre\Offre;
-use DateTimeInterface;
 
 class SortUtils
 {
     /**
-     * @param \DateTimeInterface[]|array $dates
+     * @param DateEvent[]|array $dates
      *
-     * @return \DateTimeInterface[]
+     * @return DateEvent[]
      */
     public static function sortDatesEvent(array $dates, string $order = 'ASC'): array
     {
-        usort($dates, fn($a, $b) => ($order === 'ASC' ? 1 : -1) * $a->getTimestamp() <=> $b->getTimestamp());
+        usort($dates, fn($a, $b) => ($order === 'ASC' ? 1 : -1) * $a->dateBegin->getTimestamp() <=> $b->dateBegin->getTimestamp());
 
         return $dates;
     }

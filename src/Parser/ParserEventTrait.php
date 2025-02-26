@@ -24,12 +24,17 @@ trait ParserEventTrait
         }
 
         $allDates = [];
+        $today = new \DateTime();
         $specs = $this->findByUrn($offre, UrnList::DATE_OBJECT->value, returnData: true);
         foreach ($specs as $spec) {
             $dateEvent = new DateEvent();
             foreach ($spec->spec as $specData) {
                 if ($data = $this->getData($specData, UrnList::DATE_DEB->value)) {
-                    $dateEvent->dateBegin = DateUtils::convertStringToDateTime($data);
+                    $dateBegin = DateUtils::convertStringToDateTime($data);
+                    if ($dateBegin->format('Y-m-d') < $today->format('Y-m-d')) {
+                        $dateBegin = $today;
+                    }
+                    $dateEvent->dateBegin = $dateBegin;
                 }
                 if ($data = $this->getData($specData, UrnList::DATE_END->value)) {
                     $dateEvent->dateEnd = DateUtils::convertStringToDateTime($data);
@@ -47,20 +52,14 @@ trait ParserEventTrait
                     $dateEvent->fermetureHeure2 = $data;
                 }
                 if ($data = $this->getData($specData, UrnList::DATE_DETAIL_OUVERTURE->value)) {
-                    $dateEvent->ouvertureDetails = $data;
+                    $dateEvent->ouvertureDetails = str_replace('<p>', '<p class="not-prose">', $data);
+                }
+                if ($data = $this->getData($specData, UrnList::DATE_RANGE->value)) {
+                    $dateEvent->dateRange = $data;
                 }
             }
 
-            if ($dateEvent->dateBegin instanceof \DateTimeInterface && $dateEvent->dateEnd instanceof \DateTimeInterface) {
-                if ($dateEvent->dateBegin->format('Y-m-d') === $dateEvent->dateEnd->format('Y-m-d')) {
-                    $allDates[] = $dateEvent->dateBegin;
-                } else {
-                    foreach (DateUtils::getPeriodBetweenDates($dateEvent->dateBegin, $dateEvent->dateEnd) as $date) {
-                        $allDates[] = $date;
-                    }
-                }
-                $offre->datesDetails[] = $dateEvent;
-            }
+            $allDates[] = $dateEvent;
         }
 
         $allDates = SortUtils::sortDatesEvent($allDates);
