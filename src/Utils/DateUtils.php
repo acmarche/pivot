@@ -19,8 +19,8 @@ class DateUtils
      */
     public static function getPeriodBetweenDates(string $dateBegin, string $dateEnd, string $format = 'd/m/Y'): array
     {
-        $startDate = self::convertStringToDateTime($format, $dateBegin);
-        $endDate =  self::convertStringToDateTime($format, $dateEnd);
+        $startDate = self::convertStringToDateTime($dateBegin, $format);
+        $endDate = self::convertStringToDateTime($dateEnd, $format);
 
         $period = CarbonPeriod::create($startDate, $endDate);
 
