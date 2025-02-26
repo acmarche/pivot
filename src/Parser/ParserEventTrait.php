@@ -2,14 +2,17 @@
 
 namespace AcMarche\Pivot\Parser;
 
-use AcMarche\Pivot\Entities\Event\DateBeginEnd;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Spec\UrnList;
 use AcMarche\Pivot\Spec\UrnTypeList;
+use AcMarche\Pivot\Utils\DateUtils;
+use AcMarche\Pivot\Utils\SortUtils;
 
 trait ParserEventTrait
 {
+    //urn:cat:accueil:datemanif todo
+
     /**
      * Complète la class Event
      * Date de début, date de fin,...
@@ -22,7 +25,7 @@ trait ParserEventTrait
             return;
         }
 
-        $dates = [];
+        $allDates = [];
         $specs = $this->findByUrn($offre, UrnList::DATE_OBJECT->value, returnData: true);
         foreach ($specs as $spec) {
             $dateBegin = null;
@@ -45,10 +48,27 @@ trait ParserEventTrait
                 }
             }
             if ($dateBegin && $dateEnd) {
-                $dates[] = new DateBeginEnd($dateBegin, $dateEnd);
+                if ($dateBegin === $dateEnd) {
+                    $allDates[] = DateUtils::convertStringToDateTime($dateBegin);
+                } else {
+                    foreach (DateUtils::getPeriodBetweenDates($dateBegin, $dateEnd) as $date) {
+                        $allDates[] = $date;
+                    }
+                }
             }
         }
 
-        $offre->dates = $dates;
+        $allDates = SortUtils::sortDatesEvent($allDates);
+        $offre->datesEvent = $allDates;
+    }
+
+    public function parseDatesValidation(Offre $offre): void
+    {
+        $format = "d/m/Y";
+        $specData = $this->findByUrn($offre, UrnList::DATE_DEB_VALID->value, returnData: true);
+        $offre->datedebvalid = DateUtils::convertStringToDateTime($specData[0]->value, $format);
+
+        $specData = $this->findByUrn($offre, UrnList::DATE_FIN_VALID->value, returnData: true);
+        $offre->datefinvalid = DateUtils::convertStringToDateTime($specData[0]->value, $format);
     }
 }

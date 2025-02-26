@@ -2,33 +2,21 @@
 
 namespace AcMarche\Pivot\Utils;
 
-use AcMarche\Pivot\Entities\Event\DateBeginEnd;
 use AcMarche\Pivot\Entities\Offre\Offre;
+use DateTimeInterface;
 
 class SortUtils
 {
     /**
-     * @param DateBeginEnd[]|array $dateBeginEnds
+     * @param \DateTimeInterface[]|array $dates
      *
-     * @return DateBeginEnd[]
+     * @return \DateTimeInterface[]
      */
-    public static function sortDatesEvent(array $dateBeginEnds, string $order = 'ASC'): array
+    public static function sortDatesEvent(array $dates, string $order = 'ASC'): array
     {
-        usort(
-            $dateBeginEnds,
-            function ($dateBeginEndA, $dateBeginEndB) use ($order) {
-                $dateA = $dateBeginEndA->date_begin;
-                $dateB = $dateBeginEndB->date_begin;
+        usort($dates, fn($a, $b) => ($order === 'ASC' ? 1 : -1) * $a->getTimestamp() <=> $b->getTimestamp());
 
-                if ($order == 'ASC') {
-                    return $dateA <=> $dateB;
-                } else {
-                    return $dateB <=> $dateA;
-                }
-            }
-        );
-
-        return $dateBeginEnds;
+        return $dates;
     }
 
     /**
@@ -38,27 +26,12 @@ class SortUtils
      */
     public static function sortEvents(array $events, string $order = 'ASC'): array
     {
-        usort(
-            $events,
-            function ($eventA, $eventB) use ($order) {
-                $dateA = $eventA->dateEnd;
-                $dateB = $eventB->dateEnd;
-                if ($order == 'ASC') {
-                    return $dateA <=> $dateB;
-                } else {
-                    return $dateB <=> $dateA;
-                }
-            }
-        );
+        usort($events, fn($a, $b) => ($order === 'ASC' ? 1 : -1) *
+            $a->firstDate()->getTimestamp() <=> $b->firstDate()->getTimestamp());
 
         return $events;
     }
 
-    /**
-     * @param Offre[] $offres
-     *
-     * @return Offre[]
-     */
     public static function sortOffres(array $offres, string $language = 'fr', string $order = 'ASC'): array
     {
         usort(
@@ -69,7 +42,7 @@ class SortUtils
                 } else {
                     return $offreB->labelByLanguage($language) <=> $offreA->labelByLanguage($language);
                 }
-            }
+            },
         );
 
         return $offres;
@@ -90,7 +63,7 @@ class SortUtils
                 } else {
                     return $offreB->name <=> $offreA->name;
                 }
-            }
+            },
         );
 
         return $offres;

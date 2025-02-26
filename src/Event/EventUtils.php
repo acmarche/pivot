@@ -2,9 +2,7 @@
 
 namespace AcMarche\Pivot\Event;
 
-use AcMarche\Pivot\Entities\Event\DateBeginEnd;
 use AcMarche\Pivot\Entities\Offre\Offre;
-use AcMarche\Pivot\Utils\SortUtils;
 use DateTime;
 use DateTimeInterface;
 
@@ -33,33 +31,18 @@ class EventUtils
     {
         self::$today = new DateTime();
         $dates = [];
-        foreach ($event->dates as $dateBeginEnd) {
-            if ($dateBeginEnd->date_end->format('Y-m-d') >= self::$today->format('Y-m-d')) {
-                $dates[] = $dateBeginEnd;
+        foreach ($event->datesEvent as $date) {
+            if ($date->format('Y-m-d') >= self::$today->format('Y-m-d')) {
+                $dates[] = $date;
             }
         }
         if ($dates === []) {
             return null;
         }
 
-        $event->dates = $dates;
-        self::setDateBeginAndDateEnd($event);
-        self::sortDatesEvent($event);
+        $event->datesEvent = $dates;
 
         return $event;
     }
 
-    private static function setDateBeginAndDateEnd(Offre $offre): void
-    {
-        $firstDate = $offre->firstDate();
-        if ($firstDate instanceof DateBeginEnd) {
-            $offre->dateBegin = $firstDate->date_begin;
-            $offre->dateEnd = $firstDate->date_end;
-        }
-    }
-
-    private static function sortDatesEvent(Offre $offre)
-    {
-        $offre->dates = SortUtils::sortDatesEvent($offre->dates);
-    }
 }

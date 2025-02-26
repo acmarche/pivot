@@ -21,6 +21,9 @@ class Offre
     use EventTrait;
     use LabelTrait;
 
+    public \DateTimeInterface $datedebvalid;
+    public \DateTimeInterface $datefinvalid;
+
     public string $codeCgt;
     public ?string $nom = null;
 

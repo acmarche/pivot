@@ -16,12 +16,14 @@ enum UrnList: string
     case TARIF = "urn:fld:tarifcplt";
     case NOMO = "urn:fld:nomofr";
     case DATE_DEB_VALID = 'urn:fld:datedebvalid';
+    case DATE_FIN_VALID = "urn:fld:datefinvalid";
     case DATE_DEB = 'urn:fld:date:datedeb';
     case DATE_END = "urn:fld:date:datefin";
-    case DATE_FIN_VALID = "urn:fld:datefinvalid";
+    case DATE_DETAIL_OUVERTURE = 'urn:fld:date:datedetailouv';//nl:urn:fld:date:datedetailouv
     case HOMEPAGE = "urn:fld:homepage";
     case ACTIVE = "urn:fld:typeevt:activrecur";
     case DATE_OBJECT = "urn:obj:date";
+    case DATE_MANIF = "urn:cat:accueil:datemanif";
     case URL = "urn:fld:url";
     case POIS = "urn:lnk:offre:poi";
     case CATEGORIE_EVENT = "urn:fld:catevt";

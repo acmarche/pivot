@@ -6,23 +6,21 @@ use DateTimeInterface;
 
 trait EventTrait
 {
-    public ?DateTimeInterface $dateBegin = null;
-    public ?DateTimeInterface $dateEnd = null;
     /**
      * ShortCut dateEndEvent ['year','month','day']
-     * @var array
+     * @var array<int,string>
      */
-    public array $dateEvent = [];
+    public array $shortCutDateEvent = [];
 
     /**
-     * @var DateBeginEnd[]
+     * @var array<int, DateTimeInterface>
      */
-    public array $dates = [];
+    public array $datesEvent = [];
 
-    public function firstDate(): ?DateBeginEnd
+    public function firstDate(): ?DateTimeInterface
     {
-        if (count($this->dates) > 0) {
-            return $this->dates[array_key_first($this->dates)];
+        if (count($this->datesEvent) > 0) {
+            return $this->datesEvent[0];
         }
 
         return null;
