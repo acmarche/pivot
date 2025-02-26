@@ -26,12 +26,15 @@ class OffreListCommand extends Command
 {
     private SymfonyStyle $io;
     private OutputInterface $output;
+    /**
+     * @var array|Offre[] $offres
+     */
     private array $offres = [];
 
     public function __construct(
         private readonly PivotRepository $pivotRepository,
         private readonly TypeOffreRepository $typeOffreRepository,
-        string $name = null
+        string $name = null,
     ) {
         parent::__construct($name);
     }
@@ -56,7 +59,6 @@ class OffreListCommand extends Command
             try {
                 $this->all();
                 $this->displayOffres($this->offres, "Toutes les offres");
-
             } catch (\JsonException|InvalidArgumentException|\Exception $e) {
                 $this->io->error($e->getMessage());
             }
@@ -98,7 +100,7 @@ class OffreListCommand extends Command
 
         $choice = new ChoiceQuestion(
             question: 'Quelle type d\'offre ?',
-            choices: $typesOffre
+            choices: $typesOffre,
         );
 
         return $this->io->askQuestion($choice);
@@ -136,12 +138,14 @@ class OffreListCommand extends Command
         $this->io->info("$count offres trouvées");
         $rows = [];
         foreach ($offres as $offre) {
-            $rows[] = [$offre->name(), $offre->codeCgt, $offre->dateModification];
+            $dateBegin = $offre->dateBegin?->format('Y-m-d');
+            $dateEnd = $offre->dateEnd?->format('Y-m-d');
+            $rows[] = [$offre->name(), $offre->codeCgt, $dateBegin, $dateEnd, $offre->dateModification];
         }
 
         $table = new Table($this->output);
         $table
-            ->setHeaders(['Nom', 'CodeCgt', 'Modifié le'])
+            ->setHeaders(['Nom', 'CodeCgt', 'Date debut', 'Fin', 'Modifié le'])
             ->setRows($rows);
         $table->render();
 
