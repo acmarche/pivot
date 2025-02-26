@@ -54,9 +54,14 @@ trait SpectFieldsTrait
             $startString = 'urn:';
         }
         foreach ($this->descriptions as $description) {
-            if (str_starts_with((string) $description->urn, $startString)) {
+            if ($description instanceof SpecData) {
+                $urn = $description->urn;
+            } else {
+                $urn = $description['urn'];
+            }
+            if (str_starts_with((string)$urn, $startString)) {
                 if ($skip !== null) {
-                    if (!str_contains((string) $description->urn, $skip)) {
+                    if (!str_contains((string)$urn, $skip)) {
                         $descriptions[] = $description;
                     }
                 } else {
