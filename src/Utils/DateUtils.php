@@ -8,9 +8,9 @@ use DateTimeInterface;
 
 class DateUtils
 {
-    public static function convertStringToDateTime(string $dateString, string $format = "d/m/Y"): DateTimeInterface|bool
+    public static function convertStringToDateTime(string $dateString, string $format = "d/m/Y"): DateTimeInterface
     {
-        return Carbon::createFromFormat($format, $dateString);
+        return Carbon::createFromFormat($format, $dateString)->toDateTime();
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Parser;
 
+use AcMarche\Pivot\Entities\Event\DateEvent;
 use AcMarche\Pivot\Entities\Offre\Offre;
 use AcMarche\Pivot\Entities\Specification\SpecData;
 use AcMarche\Pivot\Spec\UrnList;
@@ -11,11 +12,8 @@ use AcMarche\Pivot\Utils\SortUtils;
 
 trait ParserEventTrait
 {
-    //urn:cat:accueil:datemanif todo
-
     /**
-     * Complète la class Event
-     * Date de début, date de fin,...
+     * Va chercher toutes les dates
      * @param Offre $offre
      * @return void
      */
@@ -28,33 +26,40 @@ trait ParserEventTrait
         $allDates = [];
         $specs = $this->findByUrn($offre, UrnList::DATE_OBJECT->value, returnData: true);
         foreach ($specs as $spec) {
-            $dateBegin = null;
-            $dateEnd = null;
-            foreach ($spec->spec as $data) {
-                if (is_array($data)) {
-                    if ($data['urn'] == UrnList::DATE_DEB->value) {
-                        $dateBegin = $data['value'];
-                    }
-                    if ($data['urn'] == UrnList::DATE_END->value) {
-                        $dateEnd = $data['value'];
-                    }
-                } elseif ($data instanceof SpecData) {
-                    if ($data->urn == UrnList::DATE_DEB->value) {
-                        $dateBegin = $data->value;
-                    }
-                    if ($data->urn == UrnList::DATE_END->value) {
-                        $dateEnd = $data->value;
-                    }
+            $dateEvent = new DateEvent();
+            foreach ($spec->spec as $specData) {
+                if ($data = $this->getData($specData, UrnList::DATE_DEB->value)) {
+                    $dateEvent->dateBegin = DateUtils::convertStringToDateTime($data);
+                }
+                if ($data = $this->getData($specData, UrnList::DATE_END->value)) {
+                    $dateEvent->dateEnd = DateUtils::convertStringToDateTime($data);
+                }
+                if ($data = $this->getData($specData, UrnList::DATE_OUVERTURE_HEURE_1->value)) {
+                    $dateEvent->ouvertureHeure1 = $data;
+                }
+                if ($data = $this->getData($specData, UrnList::DATE_FERMETURE_HEURE_1->value)) {
+                    $dateEvent->fermetureHeure1 = $data;
+                }
+                if ($data = $this->getData($specData, UrnList::DATE_OUVERTURE_HEURE_2->value)) {
+                    $dateEvent->ouvertureHeure2 = $data;
+                }
+                if ($data = $this->getData($specData, UrnList::DATE_FERMETURE_HEURE_2->value)) {
+                    $dateEvent->fermetureHeure2 = $data;
+                }
+                if ($data = $this->getData($specData, UrnList::DATE_DETAIL_OUVERTURE->value)) {
+                    $dateEvent->ouvertureDetails = $data;
                 }
             }
-            if ($dateBegin && $dateEnd) {
-                if ($dateBegin === $dateEnd) {
-                    $allDates[] = DateUtils::convertStringToDateTime($dateBegin);
+
+            if ($dateEvent->dateBegin instanceof \DateTimeInterface && $dateEvent->dateEnd instanceof \DateTimeInterface) {
+                if ($dateEvent->dateBegin->format('Y-m-d') === $dateEvent->dateEnd->format('Y-m-d')) {
+                    $allDates[] = $dateEvent->dateBegin;
                 } else {
-                    foreach (DateUtils::getPeriodBetweenDates($dateBegin, $dateEnd) as $date) {
+                    foreach (DateUtils::getPeriodBetweenDates($dateEvent->dateBegin, $dateEvent->dateEnd) as $date) {
                         $allDates[] = $date;
                     }
                 }
+                $offre->datesDetails[] = $dateEvent;
             }
         }
 
@@ -70,5 +75,26 @@ trait ParserEventTrait
 
         $specData = $this->findByUrn($offre, UrnList::DATE_FIN_VALID->value, returnData: true);
         $offre->datefinvalid = DateUtils::convertStringToDateTime($specData[0]->value, $format);
+    }
+
+    /**
+     * Bug server www
+     * @param array|SpecData $data
+     * @param string $urn
+     * @return string|null
+     */
+    private function getData(array|SpecData $data, string $urn): ?string
+    {
+        if (is_array($data)) {
+            if ($data['urn'] === $urn) {
+                return $data['value'];
+            }
+        } elseif ($data instanceof SpecData) {
+            if ($data->urn === $urn) {
+                return $data->value;
+            }
+        }
+
+        return null;
     }
 }

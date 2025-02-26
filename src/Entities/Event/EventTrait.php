@@ -17,6 +17,11 @@ trait EventTrait
      */
     public array $datesEvent = [];
 
+    /**
+     * @var array<int, DateEvent>
+     */
+    public array $datesDetails = [];
+
     public function firstDate(): ?DateTimeInterface
     {
         if (count($this->datesEvent) > 0) {

@@ -20,6 +20,10 @@ enum UrnList: string
     case DATE_DEB = 'urn:fld:date:datedeb';
     case DATE_END = "urn:fld:date:datefin";
     case DATE_DETAIL_OUVERTURE = 'urn:fld:date:datedetailouv';//nl:urn:fld:date:datedetailouv
+    case DATE_OUVERTURE_HEURE_1 = 'urn:fld:date:houv1';
+    case DATE_FERMETURE_HEURE_1 = 'urn:fld:date:hferm1';
+    case DATE_OUVERTURE_HEURE_2 = 'urn:fld:date:houv2';
+    case DATE_FERMETURE_HEURE_2 = 'urn:fld:date:hferm2';
     case HOMEPAGE = "urn:fld:homepage";
     case ACTIVE = "urn:fld:typeevt:activrecur";
     case DATE_OBJECT = "urn:obj:date";
