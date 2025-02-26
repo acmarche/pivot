@@ -2,6 +2,7 @@
 
 namespace AcMarche\Pivot\Command;
 
+use AcMarche\Pivot\Api\QueryDetailEnum;
 use AcMarche\Pivot\Parser\OffreParser;
 use AcMarche\Pivot\Repository\PivotRemoteRepository;
 use AcMarche\Pivot\Repository\PivotRepository;
@@ -9,7 +10,6 @@ use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,7 +26,7 @@ class OffreDumpCommand extends Command
         private readonly PivotRemoteRepository $pivotRemoteRepository,
         private readonly PivotRepository $pivotRepository,
         private readonly OffreParser $pivotParser,
-        string $name = null
+        string $name = null,
     ) {
         parent::__construct($name);
     }
@@ -34,7 +34,8 @@ class OffreDumpCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('codeCgt', InputArgument::REQUIRED, 'code cgt', null)
+            ->addOption('all', 'all', InputOption::VALUE_NONE, 'All', null)
+            ->addOption('codeCgt', 'codeCgt',InputOption::VALUE_REQUIRED, 'code cgt', null)
             ->addOption('raw', "raw", InputOption::VALUE_NONE, 'Afficher le json')
             ->addOption('parse', "parse", InputOption::VALUE_NONE, 'Parser');
     }
@@ -42,9 +43,22 @@ class OffreDumpCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $codeCgt = $input->getArgument('codeCgt');
+        $all = (bool)$input->getOption('all');
+        $codeCgt = $input->getOption('codeCgt');
         $raw = (bool)$input->getOption('raw');
         $parse = (bool)$input->getOption('parse');
+
+        if ($all) {
+            try {
+                echo($this->pivotRemoteRepository->query(null,QueryDetailEnum::QUERY_DETAIL_LVL_FULL));
+            } catch (InvalidArgumentException |\Exception$e) {
+                $io->error($e->getMessage());
+
+                return Command::FAILURE;
+            }
+
+            return Command::SUCCESS;
+        }
 
         try {
             $resultString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
@@ -81,7 +95,7 @@ class OffreDumpCommand extends Command
 
         if ($parse) {
             try {
-                $offre = $this->pivotRepository->fetchOffreByCgt($codeCgt, $offreObject->dateModification);
+                $offre = $this->pivotRepository->fetchOffreByCgt($codeCgt, $offreObject->offre[0]->dateModification);
                 $this->pivotParser->launchParse($offre);
             } catch (InvalidArgumentException $e) {
                 $io->error($e->getMessage());
