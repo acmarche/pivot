@@ -2,10 +2,9 @@
 
 namespace AcMarche\Pivot\Utils;
 
-use DateTimeInterface;
-use DateTime;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use DateTimeInterface;
 
 class DateUtils
 {
@@ -17,12 +16,11 @@ class DateUtils
     /**
      * @return array<int, DateTimeInterface>
      */
-    public static function getPeriodBetweenDates(string $dateBegin, string $dateEnd, string $format = 'd/m/Y'): array
-    {
-        $startDate = self::convertStringToDateTime($dateBegin, $format);
-        $endDate = self::convertStringToDateTime($dateEnd, $format);
-
-        $period = CarbonPeriod::create($startDate, $endDate);
+    public static function getPeriodBetweenDates(
+        DateTimeInterface $dateBegin,
+        DateTimeInterface $dateEnd,
+    ): array {
+        $period = CarbonPeriod::create($dateBegin, $dateEnd);
 
         $dates = [];
         foreach ($period as $date) {
