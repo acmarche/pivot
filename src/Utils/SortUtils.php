@@ -14,7 +14,11 @@ class SortUtils
      */
     public static function sortDatesEvent(array $dates, string $order = 'ASC'): array
     {
-        usort($dates, fn($a, $b) => ($order === 'ASC' ? 1 : -1) * $a->dateBegin->getTimestamp() <=> $b->dateBegin->getTimestamp());
+        usort(
+            $dates,
+            fn(DateEvent $a, DateEvent $b) => ($order === 'ASC' ? 1 : -1) * $a->dateRealBegin->getTimestamp(
+                ) <=> $b->dateRealBegin->getTimestamp(),
+        );
 
         return $dates;
     }
@@ -26,8 +30,8 @@ class SortUtils
      */
     public static function sortEvents(array $events, string $order = 'ASC'): array
     {
-        usort($events, fn($a, $b) => ($order === 'ASC' ? 1 : -1) *
-            $a->firstDate()->getTimestamp() <=> $b->firstDate()->getTimestamp());
+        usort($events, fn(Offre $a, Offre $b) => ($order === 'ASC' ? 1 : -1) *
+            $a->firstRealDate()->getTimestamp() <=> $b->firstRealDate()->getTimestamp());
 
         return $events;
     }

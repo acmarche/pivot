@@ -26,6 +26,15 @@ trait EventTrait
         return null;
     }
 
+    public function firstRealDate(): ?DateTimeInterface
+    {
+        if (count($this->datesEvent) > 0) {
+            return $this->datesEvent[0]->dateRealBegin;
+        }
+
+        return null;
+    }
+
     public function isEventOnPeriod(): bool
     {
         foreach ($this->datesEvent as $date) {
@@ -35,13 +44,5 @@ trait EventTrait
         }
 
         return false;
-    }
-
-    /**
-     * @return  array<int, DateTimeInterface>
-     */
-    public function allDatesAsDateTime(): array
-    {
-        return array_map(fn(DateEvent $dateEvent) => $dateEvent->dateBegin, $this->datesEvent);
     }
 }

@@ -31,10 +31,12 @@ trait ParserEventTrait
             foreach ($spec->spec as $specData) {
                 if ($data = $this->getData($specData, UrnList::DATE_DEB->value)) {
                     $dateBegin = DateUtils::convertStringToDateTime($data);
+                    $dateEvent->dateRealBegin = $dateBegin;
                     if ($dateBegin->format('Y-m-d') < $today->format('Y-m-d')) {
-                        $dateBegin = $today;
+                        $dateEvent->dateBegin = $today;
+                    } else {
+                        $dateEvent->dateBegin = $dateBegin;
                     }
-                    $dateEvent->dateBegin = $dateBegin;
                 }
                 if ($data = $this->getData($specData, UrnList::DATE_END->value)) {
                     $dateEvent->dateEnd = DateUtils::convertStringToDateTime($data);

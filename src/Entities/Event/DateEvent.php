@@ -6,6 +6,7 @@ class DateEvent
 {
     public ?\DateTimeInterface $dateBegin = null;
     public ?\DateTimeInterface $dateEnd = null;
+    public ?\DateTimeInterface $dateRealBegin = null;
     public string $ouvertureHeure1 = '';
     public string $fermetureHeure1 = '';
     public string $ouvertureHeure2 = '';
