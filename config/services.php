@@ -26,6 +26,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->load('AcMarche\Pivot\\', __DIR__.'/../src/*')
         ->exclude([__DIR__.'/../src/{Entities,Tests}']);
 
+ // for new factory di   $services->load('AcMarche\\Pivot\\Repository\\', __DIR__.'/../src/AcMarche/Pivot/Repository');
+
     $services->set('dotenv', Dotenv::class)->public();
 
     //$services->set(PivotRepository::class, PivotRepository::class) //to do change name
