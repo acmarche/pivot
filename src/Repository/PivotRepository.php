@@ -63,6 +63,9 @@ class PivotRepository
                 $offres = [];
                 $i = 0;
                 foreach ($responseQuery->offre as $offreShort) {
+                    if (!$offreShort->typeOffre) {
+                        continue;
+                    }
                     if (!in_array($offreShort->typeOffre->idTypeOffre, $families)) {
                         continue;
                     }
