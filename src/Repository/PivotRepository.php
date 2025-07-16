@@ -26,7 +26,7 @@ class PivotRepository
     public function __construct(
         private readonly PivotRemoteRepository $pivotRemoteRepository,
         private readonly TypeOffreRepository $typeOffreRepository,
-        private readonly OffreParser $offreParser,
+        public readonly OffreParser $offreParser,
         private readonly PivotSerializer $pivotSerializer,
         private CacheInterface $cache,
         private readonly CacheUtils $cacheUtils
