@@ -41,6 +41,10 @@ trait ParserEventTrait
                 if ($data = $this->getData($specData, UrnList::DATE_END->value)) {
                     $dateEvent->dateEnd = DateUtils::convertStringToDateTime($data);
                 }
+                if ($dateEvent->dateEnd < $today->format('Y-m-d')) {
+                    $dateEvent = null;
+                    break;
+                }
                 if ($data = $this->getData($specData, UrnList::DATE_OUVERTURE_HEURE_1->value)) {
                     $dateEvent->ouvertureHeure1 = $data;
                 }
@@ -60,8 +64,9 @@ trait ParserEventTrait
                     $dateEvent->dateRange = $data;
                 }
             }
-
-            $allDates[] = $dateEvent;
+            if ($dateEvent) {
+                $allDates[] = $dateEvent;
+            }
         }
 
         $allDates = SortUtils::sortDatesEvent($allDates);
