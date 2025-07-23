@@ -33,17 +33,13 @@ trait ParserEventTrait
                     $dateBegin = DateUtils::convertStringToDateTime($data);
                     $dateEvent->dateRealBegin = $dateBegin;
                     if ($dateBegin->format('Y-m-d') < $today->format('Y-m-d')) {
-                        $dateEvent->dateBegin = $today;
+                        $dateEvent->dateBegin = $today;//st loup
                     } else {
                         $dateEvent->dateBegin = $dateBegin;
                     }
                 }
                 if ($data = $this->getData($specData, UrnList::DATE_END->value)) {
                     $dateEvent->dateEnd = DateUtils::convertStringToDateTime($data);
-                }
-                if ($dateEvent->dateEnd < $today->format('Y-m-d')) {
-                    $dateEvent = null;
-                    break;
                 }
                 if ($data = $this->getData($specData, UrnList::DATE_OUVERTURE_HEURE_1->value)) {
                     $dateEvent->ouvertureHeure1 = $data;
@@ -64,7 +60,8 @@ trait ParserEventTrait
                     $dateEvent->dateRange = $data;
                 }
             }
-            if ($dateEvent) {
+            if ($dateEvent->dateEnd && $dateEvent->dateEnd->format('Y-m-d') >= $today->format('Y-m-d')) {
+                //dump($dateEvent->dateEnd->format('Y-m-d'));
                 $allDates[] = $dateEvent;
             }
         }
