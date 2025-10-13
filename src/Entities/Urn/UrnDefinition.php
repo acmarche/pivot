@@ -24,8 +24,5 @@ class UrnDefinition
     public ?string $userLocalName = null;
     public ?string $userLocalSurname = null;
     public bool|null $collapsed = null;
-    /**
-     * @var array|Label
-     */
-    public array $abstract = [];
+    public null|array|Label $abstract = null;
 }
