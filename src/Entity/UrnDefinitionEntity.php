@@ -55,7 +55,7 @@ class UrnDefinitionEntity
     #[ORM\Column(type: 'json', length: 180, nullable: true)]
     public array $label = [];
 
-    #[ORM\Column(type: 'json', length: 180)]
+    #[ORM\Column(type: 'json', length: 180, nullable: true)]
     public array|null|Label $abstract = null;
 
     public static function fromUrnDefinition(UrnDefinition $urnDefinition): self
