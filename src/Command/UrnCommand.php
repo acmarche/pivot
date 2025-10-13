@@ -49,7 +49,7 @@ class UrnCommand extends Command
         $lang = $input->getOption('lang');
 
         if ($urn) {
-            $urnDefinition = $this->urnDefinitionRepository->findOneByUrn($urn);
+            $urnDefinition = $this->urnDefinitionRepository->findByUrn($urn);
             $this->io->writeln($urnDefinition->labelByLanguage($lang));
 
             return Command::SUCCESS;
@@ -64,31 +64,44 @@ class UrnCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function createListing()
+    private function createListing(): void
     {
-        $urnsString = json_decode($this->pivotRemoteRepository->thesaurus('urn'), null, 512, JSON_THROW_ON_ERROR);
+        try {
+            $urnsString = json_decode($this->pivotRemoteRepository->thesaurus('urn'), null, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
 
-        $response = $this->pivotSerializer->deserializeToClass(
-            json_encode($urnsString, JSON_THROW_ON_ERROR),
-            UrnResponse::class
-        );
+            $this->io->error($e->getMessage());
+
+            return;
+        }
+
+        try {
+            $response = $this->pivotSerializer->deserializeToClass(
+                json_encode($urnsString, JSON_THROW_ON_ERROR),
+                UrnResponse::class
+            );
+        } catch (\JsonException $e) {
+            $this->io->error($e->getMessage());
+
+            return;
+
+        }
 
         if ($response) {
             foreach ($response->spec as $urnDefinition) {
                 $this->io->section($urnDefinition->labelByLanguage('fr'));
                 $this->createUrn($urnDefinition);
             }
-            $this->io->writeln(count($response->spec));
+           // $this->io->writeln(count($response->spec));
         } else {
-            $this->io->error($urnsString);
+            dump($urnsString);
         }
     }
 
-    private function createUrn(UrnDefinition $urnDefinition): UrnDefinitionEntity
+    private function createUrn(UrnDefinition $urnDefinition): void
     {
         $urn = UrnDefinitionEntity::fromUrnDefinition($urnDefinition);
         $this->urnDefinitionRepository->persist($urn);
 
-        return $urn;
     }
 }
