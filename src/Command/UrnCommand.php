@@ -50,7 +50,6 @@ class UrnCommand extends Command
 
         if ($urn) {
             $urnDefinition = $this->urnDefinitionRepository->findOneByUrn($urn);
-            dump($urnDefinition);
             $this->io->writeln($urnDefinition->labelByLanguage($lang));
 
             return Command::SUCCESS;
@@ -80,6 +79,8 @@ class UrnCommand extends Command
                 $this->createUrn($urnDefinition);
             }
             $this->io->writeln(count($response->spec));
+        } else {
+            $this->io->error($urnsString);
         }
     }
 
