@@ -74,12 +74,13 @@ class UrnCommand extends Command
             UrnResponse::class
         );
 
-        foreach ($response->spec as $urnDefinition) {
-            $this->io->section($urnDefinition->labelByLanguage('fr'));
-            $this->createUrn($urnDefinition);
+        if ($response) {
+            foreach ($response->spec as $urnDefinition) {
+                $this->io->section($urnDefinition->labelByLanguage('fr'));
+                $this->createUrn($urnDefinition);
+            }
+            $this->io->writeln(count($response->spec));
         }
-
-        $this->io->writeln(count($response->spec));
     }
 
     private function createUrn(UrnDefinition $urnDefinition): UrnDefinitionEntity
