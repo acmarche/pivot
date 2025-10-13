@@ -89,10 +89,10 @@ class UrnCommand extends Command
 
         if ($response instanceof UrnResponse) {
             foreach ($response->spec as $urnDefinition) {
-               // $this->io->section($urnDefinition->labelByLanguage('fr'));
+                $this->io->section($urnDefinition->labelByLanguage('fr'));
                 $this->createUrn($urnDefinition);
             }
-           // $this->io->writeln(count($response->spec));
+            $this->io->writeln(count($response->spec));
         } else {
             dump($urnsString);
         }
