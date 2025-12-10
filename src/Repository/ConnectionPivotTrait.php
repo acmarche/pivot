@@ -40,17 +40,17 @@ trait ConnectionPivotTrait
             'verify_host' => false,
         ];
         //https://jolicode.com/blog/aggressive-caching-with-symfony-http-client
-       /* $httpClient = new CachingHttpClient(
-            HttpClient::create($headers),
-            new Store('/tmp/cache')
-        );*/
+        /* $httpClient = new CachingHttpClient(
+             HttpClient::create($headers),
+             new Store('/tmp/cache')
+         );*/
         $this->httpClient = HttpClient::create($headers);
     }
 
     /**
      * @throws Exception
      */
-    private function executeRequest(string $url, array $options = [], string $method = 'GET'): string
+    private function executeRequest(string $url, array $options = [], string $method = 'GET'): ?string
     {
         $this->url_executed = $url;
         try {
@@ -60,9 +60,12 @@ trait ConnectionPivotTrait
                 $options
             );
 
-            $this->data_raw = $response->getContent();
+            if ($response->getStatusCode() === 200) {
+                $this->data_raw = $response->getContent();
 
-            return $this->data_raw;
+                return $this->data_raw;
+            }
+            return null;
         } catch (ClientException|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }

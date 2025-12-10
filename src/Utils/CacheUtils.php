@@ -33,7 +33,7 @@ class CacheUtils
     {
         if (!$this->cache) {
             $client = RedisAdapter::createConnection('redis://localhost');
-            $this->cache = new RedisTagAwareAdapter($client);
+            $this->cache = new RedisTagAwareAdapter($client, 'visitmarche', 60 * 60 * 20);
         }
 
         return $this->cache;
@@ -43,6 +43,6 @@ class CacheUtils
     {
         $keyUnicode = new UnicodeString($cacheKey);
 
-        return $this->slugger->slug($keyUnicode->ascii()->toString());
+        return $this->slugger->slug($keyUnicode->ascii()->toString()) . time();
     }
 }

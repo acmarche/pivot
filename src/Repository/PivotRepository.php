@@ -135,26 +135,32 @@ class PivotRepository
         $cacheKey = $codeCgt.$updatedAt;
         $key = $this->cacheUtils->generateKey($cacheKey);
 
-        return $this->cache->get(
-            'offre-'.$key,
-            function (ItemInterface $item) use ($codeCgt) {
-                $item->expiresAfter(CacheUtils::DURATION);
-                $item->tag(CacheUtils::TAG);
-                try {
+        try {
+            return $this->cache->get(
+                'offre-'.$key,
+                function (ItemInterface $item) use ($codeCgt) {
+                    $item->expiresAfter(CacheUtils::DURATION);
+                    $item->tag(CacheUtils::TAG);
+
+                    // Let exception bubble up - Symfony won't cache exceptions
                     $dataString = $this->pivotRemoteRepository->offreByCgt($codeCgt);
-                } catch (Exception $exception) {
-                    return null;
-                }
-                $tmp = json_decode($dataString, null, 512, JSON_THROW_ON_ERROR);
-                $dataStringOffre = json_encode($tmp->offre[0], JSON_THROW_ON_ERROR);
+                    $tmp = json_decode($dataString, null, 512, JSON_THROW_ON_ERROR);
+                    $dataStringOffre = json_encode($tmp->offre[0], JSON_THROW_ON_ERROR);
 
-                if ($object = $this->pivotSerializer->deserializeToClass($dataStringOffre, Offre::class)) {
+                    $object = $this->pivotSerializer->deserializeToClass($dataStringOffre, Offre::class);
+
+                    if (!$object) {
+                        throw new Exception('Failed to deserialize offre for codeCgt: ' . $codeCgt);
+                    }
+
                     $object->dataRaw = $dataString;
+                    return $object;
                 }
-
-                return $object;
-            }
-        );
+            );
+        } catch (Exception $exception) {
+            // Exception wasn't cached, return null
+            return null;
+        }
     }
 
     /**

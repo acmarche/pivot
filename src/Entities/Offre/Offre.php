@@ -125,6 +125,9 @@ class Offre
     public ?Specification $gpx_cat_circuit = null;
     public array $locations=[];
     public ?string $cirkwi_link= null;
+    public ?float $longitude= null;
+    public ?float $latitude= null;
+    public array $recommandations=[];
 
     /**
      * Alias
