@@ -35,8 +35,8 @@ class PivotContainer
         $containerBuilder = new ContainerBuilder();
 
         $kernel = new Kernel($env, $debug);
-        (new Dotenv())
-            ->bootEnv($kernel->getProjectDir().'/.env');
+        /*(new Dotenv())
+            ->bootEnv($kernel->getProjectDir().'/.env');*/
 
         $kernel->boot();
 
