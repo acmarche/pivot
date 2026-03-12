@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:phs="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+
+    <xs:element name="Query" type="phs:TQuery"> </xs:element>
+    <xs:complexType name="TQuery">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="idUserGlobal" type="xs:int"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="mdt" type="xs:int"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="idTypeOffre" type="xs:int"/>
+            <xs:element minOccurs="0" name="province" type="xs:token"/>
+            <xs:element minOccurs="0" name="idUserGlobalOwner" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

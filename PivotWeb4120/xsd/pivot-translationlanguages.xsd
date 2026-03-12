@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:element name="translationLanguages">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="language" type="pex:TLanguage" maxOccurs="unbounded" minOccurs="0"
+                />
+            </xs:sequence>
+            <xs:attribute name="count" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TLanguage">
+        <xs:sequence>
+            <xs:element name="id" type="xs:token"/>
+            <xs:element name="name" type="xs:token"/>
+            <xs:element name="picto" type="pex:TPicto"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TPicto">
+        <xs:sequence>
+            <xs:element name="url" type="xs:token"/>
+        </xs:sequence>
+        <xs:attribute name="modifier" type="xs:token"/>
+    </xs:complexType>
+</xs:schema>

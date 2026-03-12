@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:include schemaLocation="pivot-commons.xsd"/>
+    <xs:element name="thesaurus">
+        <xs:complexType>
+            <xs:choice>
+                <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="spec" type="pex:TSpecstype" minOccurs="0"/>
+                </xs:sequence>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TSpecstype">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="type" type="xs:token"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="label" type="pex:TStringML"/>
+            <xs:element name="dynamic" type="xs:boolean"/>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="spec" type="pex:TSpecstype"/>
+            </xs:sequence>
+            <xs:element name="offres" type="pex:offres"/>
+        </xs:sequence>
+        <xs:attribute name="urn" type="xs:token" use="required"/>
+        <xs:attribute name="userGlobalId" type="xs:int"/>
+        <xs:attribute name="userGlobalName" type="xs:token"/>
+        <xs:attribute name="parent" type="xs:token"/>
+    </xs:complexType>
+    <xs:complexType name="offres">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="offre" type="pex:TOffre"/>
+        </xs:sequence>
+        <xs:attribute name="count" type="xs:int" use="optional"/>
+        <xs:attribute name="itemsPerPage" type="xs:int"/>
+        <xs:attribute name="pagesCount" type="xs:int"/>
+        <xs:attribute name="token" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="TOffre">
+        <xs:sequence>
+            <xs:element name="typeOffre" type="pex:TTypeOffre" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="codeCgt" type="xs:token" use="optional"> </xs:attribute>
+        <xs:attribute name="dateCreation" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="dateModification" type="xs:dateTime" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="TTypeOffre">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="label" type="pex:TStringML" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="idTypeOffre" type="xs:int" use="required"/>
+    </xs:complexType>
+</xs:schema>

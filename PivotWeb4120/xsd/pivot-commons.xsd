@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:complexType name="TStringML">
+        <xs:sequence>
+            <xs:element name="value" type="xs:token" maxOccurs="1" minOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="lang" type="xs:token"/>
+    </xs:complexType>
+    <xs:complexType name="TStatus">
+        <xs:sequence>
+            <xs:element name="message" type="pex:TStringML" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="level" type="xs:int" minOccurs="0"/>
+            <xs:element name="weight" type="xs:float" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="idStatus" type="xs:token" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="TMessage">
+        <xs:complexContent>
+            <xs:extension base="pex:TStatus">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="context" type="xs:token"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="TLabelledUrn">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="label" type="pex:TStringML"/>
+        </xs:sequence>
+        <xs:attribute name="urn" type="xs:token" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="TUser">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="login" type="xs:token"/>
+            <xs:element minOccurs="0" name="nom" type="xs:token"/>
+            <xs:element minOccurs="0" name="prenom" type="xs:token"/>
+        </xs:sequence>
+        <xs:attribute name="codeCgt" type="xs:token" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="TUserglobal">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="nom" type="xs:token"/>
+        </xs:sequence>
+        <xs:attribute name="idUserglobal" type="xs:int" use="required"/>
+    </xs:complexType>
+</xs:schema>

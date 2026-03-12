@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pvt="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:element name="redirections">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="offre" type="pvt:TOffre"/>
+            </xs:sequence>
+            <xs:attribute name="count" type="xs:int"/>
+            <xs:attribute name="realCount" type="xs:int"/>
+            <xs:attribute name="itemsPerPage" type="xs:int"/>
+            <xs:attribute name="pagesCount" type="xs:int"/>
+            <xs:attribute name="token" type="xs:token"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TOffre">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="redirection"
+                type="pvt:TRedirection"/>
+        </xs:sequence>
+        <xs:attribute name="codeCgt" type="xs:token" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="TRedirection">
+        <xs:sequence>
+            <xs:element name="targetUrl" type="xs:token"/>
+            <xs:element name="redirectUrl" type="xs:token" minOccurs="0"/>
+            <xs:element name="qrCodeUrl" type="xs:token" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute fixed="" name="type" type="xs:token" use="required"/>
+        <xs:attribute name="lang" type="xs:token" use="optional"/>
+    </xs:complexType>
+</xs:schema>

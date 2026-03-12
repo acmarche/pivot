@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:include schemaLocation="pivot-commons.xsd"/>
+    <xs:element name="translations">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="translation"
+                    type="pex:TStringML"/>
+            </xs:sequence>
+            <xs:attribute name="count" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

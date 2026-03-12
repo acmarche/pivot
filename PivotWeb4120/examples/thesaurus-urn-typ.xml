@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thesaurus xmlns="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+   <spec urn="urn:typ:1" code="HTL" order="1">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Hôtel]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:2" code="GIT" order="2">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Gîte]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:3" code="CHB" order="3">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Chambre d’hôtes]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:4" code="MBL" order="4">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Meublé]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:5" code="CMP" order="5">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Camping]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:6" code="BDG" order="6">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Budget Holiday]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:7" code="VLG" order="7">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Village de vacances]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:8" code="ITB" order="8">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Itinéraire]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:9" code="EVT" order="9">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Événement]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:11" code="ALD" order="11">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Découverte et Divertissement]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:12" code="GTR" order="12">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Guide touristique]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:13" code="AGV" order="13">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Agence de voyage]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:14" code="OGT" order="14">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Organisme touristique]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:15" code="FTI" order="15">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Forfait individuel]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:16" code="FTG" order="16">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Forfait groupe]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:18" code="MIF" order="18">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[MICE - Infrastructure]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:19" code="MOG" order="19">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[MICE - Organisateur]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:20" code="MPR" order="20">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[MICE - Prestataire]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:21" code="MDV" order="21">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[MICE - Divertissement]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:22" code="MAM" order="22">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[MICE - Animation]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:23" code="CTP" order="23">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Contact public]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:256" code="EGP" order="256">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Groupe d’événements]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:257" code="APD" order="257">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Animation pédagogique]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:258" code="PRD" order="258">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Producteur]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:259" code="ATS" order="259">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Artisan]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:260" code="BTQ" order="260">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Boutique de terroir]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:261" code="RST" order="261">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Restauration]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:262" code="RCT" order="262">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Recette]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:263" code="SMN" order="263">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Structure événementielle]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:267" code="PDT" order="267">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Produit de terroir]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:268" code="ANX" order="268">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Média]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:269" code="POI" order="269">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Point d’intérêt]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:270" code="GHB" order="270">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Groupe d’hébergement]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:513" code="CTD" order="513">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Contact privé]]></value>
+      </label>
+   </spec>
+   <spec urn="urn:typ:514" code="SCT" order="514">
+      <type>Type</type>
+      <label lang="fr">
+         <value><![CDATA[Suivi de contact]]></value>
+      </label>
+   </spec>
+</thesaurus>

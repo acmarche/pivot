@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:element name="report">
+        <xs:complexType>
+            <xs:sequence minOccurs="1">
+                <xs:element name="process" type="pex:process"/>
+            </xs:sequence>
+            <xs:attribute name="date" type="xs:dateTime"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="process">
+        <xs:sequence minOccurs="0">
+            <xs:element name="status">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="waiting"/>
+                        <xs:enumeration value="running"/>
+                        <xs:enumeration value="aborted"/>
+                        <xs:enumeration value="ended"/>
+                        <xs:enumeration value="error"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="message" type="xs:token"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="exportmedia" type="xs:token"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="date" type="xs:dateTime"/>
+        <xs:attribute name="id" type="xs:token"/>
+    </xs:complexType>
+</xs:schema>

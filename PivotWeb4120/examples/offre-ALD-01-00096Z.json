@@ -1,0 +1,452 @@
+{
+  "count" : 1,
+  "offre" : [ {
+    "codeCgt" : "ALD-01-00096Z",
+    "dateCreation" : "18-03-2010 15:25:38",
+    "dateModification" : "03-05-2016 10:19:39",
+    "nom" : "Walibi Belgium",
+    "estActive" : 30,
+    "visibilite" : 30,
+    "typeOffre" : {
+      "idTypeOffre" : 11,
+      "label" : [ {
+        "lang" : "fr",
+        "value" : "Découverte et Divertissement"
+      }, {
+        "lang" : "nl",
+        "value" : "Découverte et Divertissement"
+      }, {
+        "lang" : "en",
+        "value" : "Découverte et Divertissement"
+      }, {
+        "lang" : "de",
+        "value" : "Découverte et Divertissement"
+      } ]
+    },
+    "adresse1" : {
+      "rue" : "Boulevard de l'Europe",
+      "numero" : "100",
+      "idIns" : 110,
+      "ins" : "25112",
+      "cp" : "1300",
+      "localite" : [ {
+        "lang" : "fr",
+        "value" : "Wavre"
+      }, {
+        "lang" : "nl",
+        "value" : "Wavre"
+      }, {
+        "lang" : "en",
+        "value" : "Wavre"
+      }, {
+        "lang" : "de",
+        "value" : "Wavre"
+      } ],
+      "commune" : [ {
+        "lang" : "fr",
+        "value" : "Wavre"
+      }, {
+        "lang" : "nl",
+        "value" : "Wavre"
+      }, {
+        "lang" : "en",
+        "value" : "Wavre"
+      }, {
+        "lang" : "de",
+        "value" : "Wavre"
+      } ],
+      "province" : "Brabant wallon",
+      "pays" : "Belgique",
+      "lambertX" : 165411.950188531,
+      "lambertY" : 154316.212671389,
+      "latitude" : 50.6998,
+      "longitude" : 4.58564,
+      "parcNaturel" : {
+        "idPn" : 1,
+        "label" : "Hors Parcs"
+      },
+      "organisme" : {
+        "idMdt" : 41,
+        "label" : "Ardennes brabançonnes"
+      }
+    },
+    "validationScore" : 100,
+    "spec" : [ {
+      "urn" : "urn:fld:adr",
+      "urnCat" : "urn:cat:resume",
+      "urnSubCat" : "urn:cat:resume:resume",
+      "order" : 60,
+      "type" : "String",
+      "value" : "Boulevard de l'Europe, 100"
+    }, {
+      "urn" : "nl:urn:fld:nomofr",
+      "urnCat" : "urn:cat:ident",
+      "urnSubCat" : "urn:cat:ident:denom",
+      "order" : 360,
+      "type" : "FirstUpperStringML",
+      "value" : "Walibi"
+    }, {
+      "urn" : "de:urn:fld:nomofr",
+      "urnCat" : "urn:cat:ident",
+      "urnSubCat" : "urn:cat:ident:denom",
+      "order" : 360,
+      "type" : "FirstUpperStringML",
+      "value" : "Walibi"
+    }, {
+      "urn" : "en:urn:fld:nomofr",
+      "urnCat" : "urn:cat:ident",
+      "urnSubCat" : "urn:cat:ident:denom",
+      "order" : 360,
+      "type" : "FirstUpperStringML",
+      "value" : "Walibi"
+    }, {
+      "urn" : "urn:fld:id365",
+      "urnCat" : "urn:cat:ident",
+      "urnSubCat" : "urn:cat:ident:idalt",
+      "order" : 450,
+      "type" : "String",
+      "value" : "188"
+    }, {
+      "urn" : "urn:fld:class",
+      "urnCat" : "urn:cat:classlab",
+      "urnSubCat" : "urn:cat:classlab:class",
+      "order" : 740,
+      "type" : "Choice",
+      "value" : "urn:val:class:nc"
+    }, {
+      "urn" : "urn:fld:qw",
+      "urnCat" : "urn:cat:classlab",
+      "urnSubCat" : "urn:cat:classlab:qw",
+      "order" : 830,
+      "type" : "Choice",
+      "value" : "urn:val:qw:nc"
+    }, {
+      "urn" : "urn:fld:catdiv:loisir",
+      "urnCat" : "urn:cat:classlab",
+      "urnSubCat" : "urn:cat:classlab:cat",
+      "order" : 1180,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:catdiv:loisir:parcattr",
+      "urnCat" : "urn:cat:classlab",
+      "urnSubCat" : "urn:cat:classlab:cat",
+      "order" : 1290,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:phone1",
+      "urnCat" : "urn:cat:moycom",
+      "urnSubCat" : "urn:cat:moycom:moycom",
+      "order" : 2110,
+      "type" : "Phone",
+      "value" : "+3210421500"
+    }, {
+      "urn" : "urn:fld:mail1",
+      "urnCat" : "urn:cat:moycom",
+      "urnSubCat" : "urn:cat:moycom:moycom",
+      "order" : 2190,
+      "type" : "EMail",
+      "value" : "info-wbe@walibi.com"
+    }, {
+      "urn" : "urn:fld:urlweb",
+      "urnCat" : "urn:cat:moycom",
+      "urnSubCat" : "urn:cat:moycom:moycom",
+      "order" : 2210,
+      "type" : "URL",
+      "value" : "http://www.walibi.com"
+    }, {
+      "urn" : "urn:fld:urlfacebook",
+      "urnCat" : "urn:cat:moycom",
+      "urnSubCat" : "urn:cat:moycom:moycom",
+      "order" : 2220,
+      "type" : "URLFacebook",
+      "value" : "https://www.facebook.com/Walibi.Belgium"
+    }, {
+      "urn" : "urn:fld:descmarket20",
+      "urnCat" : "urn:cat:descmarket",
+      "urnSubCat" : "urn:cat:descmarket:descmarket",
+      "order" : 2350,
+      "type" : "TextML",
+      "value" : "<p>\n      Walibi, le parc d'attractions pour toute la <b>famille</b> !\n    </p>\n    <p>\n      La c&#233;l&#232;bre Radja river, le terrifiant train de mines et bien d'autres \n      attractions vous emm&#232;neront faire un voyage en famille pas comme les \n      autres...\n    </p>\n    <p>\n      <b>Man&#232;ges</b> enchanteurs pour les petits, <b>sensations fortes</b> \n      garanties pour les plus t&#233;m&#233;raires !\n    </p>\n    <p>\n      Et pour les amateurs de <b>show</b>, vibrez au son des guitares des \n      W.A.B. ou &#233;clatez-vous au rythme endiabl&#233; du groupe The SkunX mais \n      surtout vivez une &quot;battle&quot; musicale &#233;poustouflante !\n    </p>\n    <p>\n      Une exp&#233;rience hors du commun &#224; vivre en famille et entre amis !\n    </p>\n    <p>\n      <i>Plus d'infos sur les environs : <a target=\"_blank\" href=\"http://www.mtab.be\">www.mtab.be</a> \n      / +32 10 23 03 52</i>\n    </p>"
+    }, {
+      "urn" : "nl:urn:fld:descmarket20",
+      "urnCat" : "urn:cat:descmarket",
+      "urnSubCat" : "urn:cat:descmarket:descmarket",
+      "order" : 2350,
+      "type" : "TextML",
+      "value" : "<p>\n      Walibi, het attractiepark voor het hele gezin!\n    </p>\n    <p>\n      De befaamde Radja rivier, de schrikwekkende mijntrein en nog veel meer \n      attracties laten u en uw gezin een hoogst ongewone reis maken.\n    </p>\n    <p>\n      \n    </p>\n    <p>\n      Leuke draaimolens voor de kleintjes, volop sensatie voor de durvers!\n    </p>\n    <p>\n      En liefhebbers van show kunnen vibreren op de tonen van de gitaren van \n      de W.A.B., zich uitleven op het stevige ritme van de groep The SkunX \n      maar vooral een adembenemend muzikaal duel meemaken!\n    </p>\n    <p>\n      Een ongewone ervaring om te beleven met het gezin of met vrienden.\n    </p>\n    <p>\n      <i>Meer info over de omgeving: </i><a href=\"www.mtab.be\" target=\"_blank\">www.mtab.be</a> \n      <i>/ +32 10 23 03</i> 52\n    </p>"
+    }, {
+      "urn" : "en:urn:fld:descmarket20",
+      "urnCat" : "urn:cat:descmarket",
+      "urnSubCat" : "urn:cat:descmarket:descmarket",
+      "order" : 2350,
+      "type" : "TextML",
+      "value" : "<p style=\"margin-top: 0\">\r\n      Walibi, the amusement park for the whole family!\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      The famous Radja River, the terrifying train through the mines and many \r\n      more attractions for a family trip unlike any other &#8230;\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      Enchanting merry-go-rounds for the younger set, and emotional thrills \r\n      for the bold!\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      Show lovers vibrate to the sound of W.A.B. guitars or rock to the fast \r\n      pace of the Skunx. Better still, you'll love a spellbinding musical \r\n      battle!\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      An extraordinary experience to enjoy with your family and friends!\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      <i>Further information about the vicinity: <a href=\"http://www.mtab.be\">www.mtab.be</a> \r\n      / +32 10 23 03 52</i>\r\n    </p>"
+    }, {
+      "urn" : "urn:fld:descmarket",
+      "urnCat" : "urn:cat:descmarket",
+      "urnSubCat" : "urn:cat:descmarket:descmarket",
+      "order" : 2380,
+      "type" : "TextML",
+      "value" : "<p>\n      Walibi, le parc d'attractions pour toute la <b>famille</b> !\n    </p>\n    <p>\n      La c&#233;l&#232;bre Radja river, le terrifiant train de mines et bien d'autres \n      attractions vous emm&#232;neront faire un voyage en famille pas comme les \n      autres...\n    </p>\n    <p>\n      <b>Man&#232;ges</b> enchanteurs pour les petits, <b>sensations fortes</b> \n      garanties pour les plus t&#233;m&#233;raires !\n    </p>\n    <p>\n      Et pour les amateurs de <b>show</b>, vibrez au son des guitares des \n      W.A.B. ou &#233;clatez-vous au rythme endiabl&#233; du groupe The SkunX mais \n      surtout vivez une &quot;battle&quot; musicale &#233;poustouflante !\n    </p>\n    <p>\n      Une exp&#233;rience hors du commun &#224; vivre en famille et entre amis !\n    </p>\n    <p>\n      <i>Plus d'infos sur les environs : <a target=\"_blank\" href=\"http://www.mtab.be\">www.mtab.be</a> \n      / +32 10 23 03 52</i>\n    </p>"
+    }, {
+      "urn" : "nl:urn:fld:descmarket",
+      "urnCat" : "urn:cat:descmarket",
+      "urnSubCat" : "urn:cat:descmarket:descmarket",
+      "order" : 2380,
+      "type" : "TextML",
+      "value" : "<p>\n      Walibi, het attractiepark voor het hele gezin!\n    </p>\n    <p>\n      De befaamde Radja rivier, de schrikwekkende mijntrein en nog veel meer \n      attracties laten u en uw gezin een hoogst ongewone reis maken.\n    </p>\n    <p>\n      \n    </p>\n    <p>\n      Leuke draaimolens voor de kleintjes, volop sensatie voor de durvers!\n    </p>\n    <p>\n      En liefhebbers van show kunnen vibreren op de tonen van de gitaren van \n      de W.A.B., zich uitleven op het stevige ritme van de groep The SkunX \n      maar vooral een adembenemend muzikaal duel meemaken!\n    </p>\n    <p>\n      Een ongewone ervaring om te beleven met het gezin of met vrienden.\n    </p>\n    <p>\n      <i>Meer info over de omgeving: </i><a href=\"www.mtab.be\" target=\"_blank\">www.mtab.be</a> \n      <i>/ +32 10 23 03</i> 52\n    </p>"
+    }, {
+      "urn" : "en:urn:fld:descmarket",
+      "urnCat" : "urn:cat:descmarket",
+      "urnSubCat" : "urn:cat:descmarket:descmarket",
+      "order" : 2380,
+      "type" : "TextML",
+      "value" : "<p style=\"margin-top: 0\">\r\n      Walibi, the amusement park for the whole family!\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      The famous Radja River, the terrifying train through the mines and many \r\n      more attractions for a family trip unlike any other &#8230;\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      Enchanting merry-go-rounds for the younger set, and emotional thrills \r\n      for the bold!\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      Show lovers vibrate to the sound of W.A.B. guitars or rock to the fast \r\n      pace of the Skunx. Better still, you'll love a spellbinding musical \r\n      battle!\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      An extraordinary experience to enjoy with your family and friends!\r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      \r\n    </p>\r\n    <p style=\"margin-top: 0\">\r\n      <i>Further information about the vicinity: <a href=\"http://www.mtab.be\">www.mtab.be</a> \r\n      / +32 10 23 03 52</i>\r\n    </p>"
+    }, {
+      "urn" : "urn:fld:ouvind",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:ouvind",
+      "order" : 2460,
+      "type" : "TextML",
+      "value" : "<div>\n      Voir le <a href=\"http://www.walibi.com/belgium/be-fr/info/calendrier\" target=\"_blank\">site \n      Internet de Walibi</a><br><br>\n    </div>\n    <div>\n      Ferm&#233; apr&#232;s les cong&#233;s d'automne, jusque fin mars.\n    </div>"
+    }, {
+      "urn" : "en:urn:fld:ouvind",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:ouvind",
+      "order" : 2460,
+      "type" : "TextML",
+      "value" : "<div>\n      <a href=\"https://www.walibi.com/belgium/be-en/info/calendar\" target=\"_blank\">See \n      website</a>.<br><br>Closed after All Saints holidays until late March.\n    </div>"
+    }, {
+      "urn" : "nl:urn:fld:ouvind",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:ouvind",
+      "order" : 2460,
+      "type" : "TextML",
+      "value" : "<div>\n      <a href=\"https://www.walibi.com/belgium/be-nl/info/kalender\" target=\"_blank\">Zie \n      website</a>.<br><br>\n    </div>\n    <div>\n      Gesloten na Allerheiligen feestdagen tot eind maart.\n    </div>"
+    }, {
+      "urn" : "de:urn:fld:ouvind",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:ouvind",
+      "order" : 2460,
+      "type" : "TextML",
+      "value" : "Von 10 bis 18 Uhr ? am 31. M&#228;rz ? April: vom 01. bis 15. - 21. und 22. - \n    vom 27. bis 30. ? Mai: samstags - sonntags und am 01., 04., 17., 18., 28., \n    31. ? Juni: t&#228;glich au&#223;er vom 04. bis 07. und vom 11. bis 14. ? \n    Juli-August: t&#228;glich (vom 07.07. bis 31.08.: 10 - 19 Uhr) - \n    Abendveranstaltungen (10 - 23 Uhr): samstags 14., 21., 28. Juli und 04., \n    11. August ? September-Oktober: samstags - sonntags &amp; 27.09. ? Halloween: \n    20. und 21.10. &amp; vom 27.10. bis 04.11. - Abendveranstaltungen (10 - 21 \n    Uhr): 27., 28., 31.10. und 01. &amp; 02.11."
+    }, {
+      "urn" : "urn:fld:grpacc",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:grp",
+      "order" : 2500,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:langpar:de",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:langpar",
+      "order" : 2550,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:langpar:en",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:langpar",
+      "order" : 2560,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:langpar:fr",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:langpar",
+      "order" : 2570,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:langpar:nl",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:langpar",
+      "order" : 2590,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:pmr",
+      "urnCat" : "urn:cat:accueil",
+      "urnSubCat" : "urn:cat:accueil:pmr",
+      "order" : 2620,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:langvisit:fr",
+      "urnCat" : "urn:cat:visite",
+      "urnSubCat" : "urn:cat:visite:langvisit",
+      "order" : 3170,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:eqpsrv:cafet",
+      "urnCat" : "urn:cat:eqpsrv",
+      "urnSubCat" : "urn:cat:eqpsrv:eqpsrv",
+      "order" : 3340,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:eqpsrv:parking",
+      "urnCat" : "urn:cat:eqpsrv",
+      "urnSubCat" : "urn:cat:eqpsrv:eqpsrv",
+      "order" : 3380,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:eqpsrv:parkingautoc",
+      "urnCat" : "urn:cat:eqpsrv",
+      "urnSubCat" : "urn:cat:eqpsrv:eqpsrv",
+      "order" : 3390,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:eqpsrvequ:nourr",
+      "urnCat" : "urn:cat:eqpsrv",
+      "urnSubCat" : "urn:cat:epqsrv:eqpsrvequ",
+      "order" : 3560,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:tarifind:pmin:adult",
+      "urnCat" : "urn:cat:tarif",
+      "urnSubCat" : "urn:cat:tarif:tarifind",
+      "order" : 3640,
+      "type" : "Currency",
+      "value" : "35"
+    }, {
+      "urn" : "urn:fld:tarifind:pmin:enfant",
+      "urnCat" : "urn:cat:tarif",
+      "urnSubCat" : "urn:cat:tarif:tarifind",
+      "order" : 3680,
+      "type" : "Currency",
+      "value" : "30"
+    }, {
+      "urn" : "urn:fld:tarifind:pmin:senior",
+      "urnCat" : "urn:cat:tarif",
+      "urnSubCat" : "urn:cat:tarif:tarifind",
+      "order" : 3720,
+      "type" : "Currency",
+      "value" : "30"
+    }, {
+      "urn" : "urn:fld:tarifind:gratuite",
+      "urnCat" : "urn:cat:tarif",
+      "urnSubCat" : "urn:cat:tarif:tarifind",
+      "order" : 3800,
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:tarifgrp:pmin",
+      "urnCat" : "urn:cat:tarif",
+      "urnSubCat" : "urn:cat:tarif:tarifgrp",
+      "order" : 3830,
+      "type" : "Currency",
+      "value" : "25"
+    }, {
+      "urn" : "urn:fld:tarifcplt",
+      "urnCat" : "urn:cat:tarif",
+      "urnSubCat" : "urn:cat:tarif:tarifcplt",
+      "order" : 3880,
+      "type" : "TextML",
+      "value" : "<p>\n      Possibilit&#233; de prix attactifs pour les groupes suivants : groupe jeunes, \n      groupe entreprise, groupe mixte, groupe Tour &amp; Travel\n    </p>"
+    }, {
+      "urn" : "nl:urn:fld:tarifcplt",
+      "urnCat" : "urn:cat:tarif",
+      "urnSubCat" : "urn:cat:tarif:tarifcplt",
+      "order" : 3880,
+      "type" : "TextML",
+      "value" : "<p>\n      Mogelijkheid tot aantrekkelijke prijzen voor de volgende groepen: jonge \n      groep, business groep, gemengde groep, Tour &amp; Travel Groep.\n    </p>"
+    }, {
+      "urn" : "en:urn:fld:tarifcplt",
+      "urnCat" : "urn:cat:tarif",
+      "urnSubCat" : "urn:cat:tarif:tarifcplt",
+      "order" : 3880,
+      "type" : "TextML",
+      "value" : "<p>\n      Possibility of attractive prices for the following groups: young group, \n      business group, mixed group, Tour &amp; Travel Group\n    </p>"
+    }, {
+      "urn" : "urn:fld:filtautre:01:02WM:0001",
+      "urnCat" : "urn:cat:filtre",
+      "urnSubCat" : "urn:cat:filtre:filtautre",
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:filtweb:01:00000Z",
+      "urnCat" : "urn:cat:ident",
+      "urnSubCat" : "urn:cat:ident:filtweb",
+      "type" : "Boolean",
+      "value" : "true"
+    }, {
+      "urn" : "urn:fld:filtweb:01:00000T",
+      "urnCat" : "urn:cat:ident",
+      "urnSubCat" : "urn:cat:ident:filtweb",
+      "type" : "Boolean",
+      "value" : "true"
+    } ],
+    "relOffre" : [ {
+      "urn" : "urn:lnk:offre:enfant",
+      "offre" : {
+        "codeCgt" : "MIF-04-0008OG",
+        "dateCreation" : "07-02-2011 14:42:35",
+        "dateModification" : "20-04-2016 15:01:30"
+      }
+    }, {
+      "urn" : "urn:lnk:offre:enfant",
+      "offre" : {
+        "codeCgt" : "MDV-04-0008OF",
+        "dateCreation" : "04-02-2011 14:08:05",
+        "dateModification" : "23-05-2016 22:05:21"
+      }
+    }, {
+      "urn" : "urn:lnk:contact:info",
+      "offre" : {
+        "codeCgt" : "CTP-1H-000S08",
+        "dateCreation" : "24-06-2013 10:29:26",
+        "dateModification" : "03-05-2016 10:19:30"
+      }
+    }, {
+      "urn" : "urn:lnk:media:autre",
+      "offre" : {
+        "codeCgt" : "ANX-1H-000S8O",
+        "dateCreation" : "26-07-2013 15:03:21",
+        "dateModification" : "07-01-2015 11:58:28"
+      }
+    }, {
+      "urn" : "urn:lnk:media:defaut",
+      "offre" : {
+        "codeCgt" : "ANX-1H-000S8P",
+        "dateCreation" : "26-07-2013 15:04:55",
+        "dateModification" : "07-01-2015 11:58:28"
+      }
+    }, {
+      "urn" : "urn:lnk:media:autre",
+      "offre" : {
+        "codeCgt" : "ANX-1H-000S8Q",
+        "dateCreation" : "26-07-2013 15:05:29",
+        "dateModification" : "07-01-2015 11:58:28"
+      }
+    }, {
+      "urn" : "urn:lnk:media:autre",
+      "offre" : {
+        "codeCgt" : "ANX-1H-000S8R",
+        "dateCreation" : "26-07-2013 15:06:23",
+        "dateModification" : "07-01-2015 11:58:28"
+      }
+    }, {
+      "urn" : "urn:lnk:offre:voiraussi",
+      "offre" : {
+        "codeCgt" : "ALD-01-000970",
+        "dateCreation" : "18-03-2010 15:25:38",
+        "dateModification" : "08-04-2016 09:32:07"
+      }
+    }, {
+      "urn" : "urn:lnk:media:autre",
+      "offre" : {
+        "codeCgt" : "ANX-1H-000TA3",
+        "dateCreation" : "12-05-2014 11:57:47",
+        "dateModification" : "07-01-2015 11:58:28"
+      }
+    } ]
+  } ]
+}

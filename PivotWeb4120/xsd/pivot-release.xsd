@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:include schemaLocation="pivot-commons.xsd"/>
+    <xs:element name="releases">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="release" type="pex:TRelease"/>
+            </xs:sequence>
+            <xs:attribute name="count" type="xs:int" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TApplication">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="func" type="pex:TFunc"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:token"/>
+    </xs:complexType>
+    <xs:complexType name="TRelease">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="codename" type="xs:token"/>
+            <xs:element name="version">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="major" type="xs:int"/>
+                        <xs:element name="minor" type="xs:int"/>
+                        <xs:element name="patch" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="copyright" type="xs:token"/>
+            <xs:element minOccurs="0" name="license" type="pex:TStringML" maxOccurs="unbounded"/>
+            <xs:element minOccurs="0" name="info" type="pex:TStringML" maxOccurs="unbounded"/>
+            <xs:element name="application" type="pex:TApplication" maxOccurs="unbounded"
+                minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:token"/>
+        <xs:attribute name="date" type="xs:dateTime"/>
+        <xs:attribute name="level" type="xs:string"/>
+        <xs:attribute name="type" type="xs:token"/>
+    </xs:complexType>
+    <xs:complexType name="TFunc">
+        <xs:sequence>
+            <xs:element name="category" type="xs:token"/>
+            <xs:element name="title" type="xs:token"/>
+            <xs:element name="content" type="xs:string" minOccurs="0"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="subfunc" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

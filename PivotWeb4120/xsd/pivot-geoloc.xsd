@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:include schemaLocation="pivot-commons.xsd"/>
+    <xs:element name="geolocs">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="geoloc" type="pex:TGeoloc"/>
+            </xs:sequence>
+            <xs:attribute name="count" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TGeoloc">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="idAlt" type="xs:token"/>
+            <xs:element minOccurs="0" name="rue" type="xs:token"/>
+            <xs:element minOccurs="0" name="numero" type="xs:token"/>
+            <xs:element minOccurs="0" name="idIns" type="xs:int"/>
+            <xs:element minOccurs="0" name="ins" type="xs:token"/>
+            <xs:element minOccurs="0" name="cp" type="xs:token"/>
+            <xs:element minOccurs="0" name="localite" type="pex:TStringML" maxOccurs="unbounded"/>
+            <xs:element minOccurs="0" name="commune" type="pex:TStringML" maxOccurs="unbounded"/>
+            <xs:element minOccurs="0" name="province" type="xs:token"/>
+            <xs:element minOccurs="0" name="provinceUrn" type="pex:TLabelledUrn"> </xs:element>
+            <xs:element minOccurs="0" name="conseilNoble" type="xs:token"/>
+            <xs:element minOccurs="0" name="mdt" type="xs:int"/>
+            <xs:element minOccurs="0" name="parcNaturel" type="xs:int"/>
+            <xs:element minOccurs="0" name="pays" type="xs:token"/>
+            <xs:element minOccurs="0" name="paysUrn" type="pex:TLabelledUrn"> </xs:element>
+            <xs:element minOccurs="0" name="longitude" type="xs:float"/>
+            <xs:element minOccurs="0" name="latitude" type="xs:float"/>
+            <xs:element minOccurs="0" name="lambertx" type="xs:float"/>
+            <xs:element minOccurs="0" name="lamberty" type="xs:float"/>
+            <xs:element minOccurs="0" name="altitude" type="xs:float"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

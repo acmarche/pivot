@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pim="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:include schemaLocation="pivot-offer.xsd"/>
+    <xs:element name="duplicates">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="duplicate"
+                    type="pim:TDuplicate"/>
+            </xs:sequence>
+            <xs:attribute name="count" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TDuplicate">
+        <xs:sequence>
+            <xs:element name="offer" type="pim:TOffre"/>
+            <xs:element maxOccurs="unbounded" name="match" type="pim:TMatch"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TMatch">
+        <xs:sequence>
+            <xs:element name="offer" type="pim:TOffre"/>
+            <xs:element name="confidenceLevel" type="pim:TConfidenceLevel"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TConfidenceLevel">
+        <xs:sequence>
+            <xs:element name="confidenceLevel" type="xs:int"/>
+            <xs:element name="idMatcher" type="xs:token"/>
+            <xs:element minOccurs="0" name="info" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

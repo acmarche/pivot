@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:include schemaLocation="pivot-commons.xsd"/>
+    <xs:element name="OffresNotifications">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="OffreNotification" type="pex:TOffreNotification"/>
+            </xs:sequence>
+            <xs:attribute name="count" type="xs:int" use="optional"/>
+            <xs:attribute name="realCount" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TOffreNotification">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="userCreation" type="pex:TUser"/>
+            <xs:element minOccurs="0" name="userGlobalCreation" type="pex:TUserglobal"/>
+            <xs:element name="offre" type="xs:token"/>
+            <xs:element minOccurs="0" name="idAlt" type="xs:token"/>
+            <xs:element minOccurs="0" name="message" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:token" use="required"/>
+        <xs:attribute name="type" type="xs:int" use="required"/>
+        <xs:attribute name="status" type="xs:int"/>
+        <xs:attribute name="dateCreation" type="xs:dateTime" use="required"/>
+        <xs:attribute name="dateRead" type="xs:dateTime"/>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pim="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+
+    <xs:element name="Query">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:sequence maxOccurs="unbounded">
+                    <xs:element ref="pim:CriteriaGroup"/>
+                </xs:sequence>
+                <xs:element ref="pim:ExportRelOffre" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="codeCgt" type="xs:token" use="optional"/>
+            <xs:attribute name="sortField" type="xs:token"/>
+            <xs:attribute name="sortMode" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="ASC"/>
+                        <xs:enumeration value="DESC"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaGroup">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteria">
+                    <xs:choice>
+                        <xs:sequence maxOccurs="unbounded">
+                            <xs:element ref="pim:CriteriaGroup"/>
+                        </xs:sequence>
+                        <xs:sequence maxOccurs="unbounded">
+                            <xs:choice>
+                                <xs:element ref="pim:CriteriaField"/>
+                                <xs:element ref="pim:CriteriaQuickSearch"/>
+                                <xs:element ref="pim:CriteriaOrthodromic"/>
+                                <xs:element ref="pim:CriteriaGeospatial"/>
+                                <xs:element ref="pim:CriteriaBasket"/>
+                                <xs:element ref="pim:CriteriaQuery"/>
+                                <xs:element ref="pim:CriteriaRelOffre"/>
+                                <xs:element ref="pim:CriteriaKeyword"/>
+                                <xs:element ref="pim:CriteriaObjectDate"/>
+                            </xs:choice>
+                        </xs:sequence>
+                    </xs:choice>
+                    <xs:attribute default="and" name="type" type="pim:TCriteriaGroupType"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaField">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteriaWithValues">
+                    <xs:attribute name="field" type="xs:token" use="required"/>
+                    <xs:attribute default="like" name="operator" type="pim:TCriteriaOperator"/>
+                    <xs:attribute default="value" name="target" type="pim:TCriteriaTarget"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaQuickSearch">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteria">
+                    <xs:sequence>
+                        <xs:element name="value" type="xs:token"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaKeyword">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteriaWithValues">
+                    <xs:attribute name="dummy" type="xs:token"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaOrthodromic">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteria">
+                    <xs:sequence>
+                        <xs:choice maxOccurs="1">
+                            <xs:element name="idIns" type="xs:int"/>
+                            <xs:element ref="pim:offre"/>
+                            <xs:sequence>
+                                <xs:element name="longitude" type="xs:float"/>
+                                <xs:element name="latitude" type="xs:float"/>
+                            </xs:sequence>
+                        </xs:choice>
+                        <xs:element name="radius" type="xs:float"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaGeospatial">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteria">
+                    <xs:sequence>
+                        <xs:choice>
+                            <xs:element ref="pim:offre"/>
+                            <xs:element name="tins" type="xs:token"/>
+                            <xs:element name="point" type="pim:TPoint"/>
+                            <xs:element name="gpx" type="xs:base64Binary"/>
+                            <xs:element name="geojson" type="xs:string"/>
+                        </xs:choice>
+                        <xs:element name="radius" default="0" minOccurs="0">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:float">
+                                    <xs:minInclusive value="0"/>
+                                    <xs:maxInclusive value="10"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="operator" type="pim:TCriteriaOperator" use="required"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaBasket">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteria">
+                    <xs:sequence maxOccurs="unbounded">
+                        <xs:element ref="pim:offre"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaQuery">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteria">
+                    <xs:sequence>
+                        <xs:element name="value" minOccurs="1" maxOccurs="1" type="xs:token"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" ref="pim:param"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaRelOffre">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteria">
+                    <xs:attribute name="field" type="xs:token" use="required"/>
+                    <xs:attribute name="operator" type="pim:TCriteriaOperator"/>
+                    <xs:attribute default="parent" name="target" type="pim:TCriteriaLinkType"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CriteriaObjectDate">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="pim:TCriteria">
+                    <xs:sequence>
+                        <xs:element name="dateDeb" type="xs:token"/>
+                        <xs:element name="dateFin" type="xs:token"/>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="param">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:token"/>
+            <xs:attribute name="value" type="xs:token"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="offre" type="xs:token"/>
+    <xs:element name="ExportRelOffre">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:token">
+                    <xs:attribute name="reverse" type="xs:boolean"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="TCriteriaGroupType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="and"/>
+            <xs:enumeration value="or"/>
+            <xs:enumeration value="rel"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TCriteriaOperator">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="between"/>
+            <xs:enumeration value="contains"/>
+            <xs:enumeration value="crosses"/>
+            <xs:enumeration value="disjoint"/>
+            <xs:enumeration value="dontexist"/>
+            <xs:enumeration value="equal"/>
+            <xs:enumeration value="exist"/>
+            <xs:enumeration value="greater"/>
+            <xs:enumeration value="greaterequal"/>
+            <xs:enumeration value="in"/>
+            <xs:enumeration value="intersects"/>
+            <xs:enumeration value="lesser"/>
+            <xs:enumeration value="lesserequal"/>
+            <xs:enumeration value="like"/>
+            <xs:enumeration value="near"/>
+            <xs:enumeration value="notequal"/>
+            <xs:enumeration value="notlike"/>
+            <xs:enumeration value="overlaps"/>
+            <xs:enumeration value="soundex"/>
+            <xs:enumeration value="touches"/>
+            <xs:enumeration value="within"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TCriteriaTarget">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="value"/>
+            <xs:enumeration value="type"/>
+            <xs:enumeration value="status"/>
+            <xs:enumeration value="datemod"/>
+            <xs:enumeration value="datecre"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="TCriteria">
+        <xs:sequence>
+            <xs:element name="penalty" type="xs:float" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute default="" name="id" type="xs:token"/>
+        <xs:attribute name="params" type="xs:token" default=""/>
+    </xs:complexType>
+    <xs:complexType name="TCriteriaWithValues">
+        <xs:complexContent>
+            <xs:extension base="pim:TCriteria">
+                <xs:choice minOccurs="0">
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="value" type="xs:token"/>
+                    <xs:element minOccurs="0" name="values" type="xs:token"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="TCriteriaLinkType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="parent"/>
+            <xs:enumeration value="child"/>
+            <xs:enumeration value="both"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="TPoint">
+        <xs:attribute name="latitude" type="xs:float"/>
+        <xs:attribute name="longitude" type="xs:float"/>
+        <xs:attribute default="wgs84" name="system">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="wgs84"/>
+                    <xs:enumeration value="lambert74"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>

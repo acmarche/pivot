@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:include schemaLocation="pivot-commons.xsd"/>
+    <xs:element name="offres">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="offre" type="pex:TOffre"/>
+            </xs:sequence>
+            <xs:attribute name="count" type="xs:int" use="optional"/>
+            <xs:attribute name="realCount" type="xs:int"/>
+            <xs:attribute name="itemsPerPage" type="xs:int"/>
+            <xs:attribute name="pagesCount" type="xs:int"/>
+            <xs:attribute name="token" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TOffre">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="userCreation" type="pex:TUser"/>
+            <xs:element minOccurs="0" name="userGlobalCreation" type="pex:TUserglobal"/>
+            <xs:element minOccurs="0" name="userModification" type="pex:TUser"/>
+            <xs:element minOccurs="0" name="userGlobalModification" type="pex:TUserglobal"/>
+            <xs:element name="nom" type="xs:token" minOccurs="0"/>
+            <xs:element name="estActive" type="xs:int" minOccurs="0"/>
+            <xs:element minOccurs="0" name="estActiveUrn" type="pex:TLabelledUrn"> </xs:element>
+            <xs:element name="visibilite" type="xs:int" minOccurs="0"/>
+            <xs:element minOccurs="0" name="visibiliteUrn" type="pex:TLabelledUrn"> </xs:element>
+            <xs:element name="typeOffre" type="pex:TTypeOffre" minOccurs="0"/>
+            <xs:element name="adresse1" type="pex:TAdresse" minOccurs="0"/>
+            <xs:element minOccurs="0" name="adresse2" type="pex:TAdresse"/>
+            <xs:element maxOccurs="unbounded" name="spec" type="pex:TSpec" minOccurs="0"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="relOffre" type="pex:TReloffre"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="relOffreTgt"
+                type="pex:TReloffreTgt"/>
+            <xs:element minOccurs="0" name="audit" type="pex:TAudit"> </xs:element>
+            <xs:element minOccurs="0" name="messageRevision" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="codeCgt" type="xs:token" use="optional"> </xs:attribute>
+        <xs:attribute name="dateCreation" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="dateModification" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="operation" type="xs:int"/>
+        <xs:attribute name="idRevision" type="xs:token"/>
+        <xs:attribute name="status">
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:minExclusive value="0"/>
+                    <xs:maxExclusive value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="followed">
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TTypeOffre">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="label" type="pex:TStringML" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="idTypeOffre" type="xs:int" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="TAdresse">
+        <xs:sequence>
+            <xs:element name="rue" type="xs:token" minOccurs="0"/>
+            <xs:element name="numero" type="xs:token" minOccurs="0"/>
+            <xs:element name="boite" type="xs:token" minOccurs="0"/>
+            <xs:element name="idIns" type="xs:int" minOccurs="0"/>
+            <xs:element name="ins" type="xs:token" minOccurs="0"/>
+            <xs:element name="cp" type="xs:token" minOccurs="0"/>
+            <xs:element maxOccurs="unbounded" name="localite" type="pex:TStringML" minOccurs="0"> </xs:element>
+            <xs:element maxOccurs="unbounded" name="commune" type="pex:TStringML" minOccurs="0"/>
+            <xs:element name="lieuDit" type="xs:token" minOccurs="0"/>
+            <xs:element minOccurs="0" name="lieuPrecis" type="xs:string"/>
+            <xs:element name="province" type="xs:token" minOccurs="0"/>
+            <xs:element minOccurs="0" name="provinceUrn" type="pex:TLabelledUrn"> </xs:element>
+            <xs:element name="pays" type="xs:token" minOccurs="0"/>
+            <xs:element minOccurs="0" name="paysUrn" type="pex:TLabelledUrn"> </xs:element>
+            <xs:element name="lambertX" type="xs:double" minOccurs="0"/>
+            <xs:element name="lambertY" type="xs:double" minOccurs="0"/>
+            <xs:element name="latitude" type="xs:float" minOccurs="0"/>
+            <xs:element name="longitude" type="xs:float" minOccurs="0"/>
+            <xs:element minOccurs="0" name="altitude" type="xs:float"/>
+            <xs:element name="noaddress" type="xs:boolean"/>
+            <xs:element name="parcNaturel" type="pex:TPns" minOccurs="0"/>
+            <xs:element name="organisme" type="pex:TMdts" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TPns">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="label" type="xs:token"/>
+        </xs:sequence>
+        <xs:attribute name="idPn" type="xs:int" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="TMdts">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="label" type="xs:token"/>
+        </xs:sequence>
+        <xs:attribute name="idMdt" type="xs:int" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="TSpec">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="userCreation" type="pex:TUser"/>
+            <xs:element minOccurs="0" name="userGlobalCreation" type="pex:TUserglobal"/>
+            <xs:element minOccurs="0" name="userModification" type="pex:TUser"/>
+            <xs:element minOccurs="0" name="userGlobalModification" type="pex:TUserglobal"/>
+            <xs:element minOccurs="0" name="urnCat" type="xs:token"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="urnCatLabel" type="pex:TStringML"/>
+            <xs:element minOccurs="0" name="urnSubCat" type="xs:token"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="urnSubCatLabel"
+                type="pex:TStringML"/>
+            <xs:element minOccurs="0" name="order" type="xs:int"/>
+            <xs:element minOccurs="0" name="type" type="xs:token"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="label" type="pex:TStringML"/>
+            <xs:element name="value" type="xs:string"/>
+            <xs:element name="valueLabel" type="pex:TStringML" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element minOccurs="0" name="status" type="pex:TStatus"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="spec" type="pex:TSpec"/>
+            <xs:element minOccurs="0" name="xpathPivotWebWs" type="xs:token"/>
+        </xs:sequence>
+        <xs:attribute name="codeCgt" type="xs:token"/>
+        <xs:attribute name="urn" type="xs:token" use="required"/>
+        <xs:attribute name="dateCreation" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="dateModification" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="operation" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="TReloffre">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="label" type="pex:TStringML"/>
+            <xs:element name="offre" type="pex:TOffre"/>
+        </xs:sequence>
+        <xs:attribute name="codeCgt" type="xs:token"/>
+        <xs:attribute name="urn" type="xs:token" use="required"/>
+        <xs:attribute name="operation" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="TReloffreTgt">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="label" type="pex:TStringML"/>
+            <xs:element name="offre" type="pex:TOffre"/>
+        </xs:sequence>
+        <xs:attribute name="codeCgt" type="xs:token"/>
+        <xs:attribute name="urn" type="xs:token" use="required"/>
+        <xs:attribute name="operation" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="TAudit">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="score" type="xs:int"/>
+            <xs:element minOccurs="0" name="scoreUrn" type="pex:TLabelledUrn"> </xs:element>
+            <xs:element minOccurs="0" name="status" type="pex:TStatus"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="report" type="pex:TMessage"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

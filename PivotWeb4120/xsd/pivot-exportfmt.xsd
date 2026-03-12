@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pim="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:element name="exportfmt">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element ref="pim:column"/>
+                    <xs:element ref="pim:object"/>
+                </xs:choice>
+                <xs:element minOccurs="0" name="parameters">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" ref="pim:nofmt"/>
+                            <xs:element minOccurs="0" ref="pim:autofilter"/>
+                            <xs:element ref="pim:dateformat"/>
+                            <xs:element ref="pim:booleanformat"/>
+                            <xs:element ref="pim:numberformat"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="codeCgt" type="xs:token" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="column">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="pim:field"/>
+                <xs:element ref="pim:text"/>
+            </xs:choice>
+            <xs:attribute name="separator" type="xs:string" use="required"/>
+            <xs:attribute name="title" type="xs:token"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="field">
+        <xs:complexType>
+            <xs:attribute name="source" type="xs:token"/>
+            <xs:attribute name="format" type="xs:token"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="object">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="pim:column"/>
+            </xs:sequence>
+            <xs:attribute name="source" type="xs:token" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="text">
+        <xs:complexType>
+            <xs:attribute name="value" type="xs:token"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="nofmt" type="xs:boolean"/>
+    <xs:element name="dateformat" type="xs:token"/>
+    <xs:element name="booleanformat" type="xs:token"/>
+    <xs:element name="numberformat" type="xs:token"/>
+    <xs:element name="autofilter" type="xs:boolean"/>
+</xs:schema>

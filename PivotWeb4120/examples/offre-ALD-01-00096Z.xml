@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<offres xmlns="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1" count="1">
+   <offre codeCgt="ALD-01-00096Z" dateCreation="18-03-2010 15:25:38" dateModification="03-05-2016 10:19:39">
+      <nom><![CDATA[Walibi Belgium]]></nom>
+      <estActive>30</estActive>
+      <visibilite>30</visibilite>
+      <typeOffre idTypeOffre="11">
+         <label lang="fr">
+            <value><![CDATA[Découverte et Divertissement]]></value>
+         </label>
+         <label lang="nl">
+            <value><![CDATA[Découverte et Divertissement]]></value>
+         </label>
+         <label lang="en">
+            <value><![CDATA[Découverte et Divertissement]]></value>
+         </label>
+         <label lang="de">
+            <value><![CDATA[Découverte et Divertissement]]></value>
+         </label>
+      </typeOffre>
+      <adresse1>
+         <rue><![CDATA[Boulevard de l'Europe]]></rue>
+         <numero><![CDATA[100]]></numero>
+         <idIns>110</idIns>
+         <ins><![CDATA[25112]]></ins>
+         <cp>1300</cp>
+         <localite lang="fr">
+            <value><![CDATA[Wavre]]></value>
+         </localite>
+         <localite lang="nl">
+            <value><![CDATA[Wavre]]></value>
+         </localite>
+         <localite lang="en">
+            <value><![CDATA[Wavre]]></value>
+         </localite>
+         <localite lang="de">
+            <value><![CDATA[Wavre]]></value>
+         </localite>
+         <commune lang="fr">
+            <value><![CDATA[Wavre]]></value>
+         </commune>
+         <commune lang="nl">
+            <value><![CDATA[Wavre]]></value>
+         </commune>
+         <commune lang="en">
+            <value><![CDATA[Wavre]]></value>
+         </commune>
+         <commune lang="de">
+            <value><![CDATA[Wavre]]></value>
+         </commune>
+         <province><![CDATA[Brabant wallon]]></province>
+         <pays><![CDATA[Belgique]]></pays>
+         <lambertX><![CDATA[165411.950188531]]></lambertX>
+         <lambertY><![CDATA[154316.212671389]]></lambertY>
+         <latitude>50.6998</latitude>
+         <longitude>4.58564</longitude>
+         <parcNaturel idPn="1">
+            <label>Hors Parcs</label>
+         </parcNaturel>
+         <organisme idMdt="41">
+            <label>Ardennes brabançonnes</label>
+         </organisme>
+      </adresse1>
+      <validationScore>100</validationScore>
+      <spec urn="urn:fld:adr">
+         <urnCat>urn:cat:resume</urnCat>
+         <urnSubCat>urn:cat:resume:resume</urnSubCat>
+         <order>60</order>
+         <type>String</type>
+         <value><![CDATA[Boulevard de l'Europe, 100]]></value>
+      </spec>
+      <spec urn="nl:urn:fld:nomofr">
+         <urnCat>urn:cat:ident</urnCat>
+         <urnSubCat>urn:cat:ident:denom</urnSubCat>
+         <order>360</order>
+         <type>FirstUpperStringML</type>
+         <value><![CDATA[Walibi]]></value>
+      </spec>
+      <spec urn="de:urn:fld:nomofr">
+         <urnCat>urn:cat:ident</urnCat>
+         <urnSubCat>urn:cat:ident:denom</urnSubCat>
+         <order>360</order>
+         <type>FirstUpperStringML</type>
+         <value><![CDATA[Walibi]]></value>
+      </spec>
+      <spec urn="en:urn:fld:nomofr">
+         <urnCat>urn:cat:ident</urnCat>
+         <urnSubCat>urn:cat:ident:denom</urnSubCat>
+         <order>360</order>
+         <type>FirstUpperStringML</type>
+         <value><![CDATA[Walibi]]></value>
+      </spec>
+      <spec urn="urn:fld:id365">
+         <urnCat>urn:cat:ident</urnCat>
+         <urnSubCat>urn:cat:ident:idalt</urnSubCat>
+         <order>450</order>
+         <type>String</type>
+         <value><![CDATA[188]]></value>
+      </spec>
+      <spec urn="urn:fld:class">
+         <urnCat>urn:cat:classlab</urnCat>
+         <urnSubCat>urn:cat:classlab:class</urnSubCat>
+         <order>740</order>
+         <type>Choice</type>
+         <value><![CDATA[urn:val:class:nc]]></value>
+      </spec>
+      <spec urn="urn:fld:qw">
+         <urnCat>urn:cat:classlab</urnCat>
+         <urnSubCat>urn:cat:classlab:qw</urnSubCat>
+         <order>830</order>
+         <type>Choice</type>
+         <value><![CDATA[urn:val:qw:nc]]></value>
+      </spec>
+      <spec urn="urn:fld:catdiv:loisir">
+         <urnCat>urn:cat:classlab</urnCat>
+         <urnSubCat>urn:cat:classlab:cat</urnSubCat>
+         <order>1180</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:catdiv:loisir:parcattr">
+         <urnCat>urn:cat:classlab</urnCat>
+         <urnSubCat>urn:cat:classlab:cat</urnSubCat>
+         <order>1290</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:phone1">
+         <urnCat>urn:cat:moycom</urnCat>
+         <urnSubCat>urn:cat:moycom:moycom</urnSubCat>
+         <order>2110</order>
+         <type>Phone</type>
+         <value><![CDATA[+3210421500]]></value>
+      </spec>
+      <spec urn="urn:fld:mail1">
+         <urnCat>urn:cat:moycom</urnCat>
+         <urnSubCat>urn:cat:moycom:moycom</urnSubCat>
+         <order>2190</order>
+         <type>EMail</type>
+         <value><![CDATA[info-wbe@walibi.com]]></value>
+      </spec>
+      <spec urn="urn:fld:urlweb">
+         <urnCat>urn:cat:moycom</urnCat>
+         <urnSubCat>urn:cat:moycom:moycom</urnSubCat>
+         <order>2210</order>
+         <type>URL</type>
+         <value><![CDATA[http://www.walibi.com]]></value>
+      </spec>
+      <spec urn="urn:fld:urlfacebook">
+         <urnCat>urn:cat:moycom</urnCat>
+         <urnSubCat>urn:cat:moycom:moycom</urnSubCat>
+         <order>2220</order>
+         <type>URLFacebook</type>
+         <value><![CDATA[https://www.facebook.com/Walibi.Belgium]]></value>
+      </spec>
+      <spec urn="urn:fld:descmarket20">
+         <urnCat>urn:cat:descmarket</urnCat>
+         <urnSubCat>urn:cat:descmarket:descmarket</urnSubCat>
+         <order>2350</order>
+         <type>TextML</type>
+         <value><![CDATA[<p>
+      Walibi, le parc d'attractions pour toute la <b>famille</b> !
+    </p>
+    <p>
+      La c&#233;l&#232;bre Radja river, le terrifiant train de mines et bien d'autres 
+      attractions vous emm&#232;neront faire un voyage en famille pas comme les 
+      autres...
+    </p>
+    <p>
+      <b>Man&#232;ges</b> enchanteurs pour les petits, <b>sensations fortes</b> 
+      garanties pour les plus t&#233;m&#233;raires !
+    </p>
+    <p>
+      Et pour les amateurs de <b>show</b>, vibrez au son des guitares des 
+      W.A.B. ou &#233;clatez-vous au rythme endiabl&#233; du groupe The SkunX mais 
+      surtout vivez une &quot;battle&quot; musicale &#233;poustouflante !
+    </p>
+    <p>
+      Une exp&#233;rience hors du commun &#224; vivre en famille et entre amis !
+    </p>
+    <p>
+      <i>Plus d'infos sur les environs : <a target="_blank" href="http://www.mtab.be">www.mtab.be</a> 
+      / +32 10 23 03 52</i>
+    </p>]]></value>
+      </spec>
+      <spec urn="nl:urn:fld:descmarket20">
+         <urnCat>urn:cat:descmarket</urnCat>
+         <urnSubCat>urn:cat:descmarket:descmarket</urnSubCat>
+         <order>2350</order>
+         <type>TextML</type>
+         <value><![CDATA[<p>
+      Walibi, het attractiepark voor het hele gezin!
+    </p>
+    <p>
+      De befaamde Radja rivier, de schrikwekkende mijntrein en nog veel meer 
+      attracties laten u en uw gezin een hoogst ongewone reis maken.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      Leuke draaimolens voor de kleintjes, volop sensatie voor de durvers!
+    </p>
+    <p>
+      En liefhebbers van show kunnen vibreren op de tonen van de gitaren van 
+      de W.A.B., zich uitleven op het stevige ritme van de groep The SkunX 
+      maar vooral een adembenemend muzikaal duel meemaken!
+    </p>
+    <p>
+      Een ongewone ervaring om te beleven met het gezin of met vrienden.
+    </p>
+    <p>
+      <i>Meer info over de omgeving: </i><a href="www.mtab.be" target="_blank">www.mtab.be</a> 
+      <i>/ +32 10 23 03</i> 52
+    </p>]]></value>
+      </spec>
+      <spec urn="en:urn:fld:descmarket20">
+         <urnCat>urn:cat:descmarket</urnCat>
+         <urnSubCat>urn:cat:descmarket:descmarket</urnSubCat>
+         <order>2350</order>
+         <type>TextML</type>
+         <value><![CDATA[<p style="margin-top: 0">
+      Walibi, the amusement park for the whole family!
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      The famous Radja River, the terrifying train through the mines and many 
+      more attractions for a family trip unlike any other &#8230;
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      Enchanting merry-go-rounds for the younger set, and emotional thrills 
+      for the bold!
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      Show lovers vibrate to the sound of W.A.B. guitars or rock to the fast 
+      pace of the Skunx. Better still, you'll love a spellbinding musical 
+      battle!
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      An extraordinary experience to enjoy with your family and friends!
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      <i>Further information about the vicinity: <a href="http://www.mtab.be">www.mtab.be</a> 
+      / +32 10 23 03 52</i>
+    </p>]]></value>
+      </spec>
+      <spec urn="urn:fld:descmarket">
+         <urnCat>urn:cat:descmarket</urnCat>
+         <urnSubCat>urn:cat:descmarket:descmarket</urnSubCat>
+         <order>2380</order>
+         <type>TextML</type>
+         <value><![CDATA[<p>
+      Walibi, le parc d'attractions pour toute la <b>famille</b> !
+    </p>
+    <p>
+      La c&#233;l&#232;bre Radja river, le terrifiant train de mines et bien d'autres 
+      attractions vous emm&#232;neront faire un voyage en famille pas comme les 
+      autres...
+    </p>
+    <p>
+      <b>Man&#232;ges</b> enchanteurs pour les petits, <b>sensations fortes</b> 
+      garanties pour les plus t&#233;m&#233;raires !
+    </p>
+    <p>
+      Et pour les amateurs de <b>show</b>, vibrez au son des guitares des 
+      W.A.B. ou &#233;clatez-vous au rythme endiabl&#233; du groupe The SkunX mais 
+      surtout vivez une &quot;battle&quot; musicale &#233;poustouflante !
+    </p>
+    <p>
+      Une exp&#233;rience hors du commun &#224; vivre en famille et entre amis !
+    </p>
+    <p>
+      <i>Plus d'infos sur les environs : <a target="_blank" href="http://www.mtab.be">www.mtab.be</a> 
+      / +32 10 23 03 52</i>
+    </p>]]></value>
+      </spec>
+      <spec urn="nl:urn:fld:descmarket">
+         <urnCat>urn:cat:descmarket</urnCat>
+         <urnSubCat>urn:cat:descmarket:descmarket</urnSubCat>
+         <order>2380</order>
+         <type>TextML</type>
+         <value><![CDATA[<p>
+      Walibi, het attractiepark voor het hele gezin!
+    </p>
+    <p>
+      De befaamde Radja rivier, de schrikwekkende mijntrein en nog veel meer 
+      attracties laten u en uw gezin een hoogst ongewone reis maken.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      Leuke draaimolens voor de kleintjes, volop sensatie voor de durvers!
+    </p>
+    <p>
+      En liefhebbers van show kunnen vibreren op de tonen van de gitaren van 
+      de W.A.B., zich uitleven op het stevige ritme van de groep The SkunX 
+      maar vooral een adembenemend muzikaal duel meemaken!
+    </p>
+    <p>
+      Een ongewone ervaring om te beleven met het gezin of met vrienden.
+    </p>
+    <p>
+      <i>Meer info over de omgeving: </i><a href="www.mtab.be" target="_blank">www.mtab.be</a> 
+      <i>/ +32 10 23 03</i> 52
+    </p>]]></value>
+      </spec>
+      <spec urn="en:urn:fld:descmarket">
+         <urnCat>urn:cat:descmarket</urnCat>
+         <urnSubCat>urn:cat:descmarket:descmarket</urnSubCat>
+         <order>2380</order>
+         <type>TextML</type>
+         <value><![CDATA[<p style="margin-top: 0">
+      Walibi, the amusement park for the whole family!
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      The famous Radja River, the terrifying train through the mines and many 
+      more attractions for a family trip unlike any other &#8230;
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      Enchanting merry-go-rounds for the younger set, and emotional thrills 
+      for the bold!
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      Show lovers vibrate to the sound of W.A.B. guitars or rock to the fast 
+      pace of the Skunx. Better still, you'll love a spellbinding musical 
+      battle!
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      An extraordinary experience to enjoy with your family and friends!
+    </p>
+    <p style="margin-top: 0">
+      
+    </p>
+    <p style="margin-top: 0">
+      <i>Further information about the vicinity: <a href="http://www.mtab.be">www.mtab.be</a> 
+      / +32 10 23 03 52</i>
+    </p>]]></value>
+      </spec>
+      <spec urn="urn:fld:ouvind">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:ouvind</urnSubCat>
+         <order>2460</order>
+         <type>TextML</type>
+         <value><![CDATA[<div>
+      Voir le <a href="http://www.walibi.com/belgium/be-fr/info/calendrier" target="_blank">site 
+      Internet de Walibi</a><br><br>
+    </div>
+    <div>
+      Ferm&#233; apr&#232;s les cong&#233;s d'automne, jusque fin mars.
+    </div>]]></value>
+      </spec>
+      <spec urn="en:urn:fld:ouvind">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:ouvind</urnSubCat>
+         <order>2460</order>
+         <type>TextML</type>
+         <value><![CDATA[<div>
+      <a href="https://www.walibi.com/belgium/be-en/info/calendar" target="_blank">See 
+      website</a>.<br><br>Closed after All Saints holidays until late March.
+    </div>]]></value>
+      </spec>
+      <spec urn="nl:urn:fld:ouvind">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:ouvind</urnSubCat>
+         <order>2460</order>
+         <type>TextML</type>
+         <value><![CDATA[<div>
+      <a href="https://www.walibi.com/belgium/be-nl/info/kalender" target="_blank">Zie 
+      website</a>.<br><br>
+    </div>
+    <div>
+      Gesloten na Allerheiligen feestdagen tot eind maart.
+    </div>]]></value>
+      </spec>
+      <spec urn="de:urn:fld:ouvind">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:ouvind</urnSubCat>
+         <order>2460</order>
+         <type>TextML</type>
+         <value><![CDATA[Von 10 bis 18 Uhr ? am 31. M&#228;rz ? April: vom 01. bis 15. - 21. und 22. - 
+    vom 27. bis 30. ? Mai: samstags - sonntags und am 01., 04., 17., 18., 28., 
+    31. ? Juni: t&#228;glich au&#223;er vom 04. bis 07. und vom 11. bis 14. ? 
+    Juli-August: t&#228;glich (vom 07.07. bis 31.08.: 10 - 19 Uhr) - 
+    Abendveranstaltungen (10 - 23 Uhr): samstags 14., 21., 28. Juli und 04., 
+    11. August ? September-Oktober: samstags - sonntags &amp; 27.09. ? Halloween: 
+    20. und 21.10. &amp; vom 27.10. bis 04.11. - Abendveranstaltungen (10 - 21 
+    Uhr): 27., 28., 31.10. und 01. &amp; 02.11.]]></value>
+      </spec>
+      <spec urn="urn:fld:grpacc">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:grp</urnSubCat>
+         <order>2500</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:langpar:de">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:langpar</urnSubCat>
+         <order>2550</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:langpar:en">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:langpar</urnSubCat>
+         <order>2560</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:langpar:fr">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:langpar</urnSubCat>
+         <order>2570</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:langpar:nl">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:langpar</urnSubCat>
+         <order>2590</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:pmr">
+         <urnCat>urn:cat:accueil</urnCat>
+         <urnSubCat>urn:cat:accueil:pmr</urnSubCat>
+         <order>2620</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:langvisit:fr">
+         <urnCat>urn:cat:visite</urnCat>
+         <urnSubCat>urn:cat:visite:langvisit</urnSubCat>
+         <order>3170</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:eqpsrv:cafet">
+         <urnCat>urn:cat:eqpsrv</urnCat>
+         <urnSubCat>urn:cat:eqpsrv:eqpsrv</urnSubCat>
+         <order>3340</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:eqpsrv:parking">
+         <urnCat>urn:cat:eqpsrv</urnCat>
+         <urnSubCat>urn:cat:eqpsrv:eqpsrv</urnSubCat>
+         <order>3380</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:eqpsrv:parkingautoc">
+         <urnCat>urn:cat:eqpsrv</urnCat>
+         <urnSubCat>urn:cat:eqpsrv:eqpsrv</urnSubCat>
+         <order>3390</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:eqpsrvequ:nourr">
+         <urnCat>urn:cat:eqpsrv</urnCat>
+         <urnSubCat>urn:cat:epqsrv:eqpsrvequ</urnSubCat>
+         <order>3560</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:tarifind:pmin:adult">
+         <urnCat>urn:cat:tarif</urnCat>
+         <urnSubCat>urn:cat:tarif:tarifind</urnSubCat>
+         <order>3640</order>
+         <type>Currency</type>
+         <value><![CDATA[35]]></value>
+      </spec>
+      <spec urn="urn:fld:tarifind:pmin:enfant">
+         <urnCat>urn:cat:tarif</urnCat>
+         <urnSubCat>urn:cat:tarif:tarifind</urnSubCat>
+         <order>3680</order>
+         <type>Currency</type>
+         <value><![CDATA[30]]></value>
+      </spec>
+      <spec urn="urn:fld:tarifind:pmin:senior">
+         <urnCat>urn:cat:tarif</urnCat>
+         <urnSubCat>urn:cat:tarif:tarifind</urnSubCat>
+         <order>3720</order>
+         <type>Currency</type>
+         <value><![CDATA[30]]></value>
+      </spec>
+      <spec urn="urn:fld:tarifind:gratuite">
+         <urnCat>urn:cat:tarif</urnCat>
+         <urnSubCat>urn:cat:tarif:tarifind</urnSubCat>
+         <order>3800</order>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:tarifgrp:pmin">
+         <urnCat>urn:cat:tarif</urnCat>
+         <urnSubCat>urn:cat:tarif:tarifgrp</urnSubCat>
+         <order>3830</order>
+         <type>Currency</type>
+         <value><![CDATA[25]]></value>
+      </spec>
+      <spec urn="urn:fld:tarifcplt">
+         <urnCat>urn:cat:tarif</urnCat>
+         <urnSubCat>urn:cat:tarif:tarifcplt</urnSubCat>
+         <order>3880</order>
+         <type>TextML</type>
+         <value><![CDATA[<p>
+      Possibilit&#233; de prix attactifs pour les groupes suivants : groupe jeunes, 
+      groupe entreprise, groupe mixte, groupe Tour &amp; Travel
+    </p>]]></value>
+      </spec>
+      <spec urn="nl:urn:fld:tarifcplt">
+         <urnCat>urn:cat:tarif</urnCat>
+         <urnSubCat>urn:cat:tarif:tarifcplt</urnSubCat>
+         <order>3880</order>
+         <type>TextML</type>
+         <value><![CDATA[<p>
+      Mogelijkheid tot aantrekkelijke prijzen voor de volgende groepen: jonge 
+      groep, business groep, gemengde groep, Tour &amp; Travel Groep.
+    </p>]]></value>
+      </spec>
+      <spec urn="en:urn:fld:tarifcplt">
+         <urnCat>urn:cat:tarif</urnCat>
+         <urnSubCat>urn:cat:tarif:tarifcplt</urnSubCat>
+         <order>3880</order>
+         <type>TextML</type>
+         <value><![CDATA[<p>
+      Possibility of attractive prices for the following groups: young group, 
+      business group, mixed group, Tour &amp; Travel Group
+    </p>]]></value>
+      </spec>
+      <spec urn="urn:fld:filtautre:01:02WM:0001">
+         <urnCat>urn:cat:filtre</urnCat>
+         <urnSubCat>urn:cat:filtre:filtautre</urnSubCat>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:filtweb:01:00000Z">
+         <urnCat>urn:cat:ident</urnCat>
+         <urnSubCat>urn:cat:ident:filtweb</urnSubCat>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <spec urn="urn:fld:filtweb:01:00000T">
+         <urnCat>urn:cat:ident</urnCat>
+         <urnSubCat>urn:cat:ident:filtweb</urnSubCat>
+         <type>Boolean</type>
+         <value><![CDATA[true]]></value>
+      </spec>
+      <relOffre urn="urn:lnk:offre:enfant">
+         <offre codeCgt="MIF-04-0008OG" dateCreation="07-02-2011 14:42:35" dateModification="20-04-2016 15:01:30"/>
+      </relOffre>
+      <relOffre urn="urn:lnk:offre:enfant">
+         <offre codeCgt="MDV-04-0008OF" dateCreation="04-02-2011 14:08:05" dateModification="23-05-2016 22:05:21"/>
+      </relOffre>
+      <relOffre urn="urn:lnk:contact:info">
+         <offre codeCgt="CTP-1H-000S08" dateCreation="24-06-2013 10:29:26" dateModification="03-05-2016 10:19:30"/>
+      </relOffre>
+      <relOffre urn="urn:lnk:media:autre">
+         <offre codeCgt="ANX-1H-000S8O" dateCreation="26-07-2013 15:03:21" dateModification="07-01-2015 11:58:28"/>
+      </relOffre>
+      <relOffre urn="urn:lnk:media:defaut">
+         <offre codeCgt="ANX-1H-000S8P" dateCreation="26-07-2013 15:04:55" dateModification="07-01-2015 11:58:28"/>
+      </relOffre>
+      <relOffre urn="urn:lnk:media:autre">
+         <offre codeCgt="ANX-1H-000S8Q" dateCreation="26-07-2013 15:05:29" dateModification="07-01-2015 11:58:28"/>
+      </relOffre>
+      <relOffre urn="urn:lnk:media:autre">
+         <offre codeCgt="ANX-1H-000S8R" dateCreation="26-07-2013 15:06:23" dateModification="07-01-2015 11:58:28"/>
+      </relOffre>
+      <relOffre urn="urn:lnk:offre:voiraussi">
+         <offre codeCgt="ALD-01-000970" dateCreation="18-03-2010 15:25:38" dateModification="08-04-2016 09:32:07"/>
+      </relOffre>
+      <relOffre urn="urn:lnk:media:autre">
+         <offre codeCgt="ANX-1H-000TA3" dateCreation="12-05-2014 11:57:47" dateModification="07-01-2015 11:58:28"/>
+      </relOffre>
+   </offre>
+</offres>

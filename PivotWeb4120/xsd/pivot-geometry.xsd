@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:element name="geometries">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="geometry" maxOccurs="unbounded" minOccurs="0" type="pex:TGeometry"
+                />
+            </xs:sequence>
+            <xs:attribute name="count" type="xs:int" use="optional"/>
+            <xs:attribute name="realCount" type="xs:int"/>
+            <xs:attribute name="itemsPerPage" type="xs:int"/>
+            <xs:attribute name="pagesCount" type="xs:int"/>
+            <xs:attribute name="token" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TGeometry">
+        <xs:sequence>
+            <xs:element name="offer" type="xs:token"/>
+            <xs:element name="data" type="xs:string"/>
+            <xs:element name="distance" type="xs:unsignedInt"/>
+            <xs:element name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="GEOM"/>
+                        <xs:enumeration value="BOX"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="context">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="STRPT"/>
+                        <xs:enumeration value="ENDPT"/>
+                        <xs:enumeration value="TRK"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="dateModification" type="xs:dateTime"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:int"/>
+    </xs:complexType>
+</xs:schema>

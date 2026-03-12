@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:include schemaLocation="pivot-cirkwi-poi.xsd"/>
+
+	<xs:element name="circuits">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="circuit" type="circuit"/>
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:token" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="circuit">
+		<xs:sequence maxOccurs="1" minOccurs="0">
+			<xs:element ref="informations"/>
+			<xs:element name="distance" type="xs:string"/>
+			<xs:element name="adresse" type="adresse"/>
+			<xs:element name="auteur" type="auteur"/>
+			<xs:element name="accessibilite" type="accessibilite"/>
+			<xs:element name="fichier_trace" type="fichier_trace"/>
+			<xs:element ref="tags_prives"/>
+			<xs:element ref="locomotions"/>
+			<xs:element ref="infos_parcours"/>
+			<xs:element ref="pois"/>
+			<xs:element name="lien" type="xs:string"/>
+			<xs:element name="altitude_minimum" type="xs:string"/>
+			<xs:element name="altitude_maximum" type="xs:string"/>
+			<xs:element name="denivele_positif" type="xs:string"/>
+			<xs:element name="denivele_negatif" type="xs:string"/>
+			<xs:element name="diffusion" type="diffusion"/>
+		</xs:sequence>
+		<xs:attribute name="id_circuit" type="xs:token" use="required"/>
+		<xs:attribute name="code_cgt" type="xs:token" use="required"/>
+		<xs:attribute name="date_modification" type="xs:token" use="required"/>
+		<xs:attribute name="date_creation" type="xs:token" use="required"/>
+		<xs:attribute name="id_utilisateur" type="xs:token"/>
+		<xs:attribute name="publie_cirkwi" type="xs:int"/>
+		<xs:attribute name="publie_reseau" type="xs:int"/>
+	</xs:complexType>
+
+	<xs:element name="locomotions">
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded" minOccurs="0">
+				<xs:element name="locomotion" type="locomotion"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="locomotion">
+		<xs:attribute name="type" type="xs:string"/>
+		<xs:attribute name="id_locomotion" type="xs:string"/>
+		<xs:attribute name="difficulte" type="xs:string"/>
+		<xs:attribute name="duree" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="accessibilite">
+		<xs:attribute name="accessible_transports_commun" type="xs:string"/>
+		<xs:attribute name="pmr" type="xs:string"/>
+		<xs:attribute name="poussette" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="fichier_trace">
+		<xs:attribute name="url" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:element name="infos_parcours">
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded" minOccurs="0">
+				<xs:element name="info_parcours" type="info_parcours"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="info_parcours">
+		<xs:sequence maxOccurs="1" minOccurs="0">
+			<xs:element ref="categories"/>
+			<xs:element ref="informations"/>
+			<xs:element name="adresse" type="adresse"/>
+		</xs:sequence>
+		<xs:attribute name="numero" type="xs:string"/>
+		<xs:attribute name="date_creation" type="xs:string"/>
+		<xs:attribute name="date_modification" type="xs:string"/>
+		<xs:attribute name="id_info_parcours" type="xs:string"/>
+		<xs:attribute name="code_cgt" type="xs:token" use="required"/>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pex="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:include schemaLocation="pivot-commons.xsd"/>
+    <xs:element name="thesaurus">
+        <xs:complexType>
+            <xs:choice>
+                <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="spec" type="pex:TSpecstype" minOccurs="0"/>
+                </xs:sequence>
+                <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="tins" type="pex:TIns"/>
+                </xs:sequence>
+                <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="tmdt" type="pex:TMdt"/>
+                </xs:sequence>
+                <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="tpn" type="pex:TPn"/>
+                </xs:sequence>
+                <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="tstatus" type="pex:TStatus"/>
+                </xs:sequence>
+                <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="trues" type="pex:TRues"/>
+                </xs:sequence>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TSpecstype">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="type" type="xs:token"/>
+            <xs:element minOccurs="0" name="object" type="xs:token" nillable="false"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="label" type="pex:TStringML"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="abstract" type="pex:TStringML"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="definition" type="pex:TStringML"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="picto" type="pex:TPicto"/>
+            <xs:element name="xpathPivotWebWs" type="xs:token" minOccurs="0"/>
+            <xs:element minOccurs="0" name="value" type="xs:token"/>
+            <xs:element name="dynamic" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="root" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="system" type="xs:boolean" minOccurs="0"/>
+            <xs:element minOccurs="0" name="edit" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="poi" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="visibilite" type="xs:int"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="userGlobalGranted" type="xs:int"/>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="spec" type="pex:TSpecstype"/>
+            </xs:sequence>
+        </xs:sequence>
+        <xs:attribute name="urn" type="xs:token" use="required"/>
+        <xs:attribute name="code" type="xs:token"/>
+        <xs:attribute name="order" type="xs:int"/>
+        <xs:attribute name="redundant" type="xs:boolean"/>
+        <xs:attribute name="userGlobalId" type="xs:int"/>
+        <xs:attribute name="userGlobalName" type="xs:token"/>
+        <xs:attribute name="userLocalLogin" type="xs:token"/>
+        <xs:attribute name="userLocalName" type="xs:token"/>
+        <xs:attribute name="userLocalSurname" type="xs:token"/>
+        <xs:attribute name="urn_new" type="xs:token"/>
+        <xs:attribute name="deprecated" type="xs:boolean"/>
+        <xs:attribute name="parent" type="xs:token"/>
+        <xs:attribute name="collapsed" type="xs:boolean"/>
+        <xs:attribute name="dateModification" type="xs:dateTime"/>
+        <xs:attribute name="dateCreation" type="xs:dateTime"/>
+    </xs:complexType>
+    <xs:complexType name="TIns">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="ins" type="xs:token"/>
+            <xs:element name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:enumeration value="10"/>
+                        <xs:enumeration value="20"/>
+                        <xs:enumeration value="30"/>
+                        <xs:enumeration value="40"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="cp" type="xs:token"/>
+            <xs:element maxOccurs="unbounded" name="localite" type="pex:TStringML"/>
+            <xs:element maxOccurs="unbounded" name="commune" type="pex:TStringML"/>
+            <xs:element name="arrondissement" type="xs:token"/>
+            <xs:element name="province" type="xs:token"/>
+            <xs:element name="provinceUrn" type="pex:TLabelledUrn"> </xs:element>
+            <xs:element name="conseilNoble" type="xs:token"/>
+            <xs:element name="mdt" type="pex:TMdt"/>
+            <xs:element name="parcNaturel" type="pex:TPn"/>
+            <xs:element name="pays" type="xs:token"/>
+            <xs:element name="paysUrn" type="pex:TLabelledUrn"> </xs:element>
+            <xs:element minOccurs="0" name="longitude" type="xs:float"/>
+            <xs:element minOccurs="0" name="latitude" type="xs:float"/>
+            <xs:element minOccurs="0" name="altitude" type="xs:float"/>
+        </xs:sequence>
+        <xs:attribute name="idIns" type="xs:int" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="TMdt">
+        <xs:sequence>
+            <xs:element name="value" type="xs:token"/>
+            <xs:element minOccurs="0" name="idUserGlobal" type="xs:int"/>
+        </xs:sequence>
+        <xs:attribute name="idMdt" type="xs:int" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="TPn">
+        <xs:sequence>
+            <xs:element name="value" type="xs:token"/>
+        </xs:sequence>
+        <xs:attribute name="idPn" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="TPicto">
+        <xs:sequence>
+            <xs:element name="url" type="xs:token"/>
+        </xs:sequence>
+        <xs:attribute name="modifier" type="xs:token"/>
+    </xs:complexType>
+    <xs:complexType name="TRues">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="idAlt" type="xs:token"/>
+            <xs:element minOccurs="0" name="source" type="xs:token"/>
+            <xs:element name="ins_com" type="xs:token"/>
+            <xs:element name="nom" type="pex:TStringML" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="idRue" type="xs:int" use="required"/>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1"
+    xmlns:pim="http://pivot.tourismewallonie.be/files/xsd/pivot/3.1">
+    <xs:include schemaLocation="pivot-query.xsd"/>
+    <xs:include schemaLocation="pivot-offer.xsd"/>
+    <xs:element name="exportmedia">
+        <xs:complexType>
+            <xs:sequence minOccurs="1">
+                <xs:element name="exportmediafmt" type="pim:exportmediafmt" minOccurs="0"/>
+                <xs:element ref="pim:Query" minOccurs="0"/>
+                <xs:element ref="pim:offres" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="exportmediafmt">
+        <xs:sequence minOccurs="0">
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                <xs:element ref="pim:mediatype"/>
+            </xs:sequence>
+            <xs:element ref="pim:linktype"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element default="urn:lnk:media:defaut" name="linktype">
+        <xs:simpleType>
+            <xs:restriction base="xs:token">
+                <xs:enumeration value="urn:lnk:media:autre"/>
+                <xs:enumeration value="urn:lnk:media:defaut"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="mediatype" default="urn:val:typmed:photo">
+        <xs:simpleType>
+            <xs:restriction base="xs:token">
+                <xs:enumeration value="urn:val:typmed:arch"/>
+                <xs:enumeration value="urn:val:typmed:audio"/>
+                <xs:enumeration value="urn:val:typmed:cartprom"/>
+                <xs:enumeration value="urn:val:typmed:descprom"/>
+                <xs:enumeration value="urn:val:typmed:doc"/>
+                <xs:enumeration value="urn:val:typmed:gpx"/>
+                <xs:enumeration value="urn:val:typmed:photo"/>
+                <xs:enumeration value="urn:val:typmed:plan"/>
+                <xs:enumeration value="urn:val:typmed:pres"/>
+                <xs:enumeration value="urn:val:typmed:qrcode"/>
+                <xs:enumeration value="urn:val:typmed:tabl"/>
+                <xs:enumeration value="urn:val:typmed:video"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+</xs:schema>
