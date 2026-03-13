@@ -41,7 +41,7 @@ class PivotFetchCommand extends Command
 
         if ($input->getOption('clear')) {
             $this->pivotClient->clearCache();
-            $io->info('Pivot cache cleared (files + Redis).');
+            $io->info('Pivot Redis cache cleared. JSON files kept as fallback until fresh data is fetched.');
         }
 
         $display = $input->getOption('display');

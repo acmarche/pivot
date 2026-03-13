@@ -41,7 +41,7 @@ class ThesaurusFetchCommand extends Command
 
         if ($input->getOption('clear')) {
             $this->thesaurusClient->clearCache();
-            $io->info('Thesaurus caches cleared (files + Redis).');
+            $io->info('Thesaurus Redis cache cleared. JSON file kept as fallback until fresh data is fetched.');
         }
 
         $level = ContentLevel::from((int) $input->getOption('level'));

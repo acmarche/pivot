@@ -98,7 +98,8 @@ class PivotCache
         $success = true;
 
         foreach ($levels as $l) {
-            // Clear Redis
+            // Clear Redis only — JSON files are kept as fallback until
+            // new data is successfully fetched and written via set()
             try {
                 $this->pivotCache->delete($this->getCacheKey($l));
             } catch (\Throwable $e) {
@@ -108,16 +109,21 @@ class PivotCache
                 ]);
                 $success = false;
             }
-
-            // Clear file
-            $file = $this->getFilePath($l);
-            if (file_exists($file) && !unlink($file)) {
-                $this->logger?->error('Pivot cache: failed to delete file', ['file' => $file]);
-                $success = false;
-            }
         }
 
         return $success;
+    }
+
+    public function deleteFile(ContentLevel $level): bool
+    {
+        $file = $this->getFilePath($level);
+        if (file_exists($file) && !unlink($file)) {
+            $this->logger?->error('Pivot cache: failed to delete file', ['file' => $file]);
+
+            return false;
+        }
+
+        return true;
     }
 
     public function getThesaurus(): ?array
@@ -173,6 +179,7 @@ class PivotCache
     {
         $success = true;
 
+        // Clear Redis only — JSON file kept as fallback until new data is written via setThesaurus()
         try {
             $this->pivotCache->delete('pivot_thesaurus_urns');
         } catch (\Throwable $e) {
@@ -182,13 +189,19 @@ class PivotCache
             $success = false;
         }
 
+        return $success;
+    }
+
+    public function deleteThesaurusFile(): bool
+    {
         $file = $this->getThesaurusFilePath();
         if (file_exists($file) && !unlink($file)) {
             $this->logger?->error('Thesaurus cache: failed to delete file', ['file' => $file]);
-            $success = false;
+
+            return false;
         }
 
-        return $success;
+        return true;
     }
 
     public function getFilePath(ContentLevel $level): string
