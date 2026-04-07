@@ -47,14 +47,19 @@ readonly class PivotClient
         }
 
         $data = $this->fetchFromApi($level);
-        $this->pivotCache->set($level, $data);
-
         $response = $this->pivotSerializer->deserializeOfferResponse($data);
+        if ($response->count > 150) {
+            $this->pivotCache->set($level, $data);
+        }
         unset($data);
 
         return $response;
     }
 
+    /**
+     * @param ContentLevel $level
+     * @return array
+     */
     public function fetchFromApi(ContentLevel $level): array
     {
         $url = sprintf('%s/query/%s;content=%d', $this->baseUri, $this->codeQuery, $level->value);

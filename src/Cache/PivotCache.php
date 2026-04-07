@@ -19,7 +19,7 @@ class PivotCache
     private const int TTL = 72000; // 20 hours
 
     public function __construct(
-        private CacheInterface $pivotCache,
+        private CacheInterface $redisCache,
         #[Autowire(env: 'PIVOT_CODE_QUERY'), \SensitiveParameter]
         private readonly string $codeQuery,
         #[Autowire('%kernel.project_dir%/data/pivot/')]
@@ -30,7 +30,7 @@ class PivotCache
         $redis = RedisAdapter::createConnection('redis://localhost', [
             'timeout' => 15,
         ]);
-        $this->pivotCache = new RedisAdapter($redis, 'visit_namespace', 3600, $marshaller);
+        $this->redisCache = new RedisAdapter($redis, 'visit_namespace', 3600, $marshaller);
     }
 
     public function get(ContentLevel $level): ?array
@@ -39,7 +39,7 @@ class PivotCache
 
         // Try Redis first
         try {
-            $data = $this->pivotCache->get($key, function (ItemInterface $item) use ($level) {
+            $data = $this->redisCache->get($key, function (ItemInterface $item) use ($level) {
                 // Redis miss — try file cache before calling API
                 $fileData = $this->readFromFile($level);
                 if ($fileData !== null) {
@@ -77,8 +77,8 @@ class PivotCache
         // Write to Redis
         $key = $this->getCacheKey($level);
         try {
-            $this->pivotCache->delete($key);
-            $this->pivotCache->get($key, function (ItemInterface $item) use ($data) {
+            $this->redisCache->delete($key);
+            $this->redisCache->get($key, function (ItemInterface $item) use ($data) {
                 $item->expiresAfter(self::TTL);
 
                 return $data;
@@ -101,7 +101,7 @@ class PivotCache
             // Clear Redis only — JSON files are kept as fallback until
             // new data is successfully fetched and written via set()
             try {
-                $this->pivotCache->delete($this->getCacheKey($l));
+                $this->redisCache->delete($this->getCacheKey($l));
             } catch (\Throwable $e) {
                 $this->logger?->warning('Pivot cache: failed to clear Redis key', [
                     'level' => $l->value,
@@ -131,7 +131,7 @@ class PivotCache
         $key = 'pivot_thesaurus_urns';
 
         try {
-            $data = $this->pivotCache->get($key, function (ItemInterface $item) {
+            $data = $this->redisCache->get($key, function (ItemInterface $item) {
                 $fileData = $this->readThesaurusFromFile();
                 if ($fileData !== null) {
                     $item->expiresAfter(self::TTL);
@@ -161,8 +161,8 @@ class PivotCache
 
         $key = 'pivot_thesaurus_urns';
         try {
-            $this->pivotCache->delete($key);
-            $this->pivotCache->get($key, function (ItemInterface $item) use ($data) {
+            $this->redisCache->delete($key);
+            $this->redisCache->get($key, function (ItemInterface $item) use ($data) {
                 $item->expiresAfter(self::TTL);
 
                 return $data;
@@ -181,7 +181,7 @@ class PivotCache
 
         // Clear Redis only — JSON file kept as fallback until new data is written via setThesaurus()
         try {
-            $this->pivotCache->delete('pivot_thesaurus_urns');
+            $this->redisCache->delete('pivot_thesaurus_urns');
         } catch (\Throwable $e) {
             $this->logger?->warning('Thesaurus cache: failed to clear Redis key', [
                 'error' => $e->getMessage(),
