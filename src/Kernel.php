@@ -25,14 +25,19 @@ class Kernel extends BaseKernel
 
     private function getMyBundles(): array
     {
-        return [
+        $bundles = [
             FrameworkBundle::class => ['all' => true],
-            DebugBundle::class => ['dev' => true],
             TwigBundle::class => ['all' => true],
             TwigExtraBundle::class => ['all' => true],
             PivotAiBundle::class => ['all' => true],
             MonologBundle::class => ['all' => true],
         ];
 
+
+        if (class_exists(DebugBundle::class)) {
+            $bundles[DebugBundle::class] = ['dev' => true];
+        }
+
+        return $bundles;
     }
 }
