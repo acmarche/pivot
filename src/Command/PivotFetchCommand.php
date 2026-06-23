@@ -46,11 +46,11 @@ class PivotFetchCommand extends Command
 
         try {
             if ($contentLevel) {
-                $io->info(sprintf('Fetching offers from query (level %d)', $contentLevel->value));
+                //$io->info(sprintf('Fetching offers from query (level %d)', $contentLevel->value));
                 $response = $this->pivotClient->fetchOffersByCriteria($contentLevel, useCache: false);
             } else {
                 foreach (ContentLevel::cases() as $contentLevel) {
-                    $io->info(sprintf('Fetching offers from query (level %d)', $contentLevel->value));
+                    //$io->info(sprintf('Fetching offers from query (level %d)', $contentLevel->value));
                     $response = $this->pivotClient->fetchOffersByCriteria($contentLevel, useCache: false);
                     unset($response);
                 }
@@ -58,7 +58,7 @@ class PivotFetchCommand extends Command
                 return Command::SUCCESS;
             }
             $this->pivotClient->clearCache();//clear only redis cache
-            $io->success(sprintf('Retrieved %d offer(s)', $response->count));
+            //$io->success(sprintf('Retrieved %d offer(s)', $response->count));
 
             if ($display) {
                 $this->displayOffers($response, $io);
