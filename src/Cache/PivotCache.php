@@ -44,7 +44,7 @@ class PivotCache
                 $fileData = $this->readFromFile($level);
                 if ($fileData !== null) {
                     $item->expiresAfter(self::TTL);
-                    $this->logger?->info('Pivot cache: loaded from file, stored in Redis', ['level' => $level->value]);
+                    $this->logger?->debug('Pivot cache: loaded from file, stored in Redis', ['level' => $level->value]);
 
                     return $fileData;
                 }
@@ -53,7 +53,7 @@ class PivotCache
                 throw new CacheMissException();
             });
 
-            $this->logger?->info('Pivot cache: hit from Redis', ['level' => $level->value]);
+            $this->logger?->debug('Pivot cache: hit from Redis', ['level' => $level->value]);
 
             return $data;
         } catch (CacheMissException) {
@@ -83,7 +83,7 @@ class PivotCache
 
                 return $data;
             });
-            $this->logger?->info('Pivot cache: stored in Redis', ['key' => $key]);
+            $this->logger?->debug('Pivot cache: stored in Redis', ['key' => $key]);
         } catch (\Throwable $e) {
             $this->logger?->warning('Pivot cache: failed to store in Redis', [
                 'key' => $key,
@@ -135,7 +135,7 @@ class PivotCache
                 $fileData = $this->readThesaurusFromFile();
                 if ($fileData !== null) {
                     $item->expiresAfter(self::TTL);
-                    $this->logger?->info('Thesaurus cache: loaded from file, stored in Redis');
+                    $this->logger?->debug('Thesaurus cache: loaded from file, stored in Redis');
 
                     return $fileData;
                 }
@@ -167,7 +167,7 @@ class PivotCache
 
                 return $data;
             });
-            $this->logger?->info('Thesaurus cache: stored in Redis');
+            $this->logger?->debug('Thesaurus cache: stored in Redis');
         } catch (\Throwable $e) {
             $this->logger?->warning('Thesaurus cache: failed to store in Redis', [
                 'error' => $e->getMessage(),
@@ -256,7 +256,7 @@ class PivotCache
             $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
             unset($content);
 
-            $this->logger?->info('Pivot cache: loaded from file', ['file' => $file]);
+            $this->logger?->debug('Pivot cache: loaded from file', ['file' => $file]);
 
             return $data;
         } catch (JsonException $e) {
@@ -285,7 +285,7 @@ class PivotCache
             }
 
             unset($json);
-            $this->logger?->info('Pivot cache: written to file', ['file' => $file]);
+            $this->logger?->debug('Pivot cache: written to file', ['file' => $file]);
         } catch (JsonException $e) {
             $this->logger?->error('Pivot cache: failed to encode JSON', ['error' => $e->getMessage()]);
         } catch (RuntimeException $e) {

@@ -19,7 +19,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'console' => [
                     'type' => 'console',
                     'process_psr_3_messages' => false,
-                    'channels' => ['!event', '!doctrine', '!console'],
+                    'channels' => ['!event', '!doctrine', '!console', '!http_client'],
                 ],
             ],
         ]);
@@ -64,7 +64,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'console' => [
                     'type' => 'console',
                     'process_psr_3_messages' => false,
-                    'channels' => ['!event', '!doctrine'],
+                    'channels' => ['!event', '!doctrine', '!http_client'],
                 ],
                 'deprecation' => [
                     'type' => 'stream',
