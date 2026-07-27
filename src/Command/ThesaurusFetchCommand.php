@@ -41,12 +41,9 @@ class ThesaurusFetchCommand extends Command
 
         if ($input->getOption('clear')) {
             $this->thesaurusClient->clearCache();
-            $io->info('Thesaurus Redis cache cleared. JSON file kept as fallback until fresh data is fetched.');
         }
 
         $level = ContentLevel::from((int) $input->getOption('level'));
-
-        $io->info(sprintf('Loading offers at level %d to collect URNs...', $level->value));
 
         try {
             $response = $this->pivotClient->fetchOffersByCriteria($level);
@@ -64,12 +61,10 @@ class ThesaurusFetchCommand extends Command
         }
 
         $uniqueUrns = array_values(array_unique($urns));
-        $io->info(sprintf('Found %d unique URNs to fetch from thesaurus.', count($uniqueUrns)));
 
         $fetched = $this->thesaurusClient->fetchUrns($uniqueUrns);
 
         $cache = $this->thesaurusClient->loadCache();
-        $io->success(sprintf('Fetched %d new URN(s). Total cached: %d.', $fetched, count($cache)));
 
         return Command::SUCCESS;
     }
