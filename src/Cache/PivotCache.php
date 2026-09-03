@@ -8,110 +8,47 @@ use AcMarche\PivotAi\Enums\ContentLevel;
 use JsonException;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use Symfony\Component\Cache\Adapter\RedisAdapter;
-use Symfony\Component\Cache\Marshaller\TagAwareMarshaller;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
+/**
+ * File cache for Pivot API responses.
+ *
+ * Each content level is stored as a single JSON file under the data directory.
+ * There is no separate in-memory layer: the files are the store, and the OS
+ * page cache keeps the hot ones resident. Freshness comes from the
+ * `pivot:fetch` command rewriting the files, not from an expiry.
+ */
 class PivotCache
 {
-    private const int TTL = 72000; // 20 hours
-
     public function __construct(
-        private CacheInterface $redisCache,
         #[Autowire(env: 'PIVOT_CODE_QUERY'), \SensitiveParameter]
         private readonly string $codeQuery,
         #[Autowire('%kernel.project_dir%/data/pivot/')]
         private readonly string $dataDir,
         private readonly ?LoggerInterface $logger = null,
     ) {
-        $marshaller = new TagAwareMarshaller();
-        $redis = RedisAdapter::createConnection('redis://localhost', [
-            'timeout' => 15,
-        ]);
-        $this->redisCache = new RedisAdapter($redis, 'visit_namespace', 3600, $marshaller);
     }
 
     public function get(ContentLevel $level): ?array
     {
-        $key = $this->getCacheKey($level);
-
-        // Try Redis first
-        try {
-            $data = $this->redisCache->get($key, function (ItemInterface $item) use ($level) {
-                // Redis miss — try file cache before calling API
-                $fileData = $this->readFromFile($level);
-                if ($fileData !== null) {
-                    $item->expiresAfter(self::TTL);
-                    $this->logger?->debug('Pivot cache: loaded from file, stored in Redis', ['level' => $level->value]);
-
-                    return $fileData;
-                }
-
-                // Neither Redis nor file has data — signal caller to fetch from API
-                throw new CacheMissException();
-            });
-
-            $this->logger?->debug('Pivot cache: hit from Redis', ['level' => $level->value]);
-
-            return $data;
-        } catch (CacheMissException) {
-            return null;
-        } catch (\Throwable $e) {
-            $this->logger?->warning('Pivot cache: Redis error, falling back to file', [
-                'level' => $level->value,
-                'error' => $e->getMessage(),
-            ]);
-        }
-
-        // Redis unavailable — try file directly
         return $this->readFromFile($level);
     }
 
     public function set(ContentLevel $level, array $data): void
     {
-        // Write to file
         $this->writeToFile($level, $data);
-
-        // Write to Redis
-        $key = $this->getCacheKey($level);
-        try {
-            $this->redisCache->delete($key);
-            $this->redisCache->get($key, function (ItemInterface $item) use ($data) {
-                $item->expiresAfter(self::TTL);
-
-                return $data;
-            });
-            $this->logger?->debug('Pivot cache: stored in Redis', ['key' => $key]);
-        } catch (\Throwable $e) {
-            $this->logger?->warning('Pivot cache: failed to store in Redis', [
-                'key' => $key,
-                'error' => $e->getMessage(),
-            ]);
-        }
     }
 
+    /**
+     * No-op kept for API compatibility.
+     *
+     * With the file store there is nothing to invalidate: set() replaces the
+     * file in place and the next read sees the new content. Use deleteFile()
+     * to actually remove cached data.
+     */
     public function clear(?ContentLevel $level = null): bool
     {
-        $levels = $level !== null ? [$level] : ContentLevel::cases();
-        $success = true;
-
-        foreach ($levels as $l) {
-            // Clear Redis only — JSON files are kept as fallback until
-            // new data is successfully fetched and written via set()
-            try {
-                $this->redisCache->delete($this->getCacheKey($l));
-            } catch (\Throwable $e) {
-                $this->logger?->warning('Pivot cache: failed to clear Redis key', [
-                    'level' => $l->value,
-                    'error' => $e->getMessage(),
-                ]);
-                $success = false;
-            }
-        }
-
-        return $success;
+        return true;
     }
 
     public function deleteFile(ContentLevel $level): bool
@@ -128,68 +65,20 @@ class PivotCache
 
     public function getThesaurus(): ?array
     {
-        $key = 'pivot_thesaurus_urns';
-
-        try {
-            $data = $this->redisCache->get($key, function (ItemInterface $item) {
-                $fileData = $this->readThesaurusFromFile();
-                if ($fileData !== null) {
-                    $item->expiresAfter(self::TTL);
-                    $this->logger?->debug('Thesaurus cache: loaded from file, stored in Redis');
-
-                    return $fileData;
-                }
-
-                throw new CacheMissException();
-            });
-
-            return $data;
-        } catch (CacheMissException) {
-            return null;
-        } catch (\Throwable $e) {
-            $this->logger?->warning('Thesaurus cache: Redis error, falling back to file', [
-                'error' => $e->getMessage(),
-            ]);
-        }
-
         return $this->readThesaurusFromFile();
     }
 
     public function setThesaurus(array $data): void
     {
         $this->writeThesaurusToFile($data);
-
-        $key = 'pivot_thesaurus_urns';
-        try {
-            $this->redisCache->delete($key);
-            $this->redisCache->get($key, function (ItemInterface $item) use ($data) {
-                $item->expiresAfter(self::TTL);
-
-                return $data;
-            });
-            $this->logger?->debug('Thesaurus cache: stored in Redis');
-        } catch (\Throwable $e) {
-            $this->logger?->warning('Thesaurus cache: failed to store in Redis', [
-                'error' => $e->getMessage(),
-            ]);
-        }
     }
 
+    /**
+     * No-op kept for API compatibility. See clear().
+     */
     public function clearThesaurus(): bool
     {
-        $success = true;
-
-        // Clear Redis only — JSON file kept as fallback until new data is written via setThesaurus()
-        try {
-            $this->redisCache->delete('pivot_thesaurus_urns');
-        } catch (\Throwable $e) {
-            $this->logger?->warning('Thesaurus cache: failed to clear Redis key', [
-                'error' => $e->getMessage(),
-            ]);
-            $success = false;
-        }
-
-        return $success;
+        return true;
     }
 
     public function deleteThesaurusFile(): bool
@@ -207,11 +96,6 @@ class PivotCache
     public function getFilePath(ContentLevel $level): string
     {
         return sprintf('%spivot_offers_query_%s_level_%d.json', $this->dataDir, $this->codeQuery, $level->value);
-    }
-
-    private function getCacheKey(ContentLevel $level): string
-    {
-        return sprintf('pivot_offers_%s_level_%d', $this->codeQuery, $level->value);
     }
 
     private function readFromFile(ContentLevel $level): ?array

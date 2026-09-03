@@ -57,7 +57,6 @@ class PivotFetchCommand extends Command
 
                 return Command::SUCCESS;
             }
-            $this->pivotClient->clearCache();//clear only redis cache
             //$io->success(sprintf('Retrieved %d offer(s)', $response->count));
 
             if ($display) {

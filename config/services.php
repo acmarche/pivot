@@ -6,6 +6,12 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 return static function (ContainerConfigurator $containerConfigurator): void {
 
+    $containerConfigurator->parameters()
+        // Where the SQLite offer index lives. Override with PIVOT_DB_PATH to
+        // move it off the data directory (faster disk, tmpfs, ...).
+        ->set('pivot.db_path.default', '%kernel.project_dir%/data/pivot/offers.sqlite')
+        ->set('pivot.db_path', '%env(default:pivot.db_path.default:PIVOT_DB_PATH)%');
+
     $services = $containerConfigurator->services();
     $services = $services
         ->defaults()
